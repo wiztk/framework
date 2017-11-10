@@ -1,0 +1,94 @@
+/**
+ * @defgroup base Base
+ * @brief The base and common code used in all other modules
+ *
+ * ...
+ */
+
+/**
+ * @namespace base
+ * @brief The base module
+ */
+
+/**
+ * @defgroup numerical Numerical
+ * @brief The numerical algorithm module
+ *
+ * ...
+ */
+
+/**
+ * @namespace numerical
+ * @brief The numerical algorithm
+ *
+ * ...
+ */
+
+/**
+ * @defgroup graphic Graphic
+ * @brief Graphic classes based on Google Skia
+ *
+ * Code using Google Skia for drawing 2D in GUI views.
+ */
+
+/**
+ * @namespace graphic
+ * @brief The graphic code based on Skia
+ *
+ * ...
+ */
+
+/**
+ * @ingroup graphic
+ * @defgroup graphic_intern Internal
+ * @brief Private code used in Graphic module only
+ */
+
+/**
+ * @defgroup gui GUI
+ * @brief The main module provides GUI elements
+ *
+ * The gui module provides classes to build user interface displayed on the screen.
+ *
+ * The most important base classes in this module are:
+ *
+ * - skland::AbstractEventHandler: the abstract class represents an object to handle input events and interact with skland::Surface.
+ * - skland::Surface: represents the surface on screen, it contains a native wayland surface.
+ * - skland::AbstractShellView: the base class for windows/menu/popup which use the shell surface for display and contain views.
+ * - skland::AbstractView: the base class for all views such as label/buttons/slider etc.
+ * - skland::Application: class for the singleton application instance.
+ * - skland::Display: class for the singleton connection to the compositor, which contains the native wayland display.
+ */
+
+/**
+ * @namespace gui
+ * @brief The main GUI code
+ *
+ * ...
+ */
+
+/**
+ * @ingroup gui
+ * @defgroup gui_intern Internal
+ * @brief Private code used in GUI module only
+ */
+
+/**
+ * @defgroup stock Stock
+ * @brief Stock resources
+ *
+ * Stock resources
+ */
+
+/**
+ * @namespace stock
+ * @brief The predefined resources
+ *
+ * ...
+ */
+
+/**
+ * @ingroup stock
+ * @defgroup stock_intern Internal
+ * @brief Private code used in Stock module only
+ */
