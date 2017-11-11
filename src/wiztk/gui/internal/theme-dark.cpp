@@ -30,7 +30,7 @@ class ThemeDark : public Theme {
 
   ThemeDark()
       : Theme() {
-    data().window.inactive.outline.colors[0] = 0xEF000000;
+    data().window.inactive.outline.colors[0] = 0xEF0F0F0F;
     data().window.inactive.background.colors[0] = 0xEF202020;
     data().window.active.background.colors[0] = 0xEF202020;
     data().window.inactive.foreground.colors[0] = 0xEF303030;

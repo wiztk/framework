@@ -123,6 +123,10 @@ WIZTK_EXPORT class AbstractEventHandler : public base::Trackable {
    */
   virtual ~AbstractEventHandler();
 
+  const std::string &GetName() const;
+
+  void SetName(const std::string &name);
+
  protected:
 
   /**

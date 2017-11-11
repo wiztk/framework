@@ -99,6 +99,8 @@ WIZTK_NO_EXPORT struct AbstractView::Private {
 
   AbstractLayout *layout;
 
+  std::string name;
+  
 };
 
 } // namespace gui

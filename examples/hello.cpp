@@ -32,6 +32,7 @@ int main(int argc, char *argv[]) {
   win.SetAppId("Hello");
 
   auto *label = new Label("Hello Wayland!");
+  label->SetName("Label");
   label->SetForeground(0xFF444444);
   label->SetFont(Font("Noto Sans CJK SC",
                       FontStyle(FontStyle::kWeightBold),

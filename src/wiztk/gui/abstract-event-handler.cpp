@@ -30,6 +30,14 @@ AbstractEventHandler::~AbstractEventHandler() {
 
 }
 
+const std::string& AbstractEventHandler::GetName() const {
+  return p_->name;
+}
+
+void AbstractEventHandler::SetName(const std::string &name) {
+  p_->name = name;
+}
+
 void AbstractEventHandler::AuditDestroyingToken(base::detail::Token */*token*/) {
 
 }

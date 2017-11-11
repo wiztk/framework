@@ -392,7 +392,7 @@ void AbstractView::Update(bool validate) {
     return;
   }
 
-  if (p_->redraw_node.IsLinked()) return;
+//  if (p_->redraw_node.IsLinked()) return;
   OnRequestUpdateFrom(this);
 }
 

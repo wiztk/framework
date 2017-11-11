@@ -51,6 +51,8 @@ struct AbstractEventHandler::Private : public base::Property<AbstractEventHandle
 
   // TODO: there will be more tasks added later
 
+  std::string name;
+
 };
 
 } // namespace gui

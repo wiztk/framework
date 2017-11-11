@@ -66,7 +66,9 @@ class TitleBar::CloseButton : public TitleBar::Button {
 
  public:
 
-  CloseButton() = default;
+  CloseButton() {
+    SetName("Close Button");
+  }
 
   ~CloseButton() final = default;
 
@@ -116,7 +118,9 @@ class TitleBar::MaximizeButton : public TitleBar::Button {
 
  public:
 
-  MaximizeButton() = default;
+  MaximizeButton() {
+    SetName("Maximize Button");
+  }
 
   ~MaximizeButton() final = default;
 
@@ -167,7 +171,9 @@ class TitleBar::MinimizeButton : public TitleBar::Button {
 
  public:
 
-  MinimizeButton() = default;
+  MinimizeButton() {
+    SetName("Minimize Button");
+  }
 
   ~MinimizeButton() final = default;
 
@@ -215,7 +221,9 @@ class TitleBar::FullscreenButton : public TitleBar::Button {
 
  public:
 
-  FullscreenButton() = default;
+  FullscreenButton() {
+    SetName("Fullscreen Button");
+  }
 
   ~FullscreenButton() final = default;
 
@@ -283,6 +291,8 @@ TitleBar::TitleBar()
   PushBackChild(minimize_button_);
   PushBackChild(maximize_button_);
   PushBackChild(close_button_);
+
+  SetName("Title Bar");
 }
 
 void TitleBar::SetTitle(const std::string &title) {

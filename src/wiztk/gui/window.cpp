@@ -102,9 +102,7 @@ struct Window::Private : public base::Property<Window> {
 
   static std::vector<float> kOutlineRadii;
 
- private:
-
-  void SetRadii(int scale, float offset, std::vector<float> &vec);
+  static void SetRadii(int scale, float offset, std::vector<float> &vec);
 
 };
 
@@ -454,7 +452,6 @@ void Window::OnRenderSurface(Surface *surface) {
   int scale = surface->GetScale();
   int pixel_width = GetWidth() * scale;
   int pixel_height = GetHeight() * scale;
-  RectF geometry = RectF::MakeFromXYWH(0.f, 0.f, pixel_width, pixel_height);
 
   Canvas canvas((unsigned char *) p_->buffer.GetData(),
                 p_->buffer.GetSize().width,
@@ -462,27 +459,24 @@ void Window::OnRenderSurface(Surface *surface) {
   canvas.SetOrigin(margin.left * scale, margin.top * scale);
   Context context(surface, &canvas);
 
-  const std::vector<float> &outline_radii = Private::kOutlineRadii;
-  std::vector<float> radii = {
-      outline_radii[0] * scale, outline_radii[1] * scale, // top-left
-      outline_radii[2] * scale, outline_radii[3] * scale, // top-right
-      outline_radii[4] * scale, outline_radii[5] * scale, // bottom-right
-      outline_radii[6] * scale, outline_radii[7] * scale  // bottom-left
-  };
-
   Path path;
-  if (!(IsMaximized() || IsFullscreen())) {
-    path.AddRoundRect(geometry, radii.data());
-  } else {
+
+  if (IsMaximized() || IsFullscreen()) {
+    RectF geometry = RectF::MakeFromXYWH(0.f, 0.f, pixel_width, pixel_height);
     path.AddRect(geometry);
+  } else {
+    RectF outline_geometry = RectF::MakeFromXYWH(0.5f, 0.5f, pixel_width - 1.f, pixel_height - 1.f);
+    std::vector<float> outline_radii(Private::kOutlineRadii.size(), 0.f);
+    Private::SetRadii(scale, -0.5f, outline_radii);
+    path.AddRoundRect(outline_geometry, outline_radii.data());
   }
 
   base::Deque<AbstractView::RenderNode> &deque = surface->GetViewRenderDeque();
   base::Deque<AbstractView::RenderNode>::Iterator it = deque.begin();
-  AbstractView *view = nullptr;
 
   Canvas::LockGuard guard(&canvas, path, ClipOperation::kClipIntersect, true);
 
+  AbstractView *view = nullptr;
   while (it != deque.end()) {
     view = it.element()->view();
     it.Remove();
