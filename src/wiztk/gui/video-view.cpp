@@ -75,10 +75,10 @@ void VideoView::OnDraw(const Context *context) {
   using graphic::Canvas;
   using graphic::Paint;
 
-  Canvas* canvas = context->canvas();
+  Canvas *canvas = context->canvas();
   Paint paint;
   paint.SetColor(0xFF29FF29);
-  canvas->DrawRect(GetGeometry(), paint);
+  canvas->DrawRect(GetBounds() * context->surface()->GetScale(), paint);
 }
 
 } // namespace gui

@@ -21,6 +21,7 @@
 
 namespace wiztk {
 
+// Forward declaration
 namespace graphic {
 class Font;
 }
@@ -34,6 +35,8 @@ namespace gui {
 class AbstractButton : public AbstractView {
 
  public:
+
+  using Font = graphic::Font;
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(AbstractButton);
 
@@ -51,7 +54,7 @@ class AbstractButton : public AbstractView {
 
   bool IsPressed() const;
 
-  const graphic::Font &GetFont() const;
+  const Font &GetFont() const;
 
   void SetFont(const graphic::Font &font);
 

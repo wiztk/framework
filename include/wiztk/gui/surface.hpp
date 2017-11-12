@@ -110,7 +110,7 @@ class Surface : public base::Trackable {
     kDesynchronized                     /**< Desynchronized mode */
   };
 
-  virtual ~Surface();
+  ~Surface() override;
 
   static int GetShellSurfaceCount() { return kShellSurfaceCount; }
 

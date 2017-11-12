@@ -48,6 +48,7 @@ AbstractView::AbstractView(int width, int height)
   p_ = std::make_unique<Private>(this);
   p_->geometry.Resize(width, height);
   p_->last_geometry.Resize(width, height);
+  p_->bounds.Resize(width, height);
 
   p_->preferred_size.width = Clamp(width, p_->minimal_size.width, p_->maximal_size.width);
   p_->preferred_size.height = Clamp(height, p_->minimal_size.height, p_->maximal_size.height);
@@ -308,6 +309,21 @@ float AbstractView::GetYCenter() const {
 
 const RectF &AbstractView::GetGeometry() const {
   return p_->geometry;
+}
+
+const RectF &AbstractView::GetBounds() const {
+  return p_->bounds;
+}
+
+void AbstractView::SetBounds(const RectF &bounds) {
+  p_->bounds = bounds;
+}
+
+void AbstractView::SetBounds(float left, float top, float right, float bottom) {
+  p_->bounds.left = left;
+  p_->bounds.top = top;
+  p_->bounds.right = right;
+  p_->bounds.bottom = bottom;
 }
 
 bool AbstractView::IsVisible() const {

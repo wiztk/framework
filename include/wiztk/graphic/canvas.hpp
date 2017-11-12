@@ -182,6 +182,10 @@ struct Canvas::LockGuardNode : public base::BiNode {
 
 };
 
+/**
+ * @ingroup graphic
+ * @brief A nested helper class to lock the status of a given canvas.
+ */
 class Canvas::LockGuard {
 
  public:
@@ -189,27 +193,70 @@ class Canvas::LockGuard {
   LockGuard() = delete;
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(LockGuard);
 
+  /**
+   * @brief Default constructor
+   * @param canvas
+   *
+   * The default constructor does nothing, use a Lock() function after generation.
+   */
   explicit LockGuard(Canvas *canvas)
       : canvas_(canvas) {}
 
+  /**
+   * @brief Generate a lockguard and clip the given rectangle
+   * @param canvas
+   * @param rect
+   * @param antialias
+   */
   LockGuard(Canvas *canvas, const RectF &rect, bool antialias = false)
       : canvas_(canvas) {
     Lock(rect, antialias);
   }
 
+  /**
+   * @brief Generate a lockguard and clip the given rectangle
+   * @param canvas
+   * @param rect
+   * @param op
+   * @param antialias
+   */
   LockGuard(Canvas *canvas, const RectF &rect, ClipOperation op, bool antialias = false)
       : canvas_(canvas) {
     Lock(rect, op, antialias);
   }
 
+  /**
+   * @brief Generate a lockguard and clip the given path
+   * @param canvas
+   * @param path
+   * @param antialias
+   */
   LockGuard(Canvas *canvas, const Path &path, bool antialias = false)
       : canvas_(canvas) {
     Lock(path, antialias);
   }
 
+  /**
+   * @brief Generate a lockguard and clip the given path
+   * @param canvas
+   * @param path
+   * @param op
+   * @param antialias
+   */
   LockGuard(Canvas *canvas, const Path &path, ClipOperation op, bool antialias = false)
       : canvas_(canvas) {
     Lock(path, op, antialias);
+  }
+
+  /**
+   * @brief Generate a lockguard and translate
+   * @param canvas
+   * @param dx
+   * @param dy
+   */
+  LockGuard(Canvas *canvas, float dx, float dy)
+      : canvas_(canvas) {
+    Lock(dx, dy);
   }
 
   ~LockGuard();
@@ -221,6 +268,13 @@ class Canvas::LockGuard {
   void Lock(const Path &path, bool antialias = false);
 
   void Lock(const Path &path, ClipOperation op, bool antialias = false);
+
+  /**
+   * @brief Translate and lock
+   * @param dx
+   * @param dy
+   */
+  void Lock(float dx, float dy);
 
   void Unlock();
 

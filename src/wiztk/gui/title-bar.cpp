@@ -81,9 +81,7 @@ class TitleBar::CloseButton : public TitleBar::Button {
 void TitleBar::CloseButton::OnDraw(const Context &context) {
   Canvas *canvas = context.canvas();
   int scale = context.surface()->GetScale();
-  const RectF &rect = GetGeometry();
-
-  Canvas::LockGuard guard(canvas, rect * scale);
+  const RectF &rect = GetBounds();
 
   canvas->Scale(scale, scale);
 
@@ -133,9 +131,7 @@ class TitleBar::MaximizeButton : public TitleBar::Button {
 void TitleBar::MaximizeButton::OnDraw(const Context &context) {
   Canvas *canvas = context.canvas();
   int scale = context.surface()->GetScale();
-  const RectF &rect = GetGeometry();
-
-  Canvas::LockGuard guard(canvas, rect * scale);
+  const RectF &rect = GetBounds();
 
   canvas->Scale(scale, scale);
 
@@ -186,9 +182,7 @@ class TitleBar::MinimizeButton : public TitleBar::Button {
 void TitleBar::MinimizeButton::OnDraw(const Context &context) {
   Canvas *canvas = context.canvas();
   int scale = context.surface()->GetScale();
-  const RectF &rect = GetGeometry();
-
-  Canvas::LockGuard guard(canvas, rect * scale);
+  const RectF &rect = GetBounds();
 
   canvas->Scale(scale, scale);
 
@@ -235,9 +229,7 @@ class TitleBar::FullscreenButton : public TitleBar::Button {
 void TitleBar::FullscreenButton::OnDraw(const Context &context) {
   Canvas *canvas = context.canvas();
   int scale = context.surface()->GetScale();
-  const RectF &rect = GetGeometry();
-
-  Canvas::LockGuard guard(canvas, rect * scale);
+  const RectF &rect = GetBounds();
 
   canvas->Scale(scale, scale);
 
@@ -315,6 +307,8 @@ void TitleBar::OnConfigureGeometry(const RectF &old_geometry, const RectF &new_g
 }
 
 void TitleBar::OnSaveGeometry(const RectF &old_geometry, const RectF &new_geometry) {
+  SetBounds(0.f, 0.f, new_geometry.width(), new_geometry.height());
+
   int y = ((int) new_geometry.height() - close_button_->GetHeight()) / 2;
   int x = kButtonSpace;
   close_button_->MoveTo(x, y);
@@ -379,7 +373,7 @@ void TitleBar::OnDraw(const Context &context) {
   float text_width = paint.MeasureText(title_.c_str(), title_.length());
 
   SkTextBox text_box;
-  const RectF rect = GetGeometry() * scale;
+  const RectF rect = GetBounds() * scale;
   // Put the foreground at the center
   text_box.setBox(rect.l + (rect.width() - text_width) / 2.f,
                   rect.t + 1.f, // move down a little for better look

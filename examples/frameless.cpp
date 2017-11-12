@@ -84,7 +84,7 @@ class MainWidget : public AbstractView {
     using wiztk::graphic::Canvas;
     using wiztk::graphic::Paint;
 
-    const RectF &rect = GetGeometry();
+    const RectF &rect = GetBounds();
     int scale = context.surface()->GetScale();
 
     Canvas *canvas = context.canvas();

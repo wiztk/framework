@@ -190,7 +190,15 @@ void Window::Private::DrawShadow(const Context &context, const Path &path) {
 }
 
 void Window::Private::RecursiveDraw(AbstractView *view, const Context &context) {
-  Canvas::LockGuard guard(context.canvas(), view->GetGeometry());
+  const RectF &geometry = view->GetGeometry();
+  const RectF &bounds = view->GetBounds();
+  int scale = context.surface()->GetScale();
+
+  Canvas::LockGuard guard(context.canvas(),
+                          RectF::MakeFromXYWH(geometry.x() + bounds.x(),
+                                              geometry.y() + bounds.y(),
+                                              bounds.width(),
+                                              bounds.height()) * scale);
 
   AbstractView *parent = view->GetParent();
   if (nullptr != parent) {
@@ -198,7 +206,6 @@ void Window::Private::RecursiveDraw(AbstractView *view, const Context &context) 
   } else {
     context.canvas()->Clear();
 
-    int scale = context.surface()->GetScale();
     int pixel_width = owner()->GetWidth() * scale;
     int pixel_height = owner()->GetHeight() * scale;
 

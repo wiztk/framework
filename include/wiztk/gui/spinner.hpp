@@ -14,34 +14,33 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_GL_WIDGET_HPP_
-#define WIZTK_GUI_GL_WIDGET_HPP_
+#ifndef WIZTK_GUI_SPINNER_HPP_
+#define WIZTK_GUI_SPINNER_HPP_
 
 #include "abstract-view.hpp"
 
 namespace wiztk {
 namespace gui {
 
-class Surface;
-class AbstractRenderingAPI;
-
-class GLView : public AbstractView {
+/**
+ * @ingroup gui
+ * @brief Spinner
+ */
+class Spinner : public AbstractView {
 
  public:
 
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(GLView);
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Spinner);
 
-  GLView();
-
-  void SetRenderingAPI(AbstractRenderingAPI *api);
+  Spinner();
 
  protected:
 
-  virtual ~GLView();
+  ~Spinner() override;
 
-  void OnConfigureGeometry(const RectF &old_geometry, const RectF &new_geometry) final;
+  void OnConfigureGeometry(const RectF &old_rect, const RectF &new_rect) override;
 
-  void OnSaveGeometry(const RectF &old_geometry, const RectF &new_geometry) final;
+  void OnSaveGeometry(const RectF &old_rect, const RectF &new_rect) override;
 
   void OnMouseEnter(MouseEvent *event) override;
 
@@ -57,19 +56,7 @@ class GLView : public AbstractView {
 
   void OnKeyUp(KeyEvent *event) override;
 
-  void OnDraw(const Context &context) final;
-
-  void OnRenderSurface(Surface *surface) override;
-
-  virtual void OnInitialize() = 0;
-
-  virtual void OnResize(int width, int height) = 0;
-
-  virtual void OnRender() = 0;
-
-  void SwapBuffers();
-
-  void MakeCurrent();
+  void OnDraw(const Context &context) override;
 
  private:
 
@@ -79,7 +66,7 @@ class GLView : public AbstractView {
 
 };
 
-} // namespace gui
-} // namespace wiztk
+}
+}
 
-#endif // WIZTK_GUI_GL_WIDGET_HPP_
+#endif // WIZTK_GUI_SPINNER_HPP_

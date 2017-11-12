@@ -380,9 +380,22 @@ WIZTK_EXPORT class AbstractView : public AbstractEventHandler {
   float GetYCenter() const;
 
   /**
-   * @brief Get the geometry of this view
+   * @brief Get the location and size of this view
+   *
+   * Geometry determines how a view interacts with input events.
    */
   const RectF &GetGeometry() const;
+
+  /**
+   * @brief Get the internal origin and size of this view
+   *
+   * Bounds determines how a view render on a surface. (e.g. it may drop shadow outside)
+   */
+  const RectF &GetBounds() const;
+
+  void SetBounds(const RectF &bounds);
+
+  void SetBounds(float left, float top, float right, float bottom);
 
   bool IsVisible() const;
 

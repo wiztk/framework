@@ -112,6 +112,10 @@ void Slider::OnDraw(const Context &context) {
   using graphic::Paint;
 
   Canvas *canvas = context.canvas();
+  int scale = context.surface()->GetScale();
+  const Rect &rect = GetGeometry();
+  canvas->Scale(scale, scale);
+
   Paint paint;
 
   if (hover_) {
@@ -119,11 +123,10 @@ void Slider::OnDraw(const Context &context) {
   } else {
     paint.SetColor(regular_);
   }
-  canvas->DrawRect(GetGeometry(), paint);
+  canvas->DrawRect(rect, paint);
 
   paint.SetColor(active_);
 
-  const Rect &rect = GetGeometry();
   int hw = 8;
   int hh = 8;
   if (orientation() == kHorizontal) {

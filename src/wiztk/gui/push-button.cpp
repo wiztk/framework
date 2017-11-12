@@ -66,11 +66,9 @@ PushButton::~PushButton() {
 void PushButton::OnDraw(const Context &context) {
   Canvas *canvas = context.canvas();
 
-  const RectF &geometry = GetGeometry();
+  const RectF &rect = GetBounds();
   int scale = context.surface()->GetScale();
-  Canvas::LockGuard guard(canvas, geometry * scale);
 
-  canvas->Clear();
   canvas->Scale(scale, scale);
 
   Paint paint;
@@ -78,14 +76,14 @@ void PushButton::OnDraw(const Context &context) {
   if (IsHovered()) {
     if (IsPressed()) {
       paint.SetColor(active_);
-      canvas->DrawRect(GetGeometry(), paint);
+      canvas->DrawRect(rect, paint);
     } else {
       paint.SetColor(highlight_);
-      canvas->DrawRect(GetGeometry(), paint);
+      canvas->DrawRect(rect, paint);
     }
   } else {
     paint.SetColor(regular_);
-    canvas->DrawRect(GetGeometry(), paint);
+    canvas->DrawRect(rect, paint);
   }
 
   const Font &font = GetFont();
@@ -103,10 +101,10 @@ void PushButton::OnDraw(const Context &context) {
 
   TextBox text_box;
   // Put the text at the center
-  text_box.SetBox(geometry.l + (geometry.width() - text_width) / 2.f,
-                  geometry.t + 1.f, // move down a little for better look
-                  geometry.r - (geometry.width() - text_width) / 2.f,
-                  geometry.b);
+  text_box.SetBox(rect.l + (rect.width() - text_width) / 2.f,
+                  rect.t + 1.f, // move down a little for better look
+                  rect.r - (rect.width() - text_width) / 2.f,
+                  rect.b);
   text_box.SetSpacingAlign(TextBox::kSpacingAlignCenter);
   text_box.SetText(text.c_str(), text.length(), paint);
   text_box.Draw(*canvas);

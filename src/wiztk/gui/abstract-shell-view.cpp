@@ -19,6 +19,7 @@
 
 #include "wiztk/base/defines.hpp"
 #include "wiztk/base/memory.hpp"
+#include "wiztk/base/rect.hpp"
 
 #include "wiztk/numerical/bit.hpp"
 
@@ -41,6 +42,7 @@ using Size = base::SizeI;
 
 using base::Margin;
 using base::SLOT;
+using graphic::Canvas;
 using numerical::Bit;
 
 const Margin AbstractShellView::kResizingMargin(5, 5, 5, 5);
@@ -328,6 +330,14 @@ void AbstractShellView::DispatchUpdate(AbstractView *view) {
 }
 
 void AbstractShellView::Draw(AbstractView *view, const Context &context) {
+  using base::RectF;
+
+  const RectF &rect = view->GetGeometry();
+  int scale = context.surface()->GetScale();
+
+  // Translate and lock the status:
+  Canvas::LockGuard guard(context.canvas(), rect.left * scale, rect.top * scale);
+
   view->OnDraw(context);
 }
 

@@ -17,7 +17,7 @@
 #ifndef WIZTK_GUI_LINEAR_LAYOUT_HPP_
 #define WIZTK_GUI_LINEAR_LAYOUT_HPP_
 
-#include <wiztk/base/types.hpp>
+#include "wiztk/base/types.hpp"
 #include "abstract-layout.hpp"
 
 namespace wiztk {

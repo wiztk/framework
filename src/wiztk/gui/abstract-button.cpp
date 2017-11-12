@@ -170,6 +170,7 @@ void AbstractButton::OnConfigureGeometry(const RectF &old_geometry, const RectF 
 }
 
 void AbstractButton::OnSaveGeometry(const RectF &old_geometry, const RectF &new_geometry) {
+  SetBounds(0, 0, new_geometry.width(), new_geometry.height());
   Update();
 }
 

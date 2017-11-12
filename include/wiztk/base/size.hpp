@@ -42,7 +42,7 @@ struct Size {
     return *this;
   }
 
-  inline ~Size() {}
+  inline ~Size() = default;
 
   inline bool IsValid() const {
     return width >= 0 && height >= 0;

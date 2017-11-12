@@ -87,9 +87,9 @@ void Canvas::SetOrigin(float x, float y) {
 
 Surface *Canvas::CreateSurface(const ImageInfo &info) {
   sk_sp<SkSurface> native = p_->sk_canvas.makeSurface(SkImageInfo::Make(info.width(),
-                                                                         info.height(),
-                                                                         static_cast<SkColorType >(info.color_type()),
-                                                                         static_cast<SkAlphaType >(info.alpha_type())));
+                                                                        info.height(),
+                                                                        static_cast<SkColorType >(info.color_type()),
+                                                                        static_cast<SkAlphaType >(info.alpha_type())));
   // TODO: create surface
   return nullptr;
 }
@@ -116,10 +116,10 @@ void Canvas::DrawCircle(float x, float y, float radius, const Paint &paint) {
 
 void Canvas::DrawArc(const RectF &oval, float start_angle, float sweep_angle, bool use_center, const Paint &paint) {
   p_->sk_canvas.drawArc(*reinterpret_cast<const SkRect *>(&oval),
-                         start_angle,
-                         sweep_angle,
-                         use_center,
-                         paint.GetSkPaint());
+                        start_angle,
+                        sweep_angle,
+                        use_center,
+                        paint.GetSkPaint());
 }
 
 void Canvas::DrawPath(const Path &path, const Paint &paint) {
@@ -197,7 +197,7 @@ void Canvas::Save() {
 
 void Canvas::SaveLayer(const RectF *bounds, const Paint *paint) {
   p_->sk_canvas.saveLayer(reinterpret_cast<const SkRect *>(bounds),
-                           nullptr == paint ? nullptr : &paint->GetSkPaint());
+                          nullptr == paint ? nullptr : &paint->GetSkPaint());
 }
 
 void Canvas::SaveLayer(const RectF *bounds, unsigned char alpha) {
@@ -289,6 +289,15 @@ void Canvas::LockGuard::Lock(const Path &path, ClipOperation op, bool antialias)
   node_.depth = canvas_->GetSaveCount();
   canvas_->Save();
   canvas_->ClipPath(path, op, antialias);
+}
+
+void Canvas::LockGuard::Lock(float dx, float dy) {
+  if (node_.IsLinked()) return;
+
+  canvas_->p_->lock_guard_deque.PushBack(&node_);
+  node_.depth = canvas_->GetSaveCount();
+  canvas_->Save();
+  canvas_->Translate(dx, dy);
 }
 
 void Canvas::LockGuard::Unlock() {

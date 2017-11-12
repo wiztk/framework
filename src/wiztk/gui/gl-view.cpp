@@ -38,7 +38,11 @@ struct GLView::Private : public base::Property<GLView> {
   explicit Private(GLView *owner)
       : base::Property<GLView>(owner) {}
 
-  ~Private() final = default;
+  ~Private() final {
+    // Note: delete rendering_api before destroying gl_surface:
+    delete rendering_api;
+    delete gl_surface;
+  }
 
   Surface *gl_surface = nullptr;
 
@@ -60,14 +64,11 @@ void GLView::Private::OnFrame(uint32_t serial) {
 
 GLView::GLView() {
   p_ = std::make_unique<Private>(this);
-
   p_->callback.done().Bind(p_.get(), &GLView::Private::OnFrame);
 }
 
 GLView::~GLView() {
-  // Note: delete interface_ before destroying gl_surface:
-  delete p_->rendering_api;
-  delete p_->gl_surface;
+
 }
 
 void GLView::SetRenderingAPI(AbstractRenderingAPI *api) {
@@ -90,6 +91,7 @@ void GLView::OnConfigureGeometry(const RectF &old_geometry, const RectF &new_geo
 }
 
 void GLView::OnSaveGeometry(const RectF &old_geometry, const RectF &new_geometry) {
+  SetBounds(0.f, 0.f, new_geometry.width(), new_geometry.height());
   Update();
 }
 

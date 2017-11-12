@@ -88,6 +88,11 @@ WIZTK_NO_EXPORT struct AbstractView::Private {
 
   RectF last_geometry;
 
+  /**
+   * @brief The internal origin and size
+   */
+  RectF bounds;
+
   GeometryTask geometry_task;
 
   RenderNode redraw_node;

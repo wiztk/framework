@@ -93,6 +93,7 @@ void Label::OnConfigureGeometry(const RectF &old_geometry, const RectF &new_geom
 }
 
 void Label::OnSaveGeometry(const RectF &old_geometry, const RectF &new_geometry) {
+  SetBounds(0.f, 0.f, new_geometry.width(), new_geometry.height());
   Update();
 }
 
@@ -130,8 +131,7 @@ void Label::OnDraw(const Context &context) {
   using graphic::TextBox;
 
   int scale = context.surface()->GetScale();
-  const RectF rect = GetGeometry() * scale;
-  Canvas::LockGuard guard(context.canvas(), rect);
+  const RectF rect = GetBounds() * scale;
 
   Paint paint;
   paint.SetColor(p_->background);
