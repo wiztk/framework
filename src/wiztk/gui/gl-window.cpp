@@ -16,7 +16,7 @@
 
 #include "wiztk/gui/gl-window.hpp"
 
-#include "wiztk/base/defines.hpp"
+#include "wiztk/base/macros.hpp"
 #include "wiztk/base/memory.hpp"
 #include "wiztk/base/property.hpp"
 

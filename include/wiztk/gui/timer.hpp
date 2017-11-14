@@ -49,7 +49,7 @@ class Timer {
 
   bool IsArmed() const;
 
-  base::SignalRef<> timeout() { return timeout_; }
+  base::SignalRefT<> timeout() { return timeout_; }
 
   /**
    * @brief Get clock time in nanoseconds
@@ -66,7 +66,7 @@ class Timer {
 
   std::unique_ptr<Private> p_;
 
-  base::Signal<> timeout_;
+  base::SignalT<> timeout_;
 
 };
 

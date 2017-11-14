@@ -16,7 +16,7 @@
 
 #include <wiztk/gui/theme.hpp>
 #include <iostream>
-#include <wiztk/base/defines.hpp>
+#include <wiztk/base/macros.hpp>
 #include <wiztk/graphic/gradient-shader.hpp>
 #include "wiztk/graphic/font-style.hpp"
 

@@ -76,7 +76,7 @@ class Display {
    */
   static const std::set<uint32_t> &GetPixelFormats();
 
-  static base::SignalRef<const Global &> unregister() { return kDisplay->unregister_; }
+  static base::SignalRefT<const Global &> unregister() { return kDisplay->unregister_; }
 
   /**
    * @brief Get a predefined cursor
@@ -120,7 +120,7 @@ class Display {
 
   std::unique_ptr<Private> p_;
 
-  base::Signal<const Global &> unregister_;
+  base::SignalT<const Global &> unregister_;
 
   static Display *kDisplay;
 

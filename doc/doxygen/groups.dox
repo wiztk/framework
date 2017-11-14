@@ -11,6 +11,12 @@
  */
 
 /**
+ * @ingroup base
+ * @defgroup base_intern Internal
+ * @brief Private code used in Base module only
+ */
+
+/**
  * @defgroup numerical Numerical
  * @brief The numerical algorithm module
  *

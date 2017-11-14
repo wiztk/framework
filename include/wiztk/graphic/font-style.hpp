@@ -17,7 +17,7 @@
 #ifndef WIZTK_GRAPHIC_FONT_STYLE_HPP_
 #define WIZTK_GRAPHIC_FONT_STYLE_HPP_
 
-#include "wiztk/base/defines.hpp"
+#include "wiztk/base/macros.hpp"
 
 #include <memory>
 

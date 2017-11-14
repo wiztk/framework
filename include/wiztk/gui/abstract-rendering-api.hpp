@@ -17,7 +17,7 @@
 #ifndef WIZTK_GUI_ABSTRACT_RENDERING_API_HPP_
 #define WIZTK_GUI_ABSTRACT_RENDERING_API_HPP_
 
-#include "wiztk/base/defines.hpp"
+#include "wiztk/base/macros.hpp"
 #include "wiztk/base/sigcxx.hpp"
 
 #include <memory>
@@ -53,7 +53,7 @@ class AbstractRenderingAPI {
 
   virtual void SwapBuffers() = 0;
 
-  base::SignalRef<> destroyed() { return destroyed_; }
+  base::SignalRefT<> destroyed() { return destroyed_; }
 
  protected:
 
@@ -67,7 +67,7 @@ class AbstractRenderingAPI {
 
   struct Private;
 
-  base::Signal<> destroyed_;
+  base::SignalT<> destroyed_;
 
 };
 

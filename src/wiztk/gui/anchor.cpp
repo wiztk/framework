@@ -16,7 +16,7 @@
 
 #include <wiztk/gui/anchor.hpp>
 #include <wiztk/gui/anchor-group.hpp>
-#include <wiztk/base/defines.hpp>
+#include <wiztk/base/macros.hpp>
 
 #include "internal/abstract-view_iterators.hpp"
 

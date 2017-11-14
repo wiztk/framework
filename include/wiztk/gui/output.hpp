@@ -44,7 +44,7 @@ class Output : public base::CompoundDeque::Element {
 
   virtual ~Output();
 
-  base::SignalRef<Output *> destroyed() { return destroyed_; }
+  base::SignalRefT<Output *> destroyed() { return destroyed_; }
 
   int GetSubPixel() const;
 
@@ -66,7 +66,7 @@ class Output : public base::CompoundDeque::Element {
 
   std::unique_ptr<Private> p_;
 
-  base::Signal<Output *> destroyed_;
+  base::SignalT<Output *> destroyed_;
 
 };
 

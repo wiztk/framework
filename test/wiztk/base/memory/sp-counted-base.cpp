@@ -36,7 +36,7 @@ SPCountedBaseTest::~SPCountedBaseTest() {
  */
 TEST_F(SPCountedBaseTest, memory_size_1) {
   SkRefCntBase sk_base;
-  SPCountedBase base;
+  RefCountedBase base;
 
   std::cout << sizeof(std::atomic_ulong) << std::endl;
   std::cout << sizeof(size_t) << std::endl;

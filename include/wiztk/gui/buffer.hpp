@@ -20,7 +20,7 @@
 #include "wiztk/base/point.hpp"
 #include "wiztk/base/size.hpp"
 #include "wiztk/base/sigcxx.hpp"
-#include "wiztk/base/defines.hpp"
+#include "wiztk/base/macros.hpp"
 
 #include <cstdint>
 #include <memory>
@@ -48,10 +48,10 @@ class Buffer {
   using Size = base::SizeI;
 
   template<typename ... ParamTypes>
-  using SignalRef = typename base::SignalRef<ParamTypes...>;
+  using SignalRefT = typename base::SignalRefT<ParamTypes...>;
 
   template<typename ... ParamTypes>
-  using Signal = typename base::Signal<ParamTypes...>;
+  using SignalT = typename base::SignalT<ParamTypes...>;
 
   Buffer();
 
@@ -82,9 +82,9 @@ class Buffer {
 
   int GetHeight() const;
 
-  SignalRef<> release() { return release_; }
+  SignalRefT<> release() { return release_; }
 
-  SignalRef<> destroyed() { return destroyed_; }
+  SignalRefT<> destroyed() { return destroyed_; }
 
  private:
 
@@ -92,9 +92,9 @@ class Buffer {
 
   std::unique_ptr<Private> p_;
 
-  Signal<> release_;
+  SignalT<> release_;
 
-  Signal<> destroyed_;
+  SignalT<> destroyed_;
 
 };
 

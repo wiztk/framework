@@ -17,7 +17,7 @@
 #ifndef WIZTK_CORE_DEQUE_HPP_
 #define WIZTK_CORE_DEQUE_HPP_
 
-#include "defines.hpp"
+#include "macros.hpp"
 
 #include <cstddef>
 

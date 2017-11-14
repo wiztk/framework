@@ -16,7 +16,7 @@
 
 #include <wiztk/gui/shared-memory-pool.hpp>
 
-#include "wiztk/base/defines.hpp"
+#include "wiztk/base/macros.hpp"
 
 #include <sys/mman.h>
 

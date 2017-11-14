@@ -67,7 +67,7 @@ class AbstractSlider : public AbstractView {
     return step_;
   }
 
-  base::SignalRef<const T &> changed() {
+  base::SignalRefT<const T &> changed() {
     return changed_;
   }
 
@@ -103,7 +103,7 @@ class AbstractSlider : public AbstractView {
   T maximum_;
   T step_;
 
-  base::Signal<const T &> changed_;
+  base::SignalT<const T &> changed_;
 
 };
 

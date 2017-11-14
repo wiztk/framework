@@ -25,17 +25,17 @@ namespace base {
 /**
  * @ingroup base
  */
-typedef Vector2<int> PointI;
+typedef Vector2T<int> PointI;
 
 /**
  * @ingroup base
  */
-typedef Vector2<float> PointF;
+typedef Vector2T<float> PointF;
 
 /**
  * @ingroup base
  */
-typedef Vector2<double> PointD;
+typedef Vector2T<double> PointD;
 
 } // namespace base
 } // namespace wiztk

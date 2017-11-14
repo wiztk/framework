@@ -23,7 +23,7 @@
 
 using namespace wiztk::base;
 
-class RefObject : public SPCountedBase {
+class RefObject : public RefCountedBase {
 
  public:
 
@@ -40,7 +40,7 @@ class RefObject : public SPCountedBase {
 class A;
 class B;
 
-class A : public SPCountedBase {
+class A : public RefCountedBase {
  public:
 
   A() {
@@ -54,7 +54,7 @@ class A : public SPCountedBase {
   SharedPtr<B> b_;
 };
 
-class B : public SPCountedBase {
+class B : public RefCountedBase {
  public:
 
   B() {

@@ -12,18 +12,18 @@ class Subject : public wiztk::base::Trackable {
  public:
 
   template<typename ... ParamTypes>
-  using SignalRef = typename wiztk::base::SignalRef<ParamTypes...>;
+  using SignalRefT = typename wiztk::base::SignalRefT<ParamTypes...>;
 
   template<typename ... ParamTypes>
-  using Signal = typename wiztk::base::Signal<ParamTypes...>;
+  using SignalT = typename wiztk::base::SignalT<ParamTypes...>;
 
   Subject() = default;
 
   ~Subject() final = default;
 
-  SignalRef<int> signal1() { return signal1_; }
+  SignalRefT<int> signal1() { return signal1_; }
 
-  SignalRef<int, int> signal2() { return signal2_; };
+  SignalRefT<int, int> signal2() { return signal2_; };
 
   void Test(int count) { signal1_.Emit(count); }
 
@@ -31,8 +31,8 @@ class Subject : public wiztk::base::Trackable {
 
  private:
 
-  Signal<int> signal1_;
-  Signal<int, int> signal2_;
+  SignalT<int> signal1_;
+  SignalT<int, int> signal2_;
 
 };
 

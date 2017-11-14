@@ -17,7 +17,7 @@
 #ifndef WIZTK_GUI_TASK_HPP_
 #define WIZTK_GUI_TASK_HPP_
 
-#include "wiztk/base/defines.hpp"
+#include "wiztk/base/macros.hpp"
 #include "wiztk/base/deque.hpp"
 
 #include <cstdint>

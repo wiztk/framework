@@ -13,18 +13,15 @@
 # limitations under the License.
 
 file(GLOB base_headers "${PROJECT_SOURCE_DIR}/include/wiztk/base/*.hpp")
-file(GLOB base_internal_headers "${PROJECT_SOURCE_DIR}/include/wiztk/base/internal/*.hpp")
+file(GLOB base_internal_headers "base/internal/*.hpp")
+file(GLOB base_internal_sources "base/internal/*.cpp")
 file(GLOB base_sources "base/*.cpp")
-
-if (APPLE)
-    list(REMOVE_ITEM base_headers "${PROJECT_SOURCE_DIR}/include/wiztk/base/posix-timer.hpp")
-    list(REMOVE_ITEM base_sources "${PROJECT_SOURCE_DIR}/src/wiztk/base/posix-timer.cpp")
-endif ()
 
 list(APPEND all_source_files
         ${base_headers}
+        ${base_sources}
         ${base_internal_headers}
-        ${base_sources})
+        ${base_internal_sources})
 
 file(GLOB numerical_headers "${PROJECT_SOURCE_DIR}/include/wiztk/numerical/*.hpp")
 file(GLOB numerical_sources "numerical/*.cpp")

@@ -18,7 +18,7 @@
 #define WIZTK_CORE_OBJECT_HPP_
 
 #include "sigcxx.hpp"
-#include "defines.hpp"
+#include "macros.hpp"
 
 #include <string>
 

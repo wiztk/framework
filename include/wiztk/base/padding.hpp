@@ -26,7 +26,7 @@ namespace base {
  * @ingroup base
  * @brief Class specifies content paddings.
  */
-typedef BoundingBox<int> Padding;
+typedef BoundingBoxT<int> Padding;
 
 }
 }

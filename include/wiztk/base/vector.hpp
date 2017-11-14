@@ -26,43 +26,43 @@ namespace base {
  * @tparam T
  */
 template<typename T>
-struct Vector2 {
+struct Vector2T {
 
-  inline Vector2()
+  inline Vector2T()
       : x(T(0)), y(T(0)) {}
 
-  inline Vector2(T x, T y)
+  inline Vector2T(T x, T y)
       : x(x), y(y) {}
 
-  inline Vector2(const Vector2 &other)
+  inline Vector2T(const Vector2T &other)
       : x(other.x), y(other.y) {}
 
   template<typename R>
-  inline Vector2(const Vector2<R> &other)
+  inline Vector2T(const Vector2T<R> &other)
       : x(T(other.x)), y(T(other.y)) {}
 
-  inline ~Vector2() = default;
+  inline ~Vector2T() = default;
 
-  inline Vector2 &operator=(const Vector2 &other) {
+  inline Vector2T &operator=(const Vector2T &other) {
     x = other.x;
     y = other.y;
     return *this;
   }
 
   template<typename R>
-  inline Vector2 &operator=(const Vector2<R> &other) {
+  inline Vector2T &operator=(const Vector2T<R> &other) {
     x = static_cast<T>(other.x);
     y = static_cast<T>(other.y);
     return *this;
   }
 
-  inline Vector2 &operator+=(const Vector2 &other) {
+  inline Vector2T &operator+=(const Vector2T &other) {
     x += other.x;
     y += other.y;
     return *this;
   }
 
-  inline Vector2 &operator-=(const Vector2 &other) {
+  inline Vector2T &operator-=(const Vector2T &other) {
     x -= other.x;
     y -= other.y;
     return *this;
@@ -77,8 +77,8 @@ struct Vector2 {
   }
 
   template<typename U>
-  inline Vector2 Dot(const Vector2<U> &other) const {
-    return Vector2(x * other.x, y * other.y);
+  inline Vector2T Dot(const Vector2T<U> &other) const {
+    return Vector2T(x * other.x, y * other.y);
   }
 
   union { T x, r, s; };
@@ -90,32 +90,32 @@ struct Vector2 {
  * @ingroup base
  */
 template<typename T>
-inline bool operator==(const Vector2<T> &v1, const Vector2<T> &v2) {
-  return memcmp(&v1, &v2, sizeof(Vector2<T>)) == 0;
+inline bool operator==(const Vector2T<T> &v1, const Vector2T<T> &v2) {
+  return memcmp(&v1, &v2, sizeof(Vector2T<T>)) == 0;
 }
 
 /**
  * @ingroup base
  */
 template<typename T>
-inline bool operator!=(const Vector2<T> &v1, const Vector2<T> &v2) {
-  return memcmp(&v1, &v2, sizeof(Vector2<T>)) != 0;
+inline bool operator!=(const Vector2T<T> &v1, const Vector2T<T> &v2) {
+  return memcmp(&v1, &v2, sizeof(Vector2T<T>)) != 0;
 }
 
 /**
  * @ingroup base
  */
 template<typename T>
-inline Vector2<T> operator+(const Vector2<T> &v1, const Vector2<T> &v2) {
-  return Vector2<T>(v1.x + v2.x, v1.y + v2.y);
+inline Vector2T<T> operator+(const Vector2T<T> &v1, const Vector2T<T> &v2) {
+  return Vector2T<T>(v1.x + v2.x, v1.y + v2.y);
 }
 
 /**
  * @ingroup base
  */
 template<typename T>
-inline Vector2<T> operator-(const Vector2<T> &v1, const Vector2<T> &v2) {
-  return Vector2<T>(v1.x - v2.x, v1.y - v2.y);
+inline Vector2T<T> operator-(const Vector2T<T> &v1, const Vector2T<T> &v2) {
+  return Vector2T<T>(v1.x - v2.x, v1.y - v2.y);
 }
 
 /**
@@ -124,22 +124,22 @@ inline Vector2<T> operator-(const Vector2<T> &v1, const Vector2<T> &v2) {
  * @tparam T
  */
 template<typename T>
-struct Vector3 {
+struct Vector3T {
 
-  inline Vector3()
+  inline Vector3T()
       : x(T(0)), y(T(0)), z(T(0)) {}
 
-  inline Vector3(T x, T y, T z)
+  inline Vector3T(T x, T y, T z)
       : x(x), y(y), z(z) {}
 
-  inline Vector3(const Vector3 &other)
+  inline Vector3T(const Vector3T &other)
       : x(other.x), y(other.y), z(other.z) {}
 
   template<typename U>
-  inline Vector3(const Vector3<U> &other)
+  inline Vector3T(const Vector3T<U> &other)
       : x(T(other.x)), y(T(other.y)), z(T(other.z)) {}
 
-  inline Vector3 &operator=(const Vector3 &other) {
+  inline Vector3T &operator=(const Vector3T &other) {
     x = other.x;
     y = other.y;
     z = other.z;
@@ -147,14 +147,14 @@ struct Vector3 {
   }
 
   template<typename U>
-  inline Vector3 &operator=(const Vector3<U> &other) {
+  inline Vector3T &operator=(const Vector3T<U> &other) {
     x = static_cast<T>(other.x);
     y = static_cast<T>(other.y);
     z = static_cast<T>(other.z);
     return *this;
   }
 
-  inline ~Vector3() = default;
+  inline ~Vector3T() = default;
 
   union { T x, r, s; };
   union { T y, g, t; };
@@ -165,16 +165,16 @@ struct Vector3 {
  * @ingroup base
  */
 template<typename T>
-inline bool operator==(const Vector3<T> &vector1, const Vector3<T> &vector2) {
-  return memcmp(&vector1, &vector2, sizeof(Vector3<T>)) == 0;
+inline bool operator==(const Vector3T<T> &vector1, const Vector3T<T> &vector2) {
+  return memcmp(&vector1, &vector2, sizeof(Vector3T<T>)) == 0;
 }
 
 /**
  * @ingroup base
  */
 template<typename T>
-inline bool operator!=(const Vector3<T> &vector1, const Vector3<T> &vector2) {
-  return memcmp(&vector1, &vector2, sizeof(Vector3<T>)) != 0;
+inline bool operator!=(const Vector3T<T> &vector1, const Vector3T<T> &vector2) {
+  return memcmp(&vector1, &vector2, sizeof(Vector3T<T>)) != 0;
 }
 
 /**
@@ -183,22 +183,22 @@ inline bool operator!=(const Vector3<T> &vector1, const Vector3<T> &vector2) {
  * @tparam T
  */
 template<typename T>
-struct Vector4 {
+struct Vector4T {
 
-  inline Vector4()
+  inline Vector4T()
       : x(T(0)), y(T(0)), z(T(0)), w(T(0)) {}
 
-  inline Vector4(T x, T y, T z, T w)
+  inline Vector4T(T x, T y, T z, T w)
       : x(x), y(y), z(z), w(w) {}
 
-  inline Vector4(const Vector4 &other)
+  inline Vector4T(const Vector4T &other)
       : x(other.x), y(other.y), z(other.z), w(other.w) {}
 
   template<typename U>
-  inline Vector4(const Vector4<U> &other)
+  inline Vector4T(const Vector4T<U> &other)
       : x(T(other.x)), y(T(other.y)), z(T(other.z)), w(T(other.w)) {}
 
-  inline Vector4 &operator=(const Vector4 &other) {
+  inline Vector4T &operator=(const Vector4T &other) {
     x = other.x;
     y = other.y;
     z = other.z;
@@ -207,7 +207,7 @@ struct Vector4 {
   }
 
   template<typename U>
-  inline Vector4 &operator=(const Vector4<U> &other) {
+  inline Vector4T &operator=(const Vector4T<U> &other) {
     x = static_cast<T>(other.x);
     y = static_cast<T>(other.y);
     z = static_cast<T>(other.z);
@@ -215,7 +215,7 @@ struct Vector4 {
     return *this;
   }
 
-  inline ~Vector4() = default;
+  inline ~Vector4T() = default;
 
   union { T x, r, s; };
   union { T y, g, t; };
@@ -224,13 +224,13 @@ struct Vector4 {
 };
 
 template<typename T>
-inline bool operator==(const Vector4<T> &vector1, const Vector4<T> &vector2) {
-  return memcmp(&vector1, &vector2, sizeof(Vector4<T>)) == 0;
+inline bool operator==(const Vector4T<T> &vector1, const Vector4T<T> &vector2) {
+  return memcmp(&vector1, &vector2, sizeof(Vector4T<T>)) == 0;
 }
 
 template<typename T>
-inline bool operator!=(const Vector4<T> &vector1, const Vector4<T> &vector2) {
-  return memcmp(&vector1, &vector2, sizeof(Vector4<T>)) != 0;
+inline bool operator!=(const Vector4T<T> &vector1, const Vector4T<T> &vector2) {
+  return memcmp(&vector1, &vector2, sizeof(Vector4T<T>)) != 0;
 }
 
 } // namespace base

@@ -17,7 +17,7 @@
 #ifndef WIZTK_GUI_INPUT_EVENT_HPP_
 #define WIZTK_GUI_INPUT_EVENT_HPP_
 
-#include "wiztk/base/defines.hpp"
+#include "wiztk/base/macros.hpp"
 
 namespace wiztk {
 namespace gui {

@@ -16,7 +16,7 @@
 
 #include "internal/abstract-view_private.hpp"
 
-#include "wiztk/base/defines.hpp"
+#include "wiztk/base/macros.hpp"
 #include "wiztk/base/memory.hpp"
 
 #include "wiztk/numerical/bit.hpp"

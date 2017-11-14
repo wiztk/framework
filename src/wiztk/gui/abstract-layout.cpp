@@ -27,7 +27,7 @@
 //#ifdef DEBUG
 #include <cstdlib>
 #include <wiztk/gui/timer.hpp>
-#include <wiztk/base/defines.hpp>
+#include <wiztk/base/macros.hpp>
 #include "wiztk/gui/context.hpp"
 //#endif
 

@@ -18,7 +18,7 @@
 #define WIZTK_CALLBACK_HPP
 
 #include "wiztk/base/delegate.hpp"
-#include "wiztk/base/defines.hpp"
+#include "wiztk/base/macros.hpp"
 
 #include <memory>
 
@@ -39,10 +39,10 @@ class Callback {
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Callback);
 
   template<typename ReturnType, typename ... ParamTypes>
-  using DelegateRef = typename base::DelegateRef<ReturnType, ParamTypes...>;
+  using DelegateRef = typename base::DelegateRefT<ReturnType, ParamTypes...>;
 
   template<typename ReturnType, typename ... ParamTypes>
-  using Delegate = typename base::Delegate<ReturnType, ParamTypes...>;
+  using Delegate = typename base::DelegateT<ReturnType, ParamTypes...>;
 
   Callback();
 

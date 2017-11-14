@@ -17,7 +17,7 @@
 #ifndef WIZTK_CORE_MEMORY_HPP_
 #define WIZTK_CORE_MEMORY_HPP_
 
-#include "defines.hpp"
+#include "macros.hpp"
 
 #include <memory>
 #include <atomic>
@@ -55,7 +55,7 @@ namespace base {
  *
  * A SPCountedBase object is non-copyable and non-movable.
  */
-class SPCountedBase {
+class RefCountedBase {
 
   template<typename T> friend
   class SharedPtr;
@@ -99,12 +99,12 @@ class SPCountedBase {
   /**
    * @brief Disable copy and move constructors
    */
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(SPCountedBase);
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(RefCountedBase);
 
   /**
    * @brief Default constructor
    */
-  SPCountedBase()
+  RefCountedBase()
       : counter_(new Counter) {}
 
   /**
@@ -113,7 +113,7 @@ class SPCountedBase {
    * The destructor will try to delete the internal counter object, but in most
    * cases it's deleted by SharedPtr or WeakPtr.
    */
-  virtual ~SPCountedBase() {
+  virtual ~RefCountedBase() {
 #ifdef UNIT_TEST
     if (nullptr != counter_) {
       _DEBUG("use_count: %ld, weak_count: %ld\n",
@@ -270,7 +270,7 @@ class SharedPtr {
    */
   void Swap(SharedPtr &other) noexcept {
     T *object = ptr_;
-    SPCountedBase::Counter *counter = counter_;
+    RefCountedBase::Counter *counter = counter_;
 
     ptr_ = other.ptr_;
     counter_ = other.counter_;
@@ -285,7 +285,7 @@ class SharedPtr {
    */
   void Reset(T *obj = nullptr) noexcept {
     T *old_object = ptr_;
-    SPCountedBase::Counter *old_counter = counter_;
+    RefCountedBase::Counter *old_counter = counter_;
 
     ptr_ = obj;
     counter_ = nullptr;
@@ -383,7 +383,7 @@ class SharedPtr {
 
   T *ptr_ = nullptr;
 
-  SPCountedBase::Counter *counter_ = nullptr;
+  RefCountedBase::Counter *counter_ = nullptr;
 
 };
 
@@ -439,7 +439,7 @@ class WeakPtr {
    * @brief Assignment from a SharedPtr
    */
   WeakPtr &operator=(const SharedPtr<T> &other) noexcept {
-    SPCountedBase::Counter *old_counter = counter_;
+    RefCountedBase::Counter *old_counter = counter_;
 
     ptr_ = other.ptr_;
     counter_ = other.counter_;
@@ -460,7 +460,7 @@ class WeakPtr {
    * @brief Copy assignment
    */
   WeakPtr &operator=(const WeakPtr &other) noexcept {
-    SPCountedBase::Counter *old_counter = counter_;
+    RefCountedBase::Counter *old_counter = counter_;
 
     ptr_ = other.ptr_;
     counter_ = other.counter_;
@@ -537,7 +537,7 @@ class WeakPtr {
 
   T *ptr_ = nullptr;
 
-  SPCountedBase::Counter *counter_ = nullptr;
+  RefCountedBase::Counter *counter_ = nullptr;
 
 };
 
@@ -557,7 +557,7 @@ SharedPtr<T> MakeShared(Args &&... args) {
 template<typename T>
 void Swap(SharedPtr<T> &src, SharedPtr<T> &dst) {
   T *object = src.ptr_;
-  SPCountedBase::Counter *counter = src.counter_;
+  RefCountedBase::Counter *counter = src.counter_;
 
   src.ptr_ = dst.ptr_;
   src.counter_ = dst.counter_;
@@ -573,7 +573,7 @@ void Swap(SharedPtr<T> &src, SharedPtr<T> &dst) {
 template<typename T>
 void Swap(WeakPtr<T> &src, WeakPtr<T> &dst) {
   T *object = src.ptr_;
-  SPCountedBase::Counter *counter = src.counter_;
+  RefCountedBase::Counter *counter = src.counter_;
 
   src.ptr_ = dst.ptr_;
   src.counter_ = dst.counter_;

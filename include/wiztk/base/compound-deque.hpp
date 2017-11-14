@@ -17,7 +17,7 @@
 #ifndef WIZTK_CORE_COMPOUND_DEQUE_HPP_
 #define WIZTK_CORE_COMPOUND_DEQUE_HPP_
 
-#include "defines.hpp"
+#include "macros.hpp"
 
 namespace wiztk {
 namespace base {

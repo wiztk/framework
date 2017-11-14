@@ -18,7 +18,7 @@
 #define WIZTK_GUI_ANCHOR_HPP_
 
 #include "wiztk/base/types.hpp"
-#include "wiztk/base/defines.hpp"
+#include "wiztk/base/macros.hpp"
 
 #include <utility>
 #include <memory>

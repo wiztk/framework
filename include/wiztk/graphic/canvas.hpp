@@ -21,7 +21,7 @@
 #include "wiztk/base/size.hpp"
 #include "wiztk/base/rect.hpp"
 #include "wiztk/base/color.hpp"
-#include "wiztk/base/defines.hpp"
+#include "wiztk/base/macros.hpp"
 #include "wiztk/base/deque.hpp"
 
 #include "clip-operation.hpp"

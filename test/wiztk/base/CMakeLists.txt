@@ -17,6 +17,7 @@
 # core module
 add_subdirectory(delegate)
 add_subdirectory(sigcxx)
+add_subdirectory(string)
 add_subdirectory(margin)
 add_subdirectory(rect)
 add_subdirectory(color)

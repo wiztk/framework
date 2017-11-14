@@ -21,7 +21,7 @@
 using namespace wiztk;
 using namespace wiztk::base;
 
-class RefObject : public SPCountedBase {
+class RefObject : public RefCountedBase {
 
  public:
 

@@ -16,7 +16,7 @@
 
 #include "input_private.hpp"
 
-#include <wiztk/base/defines.hpp>
+#include <wiztk/base/macros.hpp>
 
 #include <unistd.h>
 #include <sys/mman.h>

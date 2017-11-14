@@ -17,7 +17,7 @@
 #include "display_private.hpp"
 #include "display_proxy.hpp"
 
-#include "wiztk/base/defines.hpp"
+#include "wiztk/base/macros.hpp"
 
 #include <wiztk/gui/input.hpp>
 #include <wiztk/gui/output.hpp>

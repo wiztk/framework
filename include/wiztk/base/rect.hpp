@@ -32,7 +32,7 @@ namespace base {
  * @brief Template class for rectangle with 4 edges (left, top, right, bottom).
  */
 template<typename T>
-struct Rect {
+struct RectT {
 
   /**
    * @brief Create a new rectangle from the specified values of left/top/right/bottom
@@ -42,8 +42,8 @@ struct Rect {
    * @param bottom
    * @return
    */
-  inline static Rect MakeFromLTRB(T left, T top, T right, T bottom) {
-    return Rect(left, top, right, bottom);
+  inline static RectT MakeFromLTRB(T left, T top, T right, T bottom) {
+    return RectT(left, top, right, bottom);
   }
 
   /**
@@ -54,8 +54,8 @@ struct Rect {
    * @param height
    * @return
    */
-  inline static Rect MakeFromXYWH(T x, T y, T width, T height) {
-    return Rect(x, y, x + width, y + height);
+  inline static RectT MakeFromXYWH(T x, T y, T width, T height) {
+    return RectT(x, y, x + width, y + height);
   }
 
   /**
@@ -63,7 +63,7 @@ struct Rect {
    *
    * Create an empty rectangle
    */
-  inline Rect()
+  inline RectT()
       : left(0), top(0), right(0), bottom(0) {}
 
   /**
@@ -73,7 +73,7 @@ struct Rect {
    * @param right
    * @param bottom
    */
-  inline Rect(T left, T top, T right, T bottom)
+  inline RectT(T left, T top, T right, T bottom)
       : left(left), top(top), right(right), bottom(bottom) {}
 
   /**
@@ -81,14 +81,14 @@ struct Rect {
    * @param width
    * @param height
    */
-  inline Rect(T width, T height)
+  inline RectT(T width, T height)
       : left(0), top(0), right(width), bottom(height) {}
 
   /**
    * @brief Copy constructor
    * @param other
    */
-  inline Rect(const Rect &other)
+  inline RectT(const RectT &other)
       : left(other.left), top(other.top), right(other.right), bottom(other.bottom) {}
 
   /**
@@ -97,7 +97,7 @@ struct Rect {
    * @param other
    */
   template<typename R>
-  inline Rect(const Rect<R> &other)
+  inline RectT(const RectT<R> &other)
       : left(T(other.left)), top(T(other.top)), right(T(other.right)), bottom(T(other.bottom)) {}
 
   /**
@@ -105,7 +105,7 @@ struct Rect {
    * @param other
    * @return
    */
-  inline Rect &operator=(const Rect &other) {
+  inline RectT &operator=(const RectT &other) {
     left = other.left;
     top = other.top;
     right = other.right;
@@ -120,7 +120,7 @@ struct Rect {
    * @return
    */
   template<typename R>
-  inline Rect &operator=(const Rect<R> &other) {
+  inline RectT &operator=(const RectT<R> &other) {
     left = T(other.left);
     top = T(other.top);
     right = T(other.right);
@@ -153,7 +153,7 @@ struct Rect {
    * @param other
    * @return
    */
-  inline bool Contain(const Rect &other) const {
+  inline bool Contain(const RectT &other) const {
     return left <= other.left &&
         top <= other.top &&
         right >= other.right &&
@@ -199,7 +199,7 @@ struct Rect {
    * @param val
    * @return
    */
-  inline Rect Inset(T val) const {
+  inline RectT Inset(T val) const {
     return Inset(val, val);
   }
 
@@ -209,8 +209,8 @@ struct Rect {
    * @param dy
    * @return
    */
-  inline Rect Inset(T dx, T dy) const {
-    return Rect(left + dx, top + dy, right - dx, bottom - dy);
+  inline RectT Inset(T dx, T dy) const {
+    return RectT(left + dx, top + dy, right - dx, bottom - dy);
   }
 
   /**
@@ -218,7 +218,7 @@ struct Rect {
    * @param other
    * @return
    */
-  inline bool Intersect(const Rect &other) const {
+  inline bool Intersect(const RectT &other) const {
     return !GetIntersection(*this, other).IsEmpty();
   }
 
@@ -228,8 +228,8 @@ struct Rect {
    * @param rect2
    * @return
    */
-  static inline Rect GetIntersection(const Rect &rect1, const Rect &rect2) {
-    return Rect(std::max(rect1.left, rect2.left),
+  static inline RectT GetIntersection(const RectT &rect1, const RectT &rect2) {
+    return RectT(std::max(rect1.left, rect2.left),
                 std::max(rect1.top, rect2.top),
                 std::min(rect1.right, rect2.right),
                 std::min(rect1.bottom, rect2.bottom));
@@ -302,8 +302,8 @@ struct Rect {
  * @return
  */
 template<typename T>
-inline Rect<T> operator*(const Rect<T> &src, int factor) {
-  return Rect<T>(src.left * factor, src.top * factor, src.right * factor, src.bottom * factor);
+inline RectT<T> operator*(const RectT<T> &src, int factor) {
+  return RectT<T>(src.left * factor, src.top * factor, src.right * factor, src.bottom * factor);
 }
 
 /**
@@ -315,32 +315,32 @@ inline Rect<T> operator*(const Rect<T> &src, int factor) {
  * @return
  */
 template<typename T>
-inline bool operator==(const Rect<T> &src, const Rect<T> &dst) {
-  return memcmp(&src, &dst, sizeof(Rect<T>)) == 0;
+inline bool operator==(const RectT<T> &src, const RectT<T> &dst) {
+  return memcmp(&src, &dst, sizeof(RectT<T>)) == 0;
 }
 
 template<typename T>
-inline bool operator!=(const Rect<T> &src, const Rect<T> &dst) {
-  return memcmp(&src, &dst, sizeof(Rect<T>)) != 0;
+inline bool operator!=(const RectT<T> &src, const RectT<T> &dst) {
+  return memcmp(&src, &dst, sizeof(RectT<T>)) != 0;
 }
 
 /**
  * @ingroup base
  * @brief A typedef to Rect with integer values
  */
-typedef Rect<int> RectI;
+typedef RectT<int> RectI;
 
 /**
  * @ingroup base
  * @brief A typedef to Rect with float values
  */
-typedef Rect<float> RectF;
+typedef RectT<float> RectF;
 
 /**
  * @ingroup base
  * @brief A typedef to Rect with double values
  */
-typedef Rect<double> RectD;
+typedef RectT<double> RectD;
 
 } // namespace base
 } // namespace wiztk

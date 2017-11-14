@@ -176,6 +176,12 @@ if (FONTCONFIG_FOUND)
     set(LIBS ${LIBS} ${FONTCONFIG_LIBRARY})
 endif ()
 
+find_package(ICU COMPONENTS uc i18n REQUIRED)
+if (ICU_FOUND)
+    include_directories(${ICU_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${ICU_LIBRARIES})
+endif ()
+
 find_library(DL_LIBRARY "dl")
 set(LIBS ${LIBS} ${DL_LIBRARY})
 

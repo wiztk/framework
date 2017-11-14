@@ -15,7 +15,7 @@
  */
 
 #include "wiztk/base/deque.hpp"
-#include "wiztk/base/defines.hpp"
+#include "wiztk/base/macros.hpp"
 
 namespace wiztk {
 namespace base {

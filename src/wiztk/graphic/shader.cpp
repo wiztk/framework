@@ -16,7 +16,7 @@
 
 #include "internal/shader_private.hpp"
 
-#include "wiztk/base/defines.hpp"
+#include "wiztk/base/macros.hpp"
 #include "wiztk/base/memory.hpp"
 
 namespace wiztk {

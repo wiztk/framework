@@ -15,7 +15,7 @@
  */
 
 #include "wiztk/base/posix-timer.hpp"
-#include "wiztk/base/defines.hpp"
+#include "wiztk/base/macros.hpp"
 
 #include <errno.h>
 
