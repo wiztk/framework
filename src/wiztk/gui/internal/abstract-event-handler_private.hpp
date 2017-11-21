@@ -28,12 +28,12 @@ namespace gui {
  * @ingroup gui_intern
  * @brief The structure for the private data in AbstractEventHandler
  */
-struct AbstractEventHandler::Private : public base::Property<AbstractEventHandler> {
+struct AbstractEventHandler::Private : public base::PropertyT<AbstractEventHandler> {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
 
   explicit Private(AbstractEventHandler *event_handler)
-      : base::Property<AbstractEventHandler>(event_handler),
+      : base::PropertyT<AbstractEventHandler>(event_handler),
         mouse_task(event_handler),
         mouse_motion_task(event_handler) {}
 

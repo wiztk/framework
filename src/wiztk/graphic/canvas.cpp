@@ -25,6 +25,9 @@
 #include "internal/surface_private.hpp"
 #include "internal/image-info_private.hpp"
 
+#include <unicode/utf.h>
+#include <unicode/unistr.h>
+
 namespace wiztk {
 namespace graphic {
 
@@ -128,6 +131,29 @@ void Canvas::DrawPath(const Path &path, const Paint &paint) {
 
 void Canvas::DrawText(const void *text, size_t byte_length, float x, float y, const Paint &paint) {
   p_->sk_canvas.drawText(text, byte_length, x, y, paint.GetSkPaint());
+}
+
+void Canvas::DrawText(const std::string &text, float x, float y, const Paint &paint) {
+  p_->sk_canvas.drawText(text.data(), text.length(), x, y, paint.GetSkPaint());
+}
+
+void Canvas::DrawText(const String16 &text, float x, float y, const Paint &paint) {
+  // TODO: This create and copy the string array from String16 to icu::UnicodeString, find a better way for performance.
+  std::string utf8;
+  icu::UnicodeString utf16((const UChar *) text.data(), (uint32_t) text.length());
+  utf16.toUTF8String(utf8);
+
+  p_->sk_canvas.drawText(utf8.data(), utf8.length(), x, y, paint.GetSkPaint());
+}
+
+void Canvas::DrawText(const String32 &text, float x, float y, const Paint &paint) {
+  // TODO: This create and copy the string array from String16 to icu::UnicodeString, find a better way for performance.
+
+  std::string utf8;
+  icu::UnicodeString str = icu::UnicodeString::fromUTF32(reinterpret_cast<const UChar32 *>(text.data()),
+                                                         static_cast<uint32_t >(text.length()));
+  str.toUTF8String(utf8);
+  p_->sk_canvas.drawText(utf8.data(), utf8.length(), x, y, paint.GetSkPaint());
 }
 
 void Canvas::DrawPaint(const Paint &paint) {
@@ -246,7 +272,7 @@ SkCanvas *Canvas::GetSkCanvas() const {
 
 Canvas::LockGuard::~LockGuard() {
   if (node_.IsLinked()) {
-    base::Deque<LockGuardNode>::Iterator it = canvas_->p_->lock_guard_deque.rbegin();
+    base::DequeT<LockGuardNode>::Iterator it = canvas_->p_->lock_guard_deque.rbegin();
     while (it.element() != &node_) {
       it.Remove();
       it = canvas_->p_->lock_guard_deque.rbegin();
@@ -303,7 +329,7 @@ void Canvas::LockGuard::Lock(float dx, float dy) {
 void Canvas::LockGuard::Unlock() {
   if (!node_.IsLinked()) return;
 
-  base::Deque<LockGuardNode>::Iterator it = canvas_->p_->lock_guard_deque.rbegin();
+  base::DequeT<LockGuardNode>::Iterator it = canvas_->p_->lock_guard_deque.rbegin();
   while (it.element() != &node_) {
     it.Remove();
     it = canvas_->p_->lock_guard_deque.rbegin();

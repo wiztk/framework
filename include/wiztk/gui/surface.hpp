@@ -157,7 +157,7 @@ class Surface : public base::Trackable {
    * @brief Get defferred redraw task deque
    * @return
    */
-  base::Deque<AbstractView::RenderNode> &GetViewRenderDeque() const;
+  base::DequeT<AbstractView::RenderNode> &GetViewRenderDeque() const;
 
   Surface *GetShellSurface();
 
@@ -287,9 +287,9 @@ class Surface : public base::Trackable {
    */
   static int kShellSurfaceCount;
 
-  static base::Deque<RenderTask> kRenderTaskDeque;
+  static base::DequeT<RenderTask> kRenderTaskDeque;
 
-  static base::Deque<CommitTask> kCommitTaskDeque;
+  static base::DequeT<CommitTask> kCommitTaskDeque;
 
   std::unique_ptr<Private> p_;
 

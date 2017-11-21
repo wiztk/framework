@@ -85,6 +85,38 @@ TEST_F(TestStringPiece, copy_to_1) {
   ASSERT_TRUE(dst == src);
 }
 
+// Starts with:
+
+TEST_F(TestStringPiece, starts_with_1) {
+  StringPiece str("Hello World!");
+  StringPiece s("Hel");
+
+  ASSERT_TRUE(str.starts_with(s));
+}
+
+TEST_F(TestStringPiece, starts_with_2) {
+  StringPiece str("Hello World!");
+  StringPiece s("world");
+
+  ASSERT_TRUE(!str.starts_with(s));
+}
+
+// Ends with:
+
+TEST_F(TestStringPiece, ends_with_1) {
+  StringPiece str("Hello World!");
+  StringPiece s("ld!");
+
+  ASSERT_TRUE(str.ends_with(s));
+}
+
+TEST_F(TestStringPiece, ends_with_2) {
+  StringPiece str("Hello World!");
+  StringPiece s("Wor");
+
+  ASSERT_TRUE(!str.ends_with(s));
+}
+
 // Find:
 
 TEST_F(TestStringPiece, find_1) {
@@ -168,5 +200,17 @@ TEST_F(TestStringPiece, find_first_of_1) {
 
   size_t a = str_piece1.find_first_of(str_piece2);
 
-  ASSERT_TRUE(0 != a);
+  ASSERT_TRUE(2 == a);
 }
+
+TEST_F(TestStringPiece, find_first_of_2) {
+  std::string str("Hello World!");
+
+  StringPiece str_piece1(str);
+
+  size_t a = str_piece1.find_first_of("ls");
+
+  ASSERT_TRUE(2 == a);
+}
+
+// TODO: add more tests

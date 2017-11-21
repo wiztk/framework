@@ -116,3 +116,41 @@ TEST_F(DrawTest, draw_text_1) {
 
   ASSERT_TRUE(true);
 }
+
+/**
+ * @brief Draw unicode text
+ */
+TEST_F(DrawTest, draw_text_2) {
+  Bitmap bitmap;
+  bitmap.AllocateN32Pixels(kWidth, kHeight);
+
+  Canvas canvas(bitmap);
+  canvas.Clear(0xFFFFFFFF);
+
+  Paint paint;
+  paint.SetColor(0xFFFF0000);
+  paint.SetAntiAlias(true);
+
+  Typeface typeface("Noto Sans CJK SC", FontStyle());
+  Font font(typeface, 48.f);
+  paint.SetFont(font);
+
+  String16 text(u"你好，骚年！");
+
+//  const char *text = "你好，骚年！";
+
+//  canvas.DrawText(text, strlen(text), 50.f, 50.f, paint);
+  canvas.DrawText(text, 50.f, 50.f, paint);
+
+  canvas.Flush();
+
+  std::string filename = kFileNamePrefix + "draw_text_2.png";
+  bitmap.WriteToFile(filename);
+
+  std::cout << std::endl
+            << "Check image file: " << filename
+            << std::endl
+            << std::endl;
+
+  ASSERT_TRUE(true);
+}

@@ -57,12 +57,12 @@ using graphic::ClipOperation;
  * @ingroup gui_intern
  * @brief The private structure for Window
  */
-struct Window::Private : public base::Property<Window> {
+struct Window::Private : public base::PropertyT<Window> {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
 
   explicit Private(Window *owner)
-      : base::Property<Window>(owner),
+      : base::PropertyT<Window>(owner),
         minimal_size(160, 120),
         preferred_size(640, 480),
         maximal_size(65536, 65536) {}
@@ -478,8 +478,8 @@ void Window::OnRenderSurface(Surface *surface) {
     path.AddRoundRect(outline_geometry, outline_radii.data());
   }
 
-  base::Deque<AbstractView::RenderNode> &deque = surface->GetViewRenderDeque();
-  base::Deque<AbstractView::RenderNode>::Iterator it = deque.begin();
+  base::DequeT<AbstractView::RenderNode> &deque = surface->GetViewRenderDeque();
+  base::DequeT<AbstractView::RenderNode>::Iterator it = deque.begin();
 
   Canvas::LockGuard guard(&canvas, path, ClipOperation::kClipIntersect, true);
 

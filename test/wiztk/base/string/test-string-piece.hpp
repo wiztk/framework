@@ -17,9 +17,9 @@ class TestStringPiece : public testing::Test {
 
  protected:
 
-  void SetUp() final {}
+  void SetUp() override {}
 
-  void TearDown() final {}
+  void TearDown() override {}
 
 };
 

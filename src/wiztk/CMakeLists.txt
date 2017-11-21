@@ -89,8 +89,11 @@ else ()
     add_library(wiztk ${global_header} ${all_source_files})
 endif ()
 
-target_include_directories(wiztk
-        PRIVATE "${PROJECT_SOURCE_DIR}/include/wiztk")
+target_include_directories(
+        wiztk
+        PRIVATE "${PROJECT_SOURCE_DIR}/include/wiztk"
+#        PRIVATE "${PROJECT_SOURCE_DIR}/third_party/icu"
+)
 
 #    target_link_libraries(
 #            wiztk
@@ -110,6 +113,7 @@ target_link_libraries(
         PUBLIC wayland-cursor
         PRIVATE skia
         PRIVATE xdg-shell-unstable-v6
+#        PRIVATE icu_utf # in third_party
 )
 
 install(TARGETS wiztk DESTINATION lib)

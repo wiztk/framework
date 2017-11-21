@@ -437,8 +437,8 @@ void Surface::CommitTask::Run() const {
 Surface *Surface::kTop = nullptr;
 Surface *Surface::kBottom = nullptr;
 int Surface::kShellSurfaceCount = 0;
-base::Deque<Surface::RenderTask> Surface::kRenderTaskDeque;
-base::Deque<Surface::CommitTask> Surface::kCommitTaskDeque;
+base::DequeT<Surface::RenderTask> Surface::kRenderTaskDeque;
+base::DequeT<Surface::CommitTask> Surface::kCommitTaskDeque;
 
 Surface::Surface(AbstractEventHandler *event_handler, const Margin &margin) {
   _ASSERT(nullptr != event_handler);
@@ -558,7 +558,7 @@ void Surface::Update(bool validate) {
   kRenderTaskDeque.PushBack(&p_->render_task);
 }
 
-base::Deque<AbstractView::RenderNode> &Surface::GetViewRenderDeque() const {
+base::DequeT<AbstractView::RenderNode> &Surface::GetViewRenderDeque() const {
   return p_->view_render_deque;
 }
 

@@ -23,6 +23,7 @@
 #include "wiztk/base/color.hpp"
 #include "wiztk/base/macros.hpp"
 #include "wiztk/base/deque.hpp"
+#include "wiztk/base/string.hpp"
 
 #include "clip-operation.hpp"
 
@@ -53,6 +54,8 @@ class Canvas {
  public:
 
   using RectF = base::RectF;
+  using String16 = base::String16;
+  using String32 = base::String32;
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Canvas);
 
@@ -100,6 +103,12 @@ class Canvas {
   void DrawPath(const Path &path, const Paint &paint);
 
   void DrawText(const void *text, size_t byte_length, float x, float y, const Paint &paint);
+
+  void DrawText(const std::string &text, float x, float y, const Paint &paint);
+
+  void DrawText(const String16 &text, float x, float y, const Paint &paint);
+
+  void DrawText(const String32 &text, float x, float y, const Paint &paint);
 
   void DrawPaint(const Paint &paint);
 

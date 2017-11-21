@@ -56,12 +56,12 @@ using graphic::Paint;
 using graphic::Path;
 using graphic::ClipOperation;
 
-struct GLWindow::Private : public base::Property<GLWindow> {
+struct GLWindow::Private : public base::PropertyT<GLWindow> {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
 
   explicit Private(GLWindow *window)
-      : base::Property<GLWindow>(window) {}
+      : base::PropertyT<GLWindow>(window) {}
 
   ~Private() final = default;
 

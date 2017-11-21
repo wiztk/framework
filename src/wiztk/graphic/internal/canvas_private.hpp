@@ -48,7 +48,7 @@ struct Canvas::Private {
 
   size_t lock_count = 0;
 
-  base::Deque<LockGuardNode> lock_guard_deque;
+  base::DequeT<LockGuardNode> lock_guard_deque;
 
 };
 

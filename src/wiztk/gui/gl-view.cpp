@@ -31,12 +31,12 @@
 namespace wiztk {
 namespace gui {
 
-struct GLView::Private : public base::Property<GLView> {
+struct GLView::Private : public base::PropertyT<GLView> {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
 
   explicit Private(GLView *owner)
-      : base::Property<GLView>(owner) {}
+      : base::PropertyT<GLView>(owner) {}
 
   ~Private() final {
     // Note: delete rendering_api before destroying gl_surface:

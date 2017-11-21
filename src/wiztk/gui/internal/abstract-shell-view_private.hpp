@@ -29,7 +29,7 @@ namespace gui {
  * @ingroup gui_intern
  * @brief A structure for private data in AbstractShellView
  */
-struct AbstractShellView::Private : public base::Property<AbstractShellView> {
+struct AbstractShellView::Private : public base::PropertyT<AbstractShellView> {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
   Private() = delete;
@@ -47,7 +47,7 @@ struct AbstractShellView::Private : public base::Property<AbstractShellView> {
    * @brief Constructor
    */
   explicit Private(AbstractShellView *shell_view)
-      : base::Property<AbstractShellView>(shell_view),
+      : base::PropertyT<AbstractShellView>(shell_view),
         flags(0),
         shell_surface(nullptr),
         parent(nullptr),

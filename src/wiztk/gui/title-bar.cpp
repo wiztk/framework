@@ -359,6 +359,9 @@ void TitleBar::OnKeyUp(KeyEvent *event) {
 
 void TitleBar::OnDraw(const Context &context) {
   int scale = context.surface()->GetScale();
+
+  const RectF bounds = GetBounds() * scale;
+
   Paint paint;
   paint.SetAntiAlias(true);
   paint.SetStyle(Paint::kStyleFill);
@@ -367,21 +370,25 @@ void TitleBar::OnDraw(const Context &context) {
 
   // paint.SetColor(0xCF5F5FEF);
   // context.canvas()->DrawRect(GetGeometry(), paint);
+  RectF bottom_line = RectF::MakeFromLTRB(bounds.left, bounds.bottom - 1, bounds.right, bounds.bottom);
+  paint.SetColor(0xFF2929FF); // blue
+  paint.SetStyle(Paint::kStyleFill);
+  context.canvas()->DrawRect(bottom_line, paint);
 
   paint.SetColor(Theme::GetData().title_bar.active.foreground.colors[0]);
 
   float text_width = paint.MeasureText(title_.c_str(), title_.length());
 
   SkTextBox text_box;
-  const RectF rect = GetBounds() * scale;
   // Put the foreground at the center
-  text_box.setBox(rect.l + (rect.width() - text_width) / 2.f,
-                  rect.t + 1.f, // move down a little for better look
-                  rect.r - (rect.width() - text_width) / 2.f,
-                  rect.b);
+  text_box.setBox(bounds.l + (bounds.width() - text_width) / 2.f,
+                  bounds.t + 1.f, // move down a little for better look
+                  bounds.r - (bounds.width() - text_width) / 2.f,
+                  bounds.b);
   text_box.setSpacingAlign(SkTextBox::kCenter_SpacingAlign);
   text_box.setText(title_.c_str(), title_.length(), paint.GetSkPaint());
   text_box.draw(context.canvas()->GetSkCanvas());
+
 }
 
 } // namespace gui

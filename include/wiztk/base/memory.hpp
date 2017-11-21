@@ -72,15 +72,15 @@ class RefCountedBase {
 
     Counter()
         : use_count(0), weak_count(0) {
-#ifdef UNIT_TEST
+#ifdef __TEST__
       _DEBUG("%s\n", __func__);
-#endif  // UNIT_TEST
+#endif  // __TEST__
     }
 
     ~Counter() {
-#ifdef UNIT_TEST
+#ifdef __TEST__
       _DEBUG("%s\n", __func__);
-#endif  // UNIT_TEST
+#endif  // __TEST__
     }
 
     /**
@@ -114,13 +114,13 @@ class RefCountedBase {
    * cases it's deleted by SharedPtr or WeakPtr.
    */
   virtual ~RefCountedBase() {
-#ifdef UNIT_TEST
+#ifdef __TEST__
     if (nullptr != counter_) {
       _DEBUG("use_count: %ld, weak_count: %ld\n",
              counter_->use_count.load(),
              counter_->weak_count.load());
     }
-#endif  // TEST
+#endif  // __TEST__
     delete counter_;
   }
 
@@ -529,7 +529,7 @@ class WeakPtr {
       _ASSERT(0 != counter_->use_count || 0 != counter_->weak_count);
       return true;
     }
-    
+
     return false;
   }
 

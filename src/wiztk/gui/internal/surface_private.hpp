@@ -102,7 +102,7 @@ struct Surface::Private {
   RenderTask render_task;
   CommitTask commit_task;
 
-  base::Deque<AbstractView::RenderNode> view_render_deque;
+  base::DequeT<AbstractView::RenderNode> view_render_deque;
 
   static void OnEnter(void *data, struct wl_surface *wl_surface,
                       struct wl_output *wl_output);

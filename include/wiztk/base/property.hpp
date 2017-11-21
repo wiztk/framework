@@ -79,20 +79,20 @@ namespace base {
  * variable.
  */
 template<typename T>
-class Property {
+class PropertyT {
 
  public:
 
-  Property() = delete;
-  Property(const Property &) = delete;
-  Property &operator=(const Property &) = delete;
-  Property(Property &&) = delete;
-  Property &operator=(Property &&) = delete;
+  PropertyT() = delete;
+  PropertyT(const PropertyT &) = delete;
+  PropertyT &operator=(const PropertyT &) = delete;
+  PropertyT(PropertyT &&) = delete;
+  PropertyT &operator=(PropertyT &&) = delete;
 
-  inline explicit Property(T *owner)
+  inline explicit PropertyT(T *owner)
       : owner_(owner) {}
 
-  virtual ~Property() = default;
+  virtual ~PropertyT() = default;
 
   T *owner() const { return owner_; }
 

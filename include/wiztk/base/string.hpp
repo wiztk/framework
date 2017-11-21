@@ -1,15 +1,28 @@
-//
-// Created by zhanggyb on 17-11-13.
-//
+/*
+ * Copyright 2017 The WizTK Authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-#ifndef WIZTK_STRING_HPP
-#define WIZTK_STRING_HPP
+#ifndef WIZTK_BASE_STRING_HPP_
+#define WIZTK_BASE_STRING_HPP_
 
 #include "wiztk/base/macros.hpp"
 
 #include <cstring>
 #include <string>
 #include <algorithm>
+#include <memory>
 
 namespace wiztk {
 namespace base {
@@ -18,11 +31,13 @@ namespace base {
 template<typename STRING_TYPE>
 class StringPieceT;
 
+typedef std::string String;
 typedef std::u16string String16;
 typedef std::u32string String32;
 
 typedef StringPieceT<std::string> StringPiece;
-typedef StringPieceT<String16> StringPiece16;
+typedef StringPieceT<std::u16string> StringPiece16;
+typedef StringPieceT<std::u32string> StringPiece32;
 
 /**
  * @ingroup base
@@ -233,41 +248,81 @@ class StringPieceT {
     copy_to(*this, dst);
   }
 
+  /**
+   * @brief Copy this string to given string buffer.
+   * @param buf
+   * @param n
+   * @param pos
+   * @return
+   */
   size_type copy_to(value_type *buf, size_type n, size_type pos = 0) const {
     return copy_to(*this, buf, n, pos);
   }
 
+  /**
+   * @brief Append this string to another one.
+   * @param dst
+   */
   void append_to(STRING_TYPE *dst) const {
     append_to(*this, dst);
   }
 
-  // Does "this" start with "x"
+  /**
+   * @brief Returns whether this string starts with "x"
+   * @param x
+   * @return
+   */
   bool starts_with(const StringPieceT &x) const {
     return ((this->length_ >= x.length_) &&
         (word_memcmp(this->ptr_, x.ptr_, x.length_) == 0));
   }
 
-  // Does "this" end with "x"
+  /**
+   * @brief Returns whether this string ends with "x"
+   * @param x
+   * @return
+   */
   bool ends_with(const StringPieceT &x) const {
     return ((this->length_ >= x.length_) &&
         (word_memcmp(this->ptr_ + (this->length_ - x.length_),
                      x.ptr_, x.length_) == 0));
   }
 
-  // find: Search for a character or substring at a given offset.
+  /**
+   * @brief Search for a character or substring at a given offset.
+   */
   size_type find(const StringPieceT &s,
                  size_type pos = 0) const {
     return find(*this, s, pos);
   }
+
+  /**
+   * @brief Search for a character or substring at a given offset.
+   * @param c
+   * @param pos
+   * @return
+   */
   size_type find(value_type c, size_type pos = 0) const {
     return find(*this, c, pos);
   }
 
-  // rfind: Reverse find.
+  /**
+   * @brief Reverse find
+   * @param s
+   * @param pos
+   * @return
+   */
   size_type rfind(const StringPieceT &s,
                   size_type pos = StringPieceT::npos) const {
     return reverse_find(*this, s, pos);
   }
+
+  /**
+   * @brief Reverse find
+   * @param c
+   * @param pos
+   * @return
+   */
   size_type rfind(value_type c, size_type pos = StringPieceT::npos) const {
     return reverse_find(*this, c, pos);
   }
@@ -282,34 +337,71 @@ class StringPieceT {
                           size_type pos = 0) const {
     return find_first_of(*this, s, pos);
   }
+
   size_type find_first_of(value_type c, size_type pos = 0) const {
     return find_first_of(*this, c, pos);
   }
 
-  // find_first_not_of: Find the first occurence not of a set of characters.
+  /**
+   * @brief Find the first occurence not of a set of characters.
+   * @param s
+   * @param pos
+   * @return
+   */
   size_type find_first_not_of(const StringPieceT &s,
                               size_type pos = 0) const {
     return find_first_not_of(*this, s, pos);
   }
+
+  /**
+   * @brief Find the first occurence not of a set of characters.
+   * @param c
+   * @param pos
+   * @return
+   */
   size_type find_first_not_of(value_type c, size_type pos = 0) const {
     return find_first_not_of(*this, c, pos);
   }
 
-  // find_last_of: Find the last occurence of one of a set of characters.
+  /**
+   * @brief Find the last occurence of one of a set of characters.
+   * @param s
+   * @param pos
+   * @return
+   */
   size_type find_last_of(const StringPieceT &s,
                          size_type pos = StringPieceT::npos) const {
     return find_last_of(*this, s, pos);
   }
+
+  /**
+   * @brief Find the last occurence of one of a set of characters.
+   * @param c
+   * @param pos
+   * @return
+   */
   size_type find_last_of(value_type c,
                          size_type pos = StringPieceT::npos) const {
     return find_last_of(*this, c, pos);
   }
 
-  // find_last_not_of: Find the last occurence not of a set of characters.
+  /**
+   * @brief Find the last occurence not of a set of characters.
+   * @param s
+   * @param pos
+   * @return
+   */
   size_type find_last_not_of(const StringPieceT &s,
                              size_type pos = StringPieceT::npos) const {
     return find_last_not_of(*this, s, pos);
   }
+
+  /**
+   * @brief Find the last occurence not of a set of characters.
+   * @param c
+   * @param pos
+   * @return
+   */
   size_type find_last_not_of(value_type c,
                              size_type pos = StringPieceT::npos) const {
     return find_last_not_of(*this, c, pos);
@@ -464,17 +556,13 @@ WIZTK_EXPORT bool operator!=(const StringPieceT<STRING_TYPE> &x, const StringPie
   return !(x == y);
 }
 
-WIZTK_EXPORT extern std::ostream &operator<<(std::ostream &out,
-                                             const String16 &str);
+WIZTK_EXPORT std::ostream &operator<<(std::ostream &out,
+                                      const String16 &utf16);
 
-WIZTK_EXPORT extern std::ostream &operator<<(std::ostream &out,
-                                             const String32 &str);
+WIZTK_EXPORT std::ostream &operator<<(std::ostream &out,
+                                      const String32 &utf32);
 
-WIZTK_EXPORT bool IsStringUTF8(const std::string &str);
+} // namespace base
+} // namespace wiztk
 
-WIZTK_EXPORT bool IsStringASCII(const String16 &str);
-
-}
-}
-
-#endif //WIZTK_STRING_HPP
+#endif // WIZTK_BASE_STRING_HPP_

@@ -7,14 +7,20 @@
 
 #include <gtest/gtest.h>
 
-class Test : public testing::Test {
+class TestString : public testing::Test {
+
  public:
-  Test();
-  virtual ~Test();
+
+  TestString() = default;
+
+  ~TestString() override = default;
 
  protected:
-  virtual void SetUp() {}
-  virtual void TearDown() {}
+
+  void SetUp() override {}
+
+  void TearDown() override {}
+
 };
 
 #endif //WAYLAND_TOOLKIT_TEST_HPP

@@ -176,7 +176,7 @@ if (FONTCONFIG_FOUND)
     set(LIBS ${LIBS} ${FONTCONFIG_LIBRARY})
 endif ()
 
-find_package(ICU COMPONENTS uc i18n REQUIRED)
+find_package(ICU COMPONENTS uc i18n io REQUIRED)
 if (ICU_FOUND)
     include_directories(${ICU_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${ICU_LIBRARIES})
@@ -245,7 +245,7 @@ add_definitions(-DSK_SAMPLES_FOR_X)
 
 add_subdirectory(doc)
 #add_subdirectory(deps)
-# add_subdirectory(third_party)
+#add_subdirectory(third_party)
 add_subdirectory(src)
 
 if (LINUX)
