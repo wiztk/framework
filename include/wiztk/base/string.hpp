@@ -31,7 +31,7 @@ namespace base {
 template<typename STRING_TYPE>
 class StringPieceT;
 
-typedef std::string String;
+typedef std::string String8;
 typedef std::u16string String16;
 typedef std::u32string String32;
 

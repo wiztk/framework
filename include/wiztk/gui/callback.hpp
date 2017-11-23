@@ -38,11 +38,8 @@ class Callback {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Callback);
 
-  template<typename ReturnType, typename ... ParamTypes>
-  using DelegateRef = typename base::DelegateRefT<ReturnType, ParamTypes...>;
-
-  template<typename ReturnType, typename ... ParamTypes>
-  using Delegate = typename base::DelegateT<ReturnType, ParamTypes...>;
+  template<typename R, typename ... P> using DelegateRef = typename base::DelegateRefT<R, P...>;
+  template<typename R, typename ... P> using Delegate = typename base::DelegateT<R, P...>;
 
   Callback();
 

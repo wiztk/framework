@@ -34,17 +34,18 @@ class Output : public base::CompoundDeque::Element {
 
   friend class Surface;
 
-  Output() = delete;
-  Output(const Output &) = delete;
-  Output &operator=(const Output &) = delete;
-
  public:
+
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Output);
+
+  template<typename ... ParamTypes> using SignalRefT = typename base::SignalRefT<ParamTypes...>;
+  template<typename ... ParamTypes> using SignalT = typename base::SignalT<ParamTypes...>;
 
   Output(uint32_t id, uint32_t version);
 
   virtual ~Output();
 
-  base::SignalRefT<Output *> destroyed() { return destroyed_; }
+  SignalRefT<Output *> destroyed() { return destroyed_; }
 
   int GetSubPixel() const;
 
@@ -66,7 +67,7 @@ class Output : public base::CompoundDeque::Element {
 
   std::unique_ptr<Private> p_;
 
-  base::SignalT<Output *> destroyed_;
+  SignalT<Output *> destroyed_;
 
 };
 

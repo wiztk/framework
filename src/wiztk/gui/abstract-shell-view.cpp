@@ -17,9 +17,7 @@
 #include "internal/abstract-shell-view_private.hpp"
 #include "internal/abstract-view_private.hpp"
 
-#include "wiztk/base/macros.hpp"
 #include "wiztk/base/memory.hpp"
-#include "wiztk/base/rect.hpp"
 
 #include "wiztk/numerical/bit.hpp"
 
@@ -27,6 +25,7 @@
 #include "wiztk/gui/mouse-event.hpp"
 #include "wiztk/gui/key-event.hpp"
 #include "wiztk/gui/region.hpp"
+#include "wiztk/gui/context.hpp"
 #include "wiztk/gui/theme.hpp"
 
 #include "wiztk/graphic/canvas.hpp"
@@ -68,6 +67,7 @@ AbstractShellView::AbstractShellView(int width,
     Surface::Shell::Toplevel *top_level_role = Surface::Shell::Toplevel::Get(p_->shell_surface);
     top_level_role->SetTitle(title);
   } else {
+    p_->shell_surface = Surface::Shell::Popup::Create(p_->parent->p_->shell_surface, this, Theme::GetShadowMargin());
     // TODO: create popup shell surface
   }
 
@@ -332,11 +332,15 @@ void AbstractShellView::DispatchUpdate(AbstractView *view) {
 void AbstractShellView::Draw(AbstractView *view, const Context &context) {
   using base::RectF;
 
-  const RectF &rect = view->GetGeometry();
+  const RectF &geometry = view->GetGeometry();
+  const RectF &bounds = view->GetBounds();
   int scale = context.surface()->GetScale();
 
+  float x = geometry.left + bounds.left;
+  float y = geometry.top + bounds.top;
+
   // Translate and lock the status:
-  Canvas::LockGuard guard(context.canvas(), rect.left * scale, rect.top * scale);
+  Canvas::LockGuard guard(context.canvas(), x * scale, y * scale);
 
   view->OnDraw(context);
 }

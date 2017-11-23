@@ -26,9 +26,7 @@ namespace gui {
 
 struct Callback::Private {
 
-  Private(const Private &) = delete;
-  Private &operator=(const Private &) = delete;
-
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
   Private() = default;
 
   ~Private() {

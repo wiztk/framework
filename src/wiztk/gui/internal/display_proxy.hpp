@@ -29,9 +29,8 @@ namespace gui {
  */
 WIZTK_NO_EXPORT struct Display::Proxy {
 
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Proxy);
   Proxy() = delete;
-  Proxy(const Proxy &) = delete;
-  Proxy &operator=(const Proxy &) = delete;
   ~Proxy() = delete;
 
   /**

@@ -278,7 +278,7 @@ void Display::Private::OnGlobal(void *data,
 
     _this->InitializeCursors();
   } else if (strcmp(interface, wl_output_interface.name) == 0) {
-    Output *output = new Output(id, version);
+    auto *output = new Output(id, version);
     _this->AddOutput(output);
   } else if (strcmp(interface, zxdg_shell_v6_interface.name) == 0) {
     _this->p_->xdg_shell =
@@ -293,7 +293,7 @@ void Display::Private::OnGlobal(void *data,
                                                         id, &wl_shell_interface,
                                                         version));
   } else if (strcmp(interface, wl_seat_interface.name) == 0) {
-    Input *input = new Input(id, version);
+    auto *input = new Input(id, version);
     _this->AddInput(input);
   } else if (strcmp(interface, wl_data_device_manager_interface.name) == 0) {
     _this->p_->wl_data_device_manager =
@@ -309,7 +309,7 @@ void Display::Private::OnGlobalRemove(void *data,
                                       uint32_t name) {
   auto *_this = static_cast<Display *>(data);
 
-  for (std::list<Global *>::iterator it = _this->p_->globals.begin(); it != _this->p_->globals.end();) {
+  for (auto it = _this->p_->globals.begin(); it != _this->p_->globals.end();) {
     if ((*it)->id != name) {
       it++;
       continue;
@@ -355,7 +355,7 @@ void *Display::Private::GetEGLProcAddress(const char *address) {
     return (void *) eglGetProcAddress(address);
   }
 
-  return NULL;
+  return nullptr;
 }
 
 bool Display::Private::CheckEGLExtension(const char *extensions, const char *extension) {

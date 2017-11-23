@@ -17,6 +17,8 @@
 #ifndef WIZTK_GUI_SHARED_MEMORY_POOL_HPP_
 #define WIZTK_GUI_SHARED_MEMORY_POOL_HPP_
 
+#include "wiztk/base/macros.hpp"
+
 #include <wayland-client.h>
 #include <sys/types.h>
 
@@ -30,10 +32,9 @@ class SharedMemoryPool {
 
   friend class Buffer;
 
-  SharedMemoryPool &operator=(const SharedMemoryPool &) = delete;
-  SharedMemoryPool(const SharedMemoryPool &) = delete;
-
  public:
+
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(SharedMemoryPool);
 
   SharedMemoryPool()
       : wl_shm_pool_(nullptr), size_(0), data_(nullptr) {}
@@ -52,9 +53,7 @@ class SharedMemoryPool {
 
   void Destroy();
 
-  int32_t size() const {
-    return size_;
-  }
+  int32_t size() const { return size_; }
 
   void *data() const { return data_; };
 

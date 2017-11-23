@@ -105,7 +105,7 @@ class TitleBar final : public AbstractView {
   class MinimizeButton;
   class FullscreenButton;
 
-  static const int kButtonSpace = 5;
+  static const int kButtonSpace = 8;
 
   CloseButton *close_button_;
   MaximizeButton *maximize_button_;

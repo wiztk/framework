@@ -58,9 +58,7 @@ class Application::EpollTask : public AbstractEpollTask {
  */
 struct Application::Private {
 
-  Private() = delete;
-  Private(const Private &) = delete;
-  Private &operator=(const Private &) = delete;
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
 
   explicit Private(Application *app)
       : running(true), epoll_fd(-1), epoll_task(app), argc(0), argv(nullptr) {}
@@ -323,7 +321,7 @@ int Application::GetArgC() {
   return p_->argc;
 }
 
-char **Application::GetArgV() {
+char **Application::GetArgV() const {
   return p_->argv;
 }
 

@@ -22,6 +22,7 @@
 #include "wiztk/gui/title-bar.hpp"
 #include "wiztk/gui/buffer.hpp"
 #include <wiztk/gui/region.hpp>
+#include "wiztk/gui/context.hpp"
 
 #include <wiztk/graphic/paint.hpp>
 #include "wiztk/graphic/canvas.hpp"

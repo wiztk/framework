@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-#include <wiztk/gui/title-bar.hpp>
+#include "wiztk/gui/title-bar.hpp"
 
-#include <wiztk/gui/mouse-event.hpp>
-#include <wiztk/gui/key-event.hpp>
-#include <wiztk/gui/context.hpp>
+#include "wiztk/gui/mouse-event.hpp"
+#include "wiztk/gui/key-event.hpp"
+#include "wiztk/gui/context.hpp"
+#include "wiztk/gui/theme.hpp"
 
-#include <wiztk/graphic/canvas.hpp>
-#include <wiztk/graphic/paint.hpp>
-#include <wiztk/graphic/path.hpp>
-#include <wiztk/gui/theme.hpp>
+#include "wiztk/graphic/canvas.hpp"
+#include "wiztk/graphic/paint.hpp"
+#include "wiztk/graphic/path.hpp"
+#include "wiztk/graphic/gradient-shader.hpp"
 
 #include "SkCanvas.h"
 //#include "SkTypeface.h"
@@ -304,13 +305,14 @@ AbstractButton *TitleBar::GetButton(ButtonType button_type) const {
 
 void TitleBar::OnConfigureGeometry(const RectF &old_geometry, const RectF &new_geometry) {
   RequestSaveGeometry(new_geometry);
+  SetBounds(0.f, 0.f, new_geometry.width(), new_geometry.height());
 }
 
 void TitleBar::OnSaveGeometry(const RectF &old_geometry, const RectF &new_geometry) {
   SetBounds(0.f, 0.f, new_geometry.width(), new_geometry.height());
 
   int y = ((int) new_geometry.height() - close_button_->GetHeight()) / 2;
-  int x = kButtonSpace;
+  int x = y;
   close_button_->MoveTo(x, y);
 
 //  new_x += close_button_->GetWidth() + kButtonSpace;
@@ -319,7 +321,7 @@ void TitleBar::OnSaveGeometry(const RectF &old_geometry, const RectF &new_geomet
 //  new_x += maximize_button_->GetWidth() + kButtonSpace;
 //  minimize_button_->MoveTo(new_x, new_y);
 
-  x = (int) new_geometry.width() - kButtonSpace - fullscreen_button_->GetWidth();
+  x = (int) new_geometry.width() - y - fullscreen_button_->GetWidth();
   fullscreen_button_->MoveTo(x, y);
 
   x -= maximize_button_->GetWidth() + kButtonSpace;
@@ -358,22 +360,35 @@ void TitleBar::OnKeyUp(KeyEvent *event) {
 }
 
 void TitleBar::OnDraw(const Context &context) {
+  using namespace base;
+  using namespace graphic;
+
   int scale = context.surface()->GetScale();
 
   const RectF bounds = GetBounds() * scale;
+  float factor = 0.5f * scale;
 
   Paint paint;
   paint.SetAntiAlias(true);
   paint.SetStyle(Paint::kStyleFill);
+
+  PointF points[2] = {{factor, bounds.top + factor}, {factor, bounds.bottom}};
+  uint32_t colors[2] = {0xFFE7E7E7, 0xFFD7D7D7};
+  float pos[2] = {0.f, 1.f};
+
+  Shader shader = GradientShader::MakeLinear(points, colors, pos, 2, Shader::kTileModeClamp);
+  paint.SetShader(shader);
+
+  context.canvas()->DrawRect(RectF::MakeFromLTRB(bounds.left + factor,
+                                                 bounds.top + factor,
+                                                 bounds.right - factor,
+                                                 bounds.bottom), paint);
+
+  paint.Reset();
+  paint.SetAntiAlias(true);
+  paint.SetStyle(Paint::kStyleFill);
   paint.SetFont(font_);
   paint.SetTextSize(font_.GetSize() * scale);
-
-  // paint.SetColor(0xCF5F5FEF);
-  // context.canvas()->DrawRect(GetGeometry(), paint);
-  RectF bottom_line = RectF::MakeFromLTRB(bounds.left, bounds.bottom - 1, bounds.right, bounds.bottom);
-  paint.SetColor(0xFF2929FF); // blue
-  paint.SetStyle(Paint::kStyleFill);
-  context.canvas()->DrawRect(bottom_line, paint);
 
   paint.SetColor(Theme::GetData().title_bar.active.foreground.colors[0]);
 

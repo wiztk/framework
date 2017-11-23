@@ -17,6 +17,7 @@
 #include "internal/font_private.hpp"
 
 #include "internal/typeface_private.hpp"
+#include "internal/font-style_private.hpp"
 
 namespace wiztk {
 namespace graphic {

@@ -21,7 +21,6 @@
 
 #include "wiztk/base/rect.hpp"
 #include "wiztk/base/margin.hpp"
-#include "context.hpp"
 
 #include <cstdint>
 #include <string>

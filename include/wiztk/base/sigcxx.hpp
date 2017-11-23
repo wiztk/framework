@@ -32,7 +32,7 @@
 #include "delegate.hpp"
 #include "deque.hpp"
 
-#ifdef DEBUG
+#ifdef __DEBUG__
 #include <cassert>
 #endif
 

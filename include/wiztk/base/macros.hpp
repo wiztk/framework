@@ -17,7 +17,7 @@
 #ifndef WIZTK_CORE_DEFINES_HPP_
 #define WIZTK_CORE_DEFINES_HPP_
 
-#ifdef DEBUG
+#ifdef __DEBUG__
 
 //#ifdef __UNIX__
 #include <string.h>
@@ -39,12 +39,12 @@
     assert(expr); \
   } while (false)
 
-#else // NOT DEBUG
+#else // NOT __DEBUG__
 
 #define _DEBUG(fmt, args...) ((void)0)
 #define _ASSERT(expr) ((void)0)
 
-#endif // END DEBUG
+#endif // END __DEBUG__
 
 #define WIZTK_DISABLE_COPY_CONSTRUCTOR(CLASS) CLASS(const CLASS&) = delete
 #define WIZTK_DISABLE_COPY_ASSIGNMENT(CLASS) CLASS& operator=(const CLASS&) = delete

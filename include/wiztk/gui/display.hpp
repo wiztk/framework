@@ -42,18 +42,20 @@ class Input;
  * @ingroup gui
  * @brief The global display which serves as the connection to the compositor
  */
-class Display {
+class WIZTK_EXPORT Display {
 
   friend class Application;
   friend class Output;
   friend class Input;
   friend class Callback;
 
-  using CompoundDeque = base::CompoundDeque;
-
  public:
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Display);
+
+  using CompoundDeque = base::CompoundDeque;
+  template<typename ... ParamTypes> using SignalRefT = typename base::SignalRefT<ParamTypes...>;
+  template<typename ... ParamTypes> using SignalT = typename base::SignalT<ParamTypes...>;
 
   struct Global;
   struct Proxy;
@@ -76,7 +78,7 @@ class Display {
    */
   static const std::set<uint32_t> &GetPixelFormats();
 
-  static base::SignalRefT<const Global &> unregister() { return kDisplay->unregister_; }
+  SignalRefT<const Global &> unregister() { return unregister_; }
 
   /**
    * @brief Get a predefined cursor
@@ -120,7 +122,7 @@ class Display {
 
   std::unique_ptr<Private> p_;
 
-  base::SignalT<const Global &> unregister_;
+  SignalT<const Global &> unregister_;
 
   static Display *kDisplay;
 

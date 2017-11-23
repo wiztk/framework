@@ -16,8 +16,9 @@
 
 #include "test.hpp"
 
-#include <wiztk/gui/application.hpp>
-#include <wiztk/gui/dialog.hpp>
+#include "wiztk/gui/application.hpp"
+#include "wiztk/gui/dialog.hpp"
+#include "wiztk/gui/window.hpp"
 
 Test::Test()
     : testing::Test() {
@@ -35,6 +36,7 @@ Test::~Test() {
 TEST_F(Test, show) {
   using wiztk::gui::Application;
   using wiztk::gui::Dialog;
+  using wiztk::gui::Window;
 
   int argc = 1;
   char argv1[] = "show";  // to avoid compile warning
@@ -42,8 +44,12 @@ TEST_F(Test, show) {
 
   Application app(argc, argv);
 
-  Dialog win("Test Dialog");
-  win.Show();
+//  Window win("Main Window");
+
+  auto* dialog = new Dialog("Dialog");
+  dialog->Show();
+
+//  win.Show();
 
   int result = app.Run();
 

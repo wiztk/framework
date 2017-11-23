@@ -16,11 +16,10 @@
 
 #include "abstract-shell-view_private.hpp"
 
-#include "wiztk/base/macros.hpp"
+#include "wiztk/gui/context.hpp"
+#include "wiztk/gui/mouse-event.hpp"
 
 #include "wiztk/numerical/bit.hpp"
-
-#include "wiztk/gui/mouse-event.hpp"
 
 namespace wiztk {
 namespace gui {

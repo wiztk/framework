@@ -31,6 +31,7 @@
 #include "wiztk/gui/shared-memory-pool.hpp"
 #include "wiztk/gui/buffer.hpp"
 #include "wiztk/gui/region.hpp"
+#include "wiztk/gui/context.hpp"
 
 #include "internal/display_proxy.hpp"
 #include "internal/abstract-view_iterators.hpp"

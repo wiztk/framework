@@ -69,6 +69,8 @@ class AbstractRenderingAPI;
  *
  * You can also use Surface::EGL::Get() to transform a 2D surface to 3D surface,
  * and delete the Surface::EGL object will transform back to 2D.
+ *
+ * TODO: rename to ViewSurface.
  */
 class Surface : public base::Trackable {
 
@@ -396,7 +398,7 @@ class Surface::Shell::Toplevel {
 
   struct Private;
 
-  explicit Toplevel(Shell *shell_surface);
+  explicit Toplevel(Shell *shell);
 
   ~Toplevel();
 
@@ -419,9 +421,17 @@ class Surface::Shell::Popup {
   /**
    * @brief Create a popup shell surface
    */
-  static Surface *Create(Shell *parent,
-                         AbstractEventHandler *view,
+  static Surface *Create(Surface *parent,
+                         AbstractEventHandler *event_handler,
                          const Margin &margin = Margin());
+
+  void SetSize(int32_t width, int32_t height);
+
+  void SetAnchorRect(int32_t x, int32_t y, int32_t width, int32_t height);
+
+  void SetAnchor(uint32_t anchor);
+
+  void SetGravity(uint32_t gravity);
 
  private:
 

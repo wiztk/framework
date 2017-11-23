@@ -34,7 +34,7 @@ class AbstractEpollTask;
  * @ingroup gui
  * @brief Single object manages an application's main event loop and global resources
  */
-WIZTK_EXPORT class Application {
+class WIZTK_EXPORT Application {
 
  public:
 
@@ -93,7 +93,7 @@ WIZTK_EXPORT class Application {
    * @brief Get the argv parameter
    * @return
    */
-  char **GetArgV();
+  char **GetArgV() const;
 
   /**
    * @brief Get the main thread id

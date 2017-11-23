@@ -178,13 +178,12 @@ void Surface::Shell::Toplevel::SetMinimized() const {
   zxdg_toplevel_v6_set_minimized(p_->zxdg_toplevel);
 }
 
-Surface::Shell::Toplevel::Toplevel(Shell *shell_surface) {
+Surface::Shell::Toplevel::Toplevel(Shell *shell) {
+  _ASSERT(nullptr != shell);
   p_ = std::make_unique<Private>();
+  p_->shell = shell;
 
-  _ASSERT(nullptr != shell_surface);
-  p_->shell = shell_surface;
-
-  p_->zxdg_toplevel = zxdg_surface_v6_get_toplevel(shell_surface->p_->zxdg_surface);
+  p_->zxdg_toplevel = zxdg_surface_v6_get_toplevel(shell->p_->zxdg_surface);
   zxdg_toplevel_v6_add_listener(p_->zxdg_toplevel, &Private::kListener, this);
 }
 
@@ -196,10 +195,14 @@ Surface::Shell::Toplevel::~Toplevel() {
 
 // ------
 
-Surface *Surface::Shell::Popup::Create(Shell *parent, AbstractEventHandler *view, const Margin &margin) {
-  Surface *surface = Shell::Create(view, margin);
+Surface *Surface::Shell::Popup::Create(Surface *parent, AbstractEventHandler *event_handler, const Margin &margin) {
+  if (nullptr == parent) throw std::runtime_error("Error! parent is nullptr!");
+
+  if (nullptr == Shell::Get(parent)) throw std::runtime_error("Error! parent is not a shell surface!");
+
+  Surface *surface = Shell::Create(event_handler, margin);
   Shell *shell = Shell::Get(surface);
-  shell->parent_ = parent;
+  shell->parent_ = parent->p_->role.shell;
   shell->role_.popup = new Popup(shell);
   return surface;
 }
@@ -208,7 +211,11 @@ Surface::Shell::Popup::Popup(Shell *shell) {
   _ASSERT(nullptr != shell);
   p_ = std::make_unique<Private>();
   p_->shell = shell;
-  // TODO: initialize xdg_popup_
+
+  p_->zxdg_positioner = zxdg_shell_v6_create_positioner(Display::Proxy::xdg_shell());
+  p_->zxdg_popup = zxdg_surface_v6_get_popup(shell->p_->zxdg_surface,
+                                             shell->parent_->p_->zxdg_surface,
+                                             p_->zxdg_positioner);
 }
 
 Surface::Shell::Popup::~Popup() {
@@ -222,7 +229,7 @@ Surface::Shell::Popup::~Popup() {
 // ------
 
 Surface *Surface::Sub::Create(Surface *parent, AbstractEventHandler *event_handler, const Margin &margin) {
-  Surface *surface = new Surface(event_handler, margin);
+  auto *surface = new Surface(event_handler, margin);
   surface->p_->role.sub = new Sub(surface, parent);
   return surface;
 }

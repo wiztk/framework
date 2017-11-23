@@ -29,6 +29,7 @@
 #include "wiztk/gui/buffer.hpp"
 #include "wiztk/gui/region.hpp"
 #include "wiztk/gui/output.hpp"
+#include "wiztk/gui/context.hpp"
 
 #include "wiztk/gui/theme.hpp"
 
@@ -224,7 +225,7 @@ void Window::Private::RecursiveDraw(AbstractView *view, const Context &context) 
       DrawInner(context, body_path);
 
       std::vector<float> outline_radii(kOutlineRadii.size(), 0.f);
-      SetRadii(scale, -0.5f, outline_radii);
+      SetRadii(scale, -.5f, outline_radii);
 
       RectF outline_geometry = RectF::MakeFromXYWH(0.5f, 0.5f, pixel_width - 1.f, pixel_height - 1.f);
       Path outline_path;
@@ -775,7 +776,7 @@ void Window::OnFullscreenButtonClicked(base::SLOT slot) {
     ToggleFullscreen(nullptr);
   } else {
     if (nullptr != p_->output)
-      p_->owner()->ToggleFullscreen(p_->output);
+      ToggleFullscreen(p_->output);
     else {
       const CompoundDeque &outputs = Display::GetOutputs();
       if (outputs.count() > 0) {
