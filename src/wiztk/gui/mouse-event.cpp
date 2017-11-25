@@ -16,7 +16,7 @@
 
 #include "internal/mouse-event_private.hpp"
 
-#include <wiztk/gui/surface.hpp>
+#include <wiztk/gui/view-surface.hpp>
 
 namespace wiztk {
 namespace gui {
@@ -33,7 +33,7 @@ MouseEvent::~MouseEvent() {
 
 }
 
-Surface *MouseEvent::GetSurface() const {
+ViewSurface *MouseEvent::GetSurface() const {
   return p_->surface;
 }
 

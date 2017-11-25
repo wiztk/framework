@@ -32,7 +32,7 @@ namespace gui {
 
 class Output : public base::CompoundDeque::Element {
 
-  friend class Surface;
+  friend class ViewSurface;
 
  public:
 

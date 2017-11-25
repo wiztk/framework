@@ -41,7 +41,7 @@ class Path;
 class Matrix;
 class Bitmap;
 class ImageInfo;
-class Surface;
+class ViewSurface;
 
 /**
  * @ingroup graphic
@@ -49,13 +49,12 @@ class Surface;
  */
 class Canvas {
 
-  friend class Surface;
+  friend class ViewSurface;
 
  public:
 
   using RectF = base::RectF;
-  using String16 = base::String16;
-  using String32 = base::String32;
+  using String = base::String;
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Canvas);
 
@@ -85,7 +84,7 @@ class Canvas {
    * @param info
    * @return A pointer to a new created surface object, must be deleted manually
    */
-  Surface *CreateSurface(const ImageInfo &info);
+  ViewSurface *CreateSurface(const ImageInfo &info);
 
   void DrawLine(float x0, float y0, float x1, float y1, const Paint &paint);
 
@@ -106,9 +105,7 @@ class Canvas {
 
   void DrawText(const std::string &text, float x, float y, const Paint &paint);
 
-  void DrawText(const String16 &text, float x, float y, const Paint &paint);
-
-  void DrawText(const String32 &text, float x, float y, const Paint &paint);
+  void DrawText(const String &text, float x, float y, const Paint &paint);
 
   void DrawPaint(const Paint &paint);
 

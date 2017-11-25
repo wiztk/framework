@@ -14,41 +14,46 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_INTERNAL_SURFACE_SHELL_POPUP_PRIVATE_HPP_
-#define WIZTK_GUI_INTERNAL_SURFACE_SHELL_POPUP_PRIVATE_HPP_
+#ifndef WIZTK_GUI_INTERNAL_SURFACE_SHELL_TOPLEVEL_PRIVATE_HPP_
+#define WIZTK_GUI_INTERNAL_SURFACE_SHELL_TOPLEVEL_PRIVATE_HPP_
+
+#include <wiztk/gui/view-surface.hpp>
 
 #include "xdg-shell-unstable-v6-client-protocol.h"
 
 namespace wiztk {
 namespace gui {
 
-struct Surface::Shell::Popup::Private {
+struct ViewSurface::Shell::Toplevel::Private {
 
   Private(const Private &) = delete;
   Private &operator=(const Private &) = delete;
 
   Private()
-      : shell(nullptr),
-        zxdg_popup(nullptr),
-        zxdg_positioner(nullptr) {}
+      : shell(nullptr), zxdg_toplevel(nullptr) {}
 
   ~Private() {
-    if (zxdg_positioner) {
-      zxdg_positioner_v6_destroy(zxdg_positioner);
-    }
-    if (zxdg_popup) {
-      zxdg_popup_v6_destroy(zxdg_popup);
-    }
+    if (zxdg_toplevel) zxdg_toplevel_v6_destroy(zxdg_toplevel);
   }
 
   Shell *shell;
 
-  struct zxdg_popup_v6 *zxdg_popup;
-  struct zxdg_positioner_v6 *zxdg_positioner;
+  struct zxdg_toplevel_v6 *zxdg_toplevel;
+
+  static void OnConfigure(void *data,
+                          struct zxdg_toplevel_v6 *zxdg_toplevel_v6,
+                          int32_t width,
+                          int32_t height,
+                          struct wl_array *states);
+
+  static void OnClose(void *data,
+                      struct zxdg_toplevel_v6 *zxdg_toplevel_v6);
+
+  static const struct zxdg_toplevel_v6_listener kListener;
 
 };
 
 } // namespace gui
 } // namespace wiztk
 
-#endif // WIZTK_GUI_INTERNAL_SURFACE_SHELL_POPUP_PRIVATE_HPP_
+#endif // WIZTK_GUI_INTERNAL_SURFACE_SHELL_TOPLEVEL_PRIVATE_HPP_

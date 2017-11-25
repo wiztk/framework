@@ -15,7 +15,7 @@
  */
 
 #include <wiztk/gui/video-view.hpp>
-#include <wiztk/gui/surface.hpp>
+#include <wiztk/gui/view-surface.hpp>
 
 #include <wiztk/gui/context.hpp>
 #include <wiztk/graphic/canvas.hpp>
@@ -43,7 +43,7 @@ void VideoView::OnRequestUpdateFrom(AbstractView *view) {
 
 }
 
-Surface *VideoView::GetSurface(const AbstractView *view) const {
+ViewSurface *VideoView::GetSurface(const AbstractView *view) const {
   return surface_;
 }
 

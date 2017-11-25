@@ -89,7 +89,7 @@ struct AbstractShellView::Private : public base::PropertyT<AbstractShellView> {
   /**
    * @brief A pointer to a shell surface created with a shell view object
    */
-  Surface *shell_surface;
+  ViewSurface *shell_surface;
 
   /**
    * @brief The parent shell view object

@@ -17,26 +17,25 @@
 #ifndef WIZTK_GUI_INTERNAL_SURFACE_PRIVATE_HPP_
 #define WIZTK_GUI_INTERNAL_SURFACE_PRIVATE_HPP_
 
-#include "wiztk/gui/surface.hpp"
+#include "wiztk/gui/view-surface.hpp"
 #include "wiztk/gui/abstract-rendering-api.hpp"
 
 namespace wiztk {
 namespace gui {
 
-struct Surface::Private {
+struct ViewSurface::Private {
 
   using PointI = base::PointI;
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
   Private() = delete;
 
-  Private(Surface *surface, AbstractEventHandler *event_handler, const Margin &margin)
+  Private(ViewSurface *surface, AbstractEventHandler *event_handler, const Margin &margin)
       : wl_surface(nullptr),
         commit_mode(kSynchronized),
         transform(kTransformNormal),
         scale(1),
         event_handler(event_handler),
-        margin(margin),
         parent(nullptr),
         above(nullptr),
         below(nullptr),
@@ -57,8 +56,6 @@ struct Surface::Private {
 
   AbstractEventHandler *event_handler;
 
-  Margin margin;
-
   /**
    * Position in parent surface
    *
@@ -69,27 +66,27 @@ struct Surface::Private {
   /**
     * @brief The parent surface
     */
-  Surface *parent;
+  ViewSurface *parent;
 
   /**
     * @brief The sibling surface placed up
     */
-  Surface *above;
+  ViewSurface *above;
 
   /**
     * @brief The sibling surface placed down
     */
-  Surface *below;
+  ViewSurface *below;
 
   /**
    * @brief The shell surface shows front
    */
-  Surface *upper;
+  ViewSurface *upper;
 
   /**
    * @brief The shell surface shows back
    */
-  Surface *lower;
+  ViewSurface *lower;
 
   AbstractRenderingAPI *rendering_api;
 

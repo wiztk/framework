@@ -49,7 +49,7 @@ class A : public RefCountedBase {
     _DEBUG("%s\n", __func__);
   }
 
-  SharedPtr<B> b_;
+  SharedPtrT<B> b_;
 };
 
 class B : public RefCountedBase {
@@ -63,7 +63,7 @@ class B : public RefCountedBase {
     _DEBUG("%s\n", __func__);
   }
 
-  WeakPtr<A> a_;
+  WeakPtrT<A> a_;
 };
 
 WeakPtrTest::WeakPtrTest() {
@@ -76,25 +76,25 @@ WeakPtrTest::~WeakPtrTest() {
 
 TEST_F(WeakPtrTest, construct_1) {
 
-  SharedPtr<RefObject> shared_ptr(new RefObject);
-  WeakPtr<RefObject> weak_ptr(shared_ptr);
+  SharedPtrT<RefObject> shared_ptr(new RefObject);
+  WeakPtrT<RefObject> weak_ptr(shared_ptr);
 
   ASSERT_TRUE(shared_ptr->use_count() == 1 && shared_ptr->weak_count() == 1);
 }
 
 TEST_F(WeakPtrTest, construct_2) {
 
-  SharedPtr<RefObject> shared_ptr(new RefObject);
-  WeakPtr<RefObject> weak_ptr1(shared_ptr);
-  WeakPtr<RefObject> weak_ptr2(weak_ptr1);
+  SharedPtrT<RefObject> shared_ptr(new RefObject);
+  WeakPtrT<RefObject> weak_ptr1(shared_ptr);
+  WeakPtrT<RefObject> weak_ptr2(weak_ptr1);
 
   ASSERT_TRUE(shared_ptr->use_count() == 1 && shared_ptr->weak_count() == 2);
 }
 
 TEST_F(WeakPtrTest, construct_3) {
 
-  SharedPtr<RefObject> shared_ptr(new RefObject);
-  WeakPtr<RefObject> weak_ptr1(shared_ptr);
+  SharedPtrT<RefObject> shared_ptr(new RefObject);
+  WeakPtrT<RefObject> weak_ptr1(shared_ptr);
 
   shared_ptr.Reset(nullptr);
 
@@ -102,27 +102,27 @@ TEST_F(WeakPtrTest, construct_3) {
 }
 
 TEST_F(WeakPtrTest, assignment_1) {
-  SharedPtr<RefObject> shared_ptr(new RefObject);
-  WeakPtr<RefObject> weak_ptr;
+  SharedPtrT<RefObject> shared_ptr(new RefObject);
+  WeakPtrT<RefObject> weak_ptr;
   weak_ptr = shared_ptr;
 
   ASSERT_TRUE(shared_ptr->use_count() == 1 && shared_ptr->weak_count() == 1);
 }
 
 TEST_F(WeakPtrTest, assignment_2) {
-  SharedPtr<RefObject> shared_ptr(new RefObject);
-  WeakPtr<RefObject> weak_ptr1;
+  SharedPtrT<RefObject> shared_ptr(new RefObject);
+  WeakPtrT<RefObject> weak_ptr1;
   weak_ptr1 = shared_ptr;
 
-  WeakPtr<RefObject> weak_ptr2;
+  WeakPtrT<RefObject> weak_ptr2;
   weak_ptr2 = weak_ptr1;
 
   ASSERT_TRUE(shared_ptr->use_count() == 1 && shared_ptr->weak_count() == 2);
 }
 
 TEST_F(WeakPtrTest, reset_1) {
-  SharedPtr<RefObject> shared_ptr(new RefObject);
-  WeakPtr<RefObject> weak_ptr;
+  SharedPtrT<RefObject> shared_ptr(new RefObject);
+  WeakPtrT<RefObject> weak_ptr;
 
   weak_ptr.Reset();
 
@@ -130,8 +130,8 @@ TEST_F(WeakPtrTest, reset_1) {
 }
 
 TEST_F(WeakPtrTest, cross_reference_1) {
-  SharedPtr<A> a(new A);
-  SharedPtr<B> b(new B);
+  SharedPtrT<A> a(new A);
+  SharedPtrT<B> b(new B);
 
   a->b_ = b;
   b->a_ = a;
@@ -150,13 +150,13 @@ TEST_F(WeakPtrTest, cross_reference_1) {
 }
 
 TEST_F(WeakPtrTest, swap_1) {
-  SharedPtr<RefObject> shared_ptr1(new RefObject);
-  WeakPtr<RefObject> weak_ptr1(shared_ptr1);
+  SharedPtrT<RefObject> shared_ptr1(new RefObject);
+  WeakPtrT<RefObject> weak_ptr1(shared_ptr1);
   ASSERT_TRUE(weak_ptr1.use_count() == 1 && weak_ptr1.weak_count() == 1);
 
-  SharedPtr<RefObject> shared_ptr2(new RefObject);
-  SharedPtr<RefObject> shared_ptr3(shared_ptr2);
-  WeakPtr<RefObject> weak_ptr2(shared_ptr3);
+  SharedPtrT<RefObject> shared_ptr2(new RefObject);
+  SharedPtrT<RefObject> shared_ptr3(shared_ptr2);
+  WeakPtrT<RefObject> weak_ptr2(shared_ptr3);
   ASSERT_TRUE(weak_ptr2.use_count() == 2 && weak_ptr2.weak_count() == 1);
 
   Swap(weak_ptr1, weak_ptr2);
@@ -165,8 +165,8 @@ TEST_F(WeakPtrTest, swap_1) {
 }
 
 TEST_F(WeakPtrTest, bool_1) {
-  SharedPtr<RefObject> shared_ptr1(new RefObject);
-  WeakPtr<RefObject> weak_ptr1(shared_ptr1);
+  SharedPtrT<RefObject> shared_ptr1(new RefObject);
+  WeakPtrT<RefObject> weak_ptr1(shared_ptr1);
 //  ASSERT_TRUE(weak_ptr1);
 
   weak_ptr1.Reset();

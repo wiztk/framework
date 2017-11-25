@@ -39,7 +39,7 @@ struct MouseEvent::Private {
   ~Private() {}
 
   /** The surface this pointer hovers */
-  Surface *surface;
+  ViewSurface *surface;
 
   uint32_t serial;
 

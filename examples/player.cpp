@@ -51,7 +51,7 @@ class A : public RefCountedBase {
     _DEBUG("%s\n", __func__);
   }
 
-  SharedPtr<B> b_;
+  SharedPtrT<B> b_;
 };
 
 class B : public RefCountedBase {
@@ -65,13 +65,13 @@ class B : public RefCountedBase {
     _DEBUG("%s\n", __func__);
   }
 
-  WeakPtr<A> a_;
+  WeakPtrT<A> a_;
 };
 
 int main(int argc, char *argv[]) {
 
-  SharedPtr<B> b(new B);
-  SharedPtr<A> a(new A);
+  SharedPtrT<B> b(new B);
+  SharedPtrT<A> a(new A);
 
   a->b_ = b;
   b->a_ = a;

@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-#include "surface_private.hpp"
+#include "view-surface_private.hpp"
 
 #include <wiztk/gui/abstract-event-handler.hpp>
 
 namespace wiztk {
 namespace gui {
 
-const struct wl_surface_listener Surface::Private::kListener = {
+const struct wl_surface_listener ViewSurface::Private::kListener = {
     OnEnter,
     OnLeave
 };
 
-void Surface::Private::OnEnter(void *data, struct wl_surface *wl_surface, struct wl_output *wl_output) {
-  const Surface *_this = static_cast<const Surface *>(data);
+void ViewSurface::Private::OnEnter(void *data, struct wl_surface *wl_surface, struct wl_output *wl_output) {
+  const ViewSurface *_this = static_cast<const ViewSurface *>(data);
   const Output *output = static_cast<const Output *>(wl_output_get_user_data(wl_output));
   _this->p_->event_handler->OnEnterOutput(_this, output);
 }
 
-void Surface::Private::OnLeave(void *data, struct wl_surface *wl_surface, struct wl_output *wl_output) {
-  const Surface *_this = static_cast<const Surface *>(data);
+void ViewSurface::Private::OnLeave(void *data, struct wl_surface *wl_surface, struct wl_output *wl_output) {
+  const ViewSurface *_this = static_cast<const ViewSurface *>(data);
   const Output *output = static_cast<const Output *>(wl_output_get_user_data(wl_output));
   _this->p_->event_handler->OnLeaveOutput(_this, output);
 }

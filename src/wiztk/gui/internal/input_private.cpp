@@ -107,7 +107,7 @@ void Input::Private::OnPointerEnter(void *data,
   _this->p_->mouse_event->p_->surface_xy.y = wl_fixed_to_double(surface_y);
 
   _this->p_->mouse_event->p_->surface =
-      static_cast<Surface *>(wl_surface_get_user_data(wl_surface));
+      static_cast<ViewSurface *>(wl_surface_get_user_data(wl_surface));
 
   _this->p_->mouse_event->response_ = InputEvent::kUnknown;
   _this->p_->mouse_event->p_->surface->GetEventHandler()->OnMouseEnter(_this->p_->mouse_event);
@@ -120,7 +120,7 @@ void Input::Private::OnPointerLeave(void *data,
   Input *_this = static_cast<Input *>(data);
 
   _this->p_->mouse_event->p_->serial = serial;
-  _this->p_->mouse_event->p_->surface = static_cast<Surface *>(wl_surface_get_user_data(wl_surface));
+  _this->p_->mouse_event->p_->surface = static_cast<ViewSurface *>(wl_surface_get_user_data(wl_surface));
 
   _this->p_->mouse_event->response_ = InputEvent::kUnknown;
   _this->p_->mouse_event->p_->surface->GetEventHandler()->OnMouseLeave();

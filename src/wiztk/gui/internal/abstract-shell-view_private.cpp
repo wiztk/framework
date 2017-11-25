@@ -27,7 +27,7 @@ namespace gui {
 using numerical::Bit;
 
 void AbstractShellView::Private::OnXdgSurfaceConfigure(uint32_t serial) {
-  Surface::Shell *shell = Surface::Shell::Get(shell_surface);
+  ViewSurface::Shell *shell = ViewSurface::Shell::Get(shell_surface);
   shell->AckConfigure(serial);
 
   if (!owner()->IsShown()) {
@@ -38,10 +38,10 @@ void AbstractShellView::Private::OnXdgSurfaceConfigure(uint32_t serial) {
 }
 
 void AbstractShellView::Private::OnXdgToplevelConfigure(int width, int height, int states) {
-  bool maximized = (0 != (states & Surface::Shell::Toplevel::kStateMaskMaximized));
-  bool fullscreen = (0 != (states & Surface::Shell::Toplevel::kStateMaskFullscreen));
-  bool resizing = (0 != (states & Surface::Shell::Toplevel::kStateMaskResizing));
-  bool focus = (0 != (states & Surface::Shell::Toplevel::kStateMaskActivated));
+  bool maximized = (0 != (states & ViewSurface::Shell::Toplevel::kStateMaskMaximized));
+  bool fullscreen = (0 != (states & ViewSurface::Shell::Toplevel::kStateMaskFullscreen));
+  bool resizing = (0 != (states & ViewSurface::Shell::Toplevel::kStateMaskResizing));
+  bool focus = (0 != (states & ViewSurface::Shell::Toplevel::kStateMaskActivated));
 
   if (maximized != owner()->IsMaximized()) {
     Bit::Inverse<int>(flags, kFlagMaskMaximized);

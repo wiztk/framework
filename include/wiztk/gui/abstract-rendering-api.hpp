@@ -25,7 +25,7 @@
 namespace wiztk {
 namespace gui {
 
-class Surface;
+class ViewSurface;
 
 /**
  * @ingroup gui
@@ -33,7 +33,7 @@ class Surface;
  */
 class AbstractRenderingAPI {
 
-  friend class Surface;
+  friend class ViewSurface;
 
  public:
 
@@ -43,9 +43,9 @@ class AbstractRenderingAPI {
 
   virtual ~AbstractRenderingAPI();
 
-  void Setup(Surface *surface);
+  void Setup(ViewSurface *surface);
 
-  void Release(Surface *surface);
+  void Release(ViewSurface *surface);
 
   virtual void SetViewportSize(int width, int height) = 0;
 
@@ -59,9 +59,9 @@ class AbstractRenderingAPI {
 
   struct Proxy;
 
-  virtual void OnSetup(Surface *surface) = 0;
+  virtual void OnSetup(ViewSurface *surface) = 0;
 
-  virtual void OnRelease(Surface *surface) = 0;
+  virtual void OnRelease(ViewSurface *surface) = 0;
 
  private:
 

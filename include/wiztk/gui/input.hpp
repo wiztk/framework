@@ -40,7 +40,7 @@ struct ViewTask;
  */
 WIZTK_EXPORT class Input : public base::CompoundDeque::Element {
 
-  friend class Surface;
+  friend class ViewSurface;
 
   Input() = delete;
   Input(const Input &) = delete;

@@ -29,7 +29,7 @@
 namespace wiztk {
 namespace gui {
 
-class Surface;
+class ViewSurface;
 
 enum MouseButton {
   kMouseButtonLeft = BTN_LEFT,
@@ -54,7 +54,7 @@ WIZTK_EXPORT class MouseEvent : public InputEvent {
 
   MouseEvent(Input *input);
 
-  Surface *GetSurface() const;
+  ViewSurface *GetSurface() const;
 
   uint32_t GetSerial() const;
 

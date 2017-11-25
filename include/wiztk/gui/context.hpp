@@ -17,7 +17,7 @@
 #ifndef WIZTK_GUI_CONTEXT_HPP_
 #define WIZTK_GUI_CONTEXT_HPP_
 
-#include "surface.hpp"
+#include "view-surface.hpp"
 #include "callback.hpp"
 
 namespace wiztk {
@@ -40,7 +40,7 @@ class Context {
 
   Context() = default;
 
-  Context(Surface *surface, Canvas *canvas)
+  Context(ViewSurface *surface, Canvas *canvas)
       : surface_(surface), canvas_(canvas) {}
 
   Context(const Context &other)
@@ -54,9 +54,9 @@ class Context {
     return *this;
   }
 
-  Surface *surface() const { return surface_; }
+  ViewSurface *surface() const { return surface_; }
 
-  void set_surface(Surface *surface) { surface_ = surface; }
+  void set_surface(ViewSurface *surface) { surface_ = surface; }
 
   Canvas *canvas() const { return canvas_; }
 
@@ -64,7 +64,7 @@ class Context {
 
  private:
 
-  Surface *surface_ = nullptr;
+  ViewSurface *surface_ = nullptr;
   Canvas *canvas_ = nullptr;
 
 };

@@ -21,6 +21,8 @@
 #include "wiztk/base/margin.hpp"
 #include "wiztk/base/point.hpp"
 
+#include "wiztk/graphic/abstract-surface.hpp"
+
 #include "abstract-view.hpp"
 #include "task.hpp"
 
@@ -69,10 +71,8 @@ class AbstractRenderingAPI;
  *
  * You can also use Surface::EGL::Get() to transform a 2D surface to 3D surface,
  * and delete the Surface::EGL object will transform back to 2D.
- *
- * TODO: rename to ViewSurface.
  */
-class Surface : public base::Trackable {
+class ViewSurface : public graphic::AbstractSurface, public base::Trackable {
 
   using Point  = base::PointI;
   using Margin = base::Margin;
@@ -84,8 +84,8 @@ class Surface : public base::Trackable {
 
  public:
 
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Surface);
-  Surface() = delete;
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(ViewSurface);
+  ViewSurface() = delete;
 
   class Shell;
   class Sub;
@@ -112,7 +112,7 @@ class Surface : public base::Trackable {
     kDesynchronized                     /**< Desynchronized mode */
   };
 
-  ~Surface() override;
+  ~ViewSurface() override;
 
   static int GetShellSurfaceCount() { return kShellSurfaceCount; }
 
@@ -161,7 +161,7 @@ class Surface : public base::Trackable {
    */
   base::DequeT<AbstractView::RenderNode> &GetViewRenderDeque() const;
 
-  Surface *GetShellSurface();
+  ViewSurface *GetShellSurface();
 
   /**
    * @brief Get the position in window coordinates
@@ -173,31 +173,31 @@ class Surface : public base::Trackable {
    * @brief Get the parent surface
    * @return
    */
-  Surface *GetParent() const;
+  ViewSurface *GetParent() const;
 
   /**
    * @brief The sibling surface above this one
    * @return
    */
-  Surface *GetSiblingAbove() const;
+  ViewSurface *GetSiblingAbove() const;
 
   /**
    * @brief The sibling surface below this one
    * @return
    */
-  Surface *GetSiblingBelow() const;
+  ViewSurface *GetSiblingBelow() const;
 
   /**
    * @brief The shell surface placed over this one
    * @return
    */
-  Surface *GetUpperShell() const;
+  ViewSurface *GetUpperShell() const;
 
   /**
    * @brief The shell surface placed under this one
    * @return
    */
-  Surface *GetLowerShell() const;
+  ViewSurface *GetLowerShell() const;
 
   AbstractEventHandler *GetEventHandler() const;
 
@@ -212,9 +212,9 @@ class Surface : public base::Trackable {
 
   AbstractRenderingAPI *GetRenderingAPI() const;
 
-  const Margin &GetMargin() const;
-
   const Point &GetRelativePosition() const;
+
+  void Render(RenderDelegate *delegate) override;
 
  private:
 
@@ -225,7 +225,7 @@ class Surface : public base::Trackable {
     WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(RenderTask);
     RenderTask() = delete;
 
-    explicit RenderTask(Surface *surface)
+    explicit RenderTask(ViewSurface *surface)
         : surface_(surface) {}
 
     ~RenderTask() final = default;
@@ -234,7 +234,7 @@ class Surface : public base::Trackable {
 
    private:
 
-    Surface *surface_;
+    ViewSurface *surface_;
 
   };
 
@@ -245,7 +245,7 @@ class Surface : public base::Trackable {
     WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(CommitTask);
     CommitTask() = delete;
 
-    explicit CommitTask(Surface *surface)
+    explicit CommitTask(ViewSurface *surface)
         : surface_(surface) {}
 
     ~CommitTask() final = default;
@@ -254,7 +254,7 @@ class Surface : public base::Trackable {
 
    private:
 
-    Surface *surface_;
+    ViewSurface *surface_;
 
   };
 
@@ -263,7 +263,7 @@ class Surface : public base::Trackable {
    */
   struct Private;
 
-  explicit Surface(AbstractEventHandler *event_handler, const Margin &margin = Margin());
+  explicit ViewSurface(AbstractEventHandler *event_handler, const Margin &margin = Margin());
 
   void OnGLInterfaceDestroyed(__SLOT__);
 
@@ -277,12 +277,12 @@ class Surface : public base::Trackable {
   /**
    * @brief The top shell surface in the stack
    */
-  static Surface *kTop;
+  static ViewSurface *kTop;
 
   /**
    * @brief The bottom shell surface in the stack
    */
-  static Surface *kBottom;
+  static ViewSurface *kBottom;
 
   /**
    * @brief The count of shell surface
@@ -300,9 +300,9 @@ class Surface : public base::Trackable {
 /**
  * @brief Shell surface role
  */
-class Surface::Shell {
+class ViewSurface::Shell {
 
-  friend class Surface;
+  friend class ViewSurface;
 
  public:
 
@@ -312,22 +312,22 @@ class Surface::Shell {
   class Toplevel;
   class Popup;
 
-  static Shell *Get(const Surface *surface);
+  static Shell *Get(const ViewSurface *surface);
 
   void ResizeWindow(int width, int height) const;
 
   void AckConfigure(uint32_t serial) const;
 
-  Surface *surface() const { return surface_; }
+  ViewSurface *surface() const { return surface_; }
 
  private:
 
   struct Private;
 
-  static Surface *Create(AbstractEventHandler *event_handler,
+  static ViewSurface *Create(AbstractEventHandler *event_handler,
                          const Margin &margin = Margin());
 
-  explicit Shell(Surface *surface);
+  explicit Shell(ViewSurface *surface);
 
   ~Shell();
 
@@ -337,7 +337,7 @@ class Surface::Shell {
 
   std::unique_ptr<Private> p_;
 
-  Surface *surface_;
+  ViewSurface *surface_;
 
   Shell *parent_;
 
@@ -352,7 +352,7 @@ class Surface::Shell {
 /**
  * @brief Toplevel shell surface role
  */
-class Surface::Shell::Toplevel {
+class ViewSurface::Shell::Toplevel {
 
   friend class Shell;
 
@@ -371,10 +371,10 @@ class Surface::Shell::Toplevel {
   /**
    * @brief Create a toplevel shell surface
    */
-  static Surface *Create(AbstractEventHandler *event_handler,
+  static ViewSurface *Create(AbstractEventHandler *event_handler,
                          const Margin &margin = Margin());
 
-  static Toplevel *Get(const Surface *surface);
+  static Toplevel *Get(const ViewSurface *surface);
 
   void SetTitle(const char *title) const;
 
@@ -409,7 +409,7 @@ class Surface::Shell::Toplevel {
 /**
  * @brief Popup shell surface role
  */
-class Surface::Shell::Popup {
+class ViewSurface::Shell::Popup {
 
   friend class Shell;
 
@@ -421,7 +421,7 @@ class Surface::Shell::Popup {
   /**
    * @brief Create a popup shell surface
    */
-  static Surface *Create(Surface *parent,
+  static ViewSurface *Create(ViewSurface *parent,
                          AbstractEventHandler *event_handler,
                          const Margin &margin = Margin());
 
@@ -448,9 +448,9 @@ class Surface::Shell::Popup {
 /**
  * @brief Sub surface role
  */
-class Surface::Sub {
+class ViewSurface::Sub {
 
-  friend class Surface;
+  friend class ViewSurface;
 
  public:
 
@@ -460,47 +460,47 @@ class Surface::Sub {
   /**
    * @brief Create a sub surface
    */
-  static Surface *Create(Surface *parent,
+  static ViewSurface *Create(ViewSurface *parent,
                          AbstractEventHandler *event_handler,
                          const Margin &margin = Margin());
 
-  static Sub *Get(const Surface *surface);
+  static Sub *Get(const ViewSurface *surface);
 
-  void PlaceAbove(Surface *sibling);
+  void PlaceAbove(ViewSurface *sibling);
 
-  void PlaceBelow(Surface *sibling);
+  void PlaceBelow(ViewSurface *sibling);
 
   void SetRelativePosition(int x, int y);
 
   void SetWindowPosition(int x, int y);
 
-  Surface *surface() const { return surface_; }
+  ViewSurface *surface() const { return surface_; }
 
  private:
 
-  Sub(Surface *surface, Surface *parent);
+  Sub(ViewSurface *surface, ViewSurface *parent);
 
   ~Sub();
 
-  void SetParent(Surface *parent);
+  void SetParent(ViewSurface *parent);
 
   /**
  * @brief Move the local surface list and insert above target dst surface
  * @param dst
  */
-  void MoveAbove(Surface *dst);
+  void MoveAbove(ViewSurface *dst);
 
   /**
    * @brief Move the local surface list and insert below target dst surface
    * @param dst
    */
-  void MoveBelow(Surface *dst);
+  void MoveBelow(ViewSurface *dst);
 
-  void InsertAbove(Surface *sibling);
+  void InsertAbove(ViewSurface *sibling);
 
-  void InsertBelow(Surface *sibling);
+  void InsertBelow(ViewSurface *sibling);
 
-  Surface *surface_;
+  ViewSurface *surface_;
 
   struct wl_subsurface *wl_sub_surface_;
 

@@ -67,8 +67,8 @@ Dialog::~Dialog() {
 }
 
 void Dialog::OnShown() {
-  Surface *shell_surface = this->GetShellSurface();
-  const Margin &margin = shell_surface->GetMargin();
+  ViewSurface *shell_surface = this->GetShellSurface();
+  const Margin &margin = shell_surface->margin();
 
   // Create buffer and attach it to the shell surface:
   int width = GetWidth() + margin.lr();
@@ -87,8 +87,8 @@ void Dialog::OnConfigureSize(const Size &old_size, const Size &new_size) {
 }
 
 void Dialog::OnSaveSize(const Size &old_size, const Size &new_size) {
-  Surface *shell_surface = this->GetShellSurface();
-  const Margin &margin = shell_surface->GetMargin();
+  ViewSurface *shell_surface = this->GetShellSurface();
+  const Margin &margin = shell_surface->margin();
   int width = new_size.width;
   int height = new_size.height;
 
@@ -116,9 +116,9 @@ void Dialog::OnSaveSize(const Size &old_size, const Size &new_size) {
   shell_surface->Update();
 }
 
-void Dialog::OnRenderSurface(Surface *surface) {
-  Surface *shell_surface = GetShellSurface();
-  const Margin &margin = shell_surface->GetMargin();
+void Dialog::OnRenderSurface(ViewSurface *surface) {
+  ViewSurface *shell_surface = GetShellSurface();
+  const Margin &margin = shell_surface->margin();
 
   Canvas canvas((unsigned char *) p_->frame_buffer.GetData(),
                 p_->frame_buffer.GetSize().width,

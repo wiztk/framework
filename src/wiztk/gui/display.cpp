@@ -21,7 +21,7 @@
 
 #include <wiztk/gui/output.hpp>
 #include <wiztk/gui/input.hpp>
-#include <wiztk/gui/surface.hpp>
+#include <wiztk/gui/view-surface.hpp>
 
 #include <iostream>
 
@@ -80,7 +80,7 @@ void Display::Disconnect() noexcept {
 
   p_->outputs.Clear();
   p_->inputs.Clear();
-  Surface::Clear();
+  ViewSurface::Clear();
 
   if (p_->wl_data_device_manager) {
     wl_data_device_manager_destroy(p_->wl_data_device_manager);

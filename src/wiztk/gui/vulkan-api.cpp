@@ -17,7 +17,7 @@
 #include "wiztk/gui/vulkan-api.hpp"
 
 #include "internal/display_proxy.hpp"
-#include "internal/surface_private.hpp"
+#include "internal/view-surface_private.hpp"
 #include "internal/abstract-rendering-api_proxy.hpp"
 
 namespace wiztk {

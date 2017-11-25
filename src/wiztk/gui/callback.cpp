@@ -17,7 +17,7 @@
 #include "wiztk/gui/callback.hpp"
 
 #include "internal/display_private.hpp"
-#include "internal/surface_private.hpp"
+#include "internal/view-surface_private.hpp"
 
 #include "wiztk/base/memory.hpp"
 
@@ -70,7 +70,7 @@ Callback::Callback(const Display &display)
   Setup(display);
 }
 
-Callback::Callback(const Surface &surface)
+Callback::Callback(const ViewSurface &surface)
     : Callback() {
   Setup(surface);
 }
@@ -85,7 +85,7 @@ void Callback::Setup(const Display &display) {
   wl_callback_add_listener(p_->wl_callback, &Private::kListener, this);
 }
 
-void Callback::Setup(const Surface &surface) {
+void Callback::Setup(const ViewSurface &surface) {
   p_->Destroy();
   p_->wl_callback = wl_surface_frame(surface.p_->wl_surface);
   wl_callback_add_listener(p_->wl_callback, &Private::kListener, this);

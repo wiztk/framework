@@ -519,21 +519,21 @@ WIZTK_EXPORT class AbstractView : public AbstractEventHandler {
    */
   virtual void OnRequestUpdateFrom(AbstractView *view) override;
 
-  virtual void OnRenderSurface(Surface *surface) override;
+  virtual void OnRenderSurface(ViewSurface *surface) override;
 
   /**
    * @brief Callback when this view enters an output
    * @param surface
    * @param output
    */
-  virtual void OnEnterOutput(const Surface *surface, const Output *output) override;
+  virtual void OnEnterOutput(const ViewSurface *surface, const Output *output) override;
 
   /**
    * @brief Callback when this view leaves an output
    * @param surface
    * @param output
    */
-  virtual void OnLeaveOutput(const Surface *surface, const Output *output) override;
+  virtual void OnLeaveOutput(const ViewSurface *surface, const Output *output) override;
 
   /**
    * @brief Callback when any part of geometry will change

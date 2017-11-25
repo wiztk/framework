@@ -19,7 +19,7 @@
 
 #include "wiztk/gui/abstract-rendering-api.hpp"
 
-#include "surface_private.hpp"
+#include "view-surface_private.hpp"
 
 namespace wiztk {
 namespace gui {
@@ -36,7 +36,7 @@ struct AbstractRenderingAPI::Private {
 
   ~Private() = default;
 
-  Surface *surface = nullptr;
+  ViewSurface *surface = nullptr;
 
 };
 

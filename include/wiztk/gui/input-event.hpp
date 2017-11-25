@@ -28,7 +28,7 @@ class Cursor;
 WIZTK_EXPORT class InputEvent {
 
   friend class Input;
-  friend class Surface;
+  friend class ViewSurface;
 
  public:
 

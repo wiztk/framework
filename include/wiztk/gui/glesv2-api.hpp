@@ -44,9 +44,9 @@ class GLESV2API : public AbstractRenderingAPI {
 
  protected:
 
-  virtual void OnSetup(Surface *surface) final;
+  virtual void OnSetup(ViewSurface *surface) final;
 
-  virtual void OnRelease(Surface *surface) final;
+  virtual void OnRelease(ViewSurface *surface) final;
 
  private:
 

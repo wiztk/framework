@@ -25,7 +25,7 @@
 
 #include <wiztk/gui/theme.hpp>
 #include <wiztk/gui/abstract-view.hpp>
-#include <wiztk/gui/surface.hpp>
+#include <wiztk/gui/view-surface.hpp>
 
 #include "internal/display_private.hpp"
 
@@ -236,8 +236,8 @@ int Application::Run() {
   int ret = 0;
   Task *task = nullptr;
   base::DequeT<Task>::Iterator task_deque_iterator;
-  base::DequeT<Surface::RenderTask>::Iterator render_task_iterator;
-  base::DequeT<Surface::CommitTask>::Iterator commit_task_iterator;
+  base::DequeT<ViewSurface::RenderTask>::Iterator render_task_iterator;
+  base::DequeT<ViewSurface::CommitTask>::Iterator commit_task_iterator;
 
   while (true) {
 
@@ -255,23 +255,23 @@ int Application::Run() {
     /*
      * Draw contents on every surface requested
      */
-    render_task_iterator = Surface::kRenderTaskDeque.begin();
-    while (render_task_iterator != Surface::kRenderTaskDeque.end()) {
+    render_task_iterator = ViewSurface::kRenderTaskDeque.begin();
+    while (render_task_iterator != ViewSurface::kRenderTaskDeque.end()) {
       task = render_task_iterator.element();
       render_task_iterator.Remove();
       task->Run();
-      render_task_iterator = Surface::kRenderTaskDeque.begin();
+      render_task_iterator = ViewSurface::kRenderTaskDeque.begin();
     }
 
     /*
      * Commit every surface requested
      */
-    commit_task_iterator = Surface::kCommitTaskDeque.begin();
-    while (commit_task_iterator != Surface::kCommitTaskDeque.end()) {
+    commit_task_iterator = ViewSurface::kCommitTaskDeque.begin();
+    while (commit_task_iterator != ViewSurface::kCommitTaskDeque.end()) {
       task = commit_task_iterator.element();
       commit_task_iterator.Remove();
       task->Run();
-      commit_task_iterator = Surface::kCommitTaskDeque.begin();
+      commit_task_iterator = ViewSurface::kCommitTaskDeque.begin();
     }
 
     wl_display_dispatch_pending(Display::kDisplay->p_->wl_display);

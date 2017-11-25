@@ -22,7 +22,7 @@
 namespace wiztk {
 namespace gui {
 
-class Surface;
+class ViewSurface;
 class AbstractRenderingAPI;
 
 class GLView : public AbstractView {
@@ -59,7 +59,7 @@ class GLView : public AbstractView {
 
   void OnDraw(const Context &context) final;
 
-  void OnRenderSurface(Surface *surface) override;
+  void OnRenderSurface(ViewSurface *surface) override;
 
   virtual void OnInitialize() = 0;
 

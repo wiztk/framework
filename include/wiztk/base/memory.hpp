@@ -58,10 +58,10 @@ namespace base {
 class RefCountedBase {
 
   template<typename T> friend
-  class SharedPtr;
+  class SharedPtrT;
 
   template<typename T> friend
-  class WeakPtr;
+  class WeakPtrT;
 
  public:
 
@@ -150,20 +150,20 @@ class RefCountedBase {
  * @tparam T Must be SPCountedBase or the sub class
  */
 template<typename T>
-class SharedPtr {
+class SharedPtrT {
 
   template<typename R> friend
-  class WeakPtr;
+  class WeakPtrT;
 
   template<typename R>
-  friend void Swap(SharedPtr<R> &src, SharedPtr<R> &dst);
+  friend void Swap(SharedPtrT<R> &src, SharedPtrT<R> &dst);
 
  public:
 
   /**
    * @brief Default constructor
    */
-  constexpr SharedPtr() noexcept = default;
+  constexpr SharedPtrT() noexcept = default;
 
   /**
    * @brief Constructor with an assigned SPCountedBase object
@@ -171,7 +171,7 @@ class SharedPtr {
    *
    * This constructor will increase the use count of obj.
    */
-  explicit SharedPtr(T *obj) noexcept
+  explicit SharedPtrT(T *obj) noexcept
       : ptr_(obj) {
     counter_ = ptr_->counter_;
     ++counter_->use_count;
@@ -182,7 +182,7 @@ class SharedPtr {
    *
    * Increase the use count if the object in orig is not nullptr.
    */
-  SharedPtr(const SharedPtr &orig) noexcept
+  SharedPtrT(const SharedPtrT &orig) noexcept
       : ptr_(orig.ptr_) {
     if (nullptr != ptr_) {
       counter_ = ptr_->counter_;
@@ -194,7 +194,7 @@ class SharedPtr {
    * @brief Move constructor
    * @param orig
    */
-  SharedPtr(SharedPtr &&orig) noexcept
+  SharedPtrT(SharedPtrT &&orig) noexcept
       : ptr_(orig.ptr_), counter_(orig.counter_) {
     orig.ptr_ = nullptr;
     orig.counter_ = nullptr;
@@ -206,7 +206,7 @@ class SharedPtr {
    * When a SharedPtr object is destroyed, it will decrease the use count and
    * delete the object it points to if use count == 0.
    */
-  ~SharedPtr() {
+  ~SharedPtrT() {
     if (nullptr != counter_) {
       _ASSERT((nullptr != ptr_) && (ptr_->counter_ == counter_));
 
@@ -236,7 +236,7 @@ class SharedPtr {
    * The copy assignments adds the object as a shared owner of other's assets,
    * increasing the use_count.
    */
-  SharedPtr &operator=(const SharedPtr &other) noexcept {
+  SharedPtrT &operator=(const SharedPtrT &other) noexcept {
     Reset(other.ptr_);
     return *this;
   }
@@ -246,7 +246,7 @@ class SharedPtr {
    * @param other
    * @return
    */
-  SharedPtr &operator=(SharedPtr &&other) noexcept {
+  SharedPtrT &operator=(SharedPtrT &&other) noexcept {
     ptr_ = other.ptr_;
     counter_ = other.counter_;
     other.ptr_ = nullptr;
@@ -259,7 +259,7 @@ class SharedPtr {
    *
    * Adds this object as a shared owner of obj, increasing the use_count.
    */
-  SharedPtr &operator=(T *obj) noexcept {
+  SharedPtrT &operator=(T *obj) noexcept {
     Reset(obj);
     return *this;
   }
@@ -268,7 +268,7 @@ class SharedPtr {
    * @brief Swap content
    * @param other
    */
-  void Swap(SharedPtr &other) noexcept {
+  void Swap(SharedPtrT &other) noexcept {
     T *object = ptr_;
     RefCountedBase::Counter *counter = counter_;
 
@@ -393,22 +393,22 @@ class SharedPtr {
  * @tparam T
  */
 template<typename T>
-class WeakPtr {
+class WeakPtrT {
 
   template<typename R>
-  friend void Swap(WeakPtr<R> &src, WeakPtr<R> &dst);
+  friend void Swap(WeakPtrT<R> &src, WeakPtrT<R> &dst);
 
  public:
 
   /**
    * @brief Default constructor
    */
-  constexpr WeakPtr() noexcept = default;
+  constexpr WeakPtrT() noexcept = default;
 
   /**
    * @brief Copy constructor
    */
-  WeakPtr(const WeakPtr &orig) noexcept {
+  WeakPtrT(const WeakPtrT &orig) noexcept {
     ptr_ = orig.ptr_;
     counter_ = orig.counter_;
     if (nullptr != counter_) ++counter_->weak_count;
@@ -417,7 +417,7 @@ class WeakPtr {
   /**
    * @brief Constructor by a SharedPtr
    */
-  explicit WeakPtr(const SharedPtr<T> &orig) noexcept {
+  explicit WeakPtrT(const SharedPtrT<T> &orig) noexcept {
     ptr_ = orig.ptr_;
     counter_ = orig.counter_;
     if (nullptr != counter_) ++counter_->weak_count;
@@ -426,7 +426,7 @@ class WeakPtr {
   /**
    * @brief Destructor
    */
-  ~WeakPtr() {
+  ~WeakPtrT() {
     if (nullptr != counter_) {
       --counter_->weak_count;
       if ((0 == counter_->use_count) && (0 == counter_->weak_count)) {
@@ -438,7 +438,7 @@ class WeakPtr {
   /**
    * @brief Assignment from a SharedPtr
    */
-  WeakPtr &operator=(const SharedPtr<T> &other) noexcept {
+  WeakPtrT &operator=(const SharedPtrT<T> &other) noexcept {
     RefCountedBase::Counter *old_counter = counter_;
 
     ptr_ = other.ptr_;
@@ -459,7 +459,7 @@ class WeakPtr {
   /**
    * @brief Copy assignment
    */
-  WeakPtr &operator=(const WeakPtr &other) noexcept {
+  WeakPtrT &operator=(const WeakPtrT &other) noexcept {
     RefCountedBase::Counter *old_counter = counter_;
 
     ptr_ = other.ptr_;
@@ -512,12 +512,12 @@ class WeakPtr {
    * "use count", and if it's > 0 returns a valid SharedPtr . If the "use count"
    * was already zero you get an empty SharedPtr instance instead.
    */
-  SharedPtr<T> Lock() const noexcept {
+  SharedPtrT<T> Lock() const noexcept {
     if (counter_->use_count > 0) {
-      return SharedPtr<T>(ptr_);
+      return SharedPtrT<T>(ptr_);
     }
 
-    return SharedPtr<T>();
+    return SharedPtrT<T>();
   }
 
   /**
@@ -546,8 +546,8 @@ class WeakPtr {
  * @brief Constructs an object of tyep T and wraps it in a SharedPtr
  */
 template<typename T, typename ... Args>
-SharedPtr<T> MakeShared(Args &&... args) {
-  return SharedPtr<T>(new T(std::forward<Args>(args)...));
+SharedPtrT<T> MakeShared(Args &&... args) {
+  return SharedPtrT<T>(new T(std::forward<Args>(args)...));
 };
 
 /**
@@ -555,7 +555,7 @@ SharedPtr<T> MakeShared(Args &&... args) {
  * @brief Exchange content of SharedPtr objects
  */
 template<typename T>
-void Swap(SharedPtr<T> &src, SharedPtr<T> &dst) {
+void Swap(SharedPtrT<T> &src, SharedPtrT<T> &dst) {
   T *object = src.ptr_;
   RefCountedBase::Counter *counter = src.counter_;
 
@@ -571,7 +571,7 @@ void Swap(SharedPtr<T> &src, SharedPtr<T> &dst) {
  * @brief Exchange content of WeakPtr objects
  */
 template<typename T>
-void Swap(WeakPtr<T> &src, WeakPtr<T> &dst) {
+void Swap(WeakPtrT<T> &src, WeakPtrT<T> &dst) {
   T *object = src.ptr_;
   RefCountedBase::Counter *counter = src.counter_;
 

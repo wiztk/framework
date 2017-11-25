@@ -27,7 +27,7 @@ AbstractRenderingAPI::~AbstractRenderingAPI() {
   destroyed_.Emit();
 }
 
-void AbstractRenderingAPI::Setup(Surface *surface) {
+void AbstractRenderingAPI::Setup(ViewSurface *surface) {
   if (surface->p_->rendering_api == this) return;
 
   if (nullptr != surface->p_->rendering_api) {
@@ -41,7 +41,7 @@ void AbstractRenderingAPI::Setup(Surface *surface) {
   OnSetup(surface);
 }
 
-void AbstractRenderingAPI::Release(Surface *surface) {
+void AbstractRenderingAPI::Release(ViewSurface *surface) {
   if (surface->p_->rendering_api != this) return;
 
   surface->p_->rendering_api = nullptr;

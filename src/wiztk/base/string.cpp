@@ -19,19 +19,30 @@
 #include <unicode/utf.h>
 #include <unicode/unistr.h>
 #include <unicode/ustream.h>
+#include <unicode/stringpiece.h>
 
 namespace wiztk {
 namespace base {
 
-std::ostream &operator<<(std::ostream &out, const String16 &utf16) {
-  // TODO: This create and copy the string array from String16 to icu::UnicodeString, find a better way for performance.
-  return out << icu::UnicodeString(reinterpret_cast<const UChar *>(utf16.data()));
+String::String(const char *str) {
+  icu::UnicodeString unicode = icu::UnicodeString::fromUTF8(icu::StringPiece(str));
+  assign(unicode.getBuffer());
 }
 
-std::ostream &operator<<(std::ostream &out, const String32 &utf32) {
+String::String(const char16_t *str) {
+  assign(reinterpret_cast<const UChar *>(str));
+}
+
+String::String(const char32_t *str) {
+  icu::UnicodeString unicode =
+      icu::UnicodeString::fromUTF32(reinterpret_cast<const UChar32 *>(str),
+                                    static_cast<uint32_t>(std::char_traits<char32_t>::length(str)));
+  assign(unicode.getBuffer());
+}
+
+std::ostream &operator<<(std::ostream &out, const String &str) {
   // TODO: This create and copy the string array from String16 to icu::UnicodeString, find a better way for performance.
-  return out << icu::UnicodeString::fromUTF32(reinterpret_cast<const UChar32 *>(utf32.data()),
-                                              static_cast<uint32_t >(utf32.length()));
+  return out << icu::UnicodeString(str.data());
 }
 
 } // namespace base

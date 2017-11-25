@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#include "surface_shell_toplevel_private.hpp"
-#include "surface_private.hpp"
+#include "view-surface_shell_toplevel_private.hpp"
+#include "view-surface_private.hpp"
 #include "abstract-shell-view_private.hpp"
 
 #include "wiztk/numerical/bit.hpp"
@@ -25,12 +25,12 @@ namespace gui {
 
 using numerical::Bit;
 
-const struct zxdg_toplevel_v6_listener Surface::Shell::Toplevel::Private::kListener = {
+const struct zxdg_toplevel_v6_listener ViewSurface::Shell::Toplevel::Private::kListener = {
     OnConfigure,
     OnClose
 };
 
-void Surface::Shell::Toplevel::Private::OnConfigure(void *data,
+void ViewSurface::Shell::Toplevel::Private::OnConfigure(void *data,
                                                     struct zxdg_toplevel_v6 * /* zxdg_toplevel_v6 */,
                                                     int32_t width,
                                                     int32_t height,
@@ -70,7 +70,7 @@ void Surface::Shell::Toplevel::Private::OnConfigure(void *data,
     shell_view->p_->OnXdgToplevelConfigure(width, height, value);
 }
 
-void Surface::Shell::Toplevel::Private::OnClose(void *data, struct zxdg_toplevel_v6 * /* zxdg_toplevel_v6 */) {
+void ViewSurface::Shell::Toplevel::Private::OnClose(void *data, struct zxdg_toplevel_v6 * /* zxdg_toplevel_v6 */) {
   Toplevel *_this = static_cast<Toplevel *>(data);
   AbstractShellView *shell_view = dynamic_cast<AbstractShellView *>(_this->p_->shell->surface_->p_->event_handler);
   if (shell_view)

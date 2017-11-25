@@ -23,7 +23,7 @@
 #include "wiztk/gui/key-event.hpp"
 #include "wiztk/gui/mouse-event.hpp"
 
-#include "wiztk/gui/surface.hpp"
+#include "wiztk/gui/view-surface.hpp"
 #include "wiztk/gui/callback.hpp"
 #include "wiztk/gui/title-bar.hpp"
 #include "wiztk/gui/glesv2-api.hpp"
@@ -73,7 +73,7 @@ struct GLWindow::Private : public base::PropertyT<GLWindow> {
 
   AbstractRenderingAPI *rendering_api = nullptr;
 
-  Surface *gl_surface = nullptr;
+  ViewSurface *gl_surface = nullptr;
 
   Callback callback;
 
@@ -198,8 +198,8 @@ GLWindow::~GLWindow() {
 }
 
 void GLWindow::OnShown() {
-  Surface *shell_surface = this->GetShellSurface();
-  const Margin &margin = shell_surface->GetMargin();
+  ViewSurface *shell_surface = this->GetShellSurface();
+  const Margin &margin = shell_surface->margin();
 
   // Create buffer and attach it to the shell surface:
   int width = GetWidth() + margin.lr();  // buffer width with horizontal margins
@@ -213,7 +213,7 @@ void GLWindow::OnShown() {
   shell_surface->Update();
 
   // Create a sub surface and use it as a gl surface for 3D
-  p_->gl_surface = Surface::Sub::Create(shell_surface, this);
+  p_->gl_surface = ViewSurface::Sub::Create(shell_surface, this);
 
   Region region;  // zero region
   p_->gl_surface->SetInputRegion(region);
@@ -222,7 +222,7 @@ void GLWindow::OnShown() {
   p_->gl_surface->SetRenderingAPI(p_->rendering_api);
   p_->rendering_api->SetViewportSize(GetWidth(), GetHeight());
 
-  Surface::Sub::Get(p_->gl_surface)->SetWindowPosition(0, 0);
+  ViewSurface::Sub::Get(p_->gl_surface)->SetWindowPosition(0, 0);
 
   // p_->gl_surface->Update();
   p_->callback.Setup(*p_->gl_surface);
@@ -243,8 +243,8 @@ void GLWindow::OnConfigureSize(const Size &old_size, const Size &new_size) {
 }
 
 void GLWindow::OnSaveSize(const Size &old_size, const Size &new_size) {
-  Surface *shell_surface = this->GetShellSurface();
-  const Margin &margin = shell_surface->GetMargin();
+  ViewSurface *shell_surface = this->GetShellSurface();
+  const Margin &margin = shell_surface->margin();
   int width = new_size.width;
   int height = new_size.height;
 
@@ -275,9 +275,9 @@ void GLWindow::OnSaveSize(const Size &old_size, const Size &new_size) {
   DispatchMouseLeaveEvent();
 }
 
-void GLWindow::OnRenderSurface(Surface *surface) {
-  Surface *shell_surface = GetShellSurface();
-  const Margin &margin = shell_surface->GetMargin();
+void GLWindow::OnRenderSurface(ViewSurface *surface) {
+  ViewSurface *shell_surface = GetShellSurface();
+  const Margin &margin = shell_surface->margin();
   _ASSERT(shell_surface == surface);
   
   Canvas canvas((unsigned char *) p_->frame_buffer.GetData(),

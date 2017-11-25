@@ -24,12 +24,12 @@ namespace gui {
 
 class Region {
 
-  friend class Surface;
+  friend class ViewSurface;
+
+ public:
 
   Region(const Region &) = delete;
   Region &operator=(const Region &)  = delete;
-
- public:
 
   Region();
 

@@ -20,7 +20,7 @@
 #include "wiztk/base/property.hpp"
 #include "wiztk/base/memory.hpp"
 
-#include "wiztk/gui/surface.hpp"
+#include "wiztk/gui/view-surface.hpp"
 #include "wiztk/gui/mouse-event.hpp"
 #include "wiztk/gui/key-event.hpp"
 #include "wiztk/gui/context.hpp"
@@ -44,7 +44,7 @@ struct GLView::Private : public base::PropertyT<GLView> {
     delete gl_surface;
   }
 
-  Surface *gl_surface = nullptr;
+  ViewSurface *gl_surface = nullptr;
 
   AbstractRenderingAPI *rendering_api = nullptr;
 
@@ -127,7 +127,7 @@ void GLView::OnDraw(const Context &context) {
   if (nullptr == p_->rendering_api) return;
 
   if (nullptr == p_->gl_surface) {
-    p_->gl_surface = Surface::Sub::Create(context.surface(), this);
+    p_->gl_surface = ViewSurface::Sub::Create(context.surface(), this);
     p_->gl_surface->SetRenderingAPI(p_->rendering_api);
 //    gl_surface->SetCommitMode(Surface::kDesynchronized);
 
@@ -135,7 +135,7 @@ void GLView::OnDraw(const Context &context) {
     p_->gl_surface->SetInputRegion(region);
 
     p_->rendering_api->SetViewportSize(GetWidth(), GetHeight());
-    Surface::Sub::Get(p_->gl_surface)->SetWindowPosition(GetX(), GetY());
+    ViewSurface::Sub::Get(p_->gl_surface)->SetWindowPosition(GetX(), GetY());
 
     p_->callback.Setup(*p_->gl_surface);
     OnInitialize();
@@ -143,7 +143,7 @@ void GLView::OnDraw(const Context &context) {
   }
 }
 
-void GLView::OnRenderSurface(Surface *surface) {
+void GLView::OnRenderSurface(ViewSurface *surface) {
 
 }
 

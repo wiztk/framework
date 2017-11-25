@@ -19,7 +19,7 @@
 
 #include <wiztk/gui/input.hpp>
 
-#include <wiztk/gui/surface.hpp>
+#include <wiztk/gui/view-surface.hpp>
 #include <wiztk/gui/key-event.hpp>
 #include <wiztk/gui/touch-event.hpp>
 

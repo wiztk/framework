@@ -135,7 +135,7 @@ TEST_F(DrawTest, draw_text_2) {
   Font font(typeface, 48.f);
   paint.SetFont(font);
 
-  String16 text(u"你好，骚年！");
+  String text(u"你好，骚年！");
 
 //  const char *text = "你好，骚年！";
 

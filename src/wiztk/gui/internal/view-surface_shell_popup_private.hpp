@@ -14,39 +14,41 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_INTERNAL_SURFACE_SHELL_PRIVATE_HPP
-#define WIZTK_GUI_INTERNAL_SURFACE_SHELL_PRIVATE_HPP
-
-#include <wiztk/gui/surface.hpp>
+#ifndef WIZTK_GUI_INTERNAL_SURFACE_SHELL_POPUP_PRIVATE_HPP_
+#define WIZTK_GUI_INTERNAL_SURFACE_SHELL_POPUP_PRIVATE_HPP_
 
 #include "xdg-shell-unstable-v6-client-protocol.h"
 
 namespace wiztk {
 namespace gui {
 
-struct Surface::Shell::Private {
+struct ViewSurface::Shell::Popup::Private {
 
   Private(const Private &) = delete;
   Private &operator=(const Private &) = delete;
 
   Private()
-      : zxdg_surface(nullptr) {}
+      : shell(nullptr),
+        zxdg_popup(nullptr),
+        zxdg_positioner(nullptr) {}
 
   ~Private() {
-    if (zxdg_surface) zxdg_surface_v6_destroy(zxdg_surface);
+    if (zxdg_positioner) {
+      zxdg_positioner_v6_destroy(zxdg_positioner);
+    }
+    if (zxdg_popup) {
+      zxdg_popup_v6_destroy(zxdg_popup);
+    }
   }
 
-  struct zxdg_surface_v6 *zxdg_surface;
+  Shell *shell;
 
-  static void OnConfigure(void *data,
-                          struct zxdg_surface_v6 *zxdg_surface_v6,
-                          uint32_t serial);
-
-  static const struct zxdg_surface_v6_listener kListener;
+  struct zxdg_popup_v6 *zxdg_popup;
+  struct zxdg_positioner_v6 *zxdg_positioner;
 
 };
 
 } // namespace gui
 } // namespace wiztk
 
-#endif // WIZTK_GUI_INTERNAL_SURFACE_SHELL_PRIVATE_HPP
+#endif // WIZTK_GUI_INTERNAL_SURFACE_SHELL_POPUP_PRIVATE_HPP_

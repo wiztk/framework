@@ -24,20 +24,30 @@
 #include <algorithm>
 #include <memory>
 
+#include <unicode/umachine.h>
+
 namespace wiztk {
 namespace base {
 
-// Forward declaration
-template<typename STRING_TYPE>
-class StringPieceT;
+typedef std::basic_string<UChar, std::char_traits<UChar> > BasicString;
 
-typedef std::string String8;
-typedef std::u16string String16;
-typedef std::u32string String32;
+/**
+ * @ingroup base
+ * @brief Unicode string
+ */
+class String : public BasicString {
 
-typedef StringPieceT<std::string> StringPiece;
-typedef StringPieceT<std::u16string> StringPiece16;
-typedef StringPieceT<std::u32string> StringPiece32;
+ public:
+
+  using BasicString::BasicString;
+
+  String(const char *str);
+
+  String(const char16_t *str);
+
+  String(const char32_t *str);
+
+};
 
 /**
  * @ingroup base
@@ -556,11 +566,10 @@ WIZTK_EXPORT bool operator!=(const StringPieceT<STRING_TYPE> &x, const StringPie
   return !(x == y);
 }
 
-WIZTK_EXPORT std::ostream &operator<<(std::ostream &out,
-                                      const String16 &utf16);
+typedef StringPieceT<std::string> StringPiece;
 
 WIZTK_EXPORT std::ostream &operator<<(std::ostream &out,
-                                      const String32 &utf32);
+                                      const String &str);
 
 } // namespace base
 } // namespace wiztk

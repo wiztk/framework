@@ -115,10 +115,10 @@ std::vector<float> Window::Private::kOutlineRadii = {
 };
 
 void Window::Private::DrawBody() {
-  Surface *shell_surface = owner()->GetShellSurface();
+  ViewSurface *shell_surface = owner()->GetShellSurface();
   _ASSERT(nullptr != shell_surface);
 
-  const Margin &margin = shell_surface->GetMargin();
+  const Margin &margin = shell_surface->margin();
   int scale = shell_surface->GetScale();
   int pixel_width = owner()->GetWidth() * scale;
   int pixel_height = owner()->GetHeight() * scale;
@@ -332,8 +332,8 @@ const base::SizeI &Window::GetMaximalSize() const {
 }
 
 void Window::OnShown() {
-  Surface *shell_surface = GetShellSurface();
-  const Margin &margin = shell_surface->GetMargin();
+  ViewSurface *shell_surface = GetShellSurface();
+  const Margin &margin = shell_surface->margin();
 
   // Set surface's scale
   int scale = 1;
@@ -376,7 +376,7 @@ void Window::OnShown() {
 void Window::OnRequestUpdateFrom(AbstractView *view) {
   if (p_->inhibit_update) return;
 
-  Surface *surface = GetShellSurface();
+  ViewSurface *surface = GetShellSurface();
   surface->GetViewRenderDeque().PushBack(AbstractView::RenderNode::Get(view));
   surface->Update();
 }
@@ -400,7 +400,7 @@ void Window::OnConfigureSize(const Size &old_size, const Size &new_size) {
 }
 
 void Window::OnSaveSize(const Size &old_size, const Size &new_size) {
-  Surface *shell_surface = this->GetShellSurface();
+  ViewSurface *shell_surface = this->GetShellSurface();
 
   int scale = 1;
   const CompoundDeque &outputs = Display::GetOutputs();
@@ -412,7 +412,7 @@ void Window::OnSaveSize(const Size &old_size, const Size &new_size) {
 
   int width = new_size.width;
   int height = new_size.height;
-  const base::Margin &margin = shell_surface->GetMargin();
+  const base::Margin &margin = shell_surface->margin();
 
   Rect input_rect(width, height);
 
@@ -455,8 +455,8 @@ void Window::OnSaveSize(const Size &old_size, const Size &new_size) {
   }
 }
 
-void Window::OnRenderSurface(Surface *surface) {
-  const Margin &margin = surface->GetMargin();
+void Window::OnRenderSurface(ViewSurface *surface) {
+  const Margin &margin = surface->margin();
   int scale = surface->GetScale();
   int pixel_width = GetWidth() * scale;
   int pixel_height = GetHeight() * scale;
@@ -693,15 +693,15 @@ void Window::OnViewDetached(AbstractView *view) {
   }
 }
 
-void Window::OnEnterOutput(const Surface *surface, const Output *output) {
+void Window::OnEnterOutput(const ViewSurface *surface, const Output *output) {
   if (p_->output == output) return;
 
   p_->output = output;
-  Surface *shell_surface = GetShellSurface();
+  ViewSurface *shell_surface = GetShellSurface();
   shell_surface->SetScale(output->GetScale());
 }
 
-void Window::OnLeaveOutput(const Surface *surface, const Output *output) {
+void Window::OnLeaveOutput(const ViewSurface *surface, const Output *output) {
   if (p_->output != output) return;
 
   p_->output = nullptr;

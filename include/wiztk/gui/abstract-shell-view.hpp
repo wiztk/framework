@@ -46,7 +46,7 @@ class Context;
 WIZTK_EXPORT class AbstractShellView : public AbstractEventHandler {
 
   friend class AbstractView;
-  friend class Surface;
+  friend class ViewSurface;
 
  public:
 
@@ -236,9 +236,9 @@ WIZTK_EXPORT class AbstractShellView : public AbstractEventHandler {
 
   virtual void OnRequestUpdateFrom(AbstractView *view) override;
 
-  virtual void OnEnterOutput(const Surface *surface, const Output *output) override;
+  virtual void OnEnterOutput(const ViewSurface *surface, const Output *output) override;
 
-  virtual void OnLeaveOutput(const Surface *surface, const Output *output) override;
+  virtual void OnLeaveOutput(const ViewSurface *surface, const Output *output) override;
 
   virtual void OnMaximized(bool);
 
@@ -268,7 +268,7 @@ WIZTK_EXPORT class AbstractShellView : public AbstractEventHandler {
 
   void ResizeWithMouse(MouseEvent *event, uint32_t edges) const;
 
-  Surface *GetShellSurface() const;
+  ViewSurface *GetShellSurface() const;
 
   void DispatchMouseEnterEvent(AbstractView *view, MouseEvent *event);
 

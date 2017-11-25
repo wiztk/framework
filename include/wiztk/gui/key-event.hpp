@@ -24,7 +24,7 @@
 namespace wiztk {
 namespace gui {
 
-class Surface;
+class ViewSurface;
 
 enum Key {
   kKey_ESC = KEY_ESC,
@@ -90,7 +90,7 @@ class KeyEvent : public InputEvent {
   uint32_t mods_locked_;
   uint32_t group_;
 
-  Surface *surface_;
+  ViewSurface *surface_;
 };
 
 } // namespace gui

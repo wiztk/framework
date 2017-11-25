@@ -62,7 +62,7 @@ enum ColorType {
 class ImageInfo {
 
   friend class Bitmap;
-  friend class Surface;
+  friend class ViewSurface;
   friend class Canvas;
 
  public:

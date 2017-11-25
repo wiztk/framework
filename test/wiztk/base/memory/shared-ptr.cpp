@@ -44,42 +44,42 @@ SharedPtrTest::~SharedPtrTest() {
 }
 
 TEST_F(SharedPtrTest, construct_1) {
-  SharedPtr<RefObject> ptr(new RefObject);
+  SharedPtrT<RefObject> ptr(new RefObject);
   ASSERT_TRUE(ptr->use_count() == 1);
 }
 
 TEST_F(SharedPtrTest, construct_2) {
-  SharedPtr<RefObject> ptr1(new RefObject);
-  SharedPtr<RefObject> ptr2(ptr1);
+  SharedPtrT<RefObject> ptr1(new RefObject);
+  SharedPtrT<RefObject> ptr2(ptr1);
 
   ASSERT_TRUE((ptr1->use_count() == 2) && (ptr2->use_count() == 2));
 }
 
 TEST_F(SharedPtrTest, construct_3) {
-  SharedPtr<RefObject> ptr1(new RefObject);
-  SharedPtr<RefObject> ptr2(std::move(ptr1));
+  SharedPtrT<RefObject> ptr1(new RefObject);
+  SharedPtrT<RefObject> ptr2(std::move(ptr1));
 
   ASSERT_TRUE((!ptr1) && (ptr2->use_count() == 1));
 }
 
 TEST_F(SharedPtrTest, copy_assignment_1) {
-  SharedPtr<RefObject> ptr1(new RefObject);
+  SharedPtrT<RefObject> ptr1(new RefObject);
 
-  SharedPtr<RefObject> ptr2 = ptr1;
+  SharedPtrT<RefObject> ptr2 = ptr1;
 
   ASSERT_TRUE((ptr1->use_count() == 2) && (ptr2->use_count() == 2));
 }
 
 TEST_F(SharedPtrTest, move_assignment_1) {
-  SharedPtr<RefObject> ptr1(new RefObject);
+  SharedPtrT<RefObject> ptr1(new RefObject);
 
-  SharedPtr<RefObject> ptr2 = std::move(ptr1);
+  SharedPtrT<RefObject> ptr2 = std::move(ptr1);
 
   ASSERT_TRUE((!ptr1) && (ptr2->use_count() == 1));
 }
 
 TEST_F(SharedPtrTest, reset_1) {
-  SharedPtr<RefObject> ptr;
+  SharedPtrT<RefObject> ptr;
 
   ptr.Reset(new RefObject);
   ptr.Reset(new RefObject);
@@ -88,7 +88,7 @@ TEST_F(SharedPtrTest, reset_1) {
 }
 
 TEST_F(SharedPtrTest, reset_2) {
-  SharedPtr<RefObject> ptr;
+  SharedPtrT<RefObject> ptr;
 
   ptr.Reset(new RefObject);
   ptr.Reset(nullptr);
@@ -97,11 +97,11 @@ TEST_F(SharedPtrTest, reset_2) {
 }
 
 TEST_F(SharedPtrTest, swap_1) {
-  SharedPtr<RefObject> shared_ptr1(new RefObject);
+  SharedPtrT<RefObject> shared_ptr1(new RefObject);
 
-  SharedPtr<RefObject> shared_ptr2(new RefObject);
+  SharedPtrT<RefObject> shared_ptr2(new RefObject);
 
-  SharedPtr<RefObject> shared_ptr3(shared_ptr1);
+  SharedPtrT<RefObject> shared_ptr3(shared_ptr1);
 
   Swap(shared_ptr1, shared_ptr2);
 
@@ -109,11 +109,11 @@ TEST_F(SharedPtrTest, swap_1) {
 }
 
 TEST_F(SharedPtrTest, swap_2) {
-  SharedPtr<RefObject> shared_ptr1(new RefObject);
+  SharedPtrT<RefObject> shared_ptr1(new RefObject);
 
-  SharedPtr<RefObject> shared_ptr2(new RefObject);
+  SharedPtrT<RefObject> shared_ptr2(new RefObject);
 
-  SharedPtr<RefObject> shared_ptr3(shared_ptr1);
+  SharedPtrT<RefObject> shared_ptr3(shared_ptr1);
 
   shared_ptr1.Swap(shared_ptr2);
 
@@ -121,8 +121,8 @@ TEST_F(SharedPtrTest, swap_2) {
 }
 
 TEST_F(SharedPtrTest, unique_1) {
-  SharedPtr<RefObject> shared_ptr1;
-  SharedPtr<RefObject> shared_ptr2(new RefObject);
+  SharedPtrT<RefObject> shared_ptr1;
+  SharedPtrT<RefObject> shared_ptr2(new RefObject);
 
   ASSERT_TRUE(!shared_ptr1.IsUnique());
   shared_ptr1 = shared_ptr2;
