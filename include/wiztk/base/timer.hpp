@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_CORE_TIMER_HPP_
-#define WIZTK_CORE_TIMER_HPP_
+#ifndef WIZTK_BASE_TIMER_HPP_
+#define WIZTK_BASE_TIMER_HPP_
 
+#include "macros.hpp"
 #include "delegate.hpp"
 
-#include <signal.h>
-#include <time.h>
+#include <csignal>
+#include <ctime>
 #include <cstdint>
 
 namespace wiztk {
@@ -30,16 +31,15 @@ namespace base {
  * @ingroup base
  * @brief A wrapper class to use posix timer
  */
-class PosixTimer {
-
-  PosixTimer(const PosixTimer &orig) = delete;
-  PosixTimer &operator=(const PosixTimer &other) = delete;
+class WIZTK_EXPORT Timer {
 
  public:
 
-  PosixTimer();
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Timer);
 
-  ~PosixTimer();
+  Timer();
+
+  ~Timer();
 
   /**
    * @brief Start the posix timer
@@ -64,9 +64,7 @@ class PosixTimer {
    *
    * @warning This delegate was called in thread, and SHOULD not be reset when the timer is armed.
    */
-  base::DelegateRefT<void()> expire() {
-    return expire_;
-  }
+  DelegateRefT<void()> expire() { return expire_; }
 
  protected:
 
@@ -84,7 +82,7 @@ class PosixTimer {
 
   bool is_armed_;
 
-  base::DelegateT<void()> expire_;
+  DelegateT<void()> expire_;
 
 };
 

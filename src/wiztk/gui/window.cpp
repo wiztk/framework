@@ -123,7 +123,7 @@ void Window::Private::DrawBody() {
   int pixel_width = owner()->GetWidth() * scale;
   int pixel_height = owner()->GetHeight() * scale;
 
-  RectF body_geometry = RectF::MakeFromXYWH(0.f, 0.f, pixel_width, pixel_height);
+  RectF body_geometry = RectF::FromXYWH(0.f, 0.f, pixel_width, pixel_height);
   Path body_path;
 
   Canvas canvas((unsigned char *) buffer.GetData(),
@@ -148,7 +148,7 @@ void Window::Private::DrawBody() {
     std::vector<float> outline_radii(kOutlineRadii.size(), 0.f);
     SetRadii(scale, -0.5f, outline_radii);
 
-    RectF outline_geometry = RectF::MakeFromXYWH(0.5f, 0.5f, pixel_width - 1.f, pixel_height - 1.f);
+    RectF outline_geometry = RectF::FromXYWH(0.5f, 0.5f, pixel_width - 1.f, pixel_height - 1.f);
     Path outline_path;
     outline_path.AddRoundRect(outline_geometry, outline_radii.data());
     DrawOutline(context, outline_path);
@@ -196,10 +196,10 @@ void Window::Private::RecursiveDraw(AbstractView *view, const Context &context) 
   int scale = context.surface()->GetScale();
 
   Canvas::LockGuard guard(context.canvas(),
-                          RectF::MakeFromXYWH(geometry.x() + bounds.x(),
-                                              geometry.y() + bounds.y(),
-                                              bounds.width(),
-                                              bounds.height()) * scale);
+                          RectF::FromXYWH(geometry.x() + bounds.x(),
+                                          geometry.y() + bounds.y(),
+                                          bounds.width(),
+                                          bounds.height()) * scale);
 
   AbstractView *parent = view->GetParent();
   if (nullptr != parent) {
@@ -210,7 +210,7 @@ void Window::Private::RecursiveDraw(AbstractView *view, const Context &context) 
     int pixel_width = owner()->GetWidth() * scale;
     int pixel_height = owner()->GetHeight() * scale;
 
-    RectF body_geometry = RectF::MakeFromXYWH(0.f, 0.f, pixel_width, pixel_height);
+    RectF body_geometry = RectF::FromXYWH(0.f, 0.f, pixel_width, pixel_height);
 
     Path body_path;
 
@@ -227,7 +227,7 @@ void Window::Private::RecursiveDraw(AbstractView *view, const Context &context) 
       std::vector<float> outline_radii(kOutlineRadii.size(), 0.f);
       SetRadii(scale, -.5f, outline_radii);
 
-      RectF outline_geometry = RectF::MakeFromXYWH(0.5f, 0.5f, pixel_width - 1.f, pixel_height - 1.f);
+      RectF outline_geometry = RectF::FromXYWH(0.5f, 0.5f, pixel_width - 1.f, pixel_height - 1.f);
       Path outline_path;
       outline_path.AddRoundRect(outline_geometry, outline_radii.data());
       DrawOutline(context, outline_path);
@@ -470,10 +470,10 @@ void Window::OnRenderSurface(ViewSurface *surface) {
   Path path;
 
   if (IsMaximized() || IsFullscreen()) {
-    RectF geometry = RectF::MakeFromXYWH(0.f, 0.f, pixel_width, pixel_height);
+    RectF geometry = RectF::FromXYWH(0.f, 0.f, pixel_width, pixel_height);
     path.AddRect(geometry);
   } else {
-    RectF outline_geometry = RectF::MakeFromXYWH(0.5f, 0.5f, pixel_width - 1.f, pixel_height - 1.f);
+    RectF outline_geometry = RectF::FromXYWH(0.5f, 0.5f, pixel_width - 1.f, pixel_height - 1.f);
     std::vector<float> outline_radii(Private::kOutlineRadii.size(), 0.f);
     Private::SetRadii(scale, -0.5f, outline_radii);
     path.AddRoundRect(outline_geometry, outline_radii.data());
@@ -768,7 +768,7 @@ RectI Window::GetContentGeometry() const {
     y += p_->title_bar->GetHeight();
     h -= p_->title_bar->GetHeight();
   }
-  return Rect::MakeFromXYWH(x, y, w, h);
+  return Rect::FromXYWH(x, y, w, h);
 }
 
 void Window::OnFullscreenButtonClicked(base::SLOT slot) {

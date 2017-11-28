@@ -92,7 +92,7 @@ void GLWindow::Private::DrawFrame(const Context &context) {
   canvas->Clear();
 
   Path path;
-  RectF geometry = RectF::MakeFromXYWH(0.f, 0.f, owner()->GetWidth(), owner()->GetHeight());
+  RectF geometry = RectF::FromXYWH(0.f, 0.f, owner()->GetWidth(), owner()->GetHeight());
 
   if ((!owner()->IsMaximized()) || (!owner()->IsFullscreen())) {
     // Drop shadow:

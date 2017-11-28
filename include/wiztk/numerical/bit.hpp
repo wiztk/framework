@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_BIT_HPP
-#define WIZTK_BIT_HPP
+#ifndef WIZTK_NUMERICAL_BIT_HPP_
+#define WIZTK_NUMERICAL_BIT_HPP_
 
 namespace wiztk {
 namespace numerical {
@@ -48,4 +48,4 @@ class Bit {
 } // namespace numerical
 } // namespace wiztk
 
-#endif //WIZTK_BIT_HPP
+#endif // WIZTK_NUMERICAL_BIT_HPP_

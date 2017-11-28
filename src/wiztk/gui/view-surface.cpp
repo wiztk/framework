@@ -634,7 +634,7 @@ const Point &ViewSurface::GetRelativePosition() const {
   return p_->relative_position;
 }
 
-void ViewSurface::Render(RenderDelegate *delegate) {
+void ViewSurface::Render(Delegate *delegate) {
   if (nullptr != delegate) delegate->Render();
   // TODO: use this method
 }

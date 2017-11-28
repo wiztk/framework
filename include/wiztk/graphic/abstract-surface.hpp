@@ -37,13 +37,15 @@ class WIZTK_EXPORT AbstractSurface {
 
   /**
    * @ingroup graphic
-   * @brief A surface renderer
+   * @brief A delegate to render surface, used when calling AbstractSurface::Render()
    */
-  class WIZTK_EXPORT RenderDelegate {
+  class WIZTK_EXPORT Delegate {
 
    public:
 
-    virtual ~RenderDelegate() = default;
+    Delegate() = default;
+
+    virtual ~Delegate() = default;
 
     virtual void Render() {}
 
@@ -149,7 +151,7 @@ class WIZTK_EXPORT AbstractSurface {
    * @brief Pure virtual method of how to render contents on this surface.
    * @param delegate
    */
-  virtual void Render(RenderDelegate *delegate) = 0;
+  virtual void Render(Delegate *delegate) = 0;
 
  protected:
 

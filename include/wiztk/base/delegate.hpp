@@ -103,8 +103,8 @@ class DelegateT<ReturnType(ParamTypes...)> {
    * @return A delegate object
    */
   template<typename T>
-  static inline DelegateT Make(T *object_ptr,
-                               ReturnType (T::*method)(ParamTypes...)) {
+  static inline DelegateT FromMethod(T *object_ptr,
+                                     ReturnType (T::*method)(ParamTypes...)) {
     typedef ReturnType (T::*TMethod)(ParamTypes...);
 
     DelegateT d;
@@ -123,8 +123,8 @@ class DelegateT<ReturnType(ParamTypes...)> {
    * @return A delegate object
    */
   template<typename T>
-  static inline DelegateT Make(T *object_ptr,
-                               ReturnType (T::*method)(ParamTypes...) const) {
+  static inline DelegateT FromMethod(T *object_ptr,
+                                     ReturnType (T::*method)(ParamTypes...) const) {
     typedef ReturnType (T::*TMethod)(ParamTypes...) const;
 
     DelegateT d;
@@ -343,12 +343,12 @@ class DelegateRefT<ReturnType(ParamTypes...)> {
 
   template<typename T>
   void Bind(T *obj, ReturnType (T::*method)(ParamTypes...)) {
-    *delegate_ = DelegateT<ReturnType(ParamTypes...)>::template Make<T>(obj, method);
+    *delegate_ = DelegateT<ReturnType(ParamTypes...)>::template FromMethod<T>(obj, method);
   }
 
   template<typename T>
   void Bind(T *obj, ReturnType (T::*method)(ParamTypes...) const) {
-    *delegate_ = DelegateT<ReturnType(ParamTypes...)>::template Make<T>(obj, method);
+    *delegate_ = DelegateT<ReturnType(ParamTypes...)>::template FromMethod<T>(obj, method);
   }
 
   void Reset() {

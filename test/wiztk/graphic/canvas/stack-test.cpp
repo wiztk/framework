@@ -39,13 +39,13 @@ TEST_F(StackTest, save_layer_1) {
 
   Paint paint;
   paint.SetColor(0xFFFF0000);
-  RectF rect = RectF::MakeFromXYWH(0.f, 0.f, kWidth, kHeight);
+  RectF rect = RectF::FromXYWH(0.f, 0.f, kWidth, kHeight);
   rect = rect.Inset(50.f);
   canvas.DrawRect(rect, paint);
 
   canvas.SaveLayer(nullptr, nullptr);
   paint.SetColor(0xFF0000FF);
-  canvas.DrawRect(RectF::MakeFromXYWH(100, 100, 80, 100), paint);
+  canvas.DrawRect(RectF::FromXYWH(100, 100, 80, 100), paint);
   canvas.Restore();
 
   canvas.Flush();

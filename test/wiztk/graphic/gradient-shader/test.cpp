@@ -55,7 +55,7 @@ TEST_F(Test, linear_1) {
   Shader shader = GradientShader::MakeLinear(points, colors, pos, 2, Shader::kTileModeClamp);
   paint.SetShader(shader);
 
-  RectF rect = RectF::MakeFromXYWH(0.f, 0.f, kWidth, kHeight);
+  RectF rect = RectF::FromXYWH(0.f, 0.f, kWidth, kHeight);
 
   canvas.DrawRect(rect, paint);
   canvas.Flush();
@@ -94,7 +94,7 @@ TEST_F(Test, linear_2) {
   Shader shader = GradientShader::MakeLinear(points, colors, pos, 2, Shader::kTileModeClamp);
   paint.SetShader(shader);
 
-  RectF rect = RectF::MakeFromXYWH(0.f, 0.f, kWidth, kHeight);
+  RectF rect = RectF::FromXYWH(0.f, 0.f, kWidth, kHeight);
 
   canvas.DrawRect(rect, paint);
   canvas.Flush();
@@ -127,7 +127,7 @@ TEST_F(Test, radial_1) {
   Shader shader = GradientShader::MakeRadial(center, radius, colors, pos, 2, Shader::kTileModeClamp);
   paint.SetShader(shader);
 
-  RectF rect = RectF::MakeFromXYWH(0.f, 0.f, kWidth, kHeight);
+  RectF rect = RectF::FromXYWH(0.f, 0.f, kWidth, kHeight);
 
   canvas.DrawRect(rect, paint);
   canvas.Flush();
@@ -167,7 +167,7 @@ TEST_F(Test, radial_2) {
   Shader shader = GradientShader::MakeRadial(center, radius, colors, pos, 2, Shader::kTileModeClamp);
   paint.SetShader(shader);
 
-  RectF rect = RectF::MakeFromXYWH(0.f, 0.f, kWidth, kHeight);
+  RectF rect = RectF::FromXYWH(0.f, 0.f, kWidth, kHeight);
 
   canvas.DrawRect(rect, paint);
   canvas.Flush();

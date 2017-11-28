@@ -214,7 +214,7 @@ class ViewSurface : public graphic::AbstractSurface, public base::Trackable {
 
   const Point &GetRelativePosition() const;
 
-  void Render(RenderDelegate *delegate) override;
+  void Render(Delegate *delegate) override;
 
  private:
 

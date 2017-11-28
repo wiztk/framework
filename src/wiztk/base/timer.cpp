@@ -14,42 +14,40 @@
  * limitations under the License.
  */
 
-#include "wiztk/base/posix-timer.hpp"
-#include "wiztk/base/macros.hpp"
+#include "wiztk/base/timer.hpp"
 
-#include <errno.h>
+#include <cerrno>
 
 namespace wiztk {
 namespace base {
 
-PosixTimer::PosixTimer()
-    : id_(0),
+Timer::Timer()
+    : id_(nullptr),
       interval_(0),
       is_armed_(false) {
   id_ = Create();
 }
 
-PosixTimer::~PosixTimer() {
-  if (0 != id_) {
+Timer::~Timer() {
+  if (nullptr != id_) {
     if (0 != timer_delete(id_)) {
       _DEBUG("%s\n", "Not a valid POSIX timer id");
     }
   }
 }
 
-void PosixTimer::Start() {
-  if (0 == id_) return;
+void Timer::Start() {
+  if (nullptr == id_) return;
   is_armed_ = SetTime();
 }
 
-void PosixTimer::Stop() {
+void Timer::Stop() {
   if (!is_armed_) return;
 
   int ret = 0;
-  struct itimerspec ts;
-  memset(&ts, 0, sizeof(ts));
+  struct itimerspec ts = {0};
 
-  ret = timer_settime(id_, 0, &ts, 0);
+  ret = timer_settime(id_, 0, &ts, nullptr);
   if (ret < 0) {
     _DEBUG("%s\n", "Fail to stop timer");
   }
@@ -57,22 +55,22 @@ void PosixTimer::Stop() {
   is_armed_ = false;
 }
 
-void PosixTimer::SetInterval(unsigned int interval) {
-  if ((0 == id_) || (interval_ == interval)) return;
+void Timer::SetInterval(unsigned int interval) {
+  if ((nullptr == id_) || (interval_ == interval)) return;
 
   interval_ = interval;
 
   if (is_armed_) is_armed_ = SetTime();
 }
 
-timer_t PosixTimer::Create() {
-  struct sigevent sev;
+timer_t Timer::Create() {
+  struct sigevent sev = {0};
   sev.sigev_notify = SIGEV_THREAD;
   sev.sigev_value.sival_ptr = this;
   sev.sigev_notify_function = OnExpire;
-  sev.sigev_notify_attributes = 0;
+  sev.sigev_notify_attributes = nullptr;
 
-  timer_t timer = 0;
+  timer_t timer = nullptr;
 
   int ret = timer_create(CLOCK_REALTIME, &sev, &timer);
   if (ret < 0) {
@@ -84,15 +82,15 @@ timer_t PosixTimer::Create() {
     } else if (ret == ENOMEM) {
       _DEBUG("%s\n", "Could not allocate memory.");
     }
-    return 0;
+    return nullptr;
   }
 
   return timer;
 }
 
-bool PosixTimer::SetTime() {
+bool Timer::SetTime() {
   int ret = 0;
-  struct itimerspec ts;
+  struct itimerspec ts = {0};
   unsigned int sec = interval_ / 1000;
   long nsec = (interval_ % 1000) * 1000 * 1000;
 
@@ -110,8 +108,8 @@ bool PosixTimer::SetTime() {
   }
 }
 
-void PosixTimer::OnExpire(union sigval sigev_value) {
-  PosixTimer *_this = static_cast<PosixTimer *>(sigev_value.sival_ptr);
+void Timer::OnExpire(union sigval sigev_value) {
+  auto *_this = static_cast<Timer *>(sigev_value.sival_ptr);
   if (_this->expire_) _this->expire_.Invoke();
 }
 

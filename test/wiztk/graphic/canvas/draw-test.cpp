@@ -69,7 +69,7 @@ TEST_F(DrawTest, draw_rect_1) {
 
   Paint paint;
   paint.SetColor(0xFFFF0000);
-  RectF rect = RectF::MakeFromXYWH(0.f, 0.f, kWidth, kHeight);
+  RectF rect = RectF::FromXYWH(0.f, 0.f, kWidth, kHeight);
   rect = rect.Inset(50.f);
   canvas.DrawRect(rect, paint);
   canvas.Flush();

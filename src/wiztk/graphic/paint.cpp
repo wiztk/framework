@@ -88,10 +88,10 @@ void Paint::SetStyle(Style style) {
 
 ColorF Paint::GetColor() const {
   uint32_t value = p_->sk_paint.getColor();
-  return ColorF::FromUCharRGBA(SkToU8(SkColorGetR(value)),
-                               SkToU8(SkColorGetG(value)),
-                               SkToU8(SkColorGetB(value)),
-                               SkToU8(SkColorGetA(value)));
+  return ColorF::FromRGBA(SkToU8(SkColorGetR(value)),
+                          SkToU8(SkColorGetG(value)),
+                          SkToU8(SkColorGetB(value)),
+                          SkToU8(SkColorGetA(value)));
 }
 
 void Paint::SetColor(uint32_t argb) {

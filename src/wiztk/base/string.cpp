@@ -25,6 +25,7 @@ namespace wiztk {
 namespace base {
 
 String::String(const char *str) {
+  // TODO: temporary workaround, optimize this by ICU later:
   icu::UnicodeString unicode = icu::UnicodeString::fromUTF8(icu::StringPiece(str));
   assign(unicode.getBuffer());
 }
@@ -34,6 +35,7 @@ String::String(const char16_t *str) {
 }
 
 String::String(const char32_t *str) {
+  // TODO: temporary workaround, optimize this by ICU later.
   icu::UnicodeString unicode =
       icu::UnicodeString::fromUTF32(reinterpret_cast<const UChar32 *>(str),
                                     static_cast<uint32_t>(std::char_traits<char32_t>::length(str)));

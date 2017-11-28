@@ -81,19 +81,19 @@ TEST_F(Test, text_1) {
 
   paint1.SetTextSize(64.f);
   paint1.SetAntiAlias(true);
-  paint1.SetColor(ColorF::FromUCharRGBA(255, 0, 0));
+  paint1.SetColor(ColorF::FromRGBA(255, 0, 0));
   paint1.SetFont(font);
 
   paint2.SetTextSize(64.f);
   paint2.SetAntiAlias(true);
-  paint2.SetColor(ColorF::FromUCharRGBA(0, 136, 0));
+  paint2.SetColor(ColorF::FromRGBA(0, 136, 0));
   paint2.SetStyle(Paint::kStyleStroke);
   paint2.SetStrokeWidth(3.f);
   paint2.SetFont(font);
 
   paint3.SetTextSize(64.f);
   paint3.SetAntiAlias(true);
-  paint3.SetColor(ColorF::FromUCharRGBA(136, 136, 136));
+  paint3.SetColor(ColorF::FromRGBA(136, 136, 136));
   paint3.SetTextScaleX(1.5f);
   paint3.SetFont(font);
 
@@ -136,11 +136,11 @@ TEST_F(Test, set_style_1) {
   paint3.SetColor(ColorF(1.f, 0.f, 0.f));
   paint3.SetFont(font);
 
-  canvas.DrawRect(RectF::MakeFromXYWH(10, 10, 60, 20), paint1);
-  canvas.DrawRect(RectF::MakeFromXYWH(80, 10, 60, 20), paint2);
+  canvas.DrawRect(RectF::FromXYWH(10, 10, 60, 20), paint1);
+  canvas.DrawRect(RectF::FromXYWH(80, 10, 60, 20), paint2);
 
   paint2.SetStrokeWidth(5.f);
-  canvas.DrawOval(RectF::MakeFromXYWH(150, 10, 60, 20), paint2);
+  canvas.DrawOval(RectF::FromXYWH(150, 10, 60, 20), paint2);
 
   canvas.DrawText("SKIA", 4, 20.f, 120.f, paint3);
   paint3.SetColor(ColorF(0.f, 0.f, 1.f));

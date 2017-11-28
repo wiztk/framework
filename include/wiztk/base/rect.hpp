@@ -42,7 +42,7 @@ struct RectT {
    * @param bottom
    * @return
    */
-  inline static RectT MakeFromLTRB(T left, T top, T right, T bottom) {
+  inline static RectT FromLTRB(T left, T top, T right, T bottom) {
     return RectT(left, top, right, bottom);
   }
 
@@ -54,7 +54,7 @@ struct RectT {
    * @param height
    * @return
    */
-  inline static RectT MakeFromXYWH(T x, T y, T width, T height) {
+  inline static RectT FromXYWH(T x, T y, T width, T height) {
     return RectT(x, y, x + width, y + height);
   }
 

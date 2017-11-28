@@ -7,19 +7,19 @@
 
 #include <gtest/gtest.h>
 
-class TestString : public testing::Test {
+class TestTimer : public testing::Test {
 
  public:
 
-  TestString() = default;
+  TestTimer() = default;
 
-  ~TestString() override = default;
+  ~TestTimer() override = default;
 
  protected:
 
-  void SetUp() override {}
+  void SetUp() final {}
 
-  void TearDown() override {}
+  void TearDown() final {}
 
 };
 

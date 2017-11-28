@@ -545,7 +545,7 @@ template<typename T>
 void SignalT<ParamTypes...>::Connect(T *obj, void (T::*method)(ParamTypes..., SLOT), int index) {
   detail::Binding *downstream = new detail::Binding;
   DelegateT<void(ParamTypes..., SLOT)> d =
-      DelegateT<void(ParamTypes..., SLOT)>::template Make<T>(obj, method);
+      DelegateT<void(ParamTypes..., SLOT)>::template FromMethod<T>(obj, method);
   detail::DelegateTokenT<ParamTypes..., SLOT> *token = new detail::DelegateTokenT<
       ParamTypes..., SLOT>(d);
 

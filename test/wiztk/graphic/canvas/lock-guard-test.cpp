@@ -30,7 +30,7 @@ TEST_F(LockGuardTest, clip_1) {
   canvas.Clear(0xFFFFFFFF);
 
   Paint paint;
-  RectF rect = RectF::MakeFromXYWH(0.f, 0.f, kWidth, kHeight);
+  RectF rect = RectF::FromXYWH(0.f, 0.f, kWidth, kHeight);
 
   {
     RectF r1 = rect.Inset(50.f);
@@ -73,7 +73,7 @@ TEST_F(LockGuardTest, clip_2) {
   canvas.Clear(0xFFFFFFFF); // fill with white
 
   Paint paint;
-  RectF rect = RectF::MakeFromXYWH(0.f, 0.f, kWidth, kHeight);
+  RectF rect = RectF::FromXYWH(0.f, 0.f, kWidth, kHeight);
 
   Canvas::LockGuard lock1(&canvas);
   Canvas::LockGuard lock2(&canvas);

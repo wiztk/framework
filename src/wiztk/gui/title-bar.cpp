@@ -379,10 +379,10 @@ void TitleBar::OnDraw(const Context &context) {
   Shader shader = GradientShader::MakeLinear(points, colors, pos, 2, Shader::kTileModeClamp);
   paint.SetShader(shader);
 
-  context.canvas()->DrawRect(RectF::MakeFromLTRB(bounds.left + factor,
-                                                 bounds.top + factor,
-                                                 bounds.right - factor,
-                                                 bounds.bottom), paint);
+  context.canvas()->DrawRect(RectF::FromLTRB(bounds.left + factor,
+                                             bounds.top + factor,
+                                             bounds.right - factor,
+                                             bounds.bottom), paint);
 
   paint.Reset();
   paint.SetAntiAlias(true);

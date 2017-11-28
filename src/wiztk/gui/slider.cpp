@@ -134,10 +134,10 @@ void Slider::OnDraw(const Context &context) {
   } else {
     hw = rect.width() / 2;
   }
-  canvas->DrawRect(base::RectF::MakeFromLTRB(rect.center_x() - hw,
-                                             rect.center_y() - hh,
-                                             rect.center_x() + hw,
-                                             rect.center_y() + hh), paint);
+  canvas->DrawRect(base::RectF::FromLTRB(rect.center_x() - hw,
+                                         rect.center_y() - hh,
+                                         rect.center_x() + hw,
+                                         rect.center_y() + hh), paint);
 
 
 //  paint.SetStyle(Paint::Style::kStyleStroke);

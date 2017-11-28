@@ -2,20 +2,12 @@
 // Created by zhanggyb on 16-9-19.
 //
 
-#include "test.hpp"
+#include "test-timer.hpp"
 
-#include <wiztk/base/posix-timer.hpp>
+#include <wiztk/base/timer.hpp>
 #include <iostream>
 
-using wiztk::base::PosixTimer;
-
-Test::Test()
-    : testing::Test() {
-}
-
-Test::~Test() {
-
-}
+using wiztk::base::Timer;
 
 class Response {
  public:
@@ -46,7 +38,7 @@ class Response {
 
   int count_;
 
-  PosixTimer timer_;
+  Timer timer_;
 };
 
 void Response::OnTimeout() {
@@ -56,7 +48,7 @@ void Response::OnTimeout() {
     timer_.Stop();
 }
 
-TEST_F(Test, timeout_1) {
+TEST_F(TestTimer, timeout_1) {
   Response response;
 
   response.Start();

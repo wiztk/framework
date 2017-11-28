@@ -7,19 +7,19 @@
 
 #include <gtest/gtest.h>
 
-class TestString : public testing::Test {
+class TestColor : public testing::Test {
 
  public:
 
-  TestString() = default;
+  TestColor() = default;
 
-  ~TestString() override = default;
+  ~TestColor() override = default;
 
  protected:
 
-  void SetUp() override {}
+  void SetUp() final {}
 
-  void TearDown() override {}
+  void TearDown() final {}
 
 };
 

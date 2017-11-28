@@ -134,7 +134,7 @@ void Dialog::DrawFrame(const Context &context) {
   canvas->Clear();
 
   Path path;
-  RectF geometry = RectF::MakeFromXYWH(0.f, 0.f, GetWidth(), GetHeight());
+  RectF geometry = RectF::FromXYWH(0.f, 0.f, GetWidth(), GetHeight());
 
   if ((!IsMaximized()) || (!IsFullscreen())) {
     // Drop shadow:

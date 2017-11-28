@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_CLAMP_HPP
-#define WIZTK_CLAMP_HPP
+#ifndef WIZTK_NUMERICAL_CLAMP_HPP_
+#define WIZTK_NUMERICAL_CLAMP_HPP_
 
 #include <algorithm>
 
@@ -23,15 +23,15 @@ namespace wiztk {
 namespace numerical {
 
 /**
- * @ingroup base
+ * @ingroup numerical
  * @brief Clamp given value between min and max
  */
 template<typename T>
-inline T Clamp(T x, T min_value, T max_value) {
+inline T ClampT(T x, T min_value, T max_value) {
   return std::min(std::max(x, min_value), max_value);
 }
 
 } // namespace numerical
 } // namespace wiztk
 
-#endif //WIZTK_CLAMP_HPP
+#endif // WIZTK_NUMERICAL_CLAMP_HPP_
