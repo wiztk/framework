@@ -17,8 +17,8 @@
 #ifndef WIZTK_BASE_TIMER_HPP_
 #define WIZTK_BASE_TIMER_HPP_
 
-#include "macros.hpp"
-#include "delegate.hpp"
+#include "wiztk/base/macros.hpp"
+#include "wiztk/base/delegate.hpp"
 
 #include <csignal>
 #include <ctime>

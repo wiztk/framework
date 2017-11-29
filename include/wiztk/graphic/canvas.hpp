@@ -164,7 +164,7 @@ class Canvas {
 
   void Flush();
 
-  const base::PointF &GetOrigin() const;
+  const base::Point2F &GetOrigin() const;
 
   SkCanvas *GetSkCanvas() const;
 

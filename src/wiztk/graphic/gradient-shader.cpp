@@ -24,9 +24,9 @@
 namespace wiztk {
 namespace graphic {
 
-using base::PointF;
+using base::Point2F;
 
-Shader GradientShader::MakeLinear(const base::PointF *points,
+Shader GradientShader::MakeLinear(const base::Point2F *points,
                                   const uint32_t *colors,
                                   const float *pos,
                                   int count,
@@ -45,7 +45,7 @@ Shader GradientShader::MakeLinear(const base::PointF *points,
   return Shader(new Shader::Private(sk_shader));
 }
 
-Shader GradientShader::MakeLinear(const PointF points[],
+Shader GradientShader::MakeLinear(const Point2F points[],
                                   const base::ColorF colors[],
                                   const float pos[],
                                   int count,
@@ -65,7 +65,7 @@ Shader GradientShader::MakeLinear(const PointF points[],
   return Shader(new Shader::Private(sk_shader));
 }
 
-Shader GradientShader::MakeRadial(const PointF &center,
+Shader GradientShader::MakeRadial(const Point2F &center,
                                   float radius,
                                   const uint32_t colors[],
                                   const float pos[],
@@ -85,7 +85,7 @@ Shader GradientShader::MakeRadial(const PointF &center,
   return Shader(new Shader::Private(sk_shader));
 }
 
-Shader GradientShader::MakeRadial(const PointF &center,
+Shader GradientShader::MakeRadial(const Point2F &center,
                                   float radius,
                                   const base::ColorF colors[],
                                   const float pos[],

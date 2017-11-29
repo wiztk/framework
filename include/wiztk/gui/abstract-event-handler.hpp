@@ -18,8 +18,10 @@
 #define WIZTK_GUI_ABSTRACT_EVENT_HANDLER_HPP_
 
 #include "wiztk/base/sigcxx.hpp"
+#include "wiztk/base/string.hpp"
 
-#include "task.hpp"
+#include "wiztk/gui/task.hpp"
+
 #include <memory>
 
 namespace wiztk {
@@ -61,11 +63,9 @@ WIZTK_EXPORT class AbstractEventHandler : public base::Trackable {
 
  public:
 
-  template<typename ... ParamTypes>
-  using SignalRef = typename base::SignalRefT<ParamTypes...>;
-
-  template<typename ... ParamTypes>
-  using Signal = typename base::SignalT<ParamTypes...>;
+  using String = base::String;
+  template<typename ... P> using SignalRef = typename base::SignalRefT<P...>;
+  template<typename ... P> using Signal = typename base::SignalT<P...>;
 
   WIZTK_DECLARE_NONCOPYABLE(AbstractEventHandler);
 
@@ -88,7 +88,7 @@ WIZTK_EXPORT class AbstractEventHandler : public base::Trackable {
     /**
      * @brief Destructor
      */
-    virtual ~EventTask() {}
+    ~EventTask() override {}
 
     AbstractEventHandler *event_handler() const { return event_handler_; }
 
@@ -121,11 +121,11 @@ WIZTK_EXPORT class AbstractEventHandler : public base::Trackable {
   /**
    * @brief Destructor
    */
-  virtual ~AbstractEventHandler();
+  ~AbstractEventHandler() override;
 
-  const std::string &GetName() const;
+  const String &GetName() const;
 
-  void SetName(const std::string &name);
+  void SetName(const String &name);
 
  protected:
 
@@ -184,7 +184,7 @@ WIZTK_EXPORT class AbstractEventHandler : public base::Trackable {
    * @brief Disable this virtual method
    * @param token
    */
-  virtual void AuditDestroyingToken(base::detail::Token */*token*/) final;
+  void AuditDestroyingToken(base::internal::Token */*token*/) final;
 
  private:
 

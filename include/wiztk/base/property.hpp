@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_CORE_PROPERTY_HPP_
-#define WIZTK_CORE_PROPERTY_HPP_
+#ifndef WIZTK_BASE_PROPERTY_HPP_
+#define WIZTK_BASE_PROPERTY_HPP_
+
+#include "wiztk/base/macros.hpp"
 
 #ifndef __PROPERTY__
-#define __PROPERTY__(NAME) (p_->NAME)
+#define __PROPERTY__(NAME) p_->NAME
 #endif
 
 namespace wiztk {
@@ -83,11 +85,8 @@ class PropertyT {
 
  public:
 
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(PropertyT);
   PropertyT() = delete;
-  PropertyT(const PropertyT &) = delete;
-  PropertyT &operator=(const PropertyT &) = delete;
-  PropertyT(PropertyT &&) = delete;
-  PropertyT &operator=(PropertyT &&) = delete;
 
   inline explicit PropertyT(T *owner)
       : owner_(owner) {}
@@ -105,4 +104,4 @@ class PropertyT {
 } // namespace base
 } // namespace wiztk
 
-#endif // WIZTK_CORE_PROPERTY_HPP_
+#endif // WIZTK_BASE_PROPERTY_HPP_

@@ -15,12 +15,9 @@ using special functions known as slots. This is similar to C/C++ callbacks
 (function pointers), but signal/slot system ensures the type-correctness of
 callback arguments.
 
-[SkLand](https://github.com/zhanggyb/skland) provides another built-in
+[WizTK](https://github.com/wiztk) provides another built-in
 signal/slot implementation which takes advantage of C++11 standard and [fast C++
 delegates](delegates.md).
-
-**Note:** There's a standalone version
-called [sigcxx](https://github.com/zhanggyb/sigcxx).
 
 ## Features
 
@@ -37,6 +34,6 @@ called [sigcxx](https://github.com/zhanggyb/sigcxx).
 There're only several classes to know:
 
 - [Trackable](@ref Trackable): for objects can receive signals in slot methods.
-- [Signal](@ref Signal): represents a signal can be emitted, it's also a Trackable object.
-- [SignalRef](@ref SignalRef): reference to a signal object.
+- [SignalT](@ref SignalT): represents a signal can be emitted, it's also a Trackable object.
+- [SignalRefT](@ref SignalRefT): reference to a signal object.
 

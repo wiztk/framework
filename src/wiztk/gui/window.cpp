@@ -41,7 +41,7 @@
 namespace wiztk {
 namespace gui {
 
-using base::PointF;
+using base::Point2F;
 using base::RectF;
 using base::RectI;
 using base::Margin;

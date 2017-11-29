@@ -116,7 +116,7 @@ class Theme {
 
       using Attribute = Schema::Style::Attribute;
 
-      static graphic::Shader MakeLinear(const base::PointF points[2], const Attribute &color);
+      static graphic::Shader MakeLinear(const base::Point2F points[2], const Attribute &color);
 
     };
 

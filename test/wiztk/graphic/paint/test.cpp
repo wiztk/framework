@@ -167,9 +167,9 @@ TEST_F(Test, set_shader_1) {
   Canvas canvas(bitmap);
   canvas.Clear(0xFFFFFFFF);
 
-  PointF points[2] = {
-      PointF(0.f, 0.f),
-      PointF(256.f, 256.f)
+  Point2F points[2] = {
+      Point2F(0.f, 0.f),
+      Point2F(256.f, 256.f)
   };
   uint32_t colors[2] = {0xFF0000FF, 0xFFFFFF00};
 

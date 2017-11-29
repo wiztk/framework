@@ -33,7 +33,7 @@
 namespace wiztk {
 namespace gui {
 
-using Point = base::PointI;
+using Point = base::Point2I;
 using base::Margin;
 
 ViewSurface *ViewSurface::Shell::Create(AbstractEventHandler *event_handler, const Margin &margin) {

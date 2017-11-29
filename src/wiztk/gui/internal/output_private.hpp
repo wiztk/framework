@@ -45,7 +45,7 @@ struct Output::Private {
   struct wl_output *wl_output;
 
   /** position within the global compositor space */
-  base::PointI position_;
+  base::Point2I position_;
 
   /** physical_width width in millimeters of the output */
   base::SizeI physical_size_;

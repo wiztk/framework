@@ -25,7 +25,7 @@ namespace gui {
 
 struct ViewSurface::Private {
 
-  using PointI = base::PointI;
+  using PointI = base::Point2I;
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
   Private() = delete;

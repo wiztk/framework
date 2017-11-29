@@ -51,7 +51,7 @@ struct AbstractEventHandler::Private : public base::PropertyT<AbstractEventHandl
 
   // TODO: there will be more tasks added later
 
-  std::string name;
+  base::String name;
 
 };
 

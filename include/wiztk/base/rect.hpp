@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_CORE_RECT_HPP_
-#define WIZTK_CORE_RECT_HPP_
+#ifndef WIZTK_BASE_RECT_HPP_
+#define WIZTK_BASE_RECT_HPP_
 
-#include "point.hpp"
-#include "size.hpp"
+#include "wiztk/base/point.hpp"
+#include "wiztk/base/size.hpp"
 
 #include <cstring>
 #include <algorithm>
@@ -345,4 +345,4 @@ typedef RectT<double> RectD;
 } // namespace base
 } // namespace wiztk
 
-#endif // WIZTK_CORE_RECT_HPP_
+#endif // WIZTK_BASE_RECT_HPP_

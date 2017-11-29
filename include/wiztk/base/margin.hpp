@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_CORE_MARGIN_HPP_
-#define WIZTK_CORE_MARGIN_HPP_
+#ifndef WIZTK_BASE_MARGIN_HPP_
+#define WIZTK_BASE_MARGIN_HPP_
 
 #include "bounding-box.hpp"
 
@@ -31,4 +31,4 @@ typedef BoundingBoxT<int> Margin;
 }
 }
 
-#endif // WIZTK_CORE_MARGIN_HPP_
+#endif // WIZTK_BASE_MARGIN_HPP_

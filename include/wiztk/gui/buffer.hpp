@@ -44,7 +44,7 @@ class Buffer {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Buffer);
 
-  using Point = base::PointI;
+  using Point = base::Point2I;
   using Size = base::SizeI;
   template<typename ... ParamTypes> using SignalRefT = typename base::SignalRefT<ParamTypes...>;
   template<typename ... ParamTypes> using SignalT = typename base::SignalT<ParamTypes...>;

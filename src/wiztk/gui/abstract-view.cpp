@@ -32,7 +32,7 @@
 namespace wiztk {
 namespace gui {
 
-using base::PointI;
+using base::Point2I;
 using base::SizeI;
 using base::RectF;
 using numerical::ClampT;
@@ -553,7 +553,7 @@ void AbstractView::OnDestroy() {
 AbstractView *AbstractView::DispatchMouseEnterEvent(MouseEvent *event) {
   Iterator it(this);
   AbstractView *view = nullptr;
-  PointI cursor_xy(event->GetWindowXY());
+  Point2I cursor_xy(event->GetWindowXY());
 
   for (it = it.first_child(); it; ++it) {
     if (it.view()->Contain(cursor_xy.x, cursor_xy.y)) {

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_CORE_TYPES_HPP_
-#define WIZTK_CORE_TYPES_HPP_
+#ifndef WIZTK_BASE_TYPES_HPP_
+#define WIZTK_BASE_TYPES_HPP_
 
 #include <cstdint>
 
@@ -357,4 +357,4 @@ typedef uint16_t GlyphID;
 
 }
 
-#endif // WIZTK_CORE_TYPES_HPP_
+#endif // WIZTK_BASE_TYPES_HPP_

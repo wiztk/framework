@@ -24,15 +24,18 @@
  * SOFTWARE.
  */
 
-#ifndef WIZTK_CORE_DELEGATE_HPP_
-#define WIZTK_CORE_DELEGATE_HPP_
+#ifndef WIZTK_BASE_DELEGATE_HPP_
+#define WIZTK_BASE_DELEGATE_HPP_
 
 #include <cstring>
+#include <functional>
 
 namespace wiztk {
 namespace base {
 
 /// @cond IGNORE
+
+namespace internal {
 
 // generic classes to calculate method pointer:
 class GenericBase1 {};
@@ -40,6 +43,8 @@ class GenericBase2 {};
 class GenericMultiInherit : GenericBase1, GenericBase2 {};
 
 typedef void (GenericMultiInherit::*GenericMethodPointer)();
+
+} // namespace internal
 
 // A forward declaration
 // This is the key to use the template format of Delegate<return_type (args...)>
@@ -54,12 +59,15 @@ class DelegateRefT;
 /**
  * @ingroup base
  * @brief Template class for delegates
+ * @tparam ReturnType The return type
+ * @tparam ParamTypes Parameters
  *
  * @see <a href="md_doc_delegates.html">Fast C++ Delegats</a>
  */
 template<typename ReturnType, typename ... ParamTypes>
 class DelegateT<ReturnType(ParamTypes...)> {
-  typedef ReturnType (*MethodStubType)(void *object_ptr, GenericMethodPointer, ParamTypes...);
+
+  typedef ReturnType (*MethodStubType)(void *object_ptr, internal::GenericMethodPointer, ParamTypes...);
 
   struct PointerData {
 
@@ -68,27 +76,31 @@ class DelegateT<ReturnType(ParamTypes...)> {
           method_stub(nullptr),
           method_pointer(nullptr) {}
 
-    PointerData(const PointerData &orig)
-        : object_pointer(orig.object_pointer),
-          method_stub(orig.method_stub),
-          method_pointer(orig.method_pointer) {}
+    PointerData(const PointerData &other)
+        : object_pointer(other.object_pointer),
+          method_stub(other.method_stub),
+          method_pointer(other.method_pointer) {}
 
-    PointerData &operator=(const PointerData &orig) {
-      object_pointer = orig.object_pointer;
-      method_stub = orig.method_stub;
-      method_pointer = orig.method_pointer;
+    PointerData(PointerData &&) = delete;
+
+    PointerData &operator=(const PointerData &other) {
+      object_pointer = other.object_pointer;
+      method_stub = other.method_stub;
+      method_pointer = other.method_pointer;
       return *this;
     }
 
+    PointerData &operator=(PointerData &&) = delete;
+
     void *object_pointer;
     MethodStubType method_stub;
-    GenericMethodPointer method_pointer;
+    internal::GenericMethodPointer method_pointer;
   };
 
   template<typename T, typename TFxn>
   struct MethodStub {
-    static ReturnType invoke(void *obj_ptr, GenericMethodPointer any, ParamTypes ... Args) {
-      T *obj = static_cast<T *>(obj_ptr);
+    static ReturnType invoke(void *obj_ptr, internal::GenericMethodPointer any, ParamTypes ... Args) {
+      auto *obj = static_cast<T *>(obj_ptr);
       return (obj->*reinterpret_cast<TFxn>(any))(Args...);
     }
   };
@@ -105,14 +117,7 @@ class DelegateT<ReturnType(ParamTypes...)> {
   template<typename T>
   static inline DelegateT FromMethod(T *object_ptr,
                                      ReturnType (T::*method)(ParamTypes...)) {
-    typedef ReturnType (T::*TMethod)(ParamTypes...);
-
-    DelegateT d;
-    d.data_.object_pointer = object_ptr;
-    d.data_.method_stub = &MethodStub<T, TMethod>::invoke;
-    d.data_.method_pointer = reinterpret_cast<GenericMethodPointer>(method);
-
-    return d;
+    return DelegateT(object_ptr, method);
   }
 
   /**
@@ -125,14 +130,7 @@ class DelegateT<ReturnType(ParamTypes...)> {
   template<typename T>
   static inline DelegateT FromMethod(T *object_ptr,
                                      ReturnType (T::*method)(ParamTypes...) const) {
-    typedef ReturnType (T::*TMethod)(ParamTypes...) const;
-
-    DelegateT d;
-    d.data_.object_pointer = object_ptr;
-    d.data_.method_stub = &MethodStub<T, TMethod>::invoke;
-    d.data_.method_pointer = reinterpret_cast<GenericMethodPointer>(method);
-
-    return d;
+    return DelegateT(object_ptr, method);
   }
 
   /**
@@ -155,7 +153,7 @@ class DelegateT<ReturnType(ParamTypes...)> {
 
     data_.object_pointer = object_ptr;
     data_.method_stub = &MethodStub<T, TMethod>::invoke;
-    data_.method_pointer = reinterpret_cast<GenericMethodPointer>(method);
+    data_.method_pointer = reinterpret_cast<internal::GenericMethodPointer>(method);
   }
 
   /**
@@ -170,7 +168,7 @@ class DelegateT<ReturnType(ParamTypes...)> {
 
     data_.object_pointer = object_ptr;
     data_.method_stub = &MethodStub<T, TMethod>::invoke;
-    data_.method_pointer = reinterpret_cast<GenericMethodPointer>(method);
+    data_.method_pointer = reinterpret_cast<internal::GenericMethodPointer>(method);
   }
 
   /**
@@ -179,6 +177,9 @@ class DelegateT<ReturnType(ParamTypes...)> {
    */
   DelegateT(const DelegateT &orig)
       : data_(orig.data_) {}
+
+  DelegateT(DelegateT &&other) noexcept
+      : data_(other.data_) {}
 
   /**
    * @brief Destructor
@@ -206,6 +207,11 @@ class DelegateT<ReturnType(ParamTypes...)> {
     data_ = orig.data_;
     return *this;
   }
+
+  DelegateT &operator=(DelegateT &&other) noexcept {
+    data_ = other.data_;
+    return *this;
+  };
 
   ReturnType operator()(ParamTypes... Args) const {
     return (*data_.method_stub)(data_.object_pointer, data_.method_pointer, Args...);
@@ -236,7 +242,7 @@ class DelegateT<ReturnType(ParamTypes...)> {
 
     return (data_.object_pointer == object_ptr) &&
         (data_.method_stub == &MethodStub<T, TMethod>::invoke) &&
-        (data_.method_pointer == reinterpret_cast<GenericMethodPointer>(method));
+        (data_.method_pointer == reinterpret_cast<internal::GenericMethodPointer>(method));
   }
 
   /**
@@ -252,7 +258,7 @@ class DelegateT<ReturnType(ParamTypes...)> {
 
     return (data_.object_pointer == object_ptr) &&
         (data_.method_stub == &MethodStub<T, TMethod>::invoke) &&
-        (data_.method_pointer == reinterpret_cast<GenericMethodPointer>(method));
+        (data_.method_pointer == reinterpret_cast<internal::GenericMethodPointer>(method));
   }
 
  private:
@@ -376,4 +382,4 @@ class DelegateRefT<ReturnType(ParamTypes...)> {
 } // namespace base
 } // namespace wiztk
 
-#endif  // WIZTK_CORE_DELEGATE_HPP_
+#endif  // WIZTK_BASE_DELEGATE_HPP_

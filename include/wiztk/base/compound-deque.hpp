@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_CORE_COMPOUND_DEQUE_HPP_
-#define WIZTK_CORE_COMPOUND_DEQUE_HPP_
+#ifndef WIZTK_BASE_COMPOUND_DEQUE_HPP_
+#define WIZTK_BASE_COMPOUND_DEQUE_HPP_
 
-#include "macros.hpp"
+#include "wiztk/base/macros.hpp"
 
 namespace wiztk {
 namespace base {
@@ -183,4 +183,4 @@ class CompoundDeque {
 } // namespace base
 } // namespace wiztk
 
-#endif // WIZTK_CORE_COMPOUND_DEQUE_HPP_
+#endif // WIZTK_BASE_COMPOUND_DEQUE_HPP_

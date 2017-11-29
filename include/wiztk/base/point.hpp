@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_CORE_POINT_HPP_
-#define WIZTK_CORE_POINT_HPP_
+#ifndef WIZTK_BASE_POINT_HPP_
+#define WIZTK_BASE_POINT_HPP_
 
 #include "vector.hpp"
 
@@ -24,20 +24,41 @@ namespace base {
 
 /**
  * @ingroup base
+ * @brief Point of integer in 2 dimension.
  */
-typedef Vector2T<int> PointI;
+typedef Vector2T<int> Point2I;
 
 /**
  * @ingroup base
+ * @brief Point of float in 2 dimension.
  */
-typedef Vector2T<float> PointF;
+typedef Vector2T<float> Point2F;
 
 /**
  * @ingroup base
+ * @brief Point of double in 2 dimension.
  */
-typedef Vector2T<double> PointD;
+typedef Vector2T<double> Point2D;
+
+/**
+ * @ingroup base
+ * @brief Point of integer in 3 dimension.
+ */
+typedef Vector3T<int> Point3I;
+
+/**
+ * @ingroup base
+ * @brief Point of float in 3 dimension.
+ */
+typedef Vector3T<float> Point3F;
+
+/**
+ * @ingroup base
+ * @brief Point of double in 3 dimension.
+ */
+typedef Vector3T<double> Point3D;
 
 } // namespace base
 } // namespace wiztk
 
-#endif // WIZTK_CORE_POINT_HPP_
+#endif // WIZTK_BASE_POINT_HPP_

@@ -44,7 +44,7 @@ struct Canvas::Private {
 
   SkCanvas sk_canvas;
 
-  base::PointF origin;
+  base::Point2F origin;
 
   size_t lock_count = 0;
 

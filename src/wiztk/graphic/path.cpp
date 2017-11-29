@@ -21,7 +21,7 @@
 namespace wiztk {
 namespace graphic {
 
-using base::PointF;
+using base::Point2F;
 using base::RectF;
 
 struct Path::Private {
@@ -126,12 +126,12 @@ int Path::CountPoints() const {
   return p_->sk_path.countPoints();
 }
 
-PointF Path::GetPoint(int index) const {
+Point2F Path::GetPoint(int index) const {
   SkPoint p = p_->sk_path.getPoint(index);
-  return PointF(p.fX, p.fY);
+  return Point2F(p.fX, p.fY);
 }
 
-int Path::GetPoints(PointF points[], int max) const {
+int Path::GetPoints(Point2F points[], int max) const {
   return p_->sk_path.getPoints(reinterpret_cast<SkPoint *>(points), max);
 }
 
@@ -155,7 +155,7 @@ void Path::MoveTo(float x, float y) {
   p_->sk_path.moveTo(x, y);
 }
 
-void Path::MoveTo(const PointF &p) {
+void Path::MoveTo(const Point2F &p) {
   p_->sk_path.moveTo(reinterpret_cast<const SkPoint &>(p));
 }
 
@@ -167,7 +167,7 @@ void Path::LineTo(float x, float y) {
   p_->sk_path.lineTo(x, y);
 }
 
-void Path::LineTo(const PointF &p) {
+void Path::LineTo(const Point2F &p) {
   p_->sk_path.lineTo(reinterpret_cast<const SkPoint &>(p));
 }
 
@@ -179,7 +179,7 @@ void Path::QuadTo(float x1, float y1, float x2, float y2) {
   p_->sk_path.quadTo(x1, y1, x2, y2);
 }
 
-void Path::QuadTo(const PointF &p1, const PointF &p2) {
+void Path::QuadTo(const Point2F &p1, const Point2F &p2) {
   p_->sk_path.quadTo(reinterpret_cast<const SkPoint &>(p1), reinterpret_cast<const SkPoint &>(p2));
 }
 

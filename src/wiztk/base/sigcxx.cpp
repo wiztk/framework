@@ -24,12 +24,12 @@
  * SOFTWARE.
  */
 
-#include <wiztk/base/sigcxx.hpp>
+#include "wiztk/base/sigcxx.hpp"
 
 namespace wiztk {
 namespace base {
 
-namespace detail {
+namespace internal {
 
 Binding::~Binding() {
   if (previous) previous->next = next;
@@ -41,7 +41,7 @@ Binding::~Binding() {
   }
 
   if (token) {
-#ifdef DEBUG
+#ifdef __DEBUG__
     assert(token->binding == this);
 #endif
     token->binding = nullptr;
@@ -65,7 +65,7 @@ Token::~Token() {
   if (next) next->previous = previous;
 
   if (binding) {
-#ifdef DEBUG
+#ifdef __DEBUG__
     assert(binding->token == this);
 #endif
     binding->token = nullptr;
@@ -80,10 +80,10 @@ Trackable::~Trackable() {
 }
 
 void Trackable::UnbindSignal(SLOT slot) {
-  // TODO: test this method
+  using internal::Token;
 
   if (slot->token_->binding->trackable == this) {
-    detail::Token *tmp = slot->token_;
+    Token *tmp = slot->token_;
 //    slot->token_ = slot->token_->next;
 //    slot->skip_ = true;
 
@@ -94,8 +94,10 @@ void Trackable::UnbindSignal(SLOT slot) {
 }
 
 void Trackable::UnbindAllSignals() {
-  detail::Binding *tmp = nullptr;
-  detail::Binding *it = last_binding_;
+  using internal::Binding;
+
+  Binding *tmp = nullptr;
+  Binding *it = last_binding_;
 
   while (it) {
     tmp = it;
@@ -105,15 +107,17 @@ void Trackable::UnbindAllSignals() {
 }
 
 int Trackable::CountSignalBindings() const {
+  using internal::Binding;
+
   int count = 0;
-  for (detail::Binding *it = first_binding_; it; it = it->next) {
+  for (Binding *it = first_binding_; it; it = it->next) {
     count++;
   }
   return count;
 }
 
-void Trackable::PushBackBinding(detail::Binding *node) {
-#ifdef DEBUG
+void Trackable::PushBackBinding(internal::Binding *node) {
+#ifdef __DEBUG__
   assert(nullptr == node->trackable);
 #endif
 
@@ -121,7 +125,7 @@ void Trackable::PushBackBinding(detail::Binding *node) {
     last_binding_->next = node;
     node->previous = last_binding_;
   } else {
-#ifdef DEBUG
+#ifdef __DEBUG__
     assert(nullptr == first_binding_);
 #endif
     node->previous = nullptr;
@@ -132,8 +136,8 @@ void Trackable::PushBackBinding(detail::Binding *node) {
   node->trackable = this;
 }
 
-void Trackable::PushFrontBinding(detail::Binding *node) {
-#ifdef DEBUG
+void Trackable::PushFrontBinding(internal::Binding *node) {
+#ifdef __DEBUG__
   assert(nullptr == node->trackable);
 #endif
 
@@ -141,7 +145,7 @@ void Trackable::PushFrontBinding(detail::Binding *node) {
     first_binding_->previous = node;
     node->next = first_binding_;
   } else {
-#ifdef DEBUG
+#ifdef __DEBUG__
     assert(nullptr == last_binding_);
 #endif
     node->next = nullptr;
@@ -152,13 +156,13 @@ void Trackable::PushFrontBinding(detail::Binding *node) {
   node->trackable = this;
 }
 
-void Trackable::InsertBinding(int index, detail::Binding *node) {
-#ifdef DEBUG
+void Trackable::InsertBinding(int index, internal::Binding *node) {
+#ifdef __DEBUG__
   assert(nullptr == node->trackable);
 #endif
 
   if (nullptr == first_binding_) {
-#ifdef DEBUG
+#ifdef __DEBUG__
     assert(nullptr == last_binding_);
 #endif
     node->next = nullptr;
@@ -168,8 +172,8 @@ void Trackable::InsertBinding(int index, detail::Binding *node) {
   } else {
     if (index >= 0) {
 
-      detail::Binding *p = first_binding_;
-#ifdef DEBUG
+      internal::Binding *p = first_binding_;
+#ifdef __DEBUG__
       assert(p != nullptr);
 #endif
 
@@ -199,8 +203,8 @@ void Trackable::InsertBinding(int index, detail::Binding *node) {
 
     } else {
 
-      detail::Binding *p = last_binding_;
-#ifdef DEBUG
+      internal::Binding *p = last_binding_;
+#ifdef __DEBUG__
       assert(p);
 #endif
 

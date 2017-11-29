@@ -11,18 +11,17 @@ Fast C++ Delegates
 Delegates are object-oriented function pointers and wildly used in this project,
 for example, they are used to build a signal object, or replace the callback
 function in native wayland wrapper classes. To be precise, a delegate in
-[SkLand](https://github.com/zhanggyb/skland) is an object which contains 2 pointers: one pointer to an object,
+[WizTK](https://github.com/wiztk) is an object which contains 2 pointers: one pointer to an object,
 another to a member function in corresponding class, created by a template
 class. Invoke a delegate just works as call the member function directly.
 
-**Note:** Delegate in [SkLand](https://github.com/zhanggyb/skland) does not support static methods or global
-functions. A delegate to a static method is meanless (it's not object-oriented),
+**Note:** Delegate in [WizTK](https://github.com/wiztk) does not support static methods or global
+functions. A delegate to a static method is meaningless (it's not object-oriented),
 use
-[`std::bind`](http://en.cppreference.com/w/cpp/utility/functional/bind),
 [`std::function`](http://en.cppreference.com/w/cpp/utility/functional/function)
 or just function pointer as you want.
 
-You use a template class defined in `skland/core/delegate.hpp` to create a new
+You use a template class defined in `wiztk/base/delegate.hpp` to create a new
 delegate.
 
 For example, if you have a class `A` and an instance `a`:
@@ -30,10 +29,10 @@ For example, if you have a class `A` and an instance `a`:
 ``` c++
 class A {
 public:
-  
+
   A();
   ~A();
-  
+
   void OnNotifyInA(int num);
 };
 
@@ -44,7 +43,7 @@ then you can use a delegate points to the `OnNotifyInA()` member function of
 `a`:
 
 ``` c++
-#include "core/delegate.hpp"
+#include "wiztk/base/delegate.hpp"
 
 Delegate<void(int)> d(&a, &A::OnNotifyInA);
 // or use a static method: auto d = Delegate<void(int)>::FromMethod(&a, &A::OnNotifyInA);
@@ -57,8 +56,8 @@ d(1);	// This is the same as a.OnNotifyInA(1);
 ```
 
 Until here it is like
-the [`std::bind`](http://en.cppreference.com/w/cpp/utility/functional/bind) in
-C++11 STL, you can use `std::bind` in the same way:
+the [`std::function`](http://en.cppreference.com/w/cpp/utility/functional/function) in
+C++11 STL, you can use `std::function` with `std::bind` in the same way:
 
 ``` c++
 auto b = std::bind(&A::OnNotifiyInA, &a, 1);
@@ -68,7 +67,7 @@ b();
 ```
 
 But
-unlike [`std::bind`](http://en.cppreference.com/w/cpp/utility/functional/bind),
+unlike [`std::function`](http://en.cppreference.com/w/cpp/utility/functional/function),
 a delegate can be assigned to another member function of another type which has
 the same arguments, or compared with each other. This is a very important feature
 which makes delegate more flexible to be used
@@ -77,13 +76,13 @@ in [signals and slots](signals_and_slots.md).
 For example:
 
 ``` c++
-#include "core/delegate.hpp"
+#include "wiztk/base/delegate.hpp"
 
 class A {
 public:
   A();
   ~A();
-  
+
   void OnNotifyInA(int num);
 };
 
@@ -91,7 +90,7 @@ class B {
 public:
   B();
   ~B();
-    
+
   void OnNotifyInB(int num);
 };
 

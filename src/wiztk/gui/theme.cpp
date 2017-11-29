@@ -31,7 +31,7 @@
 namespace wiztk {
 namespace gui {
 
-using base::PointF;
+using base::Point2F;
 using graphic::FontStyle;
 using graphic::Shader;
 
@@ -57,7 +57,7 @@ Theme::Data::Data()
 
 }
 
-Shader Theme::Helper::GradientShader::MakeLinear(const PointF *points, const Attribute &color) {
+Shader Theme::Helper::GradientShader::MakeLinear(const Point2F *points, const Attribute &color) {
   return wiztk::graphic::GradientShader::MakeLinear(points,
                                                         color.colors.data(),
                                                         color.color_positions.data(),

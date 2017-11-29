@@ -35,7 +35,7 @@ class GradientShader {
 
  public:
 
-  static Shader MakeLinear(const base::PointF points[2],
+  static Shader MakeLinear(const base::Point2F points[2],
                            const uint32_t colors[],
                            const float pos[],
                            int count,
@@ -43,7 +43,7 @@ class GradientShader {
     return MakeLinear(points, colors, pos, count, mode, 0, nullptr);
   }
 
-  static Shader MakeLinear(const base::PointF points[2],
+  static Shader MakeLinear(const base::Point2F points[2],
                            const uint32_t colors[],
                            const float pos[],
                            int count,
@@ -51,7 +51,7 @@ class GradientShader {
                            uint32_t flags,
                            const Matrix *local_matrix);
 
-  static Shader MakeLinear(const base::PointF points[2],
+  static Shader MakeLinear(const base::Point2F points[2],
                            const base::ColorF colors[],
                            const float pos[],
                            int count,
@@ -59,7 +59,7 @@ class GradientShader {
                            uint32_t flags,
                            const Matrix *local_matrix);
 
-  static Shader MakeLinear(const base::PointF points[2],
+  static Shader MakeLinear(const base::Point2F points[2],
                            const base::ColorF colors[],
                            const float pos[],
                            int count,
@@ -67,7 +67,7 @@ class GradientShader {
     return MakeLinear(points, colors, pos, count, mode, 0, nullptr);
   }
 
-  static Shader MakeRadial(const base::PointF &center,
+  static Shader MakeRadial(const base::Point2F &center,
                            float radius,
                            const uint32_t colors[],
                            const float pos[],
@@ -76,7 +76,7 @@ class GradientShader {
                            uint32_t flags,
                            const Matrix *local_matrix);
 
-  static Shader MakeRadial(const base::PointF &center,
+  static Shader MakeRadial(const base::Point2F &center,
                            float radius,
                            const uint32_t colors[],
                            const float pos[],
@@ -85,7 +85,7 @@ class GradientShader {
     return MakeRadial(center, radius, colors, pos, count, mode, 0, nullptr);
   }
 
-  static Shader MakeRadial(const base::PointF &center,
+  static Shader MakeRadial(const base::Point2F &center,
                            float radius,
                            const base::ColorF colors[],
                            const float pos[],
@@ -94,7 +94,7 @@ class GradientShader {
                            uint32_t flags,
                            const Matrix *local_matrix);
 
-  static Shader MakeRadial(const base::PointF &center,
+  static Shader MakeRadial(const base::Point2F &center,
                            float radius,
                            const base::ColorF colors[],
                            const float pos[],

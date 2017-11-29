@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_CORE_DEFINES_HPP_
-#define WIZTK_CORE_DEFINES_HPP_
+#ifndef WIZTK_BASE_DEFINES_HPP_
+#define WIZTK_BASE_DEFINES_HPP_
 
 #ifdef __DEBUG__
 
@@ -85,4 +85,4 @@
 #define WIZTK_DEPRECATED_NO_EXPORT WIZTK_NO_EXPORT WIZTK_DEPRECATED
 #endif
 
-#endif // WIZTK_CORE_DEFINES_HPP_
+#endif // WIZTK_BASE_DEFINES_HPP_

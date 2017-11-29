@@ -21,8 +21,8 @@
 namespace wiztk {
 namespace gui {
 
-using base::PointI;
-using base::PointD;
+using base::Point2I;
+using base::Point2D;
 
 MouseEvent::MouseEvent(Input *input)
     : InputEvent(input) {
@@ -41,14 +41,14 @@ uint32_t MouseEvent::GetSerial() const {
   return p_->serial;
 }
 
-const PointD &MouseEvent::GetSurfaceXY() const {
+const Point2D &MouseEvent::GetSurfaceXY() const {
   return p_->surface_xy;
 }
 
-PointD MouseEvent::GetWindowXY() const {
-  PointD xy;
+Point2D MouseEvent::GetWindowXY() const {
+  Point2D xy;
 
-  PointI pos = p_->surface->GetWindowPosition();
+  Point2I pos = p_->surface->GetWindowPosition();
 
   xy.x = pos.x + p_->surface_xy.x;
   xy.y = pos.y + p_->surface_xy.y;

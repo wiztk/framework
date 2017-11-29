@@ -372,7 +372,7 @@ void TitleBar::OnDraw(const Context &context) {
   paint.SetAntiAlias(true);
   paint.SetStyle(Paint::kStyleFill);
 
-  PointF points[2] = {{factor, bounds.top + factor}, {factor, bounds.bottom}};
+  Point2F points[2] = {{factor, bounds.top + factor}, {factor, bounds.bottom}};
   uint32_t colors[2] = {0xFFE7E7E7, 0xFFD7D7D7};
   float pos[2] = {0.f, 1.f};
 

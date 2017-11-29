@@ -58,9 +58,9 @@ WIZTK_EXPORT class MouseEvent : public InputEvent {
 
   uint32_t GetSerial() const;
 
-  const base::PointD &GetSurfaceXY() const;
+  const base::Point2D &GetSurfaceXY() const;
 
-  base::PointD GetWindowXY() const;
+  base::Point2D GetWindowXY() const;
 
   uint32_t GetButton() const;
 

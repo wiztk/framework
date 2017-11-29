@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_CORE_COLOR_HPP_
-#define WIZTK_CORE_COLOR_HPP_
+#ifndef WIZTK_BASE_COLOR_HPP_
+#define WIZTK_BASE_COLOR_HPP_
 
 #include "wiztk/numerical/clamp.hpp"
 
@@ -236,4 +236,4 @@ typedef ColorT<double> ColorD;
 } // namespace base
 } // namespace wiztk
 
-#endif // WIZTK_CORE_COLOR_HPP_
+#endif // WIZTK_BASE_COLOR_HPP_

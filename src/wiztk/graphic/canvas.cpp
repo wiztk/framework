@@ -31,7 +31,7 @@
 namespace wiztk {
 namespace graphic {
 
-using base::PointF;
+using base::Point2F;
 using base::RectF;
 using base::ColorF;
 
@@ -250,7 +250,7 @@ void Canvas::Flush() {
   p_->sk_canvas.flush();
 }
 
-const PointF &Canvas::GetOrigin() const {
+const Point2F &Canvas::GetOrigin() const {
   return p_->origin;
 }
 

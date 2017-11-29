@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_CORE_EXCEPTIONS_HPP_
-#define WIZTK_CORE_EXCEPTIONS_HPP_
+#ifndef WIZTK_BASE_EXCEPTIONS_HPP_
+#define WIZTK_BASE_EXCEPTIONS_HPP_
 
 #include <stdexcept>
 
@@ -38,4 +38,4 @@ class HierarchicalError: public std::runtime_error
 
 }
 
-#endif // WIZTK_CORE_EXCEPTIONS_HPP_
+#endif // WIZTK_BASE_EXCEPTIONS_HPP_

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_CORE_BOUNDING_BOX_HPP_
-#define WIZTK_CORE_BOUNDING_BOX_HPP_
+#ifndef WIZTK_BASE_BOUNDING_BOX_HPP_
+#define WIZTK_BASE_BOUNDING_BOX_HPP_
 
 namespace wiztk {
 namespace base {
@@ -98,4 +98,4 @@ inline bool operator!=(const BoundingBoxT<T> &s1, const BoundingBoxT<T> &s2) {
 } // namespace base
 } // namespace wiztk
 
-#endif // WIZ_VISION_CORE_BOUNDING_BOX_HPP_
+#endif // WIZTK_BASE_BOUNDING_BOX_HPP_

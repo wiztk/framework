@@ -101,9 +101,9 @@ class Path {
 
   int CountPoints() const;
 
-  base::PointF GetPoint(int index) const;
+  base::Point2F GetPoint(int index) const;
 
-  int GetPoints(base::PointF points[], int max) const;
+  int GetPoints(base::Point2F points[], int max) const;
 
   int CountVerbs() const;
 
@@ -115,19 +115,19 @@ class Path {
 
   void MoveTo(float x, float y);
 
-  void MoveTo(const base::PointF &p);
+  void MoveTo(const base::Point2F &p);
 
   void RelativeMoveTo(float dx, float dy);
 
   void LineTo(float x, float y);
 
-  void LineTo(const base::PointF &p);
+  void LineTo(const base::Point2F &p);
 
   void RelativeLineTo(float dx, float dy);
 
   void QuadTo(float x1, float y1, float x2, float y2);
 
-  void QuadTo(const base::PointF &p1, const base::PointF &p2);
+  void QuadTo(const base::Point2F &p1, const base::Point2F &p2);
 
   void RelativeQuadTo(float dx1, float dy1, float dx2, float dy2);
 

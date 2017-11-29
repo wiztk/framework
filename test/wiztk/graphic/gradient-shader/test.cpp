@@ -48,7 +48,7 @@ TEST_F(Test, linear_1) {
 
   Paint paint;
 
-  PointF points[2] = {{0.f, 0.f}, {0.f, 300.f}};
+  Point2F points[2] = {{0.f, 0.f}, {0.f, 300.f}};
   uint32_t colors[2] = {0xFFFFFFFF, 0xFF000000};
   float pos[2] = {0.f, 1.f};
 
@@ -80,7 +80,7 @@ TEST_F(Test, linear_2) {
 
   Paint paint;
 
-  PointF points[2] = {{0.f, 0.f}, {0.f, kHeight}};
+  Point2F points[2] = {{0.f, 0.f}, {0.f, kHeight}};
   ColorF colors[2];
   colors[0].red = 1.f;
   colors[0].green = 1.f;
@@ -119,7 +119,7 @@ TEST_F(Test, radial_1) {
 
   Paint paint;
 
-  PointF center(kWidth / 2.f, kHeight / 2.f);
+  Point2F center(kWidth / 2.f, kHeight / 2.f);
   float radius = std::min(kWidth, kHeight) / 2.f;
   uint32_t colors[2] = {0xFFFFFFFF, 0xFF000000};
   float pos[2] = {0.f, 1.f};
@@ -153,7 +153,7 @@ TEST_F(Test, radial_2) {
 
   Paint paint;
 
-  PointF center(kWidth / 2.f, kHeight / 2.f);
+  Point2F center(kWidth / 2.f, kHeight / 2.f);
   float radius = std::min(kWidth, kHeight) / 2.f;
   ColorF colors[2];
   colors[0].red = 1.f;

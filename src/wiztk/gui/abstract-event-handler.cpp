@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-#include "internal/abstract-view_private.hpp"
 #include "internal/abstract-event-handler_private.hpp"
+#include "internal/abstract-view_private.hpp"
 
 #include "wiztk/base/memory.hpp"
 
 namespace wiztk {
 namespace gui {
+
+using base::String;
 
 AbstractEventHandler::AbstractEventHandler() {
   p_ = std::make_unique<Private>(this);
@@ -30,26 +32,26 @@ AbstractEventHandler::~AbstractEventHandler() {
 
 }
 
-const std::string& AbstractEventHandler::GetName() const {
-  return p_->name;
+const String &AbstractEventHandler::GetName() const {
+  return __PROPERTY__(name);
 }
 
-void AbstractEventHandler::SetName(const std::string &name) {
-  p_->name = name;
+void AbstractEventHandler::SetName(const String &name) {
+  __PROPERTY__(name) = name;
 }
 
-void AbstractEventHandler::AuditDestroyingToken(base::detail::Token */*token*/) {
+void AbstractEventHandler::AuditDestroyingToken(base::internal::Token */*token*/) {
 
 }
 
 // --------------------
 
 AbstractEventHandler::EventTask *AbstractEventHandler::EventTask::GetMouseTask(const AbstractEventHandler *event_hander) {
-  return &event_hander->p_->mouse_task;
+  return &event_hander->__PROPERTY__(mouse_task);
 }
 
 AbstractEventHandler::EventTask *AbstractEventHandler::EventTask::GetMouseMotionTask(const AbstractEventHandler *event_handler) {
-  return &event_handler->p_->mouse_motion_task;
+  return &event_handler->__PROPERTY__(mouse_motion_task);
 }
 
 } // namespace gui

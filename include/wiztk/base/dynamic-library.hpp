@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_CORE_DYNAMIC_LIBRARY_HPP_
-#define WIZTK_CORE_DYNAMIC_LIBRARY_HPP_
+#ifndef WIZTK_BASE_DYNAMIC_LIBRARY_HPP_
+#define WIZTK_BASE_DYNAMIC_LIBRARY_HPP_
 
 #include <dlfcn.h>
 
@@ -52,4 +52,4 @@ class DynamicLibrary {
 } // namespace base
 } // namespace wiztk
 
-#endif // WIZTK_CORE_DYNAMIC_LIBRARY_HPP_
+#endif // WIZTK_BASE_DYNAMIC_LIBRARY_HPP_

@@ -36,7 +36,7 @@
 namespace wiztk {
 namespace gui {
 
-using Point = base::PointI;
+using Point = base::Point2I;
 using Size = base::SizeI;
 
 using base::Margin;

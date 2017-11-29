@@ -17,8 +17,8 @@
 #ifndef WIZTK_BASE_TIME_HPP_
 #define WIZTK_BASE_TIME_HPP_
 
-#include "macros.hpp"
-#include "string.hpp"
+#include "wiztk/base/macros.hpp"
+#include "wiztk/base/string.hpp"
 
 #include <ctime>
 
@@ -69,7 +69,7 @@ class WIZTK_EXPORT Time {
    * @brief Constructor from a timespec value
    * @param ts
    */
-  Time(const struct timespec &ts)
+  explicit Time(const struct timespec &ts)
       : timespec_(ts) {}
 
   /**
@@ -95,11 +95,10 @@ class WIZTK_EXPORT Time {
        int ns = 0);
 
   /**
-   * @brief Copy constructor
+   * @brief Default copy constructor
    * @param other
    */
-  Time(const Time &other)
-      : timespec_(other.timespec_) {}
+  Time(const Time &other) = default;
 
   /**
    * @brief Default move constructor
@@ -112,10 +111,12 @@ class WIZTK_EXPORT Time {
    */
   ~Time() = default;
 
-  Time &operator=(const Time &other) {
-    timespec_ = other.timespec_;
-    return *this;
-  }
+  /**
+   * @brief Default assignment
+   * @param other
+   * @return
+   */
+  Time &operator=(const Time &other) = default;
 
   Time &operator=(Time &&other) = default;
 
@@ -125,8 +126,16 @@ class WIZTK_EXPORT Time {
 
   String ToString() const;
 
+  /**
+   * @brief Get the seconds part of the time value
+   * @return
+   */
   long sec() const { return timespec_.tv_sec; }
 
+  /**
+   * @brief Get the nanoseconds part of the time value
+   * @return
+   */
   long nsec() const { return timespec_.tv_nsec; }
 
   /**

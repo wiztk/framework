@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_CORE_VECTORS_HPP_
-#define WIZTK_CORE_VECTORS_HPP_
+#ifndef WIZTK_BASE_VECTORS_HPP_
+#define WIZTK_BASE_VECTORS_HPP_
 
 namespace wiztk {
 namespace base {
@@ -236,4 +236,4 @@ inline bool operator!=(const Vector4T<T> &vector1, const Vector4T<T> &vector2) {
 } // namespace base
 } // namespace wiztk
 
-#endif // WIZTK_CORE_VECTORS_HPP_
+#endif // WIZTK_BASE_VECTORS_HPP_

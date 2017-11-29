@@ -74,7 +74,7 @@ class AbstractRenderingAPI;
  */
 class ViewSurface : public graphic::AbstractSurface, public base::Trackable {
 
-  using Point  = base::PointI;
+  using Point  = base::Point2I;
   using Margin = base::Margin;
 
   friend class Application;

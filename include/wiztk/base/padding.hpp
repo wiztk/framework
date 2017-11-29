@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_CORE_PADDING_HPP_
-#define WIZTK_CORE_PADDING_HPP_
+#ifndef WIZTK_BASE_PADDING_HPP_
+#define WIZTK_BASE_PADDING_HPP_
 
 #include "bounding-box.hpp"
 
