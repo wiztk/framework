@@ -30,6 +30,10 @@
 #include <cstring>
 #include <functional>
 
+#ifdef __DEBUG__
+#include <cassert>
+#endif
+
 namespace wiztk {
 namespace base {
 
@@ -67,70 +71,102 @@ class DelegateRefT;
 template<typename ReturnType, typename ... ParamTypes>
 class DelegateT<ReturnType(ParamTypes...)> {
 
-  typedef ReturnType (*MethodStubType)(void *object_ptr, internal::GenericMethodPointer, ParamTypes...);
+  template<typename ReturnTypeAlias, typename ... ParamTypesAlias>
+  friend inline bool operator==(const DelegateT<ReturnTypeAlias(ParamTypesAlias...)> &src,
+                                const DelegateT<ReturnTypeAlias(ParamTypesAlias...)> &dst);
 
-  struct PointerData {
+  template<typename ReturnTypeAlias, typename ... ParamTypesAlias>
+  friend inline bool operator!=(const DelegateT<ReturnTypeAlias(ParamTypesAlias...)> &src,
+                                const DelegateT<ReturnTypeAlias(ParamTypesAlias...)> &dst);
 
-    PointerData()
-        : object_pointer(nullptr),
-          method_stub(nullptr),
-          method_pointer(nullptr) {}
+  template<typename ReturnTypeAlias, typename ... ParamTypesAlias>
+  friend inline bool operator<(const DelegateT<ReturnTypeAlias(ParamTypesAlias...)> &src,
+                               const DelegateT<ReturnTypeAlias(ParamTypesAlias...)> &dst);
 
-    PointerData(const PointerData &other)
-        : object_pointer(other.object_pointer),
+  template<typename ReturnTypeAlias, typename ... ParamTypesAlias>
+  friend inline bool operator>(const DelegateT<ReturnTypeAlias(ParamTypesAlias...)> &src,
+                               const DelegateT<ReturnTypeAlias(ParamTypesAlias...)> &dst);
+
+  typedef ReturnType (*MethodStubType)(void *object, internal::GenericMethodPointer, ParamTypes...);
+
+  struct Data {
+
+    Data()
+        : object(nullptr),
+          method_stub(nullptr) {
+      pointer.method = nullptr;
+    }
+
+    Data(const Data &other)
+        : object(other.object),
           method_stub(other.method_stub),
-          method_pointer(other.method_pointer) {}
+          pointer(other.pointer) {}
 
-    PointerData(PointerData &&) = delete;
+    Data(Data &&) = delete;
 
-    PointerData &operator=(const PointerData &other) {
-      object_pointer = other.object_pointer;
+    Data &operator=(const Data &other) {
+      object = other.object;
       method_stub = other.method_stub;
-      method_pointer = other.method_pointer;
+      pointer = other.pointer;
       return *this;
     }
 
-    PointerData &operator=(PointerData &&) = delete;
+    Data &operator=(Data &&) = delete;
 
-    void *object_pointer;
+    void *object;
     MethodStubType method_stub;
-    internal::GenericMethodPointer method_pointer;
+    union {
+      internal::GenericMethodPointer method;  // member function pointer
+      void *function; // static function pointer
+    } pointer;
+
   };
 
   template<typename T, typename TFxn>
   struct MethodStub {
-    static ReturnType invoke(void *obj_ptr, internal::GenericMethodPointer any, ParamTypes ... Args) {
-      auto *obj = static_cast<T *>(obj_ptr);
+    static ReturnType invoke(void *object, internal::GenericMethodPointer any, ParamTypes ... Args) {
+      auto *obj = static_cast<T *>(object);
       return (obj->*reinterpret_cast<TFxn>(any))(Args...);
     }
   };
 
  public:
 
+  typedef ReturnType (*TFunction)(ParamTypes...);
+
   /**
-   * @brief Create a delegate from the given object and a member function pointer
+   * @brief Create a delegate from the given object and a member function pointer.
    * @tparam T The object type
-   * @param object_ptr A pointer to an object
+   * @param object A pointer to an object
    * @param method A pointer to a member function in class T
    * @return A delegate object
    */
   template<typename T>
-  static inline DelegateT FromMethod(T *object_ptr,
+  static inline DelegateT FromMethod(T *object,
                                      ReturnType (T::*method)(ParamTypes...)) {
-    return DelegateT(object_ptr, method);
+    return DelegateT(object, method);
   }
 
   /**
-   * @brief Create a delegate from the given object and a const member function pointer
+   * @brief Create a delegate from the given object and a const member function pointer.
    * @tparam T The object type
-   * @param object_ptr A pointer to an object
+   * @param object A pointer to an object
    * @param method A pointer to a member function in class T
    * @return A delegate object
    */
   template<typename T>
-  static inline DelegateT FromMethod(T *object_ptr,
+  static inline DelegateT FromMethod(T *object,
                                      ReturnType (T::*method)(ParamTypes...) const) {
-    return DelegateT(object_ptr, method);
+    return DelegateT(object, method);
+  }
+
+  /**
+   * @brief Create a delegate from the given static function pointer.
+   * @param fn A static function pointer
+   * @return A delegate object
+   */
+  static inline DelegateT FromFunction(TFunction fn) {
+    return DelegateT(fn);
   }
 
   /**
@@ -144,31 +180,37 @@ class DelegateT<ReturnType(ParamTypes...)> {
   /**
    * @brief Constructor to create a delegate by given object and method
    * @tparam T The type of object
-   * @param object_ptr A pointer to the object
+   * @param object A pointer to the object
    * @param method A pointer to a member function in class T
    */
   template<typename T>
-  DelegateT(T *object_ptr, ReturnType (T::*method)(ParamTypes...)) {
+  DelegateT(T *object, ReturnType (T::*method)(ParamTypes...)) {
     typedef ReturnType (T::*TMethod)(ParamTypes...);
 
-    data_.object_pointer = object_ptr;
+    data_.object = object;
     data_.method_stub = &MethodStub<T, TMethod>::invoke;
-    data_.method_pointer = reinterpret_cast<internal::GenericMethodPointer>(method);
+    data_.pointer.method = reinterpret_cast<internal::GenericMethodPointer>(method);
   }
 
   /**
    * @brief Constructor to create a delegate by given object and const method
    * @tparam T The type of object
-   * @param object_ptr A pointer to the object
+   * @param object A pointer to the object
    * @param method A pointer to a const member function in class T
    */
   template<typename T>
-  DelegateT(T *object_ptr, ReturnType (T::*method)(ParamTypes...) const) {
+  DelegateT(T *object, ReturnType (T::*method)(ParamTypes...) const) {
     typedef ReturnType (T::*TMethod)(ParamTypes...) const;
 
-    data_.object_pointer = object_ptr;
+    data_.object = object;
     data_.method_stub = &MethodStub<T, TMethod>::invoke;
-    data_.method_pointer = reinterpret_cast<internal::GenericMethodPointer>(method);
+    data_.pointer.method = reinterpret_cast<internal::GenericMethodPointer>(method);
+  }
+
+  explicit DelegateT(TFunction fn) {
+    data_.object = nullptr;
+    data_.method_stub = nullptr;
+    data_.pointer.function = reinterpret_cast<void *>(fn);
   }
 
   /**
@@ -187,18 +229,6 @@ class DelegateT<ReturnType(ParamTypes...)> {
   ~DelegateT() = default;
 
   /**
-   * @brief Reset this delegate
-   *
-   * Reset pointers in this delegate to nullptr (0)
-   *
-   * @note After reset, invoke this delegate by operator() or Invoke() will cause segment fault.
-   * The bool operator will return false.
-   */
-  void Reset() {
-    memset(&data_, 0, sizeof(PointerData));
-  }
-
-  /**
    * @brief Assignment operator overloading
    * @param orig Another delegate
    * @return
@@ -213,12 +243,45 @@ class DelegateT<ReturnType(ParamTypes...)> {
     return *this;
   };
 
+  /**
+   * @brief Re-assign this delegate to a static function
+   * @param fn Static function pointer, use nullptr to reset this delegate, same as Reset()
+   * @return Reference to this delegate
+   *
+   */
+  DelegateT &operator=(TFunction fn) {
+    data_.object = nullptr;
+    data_.method_stub = nullptr;
+    data_.pointer.function = reinterpret_cast<void *>(fn);
+    return *this;
+  }
+
   ReturnType operator()(ParamTypes... Args) const {
-    return (*data_.method_stub)(data_.object_pointer, data_.method_pointer, Args...);
+    if (data_.object) {
+#ifdef __DEBUG__
+      assert(nullptr != data_.method_stub);
+#endif
+      return (*data_.method_stub)(data_.object, data_.pointer.method, Args...);
+    }
+
+#ifdef __DEBUG__
+    assert(nullptr == data_.method_stub);
+#endif
+    return reinterpret_cast<TFunction >(data_.pointer.function)(Args...);
   }
 
   ReturnType Invoke(ParamTypes... Args) const {
-    return (*data_.method_stub)(data_.object_pointer, data_.method_pointer, Args...);
+    if (data_.object) {
+#ifdef __DEBUG__
+      assert(nullptr != data_.method_stub);
+#endif
+      return (*data_.method_stub)(data_.object, data_.pointer.method, Args...);
+    }
+
+#ifdef __DEBUG__
+    assert(nullptr == data_.method_stub);
+#endif
+    return reinterpret_cast<TFunction >(data_.pointer.function)(Args...);
   }
 
   /**
@@ -226,7 +289,19 @@ class DelegateT<ReturnType(ParamTypes...)> {
    * @return True if pointer to a method is set, false otherwise
    */
   explicit operator bool() const {
-    return (nullptr != data_.object_pointer) && (nullptr != data_.method_stub) && (nullptr != data_.method_pointer);
+    return nullptr != data_.pointer.method;
+  }
+
+  /**
+   * @brief Reset this delegate
+   *
+   * Reset pointers in this delegate to nullptr (0)
+   *
+   * @note After reset, invoke this delegate by operator() or Invoke() will cause segment fault.
+   * The bool operator will return false.
+   */
+  void Reset() {
+    memset(&data_, 0, sizeof(Data));
   }
 
   /**
@@ -240,9 +315,9 @@ class DelegateT<ReturnType(ParamTypes...)> {
   bool Equal(T *object_ptr, ReturnType(T::*method)(ParamTypes...)) const {
     typedef ReturnType (T::*TMethod)(ParamTypes...);
 
-    return (data_.object_pointer == object_ptr) &&
+    return (data_.object == object_ptr) &&
         (data_.method_stub == &MethodStub<T, TMethod>::invoke) &&
-        (data_.method_pointer == reinterpret_cast<internal::GenericMethodPointer>(method));
+        (data_.pointer.method == reinterpret_cast<internal::GenericMethodPointer>(method));
   }
 
   /**
@@ -256,30 +331,26 @@ class DelegateT<ReturnType(ParamTypes...)> {
   bool Equal(T *object_ptr, ReturnType(T::*method)(ParamTypes...) const) const {
     typedef ReturnType (T::*TMethod)(ParamTypes...) const;
 
-    return (data_.object_pointer == object_ptr) &&
+    return (data_.object == object_ptr) &&
         (data_.method_stub == &MethodStub<T, TMethod>::invoke) &&
-        (data_.method_pointer == reinterpret_cast<internal::GenericMethodPointer>(method));
+        (data_.pointer.method == reinterpret_cast<internal::GenericMethodPointer>(method));
+  }
+
+  bool Equal(TFunction fn) const {
+#ifdef __DEBUG__
+    if (data_.pointer.function == fn) {
+      assert((nullptr == data_.object) && (nullptr == data_.method_stub));
+      return true;
+    }
+    return false;
+#else
+    return data_.pointer.function == fn;
+#endif  // __DEBUG__
   }
 
  private:
 
-  template<typename ReturnTypeAlias, typename ... ParamTypesAlias>
-  friend inline bool operator==(const DelegateT<ReturnTypeAlias(ParamTypesAlias...)> &src,
-                                const DelegateT<ReturnTypeAlias(ParamTypesAlias...)> &dst);
-
-  template<typename ReturnTypeAlias, typename ... ParamTypesAlias>
-  friend inline bool operator!=(const DelegateT<ReturnTypeAlias(ParamTypesAlias...)> &src,
-                                const DelegateT<ReturnTypeAlias(ParamTypesAlias...)> &dst);
-
-  template<typename ReturnTypeAlias, typename ... ParamTypesAlias>
-  friend inline bool operator<(const DelegateT<ReturnTypeAlias(ParamTypesAlias...)> &src,
-                               const DelegateT<ReturnTypeAlias(ParamTypesAlias...)> &dst);
-
-  template<typename ReturnTypeAlias, typename ... ParamTypesAlias>
-  friend inline bool operator>(const DelegateT<ReturnTypeAlias(ParamTypesAlias...)> &src,
-                               const DelegateT<ReturnTypeAlias(ParamTypesAlias...)> &dst);
-
-  PointerData data_;
+  Data data_;
 };
 
 /**
@@ -294,7 +365,7 @@ template<typename ReturnType, typename ... ParamTypes>
 inline bool operator==(const DelegateT<ReturnType(ParamTypes...)> &src,
                        const DelegateT<ReturnType(ParamTypes...)> &dst) {
   return memcmp(&src.data_, &dst.data_,
-                sizeof(typename DelegateT<ReturnType(ParamTypes...)>::PointerData)
+                sizeof(typename DelegateT<ReturnType(ParamTypes...)>::Data)
   ) == 0;
 }
 
@@ -302,7 +373,7 @@ template<typename ReturnType, typename ... ParamTypes>
 inline bool operator!=(const DelegateT<ReturnType(ParamTypes...)> &src,
                        const DelegateT<ReturnType(ParamTypes...)> &dst) {
   return memcmp(&src.data_, &dst.data_,
-                sizeof(typename DelegateT<ReturnType(ParamTypes...)>::PointerData)
+                sizeof(typename DelegateT<ReturnType(ParamTypes...)>::Data)
   ) != 0;
 }
 
@@ -310,7 +381,7 @@ template<typename ReturnType, typename ... ParamTypes>
 inline bool operator<(const DelegateT<ReturnType(ParamTypes...)> &src,
                       const DelegateT<ReturnType(ParamTypes...)> &dst) {
   return memcmp(&src.data_, &dst.data_,
-                sizeof(typename DelegateT<ReturnType(ParamTypes...)>::PointerData)
+                sizeof(typename DelegateT<ReturnType(ParamTypes...)>::Data)
   ) < 0;
 }
 
@@ -318,7 +389,7 @@ template<typename ReturnType, typename ... ParamTypes>
 inline bool operator>(const DelegateT<ReturnType(ParamTypes...)> &src,
                       const DelegateT<ReturnType(ParamTypes...)> &dst) {
   return memcmp(&src.data_, &dst.data_,
-                sizeof(typename DelegateT<ReturnType(ParamTypes...)>::PointerData)
+                sizeof(typename DelegateT<ReturnType(ParamTypes...)>::Data)
   ) > 0;
 }
 
@@ -330,6 +401,8 @@ template<typename ReturnType, typename ... ParamTypes>
 class DelegateRefT<ReturnType(ParamTypes...)> {
 
  public:
+
+  typedef ReturnType (*TFunction)(ParamTypes...);
 
   DelegateRefT() = delete;
   DelegateRefT &operator=(const DelegateRefT &) = delete;
@@ -355,6 +428,10 @@ class DelegateRefT<ReturnType(ParamTypes...)> {
   template<typename T>
   void Bind(T *obj, ReturnType (T::*method)(ParamTypes...) const) {
     *delegate_ = DelegateT<ReturnType(ParamTypes...)>::template FromMethod<T>(obj, method);
+  }
+
+  void Bind(TFunction fn) {
+    *delegate_ = DelegateT<ReturnType(ParamTypes...)>::FromFunction(fn);
   }
 
   void Reset() {

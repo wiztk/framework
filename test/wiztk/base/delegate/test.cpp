@@ -32,6 +32,10 @@ class Mockup {
 
   int count() const { return count_; }
 
+  static int Add(int a, int b) {
+    return a + b;
+  }
+
  private:
 
   int count_;
@@ -98,6 +102,15 @@ TEST_F(Test, constructor5) {
   ASSERT_TRUE(result == 1);
 }
 
+TEST_F(Test, constructor6) {
+  DelegateT<int(int, int)> d(Mockup::Add);
+
+  int result = 0;
+  result = d(1, 2);
+
+  ASSERT_TRUE(result == 3);
+}
+
 /*
  *
  */
@@ -129,6 +142,12 @@ TEST_F(Test, compare4) {
   ASSERT_TRUE(d1 != d2);
 }
 
+TEST_F(Test, compare5) {
+  DelegateT<int(int, int)> d(Mockup::Add);
+
+  ASSERT_TRUE(d.Equal(Mockup::Add));
+}
+
 TEST_F(Test, delegate_ref_1) {
   Mockup obj;
 
@@ -153,4 +172,3 @@ TEST_F(Test, delegate_ref_1) {
 
   ASSERT_TRUE((!r1) && (!r2));
 }
-

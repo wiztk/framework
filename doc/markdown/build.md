@@ -4,7 +4,7 @@ Build the source code
 ## Checkout source code
 
 ```shell
-$ git clone --recursive https://github.com/zhanggyb/skland.git
+$ git clone --recursive https://github.com/wiztk/framework.git
 ```
 
 ## Install dependencies
@@ -18,11 +18,24 @@ $ ./scripts/install-dependencies.sh
 
 ## Build the source code
 
+Create a temporary directory and generate Makefiles:
+
 ```shell
 $ cd <path to skland>
 $ mkdir build
 $ cd build
 $ cmake ..
+```
+
+Follow the instruction to checkout or download prebuilts:
+
+```shell
+$ git clone https://github.com/wiztk/prebuilts.git --depth 1
+```
+
+Run `make` to build the project.
+
+```shel
 $ make
 ```
 

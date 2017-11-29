@@ -1,5 +1,4 @@
-Fast C++ Delegates
-==================
+# Fast C++ Delegates
 
 **Note: The implementation of delegates is inspired by several articles<sup
   id="a1">[1](#f1)</sup><sup>,</sup><sup id="a2">[2](#f2)</sup><sup>,</sup><sup
@@ -11,15 +10,10 @@ Fast C++ Delegates
 Delegates are object-oriented function pointers and wildly used in this project,
 for example, they are used to build a signal object, or replace the callback
 function in native wayland wrapper classes. To be precise, a delegate in
-[WizTK](https://github.com/wiztk) is an object which contains 2 pointers: one pointer to an object,
-another to a member function in corresponding class, created by a template
-class. Invoke a delegate just works as call the member function directly.
-
-**Note:** Delegate in [WizTK](https://github.com/wiztk) does not support static methods or global
-functions. A delegate to a static method is meaningless (it's not object-oriented),
-use
-[`std::function`](http://en.cppreference.com/w/cpp/utility/functional/function)
-or just function pointer as you want.
+[WizTK](https://github.com/wiztk) is an object which contains 2 pointers: one
+pointer to an object, another to a member function in corresponding class,
+created by a template class. Invoke a delegate just works as call the member
+function directly.
 
 You use a template class defined in `wiztk/base/delegate.hpp` to create a new
 delegate.
