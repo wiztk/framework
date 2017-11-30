@@ -221,7 +221,9 @@ class DelegateT<ReturnType(ParamTypes...)> {
       : data_(orig.data_) {}
 
   DelegateT(DelegateT &&other) noexcept
-      : data_(other.data_) {}
+      : data_(other.data_) {
+    other.Reset();
+  }
 
   /**
    * @brief Destructor
@@ -240,6 +242,7 @@ class DelegateT<ReturnType(ParamTypes...)> {
 
   DelegateT &operator=(DelegateT &&other) noexcept {
     data_ = other.data_;
+    other.Reset();
     return *this;
   };
 
@@ -439,13 +442,17 @@ class DelegateRefT<ReturnType(ParamTypes...)> {
   }
 
   template<typename T>
-  bool IsAssignedTo(T *obj, ReturnType (T::*method)(ParamTypes...)) const {
+  bool IsBoundTo(T *obj, ReturnType (T::*method)(ParamTypes...)) const {
     return delegate_->Equal(obj, method);
   }
 
   template<typename T>
-  bool IsAssignedTo(T *obj, ReturnType (T::*method)(ParamTypes...) const) const {
+  bool IsBoundTo(T *obj, ReturnType (T::*method)(ParamTypes...) const) const {
     return delegate_->Equal(obj, method);
+  }
+
+  bool IsBoundTo(TFunction fn) const {
+    return delegate_->Equal(fn);
   }
 
   explicit operator bool() const {
@@ -453,7 +460,9 @@ class DelegateRefT<ReturnType(ParamTypes...)> {
   }
 
  private:
+
   DelegateT<ReturnType(ParamTypes...)> *delegate_;
+
 };
 
 } // namespace base

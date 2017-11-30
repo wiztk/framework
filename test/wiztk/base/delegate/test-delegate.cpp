@@ -2,9 +2,9 @@
 // Created by zhanggyb on 16-9-19.
 //
 
-#include "test.hpp"
+#include "test-delegate.hpp"
 
-#include <wiztk/base/delegate.hpp>
+#include "wiztk/base/delegate.hpp"
 
 using namespace wiztk;
 using namespace wiztk::base;
@@ -55,33 +55,25 @@ class MockupSub : public Mockup {
   }
 };
 
-Test::Test()
-    : testing::Test() {
-}
-
-Test::~Test() {
-
-}
-
-TEST_F(Test, constructor1) {
+TEST_F(TestDelegate, constructor1) {
   Mockup obj;
   DelegateT<int(int)> d(&obj, &Mockup::Foo);
   ASSERT_TRUE(1 == d(1));
 }
 
-TEST_F(Test, constructor2) {
+TEST_F(TestDelegate, constructor2) {
   Mockup obj;
   DelegateT<int(int)> d = DelegateT<int(int)>::FromMethod(&obj, &Mockup::Foo);
   ASSERT_TRUE(1 == d(1));
 }
 
-TEST_F(Test, constructor3) {
+TEST_F(TestDelegate, constructor3) {
   Mockup obj;
   DelegateT<int(int)> d(&obj, &Mockup::ConstFoo);
   ASSERT_TRUE(0 == d(1));
 }
 
-TEST_F(Test, constructor4) {
+TEST_F(TestDelegate, constructor4) {
   Mockup obj;
   DelegateT<int(int)> d = DelegateT<int(int)>::FromMethod(&obj, &Mockup::ConstFoo);
   ASSERT_TRUE(0 == d(1));
@@ -90,7 +82,7 @@ TEST_F(Test, constructor4) {
 /*
  * Delegate to virtual
  */
-TEST_F(Test, constructor5) {
+TEST_F(TestDelegate, constructor5) {
   Mockup *obj = new MockupSub;
   DelegateT<int(int)> d = DelegateT<int(int)>::FromMethod(obj, &Mockup::VirtualFoo);
   obj->Foo(1);  // count_ == 1
@@ -102,7 +94,7 @@ TEST_F(Test, constructor5) {
   ASSERT_TRUE(result == 1);
 }
 
-TEST_F(Test, constructor6) {
+TEST_F(TestDelegate, constructor6) {
   DelegateT<int(int, int)> d(Mockup::Add);
 
   int result = 0;
@@ -114,41 +106,58 @@ TEST_F(Test, constructor6) {
 /*
  *
  */
-TEST_F(Test, compare1) {
+TEST_F(TestDelegate, compare1) {
   Mockup obj;
   DelegateT<int(int)> d = DelegateT<int(int)>::FromMethod(&obj, &Mockup::Foo);
-  // const not equal to non-const
+// const not equal to non-const
   ASSERT_TRUE(d.Equal(&obj, &Mockup::Foo));
 }
 
-TEST_F(Test, compare2) {
+TEST_F(TestDelegate, compare2) {
   Mockup obj;
   DelegateT<int(int)> d = DelegateT<int(int)>::FromMethod(&obj, &Mockup::Foo);
-  // const not equal to non-const
+// const not equal to non-const
   ASSERT_TRUE(!d.Equal(&obj, &Mockup::ConstFoo));
 }
 
-TEST_F(Test, compare3) {
+TEST_F(TestDelegate, compare3) {
   Mockup obj1;
   DelegateT<int(int)> d1 = DelegateT<int(int)>::FromMethod(&obj1, &Mockup::Foo);
   DelegateT<int(int)> d2 = DelegateT<int(int)>::FromMethod(&obj1, &Mockup::Foo);
   ASSERT_TRUE(d1 == d2);
 }
 
-TEST_F(Test, compare4) {
+TEST_F(TestDelegate, compare4) {
   Mockup obj1;
   DelegateT<int(int)> d1 = DelegateT<int(int)>::FromMethod(&obj1, &Mockup::ConstFoo);
   DelegateT<int(int)> d2 = DelegateT<int(int)>::FromMethod(&obj1, &Mockup::Foo);
   ASSERT_TRUE(d1 != d2);
 }
 
-TEST_F(Test, compare5) {
+TEST_F(TestDelegate, compare5) {
   DelegateT<int(int, int)> d(Mockup::Add);
 
   ASSERT_TRUE(d.Equal(Mockup::Add));
 }
 
-TEST_F(Test, delegate_ref_1) {
+TEST_F(TestDelegate, lambda_1) {
+  auto d = DelegateT<int(int, int)>::FromFunction(
+      [](int x, int y) -> int {
+        return x + y;
+      }
+  );
+
+  ASSERT_TRUE(3 == d(1, 2));
+}
+
+TEST_F(TestDelegate, move_1) {
+  DelegateT<int(int, int)> d1(Mockup::Add);
+  DelegateT<int(int, int)> d2 = std::move(d1);
+
+  ASSERT_TRUE((!d1) && d2);
+}
+
+TEST_F(TestDelegate, delegate_ref_1) {
   Mockup obj;
 
   DelegateT<int(int)> d1(&obj, &Mockup::Foo);
@@ -162,11 +171,10 @@ TEST_F(Test, delegate_ref_1) {
 
   ASSERT_TRUE(r1 && r2);
 
-  bool result1 = r1.IsAssignedTo(&obj, &Mockup::Foo);
-  bool result2 = r2.IsAssignedTo(&obj, &Mockup::ConstFoo);
+  bool result1 = r1.IsBoundTo(&obj, &Mockup::Foo);
+  bool result2 = r2.IsBoundTo(&obj, &Mockup::ConstFoo);
 
   ASSERT_TRUE(result1 && result2);
-
   r1.Reset();
   r2.Reset();
 

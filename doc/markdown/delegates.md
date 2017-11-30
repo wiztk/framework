@@ -2,18 +2,34 @@
 
 **Note: The implementation of delegates is inspired by several articles<sup
   id="a1">[1](#f1)</sup><sup>,</sup><sup id="a2">[2](#f2)</sup><sup>,</sup><sup
-  id="a3">[3](#f3)</sup>on [CodeProject](https://www.codeproject.com) and
+  id="a3">[3](#f3)</sup> on [CodeProject](https://www.codeproject.com) and
   CppEvent<sup id="a4">[4](#f4)</sup>.**
 
 ## Overview
 
-Delegates are object-oriented function pointers and wildly used in this project,
-for example, they are used to build a signal object, or replace the callback
-function in native wayland wrapper classes. To be precise, a delegate in
-[WizTK](https://github.com/wiztk) is an object which contains 2 pointers: one
-pointer to an object, another to a member function in corresponding class,
-created by a template class. Invoke a delegate just works as call the member
-function directly.
+C++ provides function pointer which is a variable points to a static function or
+a member function. There're *function objects* defined in `<functional>` of STL
+to make it easy to handle function pointer. But unfortunately, there're no true
+object-oriented function pointers in standard C++.
+
+Object-oriented function pointers, also called '**delegates**', have proved
+their value in similar languages. For many applications, delegates simplify the
+use of elegant design patterns (Observer, Strategy, State[GoF]) composed of very
+loosely coupled objects.
+
+In [WizTK](https://github.com/wiztk) we introduce several new concepts to
+improve the native function pointers. The core of these concepts is
+`base::DelegatT`, a fast C++ delegate implementation, defined in
+[`include/wiztk/base/delegate.hpp`](https://github.com/wiztk/framework/include/wiztk/base/delegate.hpp).
+Delegate is wildly used in this project, it's the base of [Signals and
+Slots](https://github.com) and [Callback](https://github.com).
+
+## Quick Guide
+
+We start with C/C++ function pointer and `std::function` in STL(C++11) to
+describe why we need a new design of delegate and how to use it.
+
+*TBD*...
 
 You use a template class defined in `wiztk/base/delegate.hpp` to create a new
 delegate.
@@ -22,11 +38,9 @@ For example, if you have a class `A` and an instance `a`:
 
 ``` c++
 class A {
-public:
-
+ public:
   A();
   ~A();
-
   void OnNotifyInA(int num);
 };
 
@@ -73,18 +87,16 @@ For example:
 #include "wiztk/base/delegate.hpp"
 
 class A {
-public:
+ public:
   A();
   ~A();
-
   void OnNotifyInA(int num);
 };
 
 class B {
-public:
+ public:
   B();
   ~B();
-
   void OnNotifyInB(int num);
 };
 

@@ -352,7 +352,7 @@ class Trackable {
   void InsertBinding(int index, internal::Binding *binding);
 
   static inline void link(internal::Token *token, internal::Binding *binding) {
-#ifdef DEBUG
+#ifdef __DEBUG__
     assert((nullptr == token->binding) && (nullptr == binding->token));
 #endif
 
@@ -875,7 +875,7 @@ void SignalT<ParamTypes...>::AuditDestroyingToken(internal::Token *token) {
 
 template<typename ... ParamTypes>
 void SignalT<ParamTypes...>::PushBackToken(internal::Token *token) {
-#ifdef DEBUG
+#ifdef __DEBUG__
   assert(nullptr == token->trackable);
 #endif
 
@@ -883,7 +883,7 @@ void SignalT<ParamTypes...>::PushBackToken(internal::Token *token) {
     last_token_->next = token;
     token->previous = last_token_;
   } else {
-#ifdef DEBUG
+#ifdef __DEBUG__
     assert(nullptr == first_token_);
 #endif
     token->previous = nullptr;
@@ -896,7 +896,7 @@ void SignalT<ParamTypes...>::PushBackToken(internal::Token *token) {
 
 template<typename ... ParamTypes>
 void SignalT<ParamTypes...>::PushFrontToken(internal::Token *token) {
-#ifdef DEBUG
+#ifdef __DEBUG__
   assert(nullptr == token->trackable);
 #endif
 
@@ -904,7 +904,7 @@ void SignalT<ParamTypes...>::PushFrontToken(internal::Token *token) {
     first_token_->previous = token;
     token->next = first_token_;
   } else {
-#ifdef DEBUG
+#ifdef __DEBUG__
     assert(nullptr == last_token_);
 #endif
     token->next = nullptr;
@@ -918,12 +918,12 @@ void SignalT<ParamTypes...>::PushFrontToken(internal::Token *token) {
 
 template<typename ... ParamTypes>
 void SignalT<ParamTypes...>::InsertToken(int index, internal::Token *token) {
-#ifdef DEBUG
+#ifdef __DEBUG__
   assert(nullptr == token->trackable);
 #endif
 
   if (nullptr == first_token_) {
-#ifdef DEBUG
+#ifdef __DEBUG__
     assert(nullptr == last_token_);
 #endif
     token->next = nullptr;
@@ -934,7 +934,7 @@ void SignalT<ParamTypes...>::InsertToken(int index, internal::Token *token) {
     if (index >= 0) {
 
       internal::Token *p = first_token_;
-#ifdef DEBUG
+#ifdef __DEBUG__
       assert(p != nullptr);
 #endif
 
@@ -965,7 +965,7 @@ void SignalT<ParamTypes...>::InsertToken(int index, internal::Token *token) {
     } else {
 
       internal::Token *p = last_token_;
-#ifdef DEBUG
+#ifdef __DEBUG__
       assert(p != nullptr);
 #endif
 
