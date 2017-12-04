@@ -22,13 +22,13 @@ namespace wiztk {
 namespace base {
 
 Time::Time(int year, int month, int day, int hour, int minute, int second, int ms, int us, int ns) {
-  using numerical::ClampT;
+  using numerical::Clamp;
 
   struct tm t = {second, minute, hour, day, month - 1, year - 1900, 0, 0, 0};
   timespec_.tv_sec = mktime(&t);
-  timespec_.tv_nsec = ClampT(ms, 0, 999) * 1000 * 1000 +
-      ClampT(us, 0, 999) * 1000 +
-      ClampT(ns, 0, 999);
+  timespec_.tv_nsec = Clamp(ms, 0, 999) * 1000 * 1000 +
+      Clamp(us, 0, 999) * 1000 +
+      Clamp(ns, 0, 999);
 }
 
 Time Time::Now(Precision precision) {

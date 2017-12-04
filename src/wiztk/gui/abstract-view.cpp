@@ -34,7 +34,7 @@ namespace gui {
 using base::Point2I;
 using base::SizeI;
 using base::RectF;
-using numerical::ClampT;
+using numerical::Clamp;
 using numerical::Bit;
 
 AbstractView::AbstractView()
@@ -49,8 +49,8 @@ AbstractView::AbstractView(int width, int height)
   p_->last_geometry.Resize(width, height);
   p_->bounds.Resize(width, height);
 
-  p_->preferred_size.width = ClampT(width, p_->minimal_size.width, p_->maximal_size.width);
-  p_->preferred_size.height = ClampT(height, p_->minimal_size.height, p_->maximal_size.height);
+  p_->preferred_size.width = Clamp(width, p_->minimal_size.width, p_->maximal_size.width);
+  p_->preferred_size.height = Clamp(height, p_->minimal_size.height, p_->maximal_size.height);
 }
 
 AbstractView::~AbstractView() {

@@ -67,8 +67,8 @@ void Spinner::Private::Draw(const Context &context) {
   canvas->Scale(scale, scale);
 
   const RectF &rect = owner()->GetBounds();
-  float radius = ClampT(std::min(rect.width(), rect.height()) / 2.f - 50.f,
-                        50.f, 200.f);
+  float radius = Clamp(std::min(rect.width(), rect.height()) / 2.f - 50.f,
+                       50.f, 200.f);
 
   Paint paint;
   paint.SetAntiAlias(true);

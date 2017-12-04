@@ -98,21 +98,21 @@ struct Color {
   }
 
   Color &operator+=(short shade) {
-    using numerical::ClampT;
+    using numerical::Clamp;
 
-    r = ClampT(r + shade / T(255.), T(0.), T(1.));
-    g = ClampT(g + shade / T(255.), T(0.), T(1.));
-    b = ClampT(b + shade / T(255.), T(0.), T(1.));
+    r = Clamp(r + shade / T(255.), T(0.), T(1.));
+    g = Clamp(g + shade / T(255.), T(0.), T(1.));
+    b = Clamp(b + shade / T(255.), T(0.), T(1.));
 
     return *this;
   }
 
   Color &operator-=(short shade) {
-    using numerical::ClampT;
+    using numerical::Clamp;
 
-    r = ClampT(r - shade / T(255.), T(0.), T(1.));
-    g = ClampT(g - shade / T(255.), T(0.), T(1.));
-    b = ClampT(b - shade / T(255.), T(0.), T(1.));
+    r = Clamp(r - shade / T(255.), T(0.), T(1.));
+    g = Clamp(g - shade / T(255.), T(0.), T(1.));
+    b = Clamp(b - shade / T(255.), T(0.), T(1.));
 
     return *this;
   }
@@ -163,36 +163,36 @@ struct Color {
 
 template<typename T>
 inline Color<T> operator+(const Color<T> &src, short shade) {
-  using numerical::ClampT;
+  using numerical::Clamp;
 
   Color<T> color;
-  color.r = ClampT(src.r + shade / T(255.), T(0.), T(1.));
-  color.g = ClampT(src.g + shade / T(255.), T(0.), T(1.));
-  color.b = ClampT(src.b + shade / T(255.), T(0.), T(1.));
+  color.r = Clamp(src.r + shade / T(255.), T(0.), T(1.));
+  color.g = Clamp(src.g + shade / T(255.), T(0.), T(1.));
+  color.b = Clamp(src.b + shade / T(255.), T(0.), T(1.));
   color.a = src.a;
   return color;
 }
 
 template<typename T>
 inline Color<T> operator+(const Color<T> &color1, const Color<T> &color2) {
-  using numerical::ClampT;
+  using numerical::Clamp;
 
   Color<T> color;
-  color.r = ClampT(color1.r + color2.r, T(0.), T(1.));
-  color.g = ClampT(color1.g + color2.g, T(0.), T(1.));
-  color.b = ClampT(color1.b + color2.b, T(0.), T(1.));
-  color.a = ClampT(color1.a + color2.a, T(0.), T(1.));
+  color.r = Clamp(color1.r + color2.r, T(0.), T(1.));
+  color.g = Clamp(color1.g + color2.g, T(0.), T(1.));
+  color.b = Clamp(color1.b + color2.b, T(0.), T(1.));
+  color.a = Clamp(color1.a + color2.a, T(0.), T(1.));
   return color;
 }
 
 template<typename T>
 inline Color<T> operator-(const Color<T> &src, short shade) {
-  using numerical::ClampT;
+  using numerical::Clamp;
 
   Color<T> color;
-  color.r = ClampT(src.r - shade / T(255.), T(0.), T(1.));
-  color.g = ClampT(src.g - shade / T(255.), T(0.), T(1.));
-  color.b = ClampT(src.b - shade / T(255.), T(0.), T(1.));
+  color.r = Clamp(src.r - shade / T(255.), T(0.), T(1.));
+  color.g = Clamp(src.g - shade / T(255.), T(0.), T(1.));
+  color.b = Clamp(src.b - shade / T(255.), T(0.), T(1.));
   color.a = src.a;
 
   return color;
@@ -200,13 +200,13 @@ inline Color<T> operator-(const Color<T> &src, short shade) {
 
 template<typename T>
 inline Color<T> operator-(const Color<T> &color1, const Color<T> &color2) {
-  using numerical::ClampT;
+  using numerical::Clamp;
 
   Color<T> color;
-  color.r = ClampT(color1.r - color2.r, T(0.), T(1.));
-  color.g = ClampT(color1.g - color2.g, T(0.), T(1.));
-  color.b = ClampT(color1.b - color2.b, T(0.), T(1.));
-  color.a = ClampT(color1.a - color2.a, T(0.), T(1.));
+  color.r = Clamp(color1.r - color2.r, T(0.), T(1.));
+  color.g = Clamp(color1.g - color2.g, T(0.), T(1.));
+  color.b = Clamp(color1.b - color2.b, T(0.), T(1.));
+  color.a = Clamp(color1.a - color2.a, T(0.), T(1.));
 
   return color;
 }

@@ -27,7 +27,7 @@ namespace numerical {
  * @brief Clamp given value between min and max
  */
 template<typename T>
-inline T ClampT(T x, T min_value, T max_value) {
+inline T Clamp(T x, T min_value, T max_value) {
   return std::min(std::max(x, min_value), max_value);
 }
 
