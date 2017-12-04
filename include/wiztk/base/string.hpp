@@ -41,10 +41,22 @@ class String : public BasicString {
 
   using BasicString::BasicString;
 
+  /**
+   * @brief Constructor from UTF8 string.
+   * @param str
+   */
   String(const char *str);
 
+  /**
+   * @brief Constructor from UTF16 string.
+   * @param str
+   */
   String(const char16_t *str);
 
+  /**
+   * @brief Constructor from UTF32 string.
+   * @param str
+   */
   String(const char32_t *str);
 
 };

@@ -16,8 +16,6 @@
 
 #include "internal/canvas_private.hpp"
 
-#include "wiztk/base/memory.hpp"
-
 #include <wiztk/graphic/paint.hpp>
 #include <wiztk/graphic/path.hpp>
 
@@ -262,7 +260,7 @@ SkCanvas *Canvas::GetSkCanvas() const {
 
 Canvas::LockGuard::~LockGuard() {
   if (node_.IsLinked()) {
-    base::DequeT<LockGuardNode>::Iterator it = canvas_->p_->lock_guard_deque.rbegin();
+    base::Deque<LockGuardNode>::Iterator it = canvas_->p_->lock_guard_deque.rbegin();
     while (it.element() != &node_) {
       it.Remove();
       it = canvas_->p_->lock_guard_deque.rbegin();
@@ -319,7 +317,7 @@ void Canvas::LockGuard::Lock(float dx, float dy) {
 void Canvas::LockGuard::Unlock() {
   if (!node_.IsLinked()) return;
 
-  base::DequeT<LockGuardNode>::Iterator it = canvas_->p_->lock_guard_deque.rbegin();
+  base::Deque<LockGuardNode>::Iterator it = canvas_->p_->lock_guard_deque.rbegin();
   while (it.element() != &node_) {
     it.Remove();
     it = canvas_->p_->lock_guard_deque.rbegin();

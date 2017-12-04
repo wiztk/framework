@@ -16,7 +16,6 @@
 
 #include "internal/buffer_private.hpp"
 
-#include "wiztk/base/memory.hpp"
 #include "wiztk/gui/shared-memory-pool.hpp"
 
 namespace wiztk {

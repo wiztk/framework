@@ -7,7 +7,7 @@
 #include <wiztk/base/vector.hpp>
 
 using namespace wiztk::base;
-typedef Vector2T<int> vec2i;
+typedef Vector2<int> vec2i;
 
 Test::Test()
     : testing::Test() {

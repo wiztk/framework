@@ -17,7 +17,7 @@
 #ifndef WIZTK_BASE_POINT_HPP_
 #define WIZTK_BASE_POINT_HPP_
 
-#include "vector.hpp"
+#include "wiztk/base/vector.hpp"
 
 namespace wiztk {
 namespace base {
@@ -26,37 +26,37 @@ namespace base {
  * @ingroup base
  * @brief Point of integer in 2 dimension.
  */
-typedef Vector2T<int> Point2I;
+typedef Vector2<int> Point2I;
 
 /**
  * @ingroup base
  * @brief Point of float in 2 dimension.
  */
-typedef Vector2T<float> Point2F;
+typedef Vector2<float> Point2F;
 
 /**
  * @ingroup base
  * @brief Point of double in 2 dimension.
  */
-typedef Vector2T<double> Point2D;
+typedef Vector2<double> Point2D;
 
 /**
  * @ingroup base
  * @brief Point of integer in 3 dimension.
  */
-typedef Vector3T<int> Point3I;
+typedef Vector3<int> Point3I;
 
 /**
  * @ingroup base
  * @brief Point of float in 3 dimension.
  */
-typedef Vector3T<float> Point3F;
+typedef Vector3<float> Point3F;
 
 /**
  * @ingroup base
  * @brief Point of double in 3 dimension.
  */
-typedef Vector3T<double> Point3D;
+typedef Vector3<double> Point3D;
 
 } // namespace base
 } // namespace wiztk

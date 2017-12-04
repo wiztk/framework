@@ -15,23 +15,23 @@
  */
 
 #include <wiztk/gui/application.hpp>
-//#include <wiztk/av/format.hpp>
 
 #include <iostream>
 
-#include "wiztk/base/memory.hpp"
+#include "wiztk/base/memory/shared-ptr.hpp"
+#include "wiztk/base/memory/weak-ptr.hpp"
 
 using namespace wiztk::base;
 
-class RefObject : public RefCountedBase {
+class MyRefCounted : public RefCountedBase<> {
 
  public:
 
-  RefObject() {
+  MyRefCounted() {
     std::cout << __func__ << std::endl;
   }
 
-  virtual ~RefObject() {
+  virtual ~MyRefCounted() {
     std::cout << __func__ << std::endl;
   }
 
@@ -40,7 +40,7 @@ class RefObject : public RefCountedBase {
 class A;
 class B;
 
-class A : public RefCountedBase {
+class A : public RefCountedBase<> {
  public:
 
   A() {
@@ -51,10 +51,10 @@ class A : public RefCountedBase {
     _DEBUG("%s\n", __func__);
   }
 
-  SharedPtrT<B> b_;
+  SharedPtr<B> b_;
 };
 
-class B : public RefCountedBase {
+class B : public RefCountedBase<> {
  public:
 
   B() {
@@ -65,19 +65,23 @@ class B : public RefCountedBase {
     _DEBUG("%s\n", __func__);
   }
 
-  WeakPtrT<A> a_;
+  WeakPtr<A> a_;
 };
 
 int main(int argc, char *argv[]) {
 
-  SharedPtrT<B> b(new B);
-  SharedPtrT<A> a(new A);
+//  SharedPtrT<RefCounted> shared_ptr1(new RefCounted);
+//  WeakPtrT<RefCounted> weak_ptr1(shared_ptr1);
+//  _ASSERT(weak_ptr1.use_count() == 1 && weak_ptr1.weak_count() == 1);
+//
+//  SharedPtrT<RefCounted> shared_ptr2(new RefCounted);
+//  SharedPtrT<RefCounted> shared_ptr3(shared_ptr2);
+//  WeakPtrT<RefCounted> weak_ptr2(shared_ptr2);
+//  _ASSERT(weak_ptr2.use_count() == 2 && weak_ptr2.weak_count() == 1);
 
-  a->b_ = b;
-  b->a_ = a;
-
-  _DEBUG("a use_count: %ld, weak_count: %ld\n", a.use_count(), a.weak_count());
-  _DEBUG("b use_count: %ld, weak_count: %ld\n", b.use_count(), b.weak_count());
+//  Swap(weak_ptr1, weak_ptr2);
+//  _ASSERT(weak_ptr1.use_count() == 2 && weak_ptr1.weak_count() == 1 && weak_ptr2.use_count() == 1
+//              && weak_ptr2.weak_count() == 1);
 
   return 0;
 }

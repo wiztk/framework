@@ -17,8 +17,6 @@
 #include "internal/abstract-shell-view_private.hpp"
 #include "internal/abstract-view_private.hpp"
 
-#include "wiztk/base/memory.hpp"
-
 #include "wiztk/numerical/bit.hpp"
 
 #include "wiztk/gui/application.hpp"

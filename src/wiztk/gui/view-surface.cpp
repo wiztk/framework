@@ -19,8 +19,6 @@
 #include "internal/view-surface_shell_toplevel_private.hpp"
 #include "internal/view-surface_shell_popup_private.hpp"
 
-#include "wiztk/base/memory.hpp"
-
 #include "wiztk/gui/buffer.hpp"
 #include "wiztk/gui/input-event.hpp"
 #include "wiztk/gui/region.hpp"
@@ -444,8 +442,8 @@ void ViewSurface::CommitTask::Run() const {
 ViewSurface *ViewSurface::kTop = nullptr;
 ViewSurface *ViewSurface::kBottom = nullptr;
 int ViewSurface::kShellSurfaceCount = 0;
-base::DequeT<ViewSurface::RenderTask> ViewSurface::kRenderTaskDeque;
-base::DequeT<ViewSurface::CommitTask> ViewSurface::kCommitTaskDeque;
+base::Deque<ViewSurface::RenderTask> ViewSurface::kRenderTaskDeque;
+base::Deque<ViewSurface::CommitTask> ViewSurface::kCommitTaskDeque;
 
 ViewSurface::ViewSurface(AbstractEventHandler *event_handler, const Margin &margin)
     : AbstractSurface(margin) {
@@ -566,7 +564,7 @@ void ViewSurface::Update(bool validate) {
   kRenderTaskDeque.PushBack(&p_->render_task);
 }
 
-base::DequeT<AbstractView::RenderNode> &ViewSurface::GetViewRenderDeque() const {
+base::Deque<AbstractView::RenderNode> &ViewSurface::GetViewRenderDeque() const {
   return p_->view_render_deque;
 }
 

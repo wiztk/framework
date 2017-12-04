@@ -159,7 +159,7 @@ class ViewSurface : public graphic::AbstractSurface, public base::Trackable {
    * @brief Get defferred redraw task deque
    * @return
    */
-  base::DequeT<AbstractView::RenderNode> &GetViewRenderDeque() const;
+  base::Deque<AbstractView::RenderNode> &GetViewRenderDeque() const;
 
   ViewSurface *GetShellSurface();
 
@@ -289,9 +289,9 @@ class ViewSurface : public graphic::AbstractSurface, public base::Trackable {
    */
   static int kShellSurfaceCount;
 
-  static base::DequeT<RenderTask> kRenderTaskDeque;
+  static base::Deque<RenderTask> kRenderTaskDeque;
 
-  static base::DequeT<CommitTask> kCommitTaskDeque;
+  static base::Deque<CommitTask> kCommitTaskDeque;
 
   std::unique_ptr<Private> p_;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,40 @@
  * limitations under the License.
  */
 
-#ifndef SKLAND_TEST_CORE_MEMORY_SHARED_PTR_HPP_
-#define SKLAND_TEST_CORE_MEMORY_SHARED_PTR_HPP_
+#ifndef WIZTK_BASE_MEMORY_ABSTRACT_REF_COUNT_HPP_
+#define WIZTK_BASE_MEMORY_ABSTRACT_REF_COUNT_HPP_
 
-#include <gtest/gtest.h>
+namespace wiztk {
+namespace base {
 
-class SharedPtrTest : public testing::Test {
+class AbstractRefCounted {
+
  public:
-  SharedPtrTest();
-  virtual ~SharedPtrTest();
+
+  struct DefaultDeleter {
+
+    template<typename T>
+    void operator()(T *p) {
+      delete p;
+    }
+
+  };
+
+  AbstractRefCounted() = default;
+
+  virtual ~AbstractRefCounted() = default;
 
  protected:
-  virtual void SetUp() {}
-  virtual void TearDown() {}
+
+  virtual void Reference() = 0;
+
+  virtual void Unreference() = 0;
+
+  virtual void Destroy() = 0;
+
 };
 
-#endif //SKLAND_SHARED_PTR_HPP
+} // namespace base
+} // namespace wiztk
+
+#endif // WIZTK_BASE_MEMORY_ABSTRACT_REF_COUNT_HPP_

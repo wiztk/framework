@@ -18,7 +18,6 @@
 
 #include "wiztk/base/macros.hpp"
 #include "wiztk/base/property.hpp"
-#include "wiztk/base/memory.hpp"
 
 #include "wiztk/gui/view-surface.hpp"
 #include "wiztk/gui/mouse-event.hpp"
@@ -31,12 +30,12 @@
 namespace wiztk {
 namespace gui {
 
-struct GLView::Private : public base::PropertyT<GLView> {
+struct GLView::Private : public base::Property<GLView> {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
 
   explicit Private(GLView *owner)
-      : base::PropertyT<GLView>(owner) {}
+      : base::Property<GLView>(owner) {}
 
   ~Private() final {
     // Note: delete rendering_api before destroying gl_surface:

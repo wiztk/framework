@@ -45,7 +45,7 @@ namespace base {
 class BiNode {
 
   template<typename T> friend
-  class DequeT;
+  class Deque;
 
  public:
 
@@ -111,11 +111,11 @@ class BiNode {
  * @tparam T Must be a BiNode class or subclass
  */
 template<typename T = BiNode>
-class DequeT {
+class Deque {
 
  public:
 
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(DequeT);
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Deque);
 
   /**
    * @brief A nested iterator for deque
@@ -272,9 +272,9 @@ class DequeT {
 
   };
 
-  DequeT();
+  Deque();
 
-  virtual ~DequeT();
+  virtual ~Deque();
 
   void PushFront(T *item);
 
@@ -338,30 +338,30 @@ class DequeT {
 };
 
 template<typename T>
-DequeT<T>::DequeT() {
+Deque<T>::Deque() {
   first_.next_ = &last_;
   last_.previous_ = &first_;
 }
 
 template<typename T>
-DequeT<T>::~DequeT() {
+Deque<T>::~Deque() {
   Clear();
 }
 
 template<typename T>
-void DequeT<T>::PushFront(T *item) {
+void Deque<T>::PushFront(T *item) {
   item->Unlink();
   first_.PushBack(item);
 }
 
 template<typename T>
-void DequeT<T>::PushBack(T *item) {
+void Deque<T>::PushBack(T *item) {
   item->Unlink();
   last_.PushFront(item);
 }
 
 template<typename T>
-void DequeT<T>::Insert(T *item, int index) {
+void Deque<T>::Insert(T *item, int index) {
   if (index >= 0) {
     T *p = first_.next_;
     while ((&last_ != p) && (index > 0)) {
@@ -380,7 +380,7 @@ void DequeT<T>::Insert(T *item, int index) {
 }
 
 template<typename T>
-T *DequeT<T>::Remove(T *item) {
+T *Deque<T>::Remove(T *item) {
   if (nullptr == item) return nullptr;
 
   for (Iterator it = begin(); it != end(); ++it) {
@@ -394,7 +394,7 @@ T *DequeT<T>::Remove(T *item) {
 }
 
 template<typename T>
-size_t DequeT<T>::GetSize() const {
+size_t Deque<T>::GetSize() const {
   size_t size = 0;
 
   BiNode *element = first_.next_;
@@ -407,19 +407,19 @@ size_t DequeT<T>::GetSize() const {
 }
 
 template<typename T>
-bool DequeT<T>::IsEmpty() const {
+bool Deque<T>::IsEmpty() const {
   return first_.next_ == &last_;
 }
 
 template<typename T>
-void DequeT<T>::Clear() {
+void Deque<T>::Clear() {
   while (first_.next_ != &last_) {
     first_.next_->Unlink();
   }
 }
 
 template<typename T>
-T *DequeT<T>::operator[](int index) const {
+T *Deque<T>::operator[](int index) const {
   BiNode *p = nullptr;
 
   if (index >= 0) {

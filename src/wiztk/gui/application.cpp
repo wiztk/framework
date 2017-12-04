@@ -75,7 +75,7 @@ struct Application::Private {
 
   std::thread::id thread_id;
 
-  base::DequeT<Task> task_deque;
+  base::Deque<Task> task_deque;
 
   /**
 * @brief Create an epoll file descriptor
@@ -235,9 +235,9 @@ int Application::Run() {
   int count = 0;
   int ret = 0;
   Task *task = nullptr;
-  base::DequeT<Task>::Iterator task_deque_iterator;
-  base::DequeT<ViewSurface::RenderTask>::Iterator render_task_iterator;
-  base::DequeT<ViewSurface::CommitTask>::Iterator commit_task_iterator;
+  base::Deque<Task>::Iterator task_deque_iterator;
+  base::Deque<ViewSurface::RenderTask>::Iterator render_task_iterator;
+  base::Deque<ViewSurface::CommitTask>::Iterator commit_task_iterator;
 
   while (true) {
 
@@ -329,7 +329,7 @@ const std::thread::id &Application::GetThreadID() {
   return p_->thread_id;
 }
 
-base::DequeT<Task> &Application::GetTaskDeque() {
+base::Deque<Task> &Application::GetTaskDeque() {
   return p_->task_deque;
 }
 

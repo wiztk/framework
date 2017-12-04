@@ -16,8 +16,6 @@
 
 #include "wiztk/gui/abstract-button.hpp"
 
-#include "wiztk/base/memory.hpp"
-
 #include "wiztk/numerical/clamp.hpp"
 #include "wiztk/numerical/bit.hpp"
 

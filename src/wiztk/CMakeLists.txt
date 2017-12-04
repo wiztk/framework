@@ -13,15 +13,20 @@
 # limitations under the License.
 
 file(GLOB base_headers "${PROJECT_SOURCE_DIR}/include/wiztk/base/*.hpp")
+file(GLOB base_sources "base/*.cpp")
 file(GLOB base_internal_headers "base/internal/*.hpp")
 file(GLOB base_internal_sources "base/internal/*.cpp")
-file(GLOB base_sources "base/*.cpp")
+file(GLOB base_memory_headers "${PROJECT_SOURCE_DIR}/include/wiztk/base/memory/*.hpp")
+#file(GLOB base_memory_sources "base/internal/*.cpp")
 
-list(APPEND all_source_files
+list(
+        APPEND all_source_files
         ${base_headers}
         ${base_sources}
         ${base_internal_headers}
-        ${base_internal_sources})
+        ${base_internal_sources}
+        ${base_memory_headers}
+        )
 
 file(GLOB numerical_headers "${PROJECT_SOURCE_DIR}/include/wiztk/numerical/*.hpp")
 file(GLOB numerical_sources "numerical/*.cpp")
@@ -92,7 +97,7 @@ endif ()
 target_include_directories(
         wiztk
         PRIVATE "${PROJECT_SOURCE_DIR}/include/wiztk"
-#        PRIVATE "${PROJECT_SOURCE_DIR}/third_party/icu"
+        #        PRIVATE "${PROJECT_SOURCE_DIR}/third_party/icu"
 )
 
 #    target_link_libraries(
@@ -113,7 +118,7 @@ target_link_libraries(
         PUBLIC wayland-cursor
         PRIVATE skia
         PRIVATE xdg-shell-unstable-v6
-#        PRIVATE icu_utf # in third_party
+        #        PRIVATE icu_utf # in third_party
 )
 
 install(TARGETS wiztk DESTINATION lib)

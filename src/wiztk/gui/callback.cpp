@@ -19,8 +19,6 @@
 #include "internal/display_private.hpp"
 #include "internal/view-surface_private.hpp"
 
-#include "wiztk/base/memory.hpp"
-
 namespace wiztk {
 namespace gui {
 

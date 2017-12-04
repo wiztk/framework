@@ -14,23 +14,25 @@
  * limitations under the License.
  */
 
-#ifndef SKLAND_TEST_CORE_WEAK_PTR_HPP_
-#define SKLAND_TEST_CORE_WEAK_PTR_HPP_
+#ifndef WIZTK_TEST_BASE_MEMORY_REF_COUNTED_BASE_HPP_
+#define WIZTK_TEST_BASE_MEMORY_REF_COUNTED_BASE_HPP_
 
 #include <gtest/gtest.h>
 
-class WeakPtrTest : public testing::Test {
+class TestRefCountedBase : public testing::Test {
 
  public:
 
-  WeakPtrTest();
-  virtual ~WeakPtrTest();
+  TestRefCountedBase() = default;
+
+  ~TestRefCountedBase() override = default;
 
  protected:
 
-  virtual void SetUp() {}
-  virtual void TearDown() {}
+  void SetUp() final {}
+
+  void TearDown() final {}
 
 };
 
-#endif // SKLAND_TEST_CORE_WEAK_PTR_HPP_
+#endif // SKLAND_TEST_CORE_MEMORY_SP_COUNTED_BASE_HPP_

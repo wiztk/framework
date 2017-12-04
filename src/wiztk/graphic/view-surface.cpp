@@ -19,8 +19,6 @@
 #include "internal/canvas_private.hpp"
 #include "internal/image-info_private.hpp"
 
-#include "wiztk/base/memory.hpp"
-
 namespace wiztk {
 namespace graphic {
 

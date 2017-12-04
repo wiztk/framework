@@ -25,23 +25,23 @@ namespace base {
  * @brief Class specifies bounds around a rectangle
  */
 template<typename T>
-struct BoundingBoxT {
+struct BoundingBox {
 
-  inline BoundingBoxT()
+  inline BoundingBox()
       : l(T(0)), t(T(0)), r(T(0)), b(T(0)) {}
 
-  inline explicit BoundingBoxT(T value)
+  inline explicit BoundingBox(T value)
       : l(value), t(value), r(value), b(value) {}
 
-  inline BoundingBoxT(T l, T t, T r, T b)
+  inline BoundingBox(T l, T t, T r, T b)
       : l(l), t(t), r(r), b(b) {}
 
-  inline BoundingBoxT(const BoundingBoxT &other)
+  inline BoundingBox(const BoundingBox &other)
       : l(other.l), t(other.t), r(other.r), b(other.b) {}
 
-  inline ~BoundingBoxT() = default;
+  inline ~BoundingBox() = default;
 
-  inline BoundingBoxT &operator=(const BoundingBoxT &other) {
+  inline BoundingBox &operator=(const BoundingBox &other) {
     l = other.l;
     t = other.t;
     r = other.r;
@@ -83,16 +83,16 @@ struct BoundingBoxT {
  * @ingroup base
  */
 template<typename T>
-inline bool operator==(const BoundingBoxT<T> &s1, const BoundingBoxT<T> &s2) {
-  return memcmp(&s1, &s2, sizeof(BoundingBoxT<T>)) == 0;
+inline bool operator==(const BoundingBox<T> &s1, const BoundingBox<T> &s2) {
+  return memcmp(&s1, &s2, sizeof(BoundingBox<T>)) == 0;
 }
 
 /**
  * @ingroup base
  */
 template<typename T>
-inline bool operator!=(const BoundingBoxT<T> &s1, const BoundingBoxT<T> &s2) {
-  return memcmp(&s1, &s2, sizeof(BoundingBoxT<T>)) != 0;
+inline bool operator!=(const BoundingBox<T> &s1, const BoundingBox<T> &s2) {
+  return memcmp(&s1, &s2, sizeof(BoundingBox<T>)) != 0;
 }
 
 } // namespace base

@@ -31,7 +31,7 @@ namespace base {
  * @tparam T Only support float or double
  */
 template<typename T>
-struct ColorT {
+struct Color {
 
   inline static uint32_t GetAlpha(uint32_t argb) {
     return (argb >> 24) & 0xFF;
@@ -53,35 +53,35 @@ struct ColorT {
     return (argb & 0x00FFFFFF) | (alpha << 24);
   }
 
-  inline static ColorT FromRGBA(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255) {
-    return ColorT(r / T(255.), g / T(255.), b / T(255.), a / T(255.));
+  inline static Color FromRGBA(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255) {
+    return Color(r / T(255.), g / T(255.), b / T(255.), a / T(255.));
   }
 
-  inline static ColorT ReverseRGBFrom(const ColorT &color) {
-    ColorT ret = color;
+  inline static Color ReverseRGBFrom(const Color &color) {
+    Color ret = color;
     ret.ReverseRGB();
     return ret;
   }
 
-  ColorT()
+  Color()
       : r(T(0)), g(T(0)), b(T(0)), a(T(1.)) {
   }
 
-  ColorT(T r, T g, T b, T a = T(1.))
+  Color(T r, T g, T b, T a = T(1.))
       : r(r), g(g), b(b), a(a) {
   }
 
-  ColorT(uint32_t argb) {
+  Color(uint32_t argb) {
     a = ((argb >> 24) & 0xFF) / T(255.);
     r = ((argb >> 16) & 0xFF) / T(255.);
     g = ((argb >> 8) & 0xFF) / T(255.);
     b = ((argb >> 0) & 0xFF) / T(255.);
   }
 
-  ColorT(const ColorT &other)
+  Color(const Color &other)
       : r(other.r), g(other.g), b(other.b), a(other.a) {}
 
-  ColorT &operator=(const ColorT &other) {
+  Color &operator=(const Color &other) {
     r = other.r;
     g = other.g;
     b = other.b;
@@ -89,7 +89,7 @@ struct ColorT {
     return *this;
   }
 
-  ColorT &operator=(uint32_t argb) {
+  Color &operator=(uint32_t argb) {
     a = ((argb >> 24) & 0xFF) / T(255.);
     r = ((argb >> 16) & 0xFF) / T(255.);
     g = ((argb >> 8) & 0xFF) / T(255.);
@@ -97,7 +97,7 @@ struct ColorT {
     return *this;
   }
 
-  ColorT &operator+=(short shade) {
+  Color &operator+=(short shade) {
     using numerical::ClampT;
 
     r = ClampT(r + shade / T(255.), T(0.), T(1.));
@@ -107,7 +107,7 @@ struct ColorT {
     return *this;
   }
 
-  ColorT &operator-=(short shade) {
+  Color &operator-=(short shade) {
     using numerical::ClampT;
 
     r = ClampT(r - shade / T(255.), T(0.), T(1.));
@@ -162,10 +162,10 @@ struct ColorT {
 };
 
 template<typename T>
-inline ColorT<T> operator+(const ColorT<T> &src, short shade) {
+inline Color<T> operator+(const Color<T> &src, short shade) {
   using numerical::ClampT;
 
-  ColorT<T> color;
+  Color<T> color;
   color.r = ClampT(src.r + shade / T(255.), T(0.), T(1.));
   color.g = ClampT(src.g + shade / T(255.), T(0.), T(1.));
   color.b = ClampT(src.b + shade / T(255.), T(0.), T(1.));
@@ -174,10 +174,10 @@ inline ColorT<T> operator+(const ColorT<T> &src, short shade) {
 }
 
 template<typename T>
-inline ColorT<T> operator+(const ColorT<T> &color1, const ColorT<T> &color2) {
+inline Color<T> operator+(const Color<T> &color1, const Color<T> &color2) {
   using numerical::ClampT;
 
-  ColorT<T> color;
+  Color<T> color;
   color.r = ClampT(color1.r + color2.r, T(0.), T(1.));
   color.g = ClampT(color1.g + color2.g, T(0.), T(1.));
   color.b = ClampT(color1.b + color2.b, T(0.), T(1.));
@@ -186,10 +186,10 @@ inline ColorT<T> operator+(const ColorT<T> &color1, const ColorT<T> &color2) {
 }
 
 template<typename T>
-inline ColorT<T> operator-(const ColorT<T> &src, short shade) {
+inline Color<T> operator-(const Color<T> &src, short shade) {
   using numerical::ClampT;
 
-  ColorT<T> color;
+  Color<T> color;
   color.r = ClampT(src.r - shade / T(255.), T(0.), T(1.));
   color.g = ClampT(src.g - shade / T(255.), T(0.), T(1.));
   color.b = ClampT(src.b - shade / T(255.), T(0.), T(1.));
@@ -199,10 +199,10 @@ inline ColorT<T> operator-(const ColorT<T> &src, short shade) {
 }
 
 template<typename T>
-inline ColorT<T> operator-(const ColorT<T> &color1, const ColorT<T> &color2) {
+inline Color<T> operator-(const Color<T> &color1, const Color<T> &color2) {
   using numerical::ClampT;
 
-  ColorT<T> color;
+  Color<T> color;
   color.r = ClampT(color1.r - color2.r, T(0.), T(1.));
   color.g = ClampT(color1.g - color2.g, T(0.), T(1.));
   color.b = ClampT(color1.b - color2.b, T(0.), T(1.));
@@ -212,26 +212,26 @@ inline ColorT<T> operator-(const ColorT<T> &color1, const ColorT<T> &color2) {
 }
 
 template<typename T>
-inline bool operator==(const ColorT<T> &src, const ColorT<T> &dst) {
-  return memcmp(&src, &dst, sizeof(ColorT<T>)) == 0;
+inline bool operator==(const Color<T> &src, const Color<T> &dst) {
+  return memcmp(&src, &dst, sizeof(Color<T>)) == 0;
 }
 
 template<typename T>
-inline bool operator!=(const ColorT<T> &src, const ColorT<T> &dst) {
-  return memcmp(&src, &dst, sizeof(ColorT<T>)) != 0;
+inline bool operator!=(const Color<T> &src, const Color<T> &dst) {
+  return memcmp(&src, &dst, sizeof(Color<T>)) != 0;
 }
 
 /**
  * @ingroup base
  * @brief A typedef to color with float values
  */
-typedef ColorT<float> ColorF;
+typedef Color<float> ColorF;
 
 /**
  * @ingroup base
  * @brief A typedef to color with double values
  */
-typedef ColorT<double> ColorD;
+typedef Color<double> ColorD;
 
 } // namespace base
 } // namespace wiztk

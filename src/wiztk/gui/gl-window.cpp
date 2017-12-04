@@ -17,7 +17,6 @@
 #include "wiztk/gui/gl-window.hpp"
 
 #include "wiztk/base/macros.hpp"
-#include "wiztk/base/memory.hpp"
 #include "wiztk/base/property.hpp"
 
 #include "wiztk/gui/key-event.hpp"
@@ -57,12 +56,12 @@ using graphic::Paint;
 using graphic::Path;
 using graphic::ClipOperation;
 
-struct GLWindow::Private : public base::PropertyT<GLWindow> {
+struct GLWindow::Private : public base::Property<GLWindow> {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
 
   explicit Private(GLWindow *window)
-      : base::PropertyT<GLWindow>(window) {}
+      : base::Property<GLWindow>(window) {}
 
   ~Private() final = default;
 

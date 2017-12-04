@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-#ifndef WIZUX_CONFIG_HPP_
-#define WIZUX_CONFIG_HPP_
+#include "test-ref-counted-base.hpp"
 
-#define WIZUX_INSTALL_PREFIX "/usr/local"
-#define WIZUX_PROJECT_SOURCE_DIR "/home/zhanggyb/Workspace/github/wiztk/framework"
+#include "wiztk/base/memory/atomic-ref-count.hpp"
+#include "wiztk/base/memory/ref-counted-thread-safe-base.hpp"
 
-/* #define WIZUX_HAVE_EGL  */
+using namespace wiztk;
+using namespace wiztk::base;
 
-}
-
-#endif  // WIZUX_CONFIG_HPP_
+/**
+ * @brief Make sure have the same memory size
+ */
+//TEST_F(TestRefCountedBase, count_1) {
+//  RefCountedBase obj;
+//  ASSERT_TRUE(obj.use_count() == 0 && obj.weak_count() == 0);
+//}

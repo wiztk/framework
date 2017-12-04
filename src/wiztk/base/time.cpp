@@ -31,10 +31,11 @@ Time::Time(int year, int month, int day, int hour, int minute, int second, int m
       ClampT(ns, 0, 999);
 }
 
-Time Time::Now(Type type) {
+Time Time::Now(Precision precision) {
   Time time;
 
   clockid_t clock = CLOCK_REALTIME;
+  /*
   switch (type) {
     case kRealtime: break;
     case kRealtimeCoarse: {
@@ -67,6 +68,7 @@ Time Time::Now(Type type) {
     }
     default:break;
   }
+  */
 
   if (clock_gettime(clock, &time.timespec_))
     throw std::runtime_error("Error! Fail to get clock time!");

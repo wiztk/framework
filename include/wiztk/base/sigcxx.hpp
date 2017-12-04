@@ -128,7 +128,7 @@ class DelegateTokenT : public CallableTokenT<ParamTypes...> {
   DelegateTokenT(DelegateTokenT &&) = delete;
   DelegateTokenT &operator=(DelegateTokenT &&)= delete;
 
-  explicit DelegateTokenT(const DelegateT<void(ParamTypes...)> &d)
+  explicit DelegateTokenT(const Delegate<void(ParamTypes...)> &d)
       : CallableTokenT<ParamTypes...>(), delegate_(d) {}
 
   ~DelegateTokenT() final = default;
@@ -137,13 +137,13 @@ class DelegateTokenT : public CallableTokenT<ParamTypes...> {
     delegate_(Args...);
   }
 
-  inline const DelegateT<void(ParamTypes...)> &delegate() const {
+  inline const Delegate<void(ParamTypes...)> &delegate() const {
     return delegate_;
   }
 
  private:
 
-  DelegateT<void(ParamTypes...)> delegate_;
+  Delegate<void(ParamTypes...)> delegate_;
 
 };
 
@@ -543,8 +543,8 @@ template<typename ... ParamTypes>
 template<typename T>
 void SignalT<ParamTypes...>::Connect(T *obj, void (T::*method)(ParamTypes..., SLOT), int index) {
   internal::Binding *downstream = new internal::Binding;
-  DelegateT<void(ParamTypes..., SLOT)> d =
-      DelegateT<void(ParamTypes..., SLOT)>::template FromMethod<T>(obj, method);
+  Delegate<void(ParamTypes..., SLOT)> d =
+      Delegate<void(ParamTypes..., SLOT)>::template FromMethod<T>(obj, method);
   internal::DelegateTokenT < ParamTypes..., SLOT > *token = new internal::DelegateTokenT<
       ParamTypes..., SLOT>(d);
 

@@ -17,7 +17,6 @@
 #include "wiztk/gui/glesv2-api.hpp"
 
 #include "wiztk/base/macros.hpp"
-#include "wiztk/base/memory.hpp"
 
 #include "internal/abstract-rendering-api_proxy.hpp"
 #include "internal/display_proxy.hpp"

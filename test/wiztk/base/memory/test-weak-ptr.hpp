@@ -14,19 +14,25 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_TEST_BASE_MESSAGE_LOOP_HPP_
-#define WIZTK_TEST_BASE_MESSAGE_LOOP_HPP_
+#ifndef WIZTK_TEST_BASE_WEAK_PTR_HPP_
+#define WIZTK_TEST_BASE_WEAK_PTR_HPP_
 
 #include <gtest/gtest.h>
 
-class SPCountedBaseTest : public testing::Test {
+class TestWeakPtr : public testing::Test {
+
  public:
-  SPCountedBaseTest();
-  virtual ~SPCountedBaseTest();
+
+  TestWeakPtr() = default;
+
+  ~TestWeakPtr() override = default;
 
  protected:
-  virtual void SetUp() {}
-  virtual void TearDown() {}
+
+  void SetUp() final {}
+
+  void TearDown() final {}
+
 };
 
-#endif // SKLAND_TEST_CORE_MEMORY_SP_COUNTED_BASE_HPP_
+#endif // SKLAND_TEST_CORE_WEAK_PTR_HPP_

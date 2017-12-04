@@ -34,7 +34,7 @@ class Item : public BiNode {
 
 };
 
-class TestDeque : public DequeT<BiNode> {
+class TestDeque : public Deque<BiNode> {
 
  public:
 
@@ -72,7 +72,7 @@ TEST_F(Test, push_front_1) {
 
   ASSERT_TRUE(deque.GetSize() == 3);
 
-  DequeT<BiNode>::ConstIterator it = deque.crbegin();
+  Deque<BiNode>::ConstIterator it = deque.crbegin();
   ASSERT_TRUE(it == item1);
 
   it = deque.cend();

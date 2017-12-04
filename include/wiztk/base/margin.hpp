@@ -26,7 +26,7 @@ namespace base {
  * @ingroup base
  * @brief Class specifies content margins
  */
-typedef BoundingBoxT<int> Margin;
+typedef BoundingBox<int> Margin;
 
 }
 }

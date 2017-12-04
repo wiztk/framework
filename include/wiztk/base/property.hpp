@@ -81,17 +81,17 @@ namespace base {
  * variable.
  */
 template<typename T>
-class PropertyT {
+class Property {
 
  public:
 
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(PropertyT);
-  PropertyT() = delete;
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Property);
+  Property() = delete;
 
-  inline explicit PropertyT(T *owner)
+  inline explicit Property(T *owner)
       : owner_(owner) {}
 
-  virtual ~PropertyT() = default;
+  virtual ~Property() = default;
 
   T *owner() const { return owner_; }
 

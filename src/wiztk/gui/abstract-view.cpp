@@ -17,7 +17,6 @@
 #include "internal/abstract-view_private.hpp"
 
 #include "wiztk/base/macros.hpp"
-#include "wiztk/base/memory.hpp"
 
 #include "wiztk/numerical/bit.hpp"
 #include "wiztk/numerical/clamp.hpp"
@@ -586,7 +585,7 @@ bool AbstractView::RequestSaveGeometry(const RectF &geometry) {
     p_->shell_view->OnRequestSaveGeometry(this);
     ret = p_->geometry_task.IsLinked();
   } else {
-    base::DequeT<Task> &deque = Application::instance()->GetTaskDeque();
+    base::Deque<Task> &deque = Application::instance()->GetTaskDeque();
     deque.PushBack(&p_->geometry_task);
   }
 

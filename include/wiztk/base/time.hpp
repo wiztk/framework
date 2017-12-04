@@ -33,6 +33,8 @@ class WIZTK_EXPORT Time {
 
  public:
 
+  class Delta;
+
   enum Type {
     kRealtime,
     kRealtimeCoarse,
@@ -44,7 +46,7 @@ class WIZTK_EXPORT Time {
     kThreadCPUTimeID
   };
 
-  enum Resolution {
+  enum Precision {
     kYears,
     kMonths,
     kWeeks,
@@ -126,6 +128,8 @@ class WIZTK_EXPORT Time {
 
   String ToString() const;
 
+  Time Approximate(Precision prec) const;
+
   /**
    * @brief Get the seconds part of the time value
    * @return
@@ -143,7 +147,7 @@ class WIZTK_EXPORT Time {
    * @param type
    * @return
    */
-  static Time Now(Type type = kRealtime);
+  static Time Now(Precision precision = kMilliseconds);
 
   static Time FromTimeVal(const struct timeval &tv);
 
@@ -172,6 +176,80 @@ WIZTK_EXPORT inline bool operator>(const Time &t1, const Time &t2) {
 WIZTK_EXPORT inline Time operator+(const Time &t1, const Time &t2) {
   struct timespec ts{t1.sec() + t2.sec(), t1.nsec() + t2.nsec()};
   return Time(ts);
+}
+
+/**
+ * @ingroup base
+ * @brief Time delta of maximal nanosecond resolution
+ */
+class WIZTK_EXPORT Time::Delta {
+
+ public:
+
+  explicit Delta(long sec = 0, long nsec = 0) {
+    delta_.tv_sec = sec;
+    delta_.tv_nsec = nsec;
+  }
+
+  Delta(const Time &t1, const Time &t2) {
+    delta_.tv_sec = t2.sec() - t1.sec();
+    delta_.tv_nsec = t2.nsec() - t1.nsec();
+  }
+
+  Delta(const Delta &other) = default;
+
+  ~Delta() = default;
+
+  Delta &operator=(const Delta &other) = default;
+
+  Delta operator+(const Delta &other) const {
+    Delta d;
+    d.delta_.tv_sec = delta_.tv_sec + other.delta_.tv_sec;
+    d.delta_.tv_nsec = delta_.tv_nsec + other.delta_.tv_nsec;
+    return d;
+  }
+
+  Delta operator-(const Delta &other) const {
+    Delta d;
+    d.delta_.tv_sec = delta_.tv_sec - other.delta_.tv_sec;
+    d.delta_.tv_nsec = delta_.tv_nsec - other.delta_.tv_nsec;
+    return d;
+  }
+
+  Delta Approximate(Precision prec) const;
+
+  long sec() const { return delta_.tv_sec; }
+
+  long nsec() const { return delta_.tv_nsec; }
+
+ private:
+
+  struct timespec delta_;
+
+};
+
+WIZTK_EXPORT inline bool operator==(const Time::Delta &d1, const Time::Delta &d2) {
+  return d1.sec() == d2.sec() ? d1.nsec() == d2.nsec() : false;
+}
+
+WIZTK_EXPORT inline bool operator!=(const Time::Delta &d1, const Time::Delta &d2) {
+  return d1.sec() != d2.sec() ? d1.nsec() != d2.nsec() : true;
+}
+
+WIZTK_EXPORT inline bool operator<(const Time::Delta &d1, const Time::Delta &d2) {
+  return d1.sec() < d2.sec() ? d1.nsec() < d2.nsec() : false;
+}
+
+WIZTK_EXPORT inline bool operator>(const Time::Delta &d1, const Time::Delta &d2) {
+  return d1.sec() > d2.sec() ? d1.nsec() > d2.nsec() : false;
+}
+
+WIZTK_EXPORT inline bool operator<=(const Time::Delta &d1, const Time::Delta &d2) {
+  return d1.sec() <= d2.sec() ? d1.nsec() <= d2.nsec() : false;
+}
+
+WIZTK_EXPORT inline bool operator>=(const Time::Delta &d1, const Time::Delta &d2) {
+  return d1.sec() >= d2.sec() ? d1.nsec() >= d2.nsec() : false;
 }
 
 } // namespace base

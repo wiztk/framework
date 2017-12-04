@@ -38,10 +38,10 @@ using graphic::Paint;
 
 using namespace wiztk::numerical;
 
-struct Spinner::Private : public base::PropertyT<Spinner> {
+struct Spinner::Private : public base::Property<Spinner> {
 
   explicit Private(Spinner *owner)
-      : base::PropertyT<Spinner>(owner) {}
+      : base::Property<Spinner>(owner) {}
 
   ~Private() final = default;
 

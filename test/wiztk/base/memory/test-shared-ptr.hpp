@@ -14,32 +14,25 @@
  * limitations under the License.
  */
 
-#include "sp-counted-base.hpp"
+#ifndef WIZTK_TEST_BASE_MEMORY_SHARED_PTR_HPP_
+#define WIZTK_TEST_BASE_MEMORY_SHARED_PTR_HPP_
 
-#include "wiztk/base/memory.hpp"
+#include <gtest/gtest.h>
 
-#include "SkRefCnt.h"
+class TestSharedPtr : public testing::Test {
 
-using namespace wiztk;
-using namespace wiztk::base;
+ public:
 
-SPCountedBaseTest::SPCountedBaseTest()
-    : testing::Test() {
-}
+  TestSharedPtr() = default;
 
-SPCountedBaseTest::~SPCountedBaseTest() {
+  ~TestSharedPtr() override = default;
 
-}
+ protected:
 
-/**
- * @brief Make sure have the same memory size
- */
-TEST_F(SPCountedBaseTest, memory_size_1) {
-  SkRefCntBase sk_base;
-  RefCountedBase base;
+  void SetUp() final {}
 
-  std::cout << sizeof(std::atomic_ulong) << std::endl;
-  std::cout << sizeof(size_t) << std::endl;
+  void TearDown() final {}
 
-  ASSERT_TRUE(sizeof(sk_base) == sizeof(base));
-}
+};
+
+#endif //SKLAND_SHARED_PTR_HPP

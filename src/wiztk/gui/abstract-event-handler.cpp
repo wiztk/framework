@@ -17,8 +17,6 @@
 #include "internal/abstract-event-handler_private.hpp"
 #include "internal/abstract-view_private.hpp"
 
-#include "wiztk/base/memory.hpp"
-
 namespace wiztk {
 namespace gui {
 

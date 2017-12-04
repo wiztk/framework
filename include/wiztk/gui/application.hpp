@@ -105,7 +105,7 @@ class WIZTK_EXPORT Application {
    * @brief Get the defferred task deque
    * @return
    */
-  base::DequeT<Task> &GetTaskDeque();
+  base::Deque<Task> &GetTaskDeque();
 
   static inline Application *instance() { return kInstance; }
 

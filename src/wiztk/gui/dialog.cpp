@@ -16,8 +16,6 @@
 
 #include "wiztk/gui/dialog.hpp"
 
-#include "wiztk/base/memory.hpp"
-
 #include "wiztk/gui/shared-memory-pool.hpp"
 #include "wiztk/gui/title-bar.hpp"
 #include "wiztk/gui/buffer.hpp"

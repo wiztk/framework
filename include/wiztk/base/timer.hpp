@@ -64,7 +64,7 @@ class WIZTK_EXPORT Timer {
    *
    * @warning This delegate was called in thread, and SHOULD not be reset when the timer is armed.
    */
-  DelegateRefT<void()> expire() { return expire_; }
+  DelegateRef<void()> expire() { return expire_; }
 
  protected:
 
@@ -82,7 +82,7 @@ class WIZTK_EXPORT Timer {
 
   bool is_armed_;
 
-  DelegateT<void()> expire_;
+  Delegate<void()> expire_;
 
 };
 

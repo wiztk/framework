@@ -17,7 +17,6 @@
 #include "internal/display_private.hpp"
 
 #include "wiztk/base/exceptions.hpp"
-#include "wiztk/base/memory.hpp"
 
 #include <wiztk/gui/output.hpp>
 #include <wiztk/gui/input.hpp>

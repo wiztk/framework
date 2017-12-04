@@ -30,10 +30,10 @@ namespace graphic {
  * @ingroup graphic_intern
  * @brief The private structure used in Bitmap
  */
-struct Bitmap::Private : public base::PropertyT<Bitmap> {
+struct Bitmap::Private : public base::Property<Bitmap> {
 
   explicit Private(Bitmap *owner)
-      : base::PropertyT<Bitmap>(owner) {}
+      : base::Property<Bitmap>(owner) {}
 
   ~Private() final = default;
 

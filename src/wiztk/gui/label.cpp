@@ -16,8 +16,6 @@
 
 #include "wiztk/gui/label.hpp"
 
-#include "wiztk/base/memory.hpp"
-
 #include "wiztk/graphic/font.hpp"
 #include "wiztk/graphic/canvas.hpp"
 #include "wiztk/graphic/paint.hpp"
