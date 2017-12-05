@@ -16,8 +16,7 @@
 
 #include "test-ref-counted-base.hpp"
 
-#include "wiztk/base/memory/atomic-ref-count.hpp"
-#include "wiztk/base/memory/ref-counted-thread-safe-base.hpp"
+#include "wiztk/base/memory/ref-counted-base.hpp"
 
 using namespace wiztk;
 using namespace wiztk::base;
@@ -26,6 +25,6 @@ using namespace wiztk::base;
  * @brief Make sure have the same memory size
  */
 //TEST_F(TestRefCountedBase, count_1) {
-//  RefCountedBase obj;
+//  RefCountedBase<> obj;
 //  ASSERT_TRUE(obj.use_count() == 0 && obj.weak_count() == 0);
 //}

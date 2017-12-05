@@ -25,6 +25,11 @@
 namespace wiztk {
 namespace base {
 
+/**
+ * @ingroup base_memory
+ * @brief Shared pointer
+ * @tparam T
+ */
 template<typename T>
 class SharedPtr {
 
@@ -33,6 +38,9 @@ class SharedPtr {
 
  public:
 
+  /**
+   * @brief Default constructor.
+   */
   constexpr SharedPtr() noexcept = default;
 
   explicit SharedPtr(T *obj) noexcept {
@@ -58,6 +66,14 @@ class SharedPtr {
     return *this;
   }
 
+  SharedPtr &operator=(SharedPtr &&other) noexcept {
+    ptr_ = other.ptr_;
+    ref_count_ = other.ref_count_;
+    other.ptr_ = nullptr;
+    other.ref_count_ = nullptr;
+    return *this;
+  }
+
   SharedPtr &operator=(T *obj) noexcept {
     Reset(obj);
     return *this;
@@ -77,16 +93,11 @@ class SharedPtr {
       }
       ref_count_ = ptr_->ref_count_;
       ptr_->Reference();
-
-      std::cout << ref_count_->use_count() << std::endl;
     }
 
     if (nullptr != old_ptr) {
       _ASSERT(old_ptr->ref_count_ == old_ref_count);
       old_ptr->Unreference();
-
-      std::cout << old_ref_count->use_count() << std::endl;
-
       if (0 == old_ref_count->use_count() && 0 == old_ref_count->weak_count()) {
         delete old_ref_count;
       }
@@ -138,6 +149,19 @@ class SharedPtr {
 
   RefCount *ref_count_ = nullptr;
 
+};
+
+/**
+ * @ingroup base_memory
+ * @brief Constructs an object of tyep T and wraps it in a SharedPtr
+ * @tparam T
+ * @tparam Args
+ * @param args
+ * @return
+ */
+template<typename T, typename ... Args>
+SharedPtr<T> MakeShared(Args &&... args) {
+  return SharedPtr<T>(new T(std::forward<Args>(args)...));
 };
 
 } // namespace base

@@ -23,6 +23,11 @@
 namespace wiztk {
 namespace base {
 
+/**
+ * @ingroup base_memory
+ * @brief Reference counted base.
+ * @tparam TDeleter
+ */
 template<typename TDeleter = AbstractRefCounted::DefaultDeleter>
 class RefCountedBase : public AbstractRefCounted {
 
@@ -60,6 +65,10 @@ class RefCountedBase : public AbstractRefCounted {
 
  private:
 
+  /*
+   * A pointer to a RefCount object, this is only created in SharedPtr and destroyed in
+   * SharedPtr or WeakPtr when use_count and weak_count are both 0.
+   */
   RefCount *ref_count_ = nullptr;
 
   TDeleter deleter_;

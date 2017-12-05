@@ -142,3 +142,10 @@ TEST_F(TestSharedPtr, unique_1) {
 
   ASSERT_TRUE(shared_ptr1.IsUnique());
 }
+
+TEST_F(TestSharedPtr, move_1) {
+  SharedPtr<MyRefCounted> shared_ptr1(new MyRefCounted);
+  SharedPtr<MyRefCounted> shared_ptr2 = std::move(shared_ptr1);
+
+  ASSERT_TRUE((!shared_ptr1) && (shared_ptr2));
+}

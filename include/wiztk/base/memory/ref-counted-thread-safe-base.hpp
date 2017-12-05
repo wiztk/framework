@@ -23,6 +23,11 @@
 namespace wiztk {
 namespace base {
 
+/**
+ * @ingroup base_memory
+ * @brief Thread safe reference counted base.
+ * @tparam TDeleter
+ */
 template<typename TDeleter = AbstractRefCounted::DefaultDeleter>
 class RefCountedThreadSafeBase : public AbstractRefCounted {
 

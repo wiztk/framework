@@ -20,6 +20,10 @@
 namespace wiztk {
 namespace base {
 
+/**
+ * @ingroup base_memory
+ * @brief Abstract class with reference count.
+ */
 class AbstractRefCounted {
 
  public:

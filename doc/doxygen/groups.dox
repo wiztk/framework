@@ -18,6 +18,12 @@
 
 /**
  * @ingroup base
+ * @defgroup base_memory Memory
+ * @brief Memory management
+ */
+
+/**
+ * @ingroup base
  * @defgroup base_threading Threading
  * @brief High-level threading interface
  */

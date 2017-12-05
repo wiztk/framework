@@ -25,7 +25,7 @@ namespace wiztk {
 namespace base {
 
 /**
- * @ingroup base
+ * @ingroup base_memory
  * @brief Atomic ref count used for thread safe.
  */
 class WIZTK_EXPORT AtomicRefCount {

@@ -23,11 +23,19 @@
 namespace wiztk {
 namespace base {
 
+/**
+ * @ingroup base_memory
+ * @brief Weak pointer.
+ * @tparam T
+ */
 template<typename T>
 class WeakPtr {
 
  public:
 
+  /**
+   * @brief Default constructor.
+   */
   constexpr WeakPtr() noexcept = default;
 
   WeakPtr(const WeakPtr &other) noexcept
@@ -50,8 +58,7 @@ class WeakPtr {
     Reset();
   }
 
-  WeakPtr &operator=(const SharedPtr<T> &other) noexcept {
-//    T *old_ptr = ptr_;
+  WeakPtr &operator=(const WeakPtr &other) noexcept {
     RefCount *old_ref_count = ref_count_;
 
     ptr_ = other.ptr_;
@@ -72,8 +79,15 @@ class WeakPtr {
     return *this;
   }
 
-  WeakPtr &operator=(const WeakPtr &other) noexcept {
-//    T *old_ptr = ptr_;
+  WeakPtr &operator=(WeakPtr &&other) noexcept {
+    ptr_ = other.ptr_;
+    ref_count_ = other.ref_count_;
+    other.ptr_ = nullptr;
+    other.ref_count_ = nullptr;
+    return *this;
+  }
+
+  WeakPtr &operator=(const SharedPtr<T> &other) noexcept {
     RefCount *old_ref_count = ref_count_;
 
     ptr_ = other.ptr_;
@@ -120,7 +134,8 @@ class WeakPtr {
   }
 
   SharedPtr<T> Lock() const noexcept {
-    if (ref_count_->use_count() > 0) return SharedPtr<T>(ptr_);
+    if ((nullptr != ref_count_) && (ref_count_->use_count() > 0))
+      return SharedPtr<T>(ptr_);
 
     return SharedPtr<T>();
   }

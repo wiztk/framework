@@ -22,6 +22,10 @@
 namespace wiztk {
 namespace base {
 
+/**
+ * @ingroup base_memory
+ * @brief Reference counter with use_count and weak_count.
+ */
 class RefCount {
 
   template<typename T> friend
