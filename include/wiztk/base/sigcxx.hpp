@@ -1,27 +1,17 @@
 /*
- * The MIT License (MIT)
+ * Copyright 2017 The WizTK Authors.
  *
- * Copyright (c) 2015 Freeman Zhang <zhanggyb@gmail.com>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without
- * restriction, including without limitation the rights to use, copy,
- * modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 #ifndef WIZTK_BASE_SIGCXX_HPP_
@@ -61,12 +51,14 @@ namespace internal {
 struct Token;
 
 template<typename ... ParamTypes>
-class SignalTokenT;
+class SignalToken;
 
 /**
  * @brief A simple structure works as a list node in Trackable object
  */
 struct Binding {
+
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Binding);
 
   Binding() = default;
 
@@ -84,6 +76,8 @@ struct Binding {
  */
 struct Token {
 
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Token);
+
   Token() = default;
 
   virtual ~Token();
@@ -98,18 +92,15 @@ struct Token {
 };
 
 template<typename ... ParamTypes>
-class CallableTokenT : public Token {
+class CallableToken : public Token {
 
  public:
 
-  CallableTokenT(const CallableTokenT &) = delete;
-  CallableTokenT &operator=(const CallableTokenT &) = delete;
-  CallableTokenT(CallableTokenT &&) = delete;
-  CallableTokenT &operator=(CallableTokenT &&) = delete;
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(CallableToken);
 
-  CallableTokenT() = default;
+  CallableToken() = default;
 
-  ~CallableTokenT() override = default;
+  ~CallableToken() override = default;
 
   virtual void Invoke(ParamTypes ... Args) {
     // Override this in sub class
@@ -118,20 +109,17 @@ class CallableTokenT : public Token {
 };
 
 template<typename ... ParamTypes>
-class DelegateTokenT : public CallableTokenT<ParamTypes...> {
+class DelegateToken : public CallableToken<ParamTypes...> {
 
  public:
 
-  DelegateTokenT() = delete;
-  DelegateTokenT(const DelegateTokenT &) = delete;
-  DelegateTokenT &operator=(const DelegateTokenT &) = delete;
-  DelegateTokenT(DelegateTokenT &&) = delete;
-  DelegateTokenT &operator=(DelegateTokenT &&)= delete;
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(DelegateToken);
+  DelegateToken() = delete;
 
-  explicit DelegateTokenT(const Delegate<void(ParamTypes...)> &d)
-      : CallableTokenT<ParamTypes...>(), delegate_(d) {}
+  explicit DelegateToken(const Delegate<void(ParamTypes...)> &d)
+      : CallableToken<ParamTypes...>(), delegate_(d) {}
 
-  ~DelegateTokenT() final = default;
+  ~DelegateToken() final = default;
 
   virtual void Invoke(ParamTypes... Args) final {
     delegate_(Args...);
@@ -148,20 +136,17 @@ class DelegateTokenT : public CallableTokenT<ParamTypes...> {
 };
 
 template<typename ... ParamTypes>
-class SignalTokenT : public CallableTokenT<ParamTypes...> {
+class SignalToken : public CallableToken<ParamTypes...> {
 
  public:
 
-  SignalTokenT() = delete;
-  SignalTokenT(const SignalTokenT &) = delete;
-  SignalTokenT &operator=(const SignalTokenT &) = delete;
-  SignalTokenT(SignalTokenT &&) = delete;
-  SignalTokenT &operator=(SignalTokenT &&) = delete;
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(SignalToken);
+  SignalToken() = delete;
 
-  explicit SignalTokenT(SignalT<ParamTypes...> &signal)
-      : CallableTokenT<ParamTypes...>(), signal_(&signal) {}
+  explicit SignalToken(SignalT<ParamTypes...> &signal)
+      : CallableToken<ParamTypes...>(), signal_(&signal) {}
 
-  ~SignalTokenT() final = default;
+  ~SignalToken() final = default;
 
   virtual void Invoke(ParamTypes... Args) final {
     signal_->Emit(Args...);
@@ -385,13 +370,13 @@ template<typename T, typename ... ParamTypes>
 void Trackable::UnbindAllSignalsTo(void (T::*method)(ParamTypes...)) {
   internal::Binding *it = last_binding_;
   internal::Binding *tmp = nullptr;
-  internal::DelegateTokenT < ParamTypes...> *delegate_token = nullptr;
+  internal::DelegateToken<ParamTypes...> *delegate_token = nullptr;
 
   while (it) {
     tmp = it;
     it = it->previous;
 
-    delegate_token = dynamic_cast<internal::DelegateTokenT < ParamTypes...> * > (tmp->token);
+    delegate_token = dynamic_cast<internal::DelegateToken<ParamTypes...> * > (tmp->token);
     if (delegate_token && (delegate_token->delegate().template Equal<T>((T *) this, method))) {
       delete tmp;
     }
@@ -401,10 +386,10 @@ void Trackable::UnbindAllSignalsTo(void (T::*method)(ParamTypes...)) {
 template<typename T, typename ... ParamTypes>
 int Trackable::CountSignalBindings(void (T::*method)(ParamTypes...)) const {
   int count = 0;
-  internal::DelegateTokenT < ParamTypes...> *delegate_token = nullptr;
+  internal::DelegateToken<ParamTypes...> *delegate_token = nullptr;
 
   for (internal::Binding *p = first_binding_; p; p = p->next) {
-    delegate_token = dynamic_cast<internal::DelegateTokenT < ParamTypes...> * > (p->token);
+    delegate_token = dynamic_cast<internal::DelegateToken<ParamTypes...> * > (p->token);
     if (delegate_token && (delegate_token->delegate().template Equal<T>((T *) this, method))) {
       count++;
     }
@@ -545,7 +530,7 @@ void SignalT<ParamTypes...>::Connect(T *obj, void (T::*method)(ParamTypes..., SL
   internal::Binding *downstream = new internal::Binding;
   Delegate<void(ParamTypes..., SLOT)> d =
       Delegate<void(ParamTypes..., SLOT)>::template FromMethod<T>(obj, method);
-  internal::DelegateTokenT < ParamTypes..., SLOT > *token = new internal::DelegateTokenT<
+  internal::DelegateToken<ParamTypes..., SLOT> *token = new internal::DelegateToken<
       ParamTypes..., SLOT>(d);
 
   link(token, downstream);
@@ -555,7 +540,7 @@ void SignalT<ParamTypes...>::Connect(T *obj, void (T::*method)(ParamTypes..., SL
 
 template<typename ... ParamTypes>
 void SignalT<ParamTypes...>::Connect(SignalT<ParamTypes...> &other, int index) {
-  internal::SignalTokenT < ParamTypes...> *token = new internal::SignalTokenT<ParamTypes...>(
+  internal::SignalToken<ParamTypes...> *token = new internal::SignalToken<ParamTypes...>(
       other);
   internal::Binding *binding = new internal::Binding;
 
@@ -567,7 +552,7 @@ void SignalT<ParamTypes...>::Connect(SignalT<ParamTypes...> &other, int index) {
 template<typename ... ParamTypes>
 template<typename T>
 void SignalT<ParamTypes...>::DisconnectAll(T *obj, void (T::*method)(ParamTypes..., SLOT)) {
-  internal::DelegateTokenT < ParamTypes..., SLOT > *delegate_token = nullptr;
+  internal::DelegateToken<ParamTypes..., SLOT> *delegate_token = nullptr;
   internal::Token *it = last_token_;
   internal::Token *tmp = nullptr;
 
@@ -576,7 +561,7 @@ void SignalT<ParamTypes...>::DisconnectAll(T *obj, void (T::*method)(ParamTypes.
     it = it->previous;
 
     if (tmp->binding->trackable == obj) {
-      delegate_token = dynamic_cast<internal::DelegateTokenT < ParamTypes..., SLOT > * > (tmp);
+      delegate_token = dynamic_cast<internal::DelegateToken<ParamTypes..., SLOT> * > (tmp);
       if (delegate_token && (delegate_token->delegate().template Equal<T>(obj, method))) {
         delete tmp;
       }
@@ -586,7 +571,7 @@ void SignalT<ParamTypes...>::DisconnectAll(T *obj, void (T::*method)(ParamTypes.
 
 template<typename ... ParamTypes>
 void SignalT<ParamTypes...>::DisconnectAll(SignalT<ParamTypes...> &other) {
-  internal::SignalTokenT < ParamTypes...> *signal_token = nullptr;
+  internal::SignalToken<ParamTypes...> *signal_token = nullptr;
   internal::Token *it = last_token_;
   internal::Token *tmp = nullptr;
 
@@ -595,7 +580,7 @@ void SignalT<ParamTypes...>::DisconnectAll(SignalT<ParamTypes...> &other) {
     it = it->previous;
 
     if (tmp->binding->trackable == (&other)) {
-      signal_token = dynamic_cast<internal::SignalTokenT < ParamTypes...> * > (tmp);
+      signal_token = dynamic_cast<internal::SignalToken<ParamTypes...> * > (tmp);
       if (signal_token && (signal_token->signal() == (&other))) {
         delete tmp;
       }
@@ -606,7 +591,7 @@ void SignalT<ParamTypes...>::DisconnectAll(SignalT<ParamTypes...> &other) {
 template<typename ... ParamTypes>
 template<typename T>
 int SignalT<ParamTypes...>::Disconnect(T *obj, void (T::*method)(ParamTypes..., SLOT), int start_pos, int counts) {
-  internal::DelegateTokenT < ParamTypes..., SLOT > *delegate_token = nullptr;
+  internal::DelegateToken<ParamTypes..., SLOT> *delegate_token = nullptr;
   internal::Token *it = nullptr;
   internal::Token *tmp = nullptr;
   int ret_count = 0;
@@ -623,7 +608,7 @@ int SignalT<ParamTypes...>::Disconnect(T *obj, void (T::*method)(ParamTypes..., 
       it = it->next;
 
       if (tmp->binding->trackable == obj) {
-        delegate_token = dynamic_cast<internal::DelegateTokenT < ParamTypes..., SLOT > * > (tmp);
+        delegate_token = dynamic_cast<internal::DelegateToken<ParamTypes..., SLOT> * > (tmp);
         if (delegate_token && (delegate_token->delegate().template Equal<T>(obj, method))) {
           ret_count++;
           counts--;
@@ -644,7 +629,7 @@ int SignalT<ParamTypes...>::Disconnect(T *obj, void (T::*method)(ParamTypes..., 
       it = it->previous;
 
       if (tmp->binding->trackable == obj) {
-        delegate_token = dynamic_cast<internal::DelegateTokenT < ParamTypes..., SLOT > * > (tmp);
+        delegate_token = dynamic_cast<internal::DelegateToken<ParamTypes..., SLOT> * > (tmp);
         if (delegate_token && (delegate_token->delegate().template Equal<T>(obj, method))) {
           ret_count++;
           counts--;
@@ -660,7 +645,7 @@ int SignalT<ParamTypes...>::Disconnect(T *obj, void (T::*method)(ParamTypes..., 
 
 template<typename ... ParamTypes>
 int SignalT<ParamTypes...>::Disconnect(SignalT<ParamTypes...> &other, int start_pos, int counts) {
-  internal::SignalTokenT < ParamTypes...> *signal_token = nullptr;
+  internal::SignalToken<ParamTypes...> *signal_token = nullptr;
   internal::Token *it = nullptr;
   internal::Token *tmp = nullptr;
   int ret_count = 0;
@@ -677,7 +662,7 @@ int SignalT<ParamTypes...>::Disconnect(SignalT<ParamTypes...> &other, int start_
       it = it->next;
 
       if (tmp->binding->trackable == (&other)) {
-        signal_token = dynamic_cast<internal::SignalTokenT < ParamTypes...> * > (tmp);
+        signal_token = dynamic_cast<internal::SignalToken<ParamTypes...> * > (tmp);
         if (signal_token && (signal_token->signal() == (&other))) {
           ret_count++;
           counts--;
@@ -699,7 +684,7 @@ int SignalT<ParamTypes...>::Disconnect(SignalT<ParamTypes...> &other, int start_
       it = it->previous;
 
       if (tmp->binding->trackable == (&other)) {
-        signal_token = dynamic_cast<internal::SignalTokenT < ParamTypes...> * > (tmp);
+        signal_token = dynamic_cast<internal::SignalToken<ParamTypes...> * > (tmp);
         if (signal_token && (signal_token->signal() == (&other))) {
           ret_count++;
           counts--;
@@ -764,11 +749,11 @@ int SignalT<ParamTypes...>::Disconnect(int start_pos, int counts) {
 template<typename ... ParamTypes>
 template<typename T>
 bool SignalT<ParamTypes...>::IsConnectedTo(T *obj, void (T::*method)(ParamTypes..., SLOT)) const {
-  internal::DelegateTokenT < ParamTypes..., SLOT > *delegate_token = nullptr;
+  internal::DelegateToken<ParamTypes..., SLOT> *delegate_token = nullptr;
 
   for (internal::Token *it = first_token_; it; it = it->next) {
     if (it->binding->trackable == obj) {
-      delegate_token = dynamic_cast<internal::DelegateTokenT < ParamTypes..., SLOT > * > (it);
+      delegate_token = dynamic_cast<internal::DelegateToken<ParamTypes..., SLOT> * > (it);
       if (delegate_token && (delegate_token->delegate().template Equal<T>(obj, method))) {
         return true;
       }
@@ -779,11 +764,11 @@ bool SignalT<ParamTypes...>::IsConnectedTo(T *obj, void (T::*method)(ParamTypes.
 
 template<typename ... ParamTypes>
 bool SignalT<ParamTypes...>::IsConnectedTo(const SignalT<ParamTypes...> &other) const {
-  internal::SignalTokenT < ParamTypes...> *signal_token = nullptr;
+  internal::SignalToken<ParamTypes...> *signal_token = nullptr;
 
   for (internal::Token *it = first_token_; it; it = it->next) {
     if (it->binding->trackable == (&other)) {
-      signal_token = dynamic_cast<internal::SignalTokenT < ParamTypes...> * > (it);
+      signal_token = dynamic_cast<internal::SignalToken<ParamTypes...> * > (it);
       if (signal_token && (signal_token->signal() == (&other))) {
         return true;
       }
@@ -813,11 +798,11 @@ template<typename ... ParamTypes>
 template<typename T>
 int SignalT<ParamTypes...>::CountConnections(T *obj, void (T::*method)(ParamTypes..., SLOT)) const {
   int count = 0;
-  internal::DelegateTokenT < ParamTypes..., SLOT > *delegate_token = nullptr;
+  internal::DelegateToken<ParamTypes..., SLOT> *delegate_token = nullptr;
 
   for (internal::Token *it = first_token_; it; it = it->next) {
     if (it->binding->trackable == obj) {
-      delegate_token = dynamic_cast<internal::DelegateTokenT < ParamTypes..., SLOT > * > (it);
+      delegate_token = dynamic_cast<internal::DelegateToken<ParamTypes..., SLOT> * > (it);
       if (delegate_token && (delegate_token->delegate().template Equal<T>(obj, method))) {
         count++;
       }
@@ -829,11 +814,11 @@ int SignalT<ParamTypes...>::CountConnections(T *obj, void (T::*method)(ParamType
 template<typename ... ParamTypes>
 int SignalT<ParamTypes...>::CountConnections(const SignalT<ParamTypes...> &other) const {
   int count = 0;
-  internal::SignalTokenT < ParamTypes...> *signal_token = nullptr;
+  internal::SignalToken<ParamTypes...> *signal_token = nullptr;
 
   for (internal::Token *it = first_token_; it; it = it->next) {
     if (it->binding->trackable == (&other)) {
-      signal_token = dynamic_cast<internal::SignalTokenT < ParamTypes...> * > (it);
+      signal_token = dynamic_cast<internal::SignalToken<ParamTypes...> * > (it);
       if (signal_token && (signal_token->signal() == (&other))) {
         count++;
       }
@@ -857,7 +842,7 @@ void SignalT<ParamTypes...>::Emit(ParamTypes ... Args) {
 
   while (nullptr != slot.token_) {
     slot.token_->slot_mark_head.PushBack(&slot.mark_);
-    static_cast<internal::CallableTokenT < ParamTypes..., SLOT > * > (slot.token_)->Invoke(Args..., &slot);
+    static_cast<internal::CallableToken<ParamTypes..., SLOT> * > (slot.token_)->Invoke(Args..., &slot);
 
     if (slot.skip_) {
       slot.skip_ = false;

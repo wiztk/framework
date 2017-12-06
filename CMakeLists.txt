@@ -243,7 +243,7 @@ add_definitions(-DSK_SAMPLES_FOR_X)
 # Sub directories
 # ----------------------------------------------------------------------------
 
-add_subdirectory(doc)
+add_subdirectory(docs)
 #add_subdirectory(deps)
 #add_subdirectory(third_party)
 add_subdirectory(src)

@@ -1,34 +1,23 @@
 /*
- * The MIT License (MIT)
+ * Copyright 2017 The WizTK Authors.
  *
- * Copyright (c) 2015 Freeman Zhang <zhanggyb@gmail.com>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without
- * restriction, including without limitation the rights to use, copy,
- * modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 #ifndef WIZTK_BASE_DELEGATE_HPP_
 #define WIZTK_BASE_DELEGATE_HPP_
 
 #include <cstring>
-#include <functional>
 
 #ifdef __DEBUG__
 #include <cassert>
@@ -50,7 +39,8 @@ typedef void (GenericMultiInherit::*GenericMethodPointer)();
 
 } // namespace internal
 
-// A forward declaration
+// Forward declarations
+
 // This is the key to use the template format of Delegate<return_type (args...)>
 template<typename _Signature>
 class Delegate;
@@ -61,6 +51,7 @@ class DelegateRef;
 /// @endcond
 
 /**
+ * @ingroup base
  * @brief The type of this delegate
  */
 enum DelegateType {
@@ -73,7 +64,43 @@ enum DelegateType {
  * @ingroup base
  * @brief Template class for delegates
  * @tparam ReturnType The return type
- * @tparam ParamTypes Parameters
+ * @tparam ParamTypes Arbitrary number of parameters
+ *
+ * A delegate is a type that represents references to methods (also called member functions)
+ * or static functions with a particular parameter list and return type. Delegate is the key
+ * feature and wildely used in WizTK.
+ *
+ * When you instantiate a delegate, you can associate its instance with any method/function
+ * with a compatible signature and return type.
+ *
+ * The following example shows a delegate to a method:
+ *
+ * @code
+ * class A {
+ *  public:
+ *   int Foo (int x, int y);
+ *   // ...
+ * };
+ *
+ * A a;
+ * auto foo = Delegate<int(int, int)>::FromMethod(&a, &A::Foo);
+ * @endcode
+ *
+ * The following example shows a delegate to a static function, in this situation, it works
+ * the same as a function pointer:
+ *
+ * @code
+ * class B {
+ *  public:
+ *   static int Foo (int x, int y);
+ *   // ...
+ * };
+ *
+ * int Foo (int x, int y);  // Global function
+ *
+ * auto foo_b = Delegate<int(int, int)>::FromFunction(&B::Foo);
+ * auto foo = Delegate<int(int, int)>::FromFunction(&Foo);
+ * @endcode
  *
  * @see <a href="md_doc_delegates.html">Fast C++ Delegats</a>
  */
@@ -141,6 +168,9 @@ class Delegate<ReturnType(ParamTypes...)> {
 
  public:
 
+  /**
+   * @brief Typedef to static method
+   */
   typedef ReturnType (*TFunction)(ParamTypes...);
 
   /**
@@ -397,10 +427,7 @@ class Delegate<ReturnType(ParamTypes...)> {
 #ifdef __DEBUG__
       assert(nullptr == data_.method_stub);
 #endif
-      if (nullptr == data_.pointer.function)
-        return kDelegateTypeUndefined;
-
-      return kDelegateTypeFunction;
+      return nullptr == data_.pointer.function ? kDelegateTypeUndefined : kDelegateTypeFunction;
     }
 
 #ifdef __DEBUG__

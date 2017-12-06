@@ -26,9 +26,9 @@ namespace base {
 /**
  * @ingroup base_memory
  * @brief Reference counted base.
- * @tparam TDeleter
+ * @tparam DeleterType
  */
-template<typename TDeleter = AbstractRefCounted::DefaultDeleter>
+template<typename DeleterType = AbstractRefCounted::DefaultDeleter>
 class RefCountedBase : public AbstractRefCounted {
 
   template<typename T> friend
@@ -71,7 +71,7 @@ class RefCountedBase : public AbstractRefCounted {
    */
   RefCount *ref_count_ = nullptr;
 
-  TDeleter deleter_;
+  DeleterType deleter_;
 
 };
 

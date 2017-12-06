@@ -4,8 +4,8 @@
  *
  * @section start Start
  *
- * - [Get the code: checkout, build and run](md_doc_markdown_build.html)
- * - [IDE Configuration](md_doc_markdown_ide.html)
+ * - [Get the code: checkout, build and run](md_docs_wiztk_build.html)
+ * - [IDE Configuration](md_doc_wiztk_ide.html)
  * - Directory structure
  *
  * @section tutorial Tutorial
@@ -15,9 +15,9 @@
  * @section guide Development Guides
  *
  * - C++11
- *   - [Coding style](md_doc_markdown_coding_style.html)
- * - [Fast C++ Delegates](md_doc_markdown_delegates.html)
- * - [Signals and Slots](md_doc_markdown_signals_and_slots.html)
+ *   - [Coding style](md_docs_wiztk_coding_style.html)
+ * - [Fast C++ Delegates](md_docs_wiztk_delegates.html)
+ * - [Signals and Slots](md_docs_wiztk_signals_and_slots.html)
  * - Wayland introduction
  *   - Surface stack
  * - Drawing with Google Skia

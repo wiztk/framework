@@ -190,3 +190,18 @@ TEST_F(TestDelegate, delegate_ref_1) {
 
   ASSERT_TRUE((!r1) && (!r2));
 }
+
+int add(int a, int b) {
+  return a + b;
+}
+
+TEST_F(TestDelegate, static_function_1) {
+  auto d = Delegate<int(int, int)>::FromFunction(&add);
+  ASSERT_TRUE(d.Equal(&add));
+}
+
+TEST_F(TestDelegate, static_function_2) {
+  auto d = Delegate<int(int, int)>::FromFunction(&Mockup::Add);
+  ASSERT_TRUE(!d.Equal(&add));
+  ASSERT_TRUE(d.Equal(&Mockup::Add));
+}

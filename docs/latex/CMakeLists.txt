@@ -15,14 +15,14 @@
 add_custom_target(
         tikz
 #        ALL
-        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/doc/latex"
+        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/docs/latex"
 )
 
 # -----------------------------------------------------------------------------
 # signal_slot:
 
-set(LATEX_SOURCE_DIR "${PROJECT_SOURCE_DIR}/doc/latex")
-set(LATEX_BINARY_DIR "${PROJECT_BINARY_DIR}/doc/latex")
+set(LATEX_SOURCE_DIR "${PROJECT_SOURCE_DIR}/docs/latex")
+set(LATEX_BINARY_DIR "${PROJECT_BINARY_DIR}/docs/latex")
 
 add_custom_command(
         TARGET tikz
