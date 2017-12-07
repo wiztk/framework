@@ -53,7 +53,7 @@ class AbstractRenderingAPI {
 
   virtual void SwapBuffers() = 0;
 
-  base::SignalRefT<> destroyed() { return destroyed_; }
+  base::SignalRef<> destroyed() { return destroyed_; }
 
  protected:
 
@@ -67,7 +67,7 @@ class AbstractRenderingAPI {
 
   struct Private;
 
-  base::SignalT<> destroyed_;
+  base::Signal<> destroyed_;
 
 };
 

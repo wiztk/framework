@@ -663,7 +663,7 @@ WIZTK_EXPORT class AbstractView : public AbstractEventHandler {
 
   std::unique_ptr<Private> p_;
 
-  base::SignalT<AbstractView *> destroyed_;
+  base::Signal<AbstractView *> destroyed_;
 
 };
 

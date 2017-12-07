@@ -28,12 +28,11 @@ namespace gui {
 template<typename T>
 class AbstractSlider : public AbstractView {
 
-  AbstractSlider(const AbstractSlider &) = delete;
-  AbstractSlider &operator=(const AbstractSlider &) = delete;
-
  public:
 
-  AbstractSlider(Orientation orientation = kHorizontal);
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(AbstractSlider);
+
+  explicit AbstractSlider(Orientation orientation = kHorizontal);
 
   virtual ~AbstractSlider();
 
@@ -67,7 +66,7 @@ class AbstractSlider : public AbstractView {
     return step_;
   }
 
-  base::SignalRefT<const T &> changed() {
+  base::SignalRef<const T &> changed() {
     return changed_;
   }
 
@@ -103,7 +102,7 @@ class AbstractSlider : public AbstractView {
   T maximum_;
   T step_;
 
-  base::SignalT<const T &> changed_;
+  base::Signal<const T &> changed_;
 
 };
 

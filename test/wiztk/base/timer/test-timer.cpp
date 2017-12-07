@@ -48,6 +48,33 @@ void Response::OnTimeout() {
     timer_.Stop();
 }
 
+TEST_F(TestTimer, expire_1) {
+  Timer t;
+  t.SetInterval(1000);
+  int count = 0;
+
+  auto l = [&] {
+    count++;
+    std::cout << "count: " << count << std::endl;
+    if (count == 10) t.Stop();
+  };
+
+  t.expire().Bind(l);
+
+  std::cout << "before start: count: " << count << std::endl;
+
+  t.Start();
+
+  while (true) {
+    sleep(1);
+    if (!t.is_armed()) break;
+  }
+
+  std::cout << "after stop: count: " << count << std::endl;
+
+  ASSERT_TRUE(count == 10);
+}
+
 TEST_F(TestTimer, timeout_1) {
   Response response;
 

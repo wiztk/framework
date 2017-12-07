@@ -54,8 +54,8 @@ class WIZTK_EXPORT Display {
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Display);
 
   using CompoundDeque = base::CompoundDeque;
-  template<typename ... ParamTypes> using SignalRefT = typename base::SignalRefT<ParamTypes...>;
-  template<typename ... ParamTypes> using SignalT = typename base::SignalT<ParamTypes...>;
+  template<typename ... ParamTypes> using SignalRefT = typename base::SignalRef<ParamTypes...>;
+  template<typename ... ParamTypes> using SignalT = typename base::Signal<ParamTypes...>;
 
   struct Global;
   struct Proxy;

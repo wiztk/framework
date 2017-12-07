@@ -38,8 +38,8 @@ class Output : public base::CompoundDeque::Element {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Output);
 
-  template<typename ... ParamTypes> using SignalRefT = typename base::SignalRefT<ParamTypes...>;
-  template<typename ... ParamTypes> using SignalT = typename base::SignalT<ParamTypes...>;
+  template<typename ... Args> using SignalRefT = typename base::SignalRef<Args...>;
+  template<typename ... Args> using SignalT = typename base::Signal<Args...>;
 
   Output(uint32_t id, uint32_t version);
 

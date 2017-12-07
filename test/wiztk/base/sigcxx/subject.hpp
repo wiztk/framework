@@ -12,10 +12,10 @@ class Subject : public wiztk::base::Trackable {
  public:
 
   template<typename ... ParamTypes>
-  using SignalRefT = typename wiztk::base::SignalRefT<ParamTypes...>;
+  using SignalRefT = typename wiztk::base::SignalRef<ParamTypes...>;
 
   template<typename ... ParamTypes>
-  using SignalT = typename wiztk::base::SignalT<ParamTypes...>;
+  using SignalT = typename wiztk::base::Signal<ParamTypes...>;
 
   Subject() = default;
 

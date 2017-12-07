@@ -12,76 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-file(GLOB base_headers "${PROJECT_SOURCE_DIR}/include/wiztk/base/*.hpp")
-file(GLOB base_sources "base/*.cpp")
-file(GLOB base_internal_headers "base/internal/*.hpp")
-file(GLOB base_internal_sources "base/internal/*.cpp")
-file(GLOB base_memory_headers "${PROJECT_SOURCE_DIR}/include/wiztk/base/memory/*.hpp")
-#file(GLOB base_memory_sources "base/internal/*.cpp")
+file(GLOB_RECURSE base_headers "${PROJECT_SOURCE_DIR}/include/wiztk/base/*.hpp")
+file(GLOB_RECURSE base_sources "base/*.cpp")
+list(APPEND all_source_files ${base_headers} ${base_sources})
 
-list(
-        APPEND all_source_files
-        ${base_headers}
-        ${base_sources}
-        ${base_internal_headers}
-        ${base_internal_sources}
-        ${base_memory_headers}
-        )
+file(GLOB_RECURSE numerical_headers "${PROJECT_SOURCE_DIR}/include/wiztk/numerical/*.hpp")
+file(GLOB_RECURSE numerical_sources "numerical/*.cpp")
+list(APPEND all_source_files ${numerical_headers} ${numerical_sources})
 
-file(GLOB numerical_headers "${PROJECT_SOURCE_DIR}/include/wiztk/numerical/*.hpp")
-file(GLOB numerical_sources "numerical/*.cpp")
-file(GLOB numerical_internal_headers "numerical/internal/*.hpp")
-file(GLOB numerical_internal_sources "numerical/internal/*.cpp")
+file(GLOB_RECURSE net_headers "${PROJECT_SOURCE_DIR}/include/wiztk/net/*.hpp")
+file(GLOB_RECURSE net_sources "net/*.cpp")
+list(APPEND all_source_files ${net_headers} ${net_sources})
 
-list(APPEND all_source_files
-        ${numerical_headers}
-        ${numerical_sources}
-        ${numerical_internal_headers}
-        ${numerical_internal_sources})
+file(GLOB_RECURSE graphic_headers "${PROJECT_SOURCE_DIR}/include/wiztk/graphic/*.hpp")
+file(GLOB_RECURSE graphic_sources "graphic/*.cpp")
+list(APPEND all_source_files ${graphic_headers} ${graphic_sources})
 
-file(GLOB graphic_headers "${PROJECT_SOURCE_DIR}/include/wiztk/graphic/*.hpp")
-file(GLOB graphic_sources "graphic/*.cpp")
-file(GLOB graphic_internal_headers "graphic/internal/*.hpp")
-file(GLOB graphic_internal_sources "graphic/internal/*.cpp")
-
-list(APPEND all_source_files
-        ${graphic_headers}
-        ${graphic_sources}
-        ${graphic_internal_headers}
-        ${graphic_internal_sources})
-
-#file(GLOB av_headers "${PROJECT_SOURCE_DIR}/include/wiztk/av/*.hpp")
-#file(GLOB av_sources "av/*.cpp")
-#file(GLOB av_internal_headers "av/internal/*.hpp")
-#file(GLOB av_internal_sources "av/internal/*.cpp")
-#
-#list(APPEND all_source_files
-#        ${av_headers}
-#        ${av_sources}
-#        ${av_internal_headers}
-#        ${av_internal_sources})
-
-file(GLOB gui_headers "${PROJECT_SOURCE_DIR}/include/wiztk/gui/*.hpp")
-file(GLOB gui_sources "gui/*.cpp")
-file(GLOB gui_internal_headers "gui/internal/*.hpp")
-file(GLOB gui_internal_sources "gui/internal/*.cpp")
-
-file(GLOB stock_headers "${PROJECT_SOURCE_DIR}/include/wiztk/stock/*.hpp")
-file(GLOB stock_sources "stock/*.cpp")
-file(GLOB stock_internal_headers "stock/internal/*.hpp")
-file(GLOB stock_internal_sources "stock/internal/*.cpp")
-
-list(APPEND all_source_files
-        ${egl_headers}
-        ${egl_sources}
-        ${gui_headers}
-        ${gui_sources}
-        ${gui_internal_headers}
-        ${gui_internal_sources}
-        ${stock_headers}
-        ${stock_sources}
-        ${stock_internal_headers}
-        ${stock_internal_sources})
+file(GLOB_RECURSE gui_headers "${PROJECT_SOURCE_DIR}/include/wiztk/gui/*.hpp")
+file(GLOB_RECURSE gui_sources "gui/*.cpp")
+list(APPEND all_source_files ${gui_headers} ${gui_sources})
 
 set(global_header "${PROJECT_SOURCE_DIR}/include/wiztk/config.hpp")
 
@@ -122,4 +71,3 @@ target_link_libraries(
 )
 
 install(TARGETS wiztk DESTINATION lib)
-

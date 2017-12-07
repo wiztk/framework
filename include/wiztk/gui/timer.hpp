@@ -35,7 +35,7 @@ class Timer {
    * @brief Default constructor
    * @param interval Interval in microseconds
    */
-  Timer(unsigned int interval = 5000000);
+  explicit Timer(unsigned int interval = 5000000);
 
   ~Timer();
 
@@ -49,7 +49,7 @@ class Timer {
 
   bool IsArmed() const;
 
-  base::SignalRefT<> timeout() { return timeout_; }
+  base::SignalRef<> timeout() { return timeout_; }
 
   /**
    * @brief Get clock time in nanoseconds
@@ -66,7 +66,7 @@ class Timer {
 
   std::unique_ptr<Private> p_;
 
-  base::SignalT<> timeout_;
+  base::Signal<> timeout_;
 
 };
 

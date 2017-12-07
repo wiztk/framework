@@ -21,6 +21,7 @@
 
 #ifdef __DEBUG__
 #include <cassert>
+#include <functional>
 #endif
 
 namespace wiztk {
@@ -56,8 +57,8 @@ class DelegateRef;
  */
 enum DelegateType {
   kDelegateTypeUndefined, /**< The delegate is not bound to any method/function pointer */
-  kDelegateTypeMethod,  /**< The delegate is bound to a method (member function) */
-  kDelegateTypeFunction /**< The delegate is bound to a static function */
+  kDelegateTypeMember,  /**< The delegate is bound to a method (member function) */
+  kDelegateTypeStatic /**< The delegate is bound to a static function */
 };
 
 /**
@@ -206,6 +207,19 @@ class Delegate<ReturnType(ParamTypes...)> {
    */
   static inline Delegate FromFunction(TFunction fn) {
     return Delegate(fn);
+  }
+
+  /**
+   * @brief Create a delegate from the given lambda object.
+   * @tparam T
+   * @param lambda
+   * @return
+   */
+  template<typename T>
+  static inline Delegate FromLambda(const T &lambda) {
+    typedef ReturnType (T::*TMethod)(ParamTypes...) const;
+    TMethod method = &T::operator();
+    return FromMethod(const_cast<T *>(&lambda), method);
   }
 
   /**
@@ -372,31 +386,49 @@ class Delegate<ReturnType(ParamTypes...)> {
   /**
    * @brief Compare this delegate to a member function of an object
    * @tparam T
-   * @param object_ptr
+   * @param object
    * @param method
    * @return
    */
   template<typename T>
-  bool Equal(T *object_ptr, ReturnType(T::*method)(ParamTypes...)) const {
+  bool Equal(T *object, ReturnType(T::*method)(ParamTypes...)) const {
     typedef ReturnType (T::*TMethod)(ParamTypes...);
 
-    return (data_.object == object_ptr) &&
+    return (data_.object == object) &&
         (data_.method_stub == &MethodStub<T, TMethod>::invoke) &&
         (data_.pointer.method == reinterpret_cast<internal::GenericMethodPointer>(method));
   }
 
   /**
-   * @brief Compare this delegate to a const member function of an object
+   * @brief Compare this delegate to a const member function of an object.
    * @tparam T
-   * @param object_ptr
+   * @param object
    * @param method
    * @return
    */
   template<typename T>
-  bool Equal(T *object_ptr, ReturnType(T::*method)(ParamTypes...) const) const {
+  bool Equal(T *object, ReturnType(T::*method)(ParamTypes...) const) const {
     typedef ReturnType (T::*TMethod)(ParamTypes...) const;
 
-    return (data_.object == object_ptr) &&
+    return (data_.object == object) &&
+        (data_.method_stub == &MethodStub<T, TMethod>::invoke) &&
+        (data_.pointer.method == reinterpret_cast<internal::GenericMethodPointer>(method));
+  }
+
+  /**
+   * @brief Compare this delegate to a lambda.
+   * @tparam T
+   * @param lambda
+   * @return
+   */
+  template<typename T>
+  bool Equal(const T &lambda) {
+    typedef ReturnType (T::*TMethod)(ParamTypes...) const;
+
+    TMethod method = &T::operator();
+    auto *object = const_cast<T *> (&lambda);
+
+    return (data_.object == object) &&
         (data_.method_stub == &MethodStub<T, TMethod>::invoke) &&
         (data_.pointer.method == reinterpret_cast<internal::GenericMethodPointer>(method));
   }
@@ -406,7 +438,7 @@ class Delegate<ReturnType(ParamTypes...)> {
    * @param fn
    * @return
    */
-  bool Equal(TFunction fn) const {
+  bool EqualStatic(TFunction fn) const {
 #ifdef __DEBUG__
     if (data_.pointer.function == fn) {
       assert((nullptr == data_.object) && (nullptr == data_.method_stub));
@@ -427,13 +459,13 @@ class Delegate<ReturnType(ParamTypes...)> {
 #ifdef __DEBUG__
       assert(nullptr == data_.method_stub);
 #endif
-      return nullptr == data_.pointer.function ? kDelegateTypeUndefined : kDelegateTypeFunction;
+      return nullptr == data_.pointer.function ? kDelegateTypeUndefined : kDelegateTypeStatic;
     }
 
 #ifdef __DEBUG__
     assert(nullptr != data_.method_stub);
 #endif
-    return kDelegateTypeMethod;
+    return kDelegateTypeMember;
   }
 
  private:
@@ -491,56 +523,136 @@ class DelegateRef<ReturnType(ParamTypes...)> {
 
  public:
 
+  /**
+   * @brief Typedef to a static function.
+   */
   typedef ReturnType (*TFunction)(ParamTypes...);
 
   DelegateRef() = delete;
   DelegateRef &operator=(const DelegateRef &) = delete;
+  DelegateRef(const DelegateRef &) = delete;
+  DelegateRef &operator=(DelegateRef &&) = delete;
 
+  /**
+   * @brief Constructs a DelegateRef with the given Delegate.
+   * @param delegate
+   */
   DelegateRef(Delegate<ReturnType(ParamTypes...)> &delegate)
       : delegate_(&delegate) {}
 
-  DelegateRef(const DelegateRef &orig)
-      : delegate_(orig.delegate_) {}
+  /**
+   * @brief Move constructor.
+   * @param orig
+   */
+  DelegateRef(DelegateRef &&orig) noexcept
+      : delegate_(orig.delegate_) {
+    orig.delegate_ = nullptr;
+  }
 
+  /**
+   * @brief Default destructor.
+   */
   ~DelegateRef() = default;
 
+  /**
+   * @brief Assignment operator.
+   * @param delegate A Delegate object
+   * @return Reference to this object
+   */
   DelegateRef &operator=(Delegate<ReturnType(ParamTypes...)> &delegate) {
     delegate_ = &delegate;
     return *this;
   }
 
+  /**
+   * @brief Bind the delegate referenced to given method.
+   * @tparam T
+   * @param obj
+   * @param method
+   */
   template<typename T>
   void Bind(T *obj, ReturnType (T::*method)(ParamTypes...)) {
     *delegate_ = Delegate<ReturnType(ParamTypes...)>::template FromMethod<T>(obj, method);
   }
 
+  /**
+   * @brief Bind the delegate referenced to given const method.
+   * @tparam T
+   * @param obj
+   * @param method
+   */
   template<typename T>
   void Bind(T *obj, ReturnType (T::*method)(ParamTypes...) const) {
     *delegate_ = Delegate<ReturnType(ParamTypes...)>::template FromMethod<T>(obj, method);
   }
 
-  void Bind(TFunction fn) {
+  /**
+   * @brief Bind the delegate referenced to given lambda.
+   * @tparam T
+   * @param lambda
+   */
+  template<typename T>
+  void Bind(const T &lambda) {
+    *delegate_ = Delegate<ReturnType(ParamTypes...)>::template FromLambda(lambda);
+  }
+
+  /**
+   * @brief Bind the delegate referenced to given static function.
+   * @param fn
+   */
+  void BindStatic(TFunction fn) {
     *delegate_ = Delegate<ReturnType(ParamTypes...)>::FromFunction(fn);
   }
 
+  /**
+   * @brief Reset the delegate referenced.
+   */
   void Reset() {
     delegate_->Reset();
   }
 
+  /**
+   * @brief Returns if the delegate referenced points to a method.
+   * @tparam T
+   * @param obj
+   * @param method
+   * @return
+   */
   template<typename T>
   bool IsBoundTo(T *obj, ReturnType (T::*method)(ParamTypes...)) const {
     return delegate_->Equal(obj, method);
   }
 
+  /**
+   * @brief Returns if the delegate referenced points to a const method.
+   * @tparam T
+   * @param obj
+   * @param method
+   * @return
+   */
   template<typename T>
   bool IsBoundTo(T *obj, ReturnType (T::*method)(ParamTypes...) const) const {
     return delegate_->Equal(obj, method);
   }
 
-  bool IsBoundTo(TFunction fn) const {
-    return delegate_->Equal(fn);
+  template<typename T>
+  bool IsBoundTo(const T &lambda) const {
+    return delegate_->Equal(lambda);
   }
 
+  /**
+    * @brief Returns if the delegate referenced points to a static function.
+    * @param fn
+    * @return
+    */
+  bool IsBoundToStatic(TFunction fn) const {
+    return delegate_->EqualStatic(fn);
+  }
+
+  /**
+   * @brief Override the bool operation.
+   * @return
+   */
   explicit operator bool() const {
     return delegate_->operator bool();
   }

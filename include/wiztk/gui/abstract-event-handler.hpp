@@ -64,8 +64,8 @@ WIZTK_EXPORT class AbstractEventHandler : public base::Trackable {
  public:
 
   using String = base::String;
-  template<typename ... P> using SignalRef = typename base::SignalRefT<P...>;
-  template<typename ... P> using Signal = typename base::SignalT<P...>;
+  template<typename ... Args> using SignalRef = typename base::SignalRef<Args...>;
+  template<typename ... Args> using Signal = typename base::Signal<Args...>;
 
   WIZTK_DECLARE_NONCOPYABLE(AbstractEventHandler);
 

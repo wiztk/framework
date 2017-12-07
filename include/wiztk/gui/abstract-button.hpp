@@ -46,7 +46,7 @@ class AbstractButton : public AbstractView {
 
   explicit AbstractButton(const std::string &text);
 
-  base::SignalRefT<> clicked() { return clicked_; }
+  SignalRef<> clicked() { return clicked_; }
 
   bool IsSensitive() const;
 
@@ -94,7 +94,7 @@ class AbstractButton : public AbstractView {
 
   std::unique_ptr<Private> p_;
 
-  base::SignalT<> clicked_;
+  Signal<> clicked_;
 
 };
 

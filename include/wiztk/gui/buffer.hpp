@@ -46,8 +46,8 @@ class Buffer {
 
   using Point = base::Point2I;
   using Size = base::SizeI;
-  template<typename ... ParamTypes> using SignalRefT = typename base::SignalRefT<ParamTypes...>;
-  template<typename ... ParamTypes> using SignalT = typename base::SignalT<ParamTypes...>;
+  template<typename ... Args> using SignalRefT = typename base::SignalRef<Args...>;
+  template<typename ... Args> using SignalT = typename base::Signal<Args...>;
 
   Buffer();
 

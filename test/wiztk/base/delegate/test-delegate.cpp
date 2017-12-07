@@ -59,28 +59,28 @@ TEST_F(TestDelegate, constructor1) {
   Mockup obj;
   Delegate<int(int)> d(&obj, &Mockup::Foo);
   ASSERT_TRUE(1 == d(1));
-  ASSERT_TRUE(d.type() == kDelegateTypeMethod);
+  ASSERT_TRUE(d.type() == kDelegateTypeMember);
 }
 
 TEST_F(TestDelegate, constructor2) {
   Mockup obj;
   Delegate<int(int)> d = Delegate<int(int)>::FromMethod(&obj, &Mockup::Foo);
   ASSERT_TRUE(1 == d(1));
-  ASSERT_TRUE(d.type() == kDelegateTypeMethod);
+  ASSERT_TRUE(d.type() == kDelegateTypeMember);
 }
 
 TEST_F(TestDelegate, constructor3) {
   Mockup obj;
   Delegate<int(int)> d(&obj, &Mockup::ConstFoo);
   ASSERT_TRUE(0 == d(1));
-  ASSERT_TRUE(d.type() == kDelegateTypeMethod);
+  ASSERT_TRUE(d.type() == kDelegateTypeMember);
 }
 
 TEST_F(TestDelegate, constructor4) {
   Mockup obj;
   Delegate<int(int)> d = Delegate<int(int)>::FromMethod(&obj, &Mockup::ConstFoo);
   ASSERT_TRUE(0 == d(1));
-  ASSERT_TRUE(d.type() == kDelegateTypeMethod);
+  ASSERT_TRUE(d.type() == kDelegateTypeMember);
 }
 
 /*
@@ -146,18 +146,7 @@ TEST_F(TestDelegate, compare4) {
 TEST_F(TestDelegate, compare5) {
   Delegate<int(int, int)> d(Mockup::Add);
 
-  ASSERT_TRUE(d.Equal(Mockup::Add));
-}
-
-TEST_F(TestDelegate, lambda_1) {
-  auto d = Delegate<int(int, int)>::FromFunction(
-      [](int x, int y) -> int {
-        return x + y;
-      }
-  );
-
-  ASSERT_TRUE(3 == d(1, 2));
-  ASSERT_TRUE(d.type() == kDelegateTypeFunction);
+  ASSERT_TRUE(d.EqualStatic(&Mockup::Add));
 }
 
 TEST_F(TestDelegate, move_1) {
@@ -197,11 +186,54 @@ int add(int a, int b) {
 
 TEST_F(TestDelegate, static_function_1) {
   auto d = Delegate<int(int, int)>::FromFunction(&add);
-  ASSERT_TRUE(d.Equal(&add));
+  ASSERT_TRUE(d.EqualStatic(&add));
 }
 
 TEST_F(TestDelegate, static_function_2) {
   auto d = Delegate<int(int, int)>::FromFunction(&Mockup::Add);
-  ASSERT_TRUE(!d.Equal(&add));
-  ASSERT_TRUE(d.Equal(&Mockup::Add));
+  ASSERT_TRUE(!d.EqualStatic(&add));
+  ASSERT_TRUE(d.EqualStatic(&Mockup::Add));
+}
+
+TEST_F(TestDelegate, lambda_1) {
+  auto d = Delegate<int(int, int)>::FromFunction(
+      [](int x, int y) -> int {
+        return x + y;
+      }
+  );
+
+  ASSERT_TRUE(3 == d(1, 2));
+  ASSERT_TRUE(d.type() == kDelegateTypeStatic);
+}
+
+TEST_F(TestDelegate, lambda_2) {
+
+  int foo = 0;
+
+  auto l1 = [](int a, int b) { std::cout << "No return" << std::endl; };
+  auto l2 = [&](int a, int b) -> int { return a + b + foo; };
+
+  std::cout << "Lambda size with no capture list: " << sizeof(l1) << std::endl;
+
+  std::cout << "Lambda size with capture list: " << sizeof(l2) << std::endl;
+
+  auto d1 = Delegate<int(int, int)>::FromLambda(l2);
+
+  ASSERT_TRUE(d1.Equal(l2));
+
+  std::cout << d1(3, 4) << std::endl;
+
+  auto d2 = Delegate<int(int, int)>::FromLambda([](int a, int b) -> int {
+    return a + b;
+  });
+
+  std::cout << d2(6, 7) << std::endl;
+
+  auto d3 = Delegate<void()>::FromLambda([] {
+    std::cout << "lambda without params." << std::endl;
+  });
+
+  d3();
+
+  ASSERT_TRUE(true);
 }
