@@ -44,6 +44,7 @@ class AddressInfo : protected base::BiNode {
   class base::Deque;
 
   friend class AddressInfoList;
+  friend class IPAddress;
 
  public:
 
@@ -77,6 +78,12 @@ class AddressInfo : protected base::BiNode {
 
   int protocol() const { return address_info_->ai_protocol; }
 
+  socklen_t addrlen() const { return address_info_->ai_addrlen; }
+
+  struct sockaddr *addr() const { return address_info_->ai_addr; }
+
+  const char *canonical_name() const { return address_info_->ai_canonname; }
+
  private:
 
   AddressInfo() = default;
@@ -87,7 +94,7 @@ class AddressInfo : protected base::BiNode {
 
 /**
  * @ingroup net
- * @brief A list of address info related to the same host and service.
+ * @brief A list of AddressInfo related to the same host and service.
  */
 class AddressInfoList {
 

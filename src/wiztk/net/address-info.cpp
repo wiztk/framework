@@ -24,16 +24,16 @@ std::unique_ptr<AddressInfoList> AddressInfo::GetAll(const char *host,
                                                      const AddressInfo *hints) {
   std::unique_ptr<AddressInfoList> list_ptr(new AddressInfoList);
 
-  struct addrinfo *native = nullptr;
+  struct addrinfo *addr_info = nullptr;
 
   int result = getaddrinfo(host,
                            service,
                            nullptr == hints ? nullptr : hints->address_info_,
-                           &native);
+                           &addr_info);
 
   if (result) {
-    if (nullptr != native) {
-      freeaddrinfo(native);
+    if (nullptr != addr_info) {
+      freeaddrinfo(addr_info);
     }
 
     // TODO: check the return value
@@ -41,7 +41,7 @@ std::unique_ptr<AddressInfoList> AddressInfo::GetAll(const char *host,
     throw std::runtime_error("Error! Cannot get address info!");
   }
 
-  struct addrinfo *ai_ptr = native;
+  struct addrinfo *ai_ptr = addr_info;
   AddressInfo *tmp = nullptr;
   while (nullptr != ai_ptr) {
     tmp = new AddressInfo;

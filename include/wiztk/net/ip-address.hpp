@@ -31,6 +31,7 @@ namespace wiztk {
 namespace net {
 
 // Forward declaration:
+class AddressInfo;
 class IPAddressList;
 
 /**
@@ -48,11 +49,41 @@ class IPAddress : protected base::BiNode {
 
  public:
 
+  /**
+   * @brief A typedef of host/service pair.
+   */
+  typedef std::pair<std::string, std::string> NameInfo;
+
   static std::unique_ptr<IPAddressList> GetByName(const char *name);
+
+  /**
+   * @brief Get an IPAddressList by given address info.
+   * @param host
+   * @param service
+   * @param hints
+   * @return
+   */
+  static std::unique_ptr<IPAddressList> GetByHostAndService(const char *host = nullptr,
+                                                            const char *service = nullptr,
+                                                            const AddressInfo *hints = nullptr);
+
+  /**
+   * @brief Constructor by an AddressInfo.
+   * @param address_info
+   */
+  explicit IPAddress(const AddressInfo &address_info);
+
+  /**
+   * @brief Copy constructor.
+   * @param other
+   */
+  IPAddress(const IPAddress &other);
 
   IPAddress(IPAddress &&other) noexcept = default;
 
-  IPAddress &operator=(IPAddress &&other)noexcept = default;
+  IPAddress &operator=(const IPAddress &other);
+
+  IPAddress &operator=(IPAddress &&other) noexcept = default;
 
   ~IPAddress() override;
 
@@ -60,11 +91,19 @@ class IPAddress : protected base::BiNode {
 
   std::string ToString() const;
 
+  bool ToHostAndService(std::string *host, std::string *service);
+
+  NameInfo ToHostAndService();
+
  protected:
 
   IPAddress() = default;
 
   struct sockaddr *address_ = nullptr;
+
+ private:
+
+  void Clear();
 
 };
 
