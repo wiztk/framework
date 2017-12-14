@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_BASE_COMPOUND_DEQUE_HPP_
-#define WIZTK_BASE_COMPOUND_DEQUE_HPP_
+#ifndef WIZTK_BASE_COUNTED_DEQUE_HPP_
+#define WIZTK_BASE_COUNTED_DEQUE_HPP_
 
 #include "wiztk/base/macros.hpp"
 
@@ -24,42 +24,40 @@ namespace base {
 
 /**
  * @ingroup base
- * @brief A compound but faster double-ended queue container
+ * @brief A double-ended queue container with an element counter.
  */
-class CompoundDeque {
+class CountedDeque {
 
  public:
 
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(CompoundDeque);
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(CountedDeque);
 
   /**
-   * @brief A nested class represents an element in a deque
-   */
+ * @brief A nested class represents an element in a deque
+ */
   class Element {
 
-    friend class CompoundDeque;
+    friend class CountedDeque;
 
    public:
 
     WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Element);
 
-    Element();
+    Element() = default;
 
     virtual ~Element();
-
-   protected:
 
     Element *previous() const { return previous_; }
 
     Element *next() const { return next_; }
 
-    CompoundDeque *deque() const { return deque_; }
+    CountedDeque *deque() const { return deque_; }
 
    private:
 
-    Element *previous_;
-    Element *next_;
-    CompoundDeque *deque_;
+    Element *previous_ = nullptr;
+    Element *next_ = nullptr;
+    CountedDeque *deque_ = nullptr;
 
   };
 
@@ -132,9 +130,9 @@ class CompoundDeque {
 
   };
 
-  CompoundDeque();
+  CountedDeque() = default;
 
-  virtual ~CompoundDeque();
+  virtual ~CountedDeque();
 
   void PushFront(Element *item);
 
@@ -166,17 +164,15 @@ class CompoundDeque {
 
   int count() const { return count_; }
 
- protected:
-
   Element *first() const { return first_; }
 
   Element *last() const { return last_; }
 
  private:
 
-  Element *first_;
-  Element *last_;
-  int count_;
+  Element *first_ = nullptr;
+  Element *last_ = nullptr;
+  int count_ = 0;
 
 };
 

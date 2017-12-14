@@ -20,6 +20,7 @@
 #include "wiztk/base/macros.hpp"
 
 #include <cstddef>
+#include <functional>
 
 namespace wiztk {
 namespace base {
@@ -49,17 +50,31 @@ class BiNode {
 
  public:
 
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(BiNode);
+  WIZTK_DECLARE_NONCOPYABLE(BiNode);
 
   /**
    * @brief Default constructor
    */
   BiNode() = default;
 
+  BiNode(BiNode &&other) noexcept
+      : previous_(other.previous_), next_(other.next_) {
+    other.previous_ = nullptr;
+    other.next_ = nullptr;
+  }
+
   /**
    * @brief Constructor
    */
   virtual ~BiNode();
+
+  BiNode &operator=(BiNode &&other) noexcept {
+    previous_ = other.previous_;
+    next_ = other.next_;
+    other.previous_ = nullptr;
+    other.next_ = nullptr;
+    return *this;
+  }
 
   /**
    * @brief Check if this node is linked to another
@@ -110,7 +125,7 @@ class BiNode {
  * @brief A simple double-ended queue container
  * @tparam T Must be a BiNode class or subclass
  */
-template<typename T = BiNode>
+template<typename T>
 class Deque {
 
  public:
@@ -127,11 +142,11 @@ class Deque {
     explicit Iterator(BiNode *element = nullptr)
         : element_(element) {}
 
-    Iterator(const Iterator &orig) = default;
+    Iterator(const Iterator &) = default;
 
     ~Iterator() = default;
 
-    Iterator &operator=(const Iterator &other) = default;
+    Iterator &operator=(const Iterator &) = default;
 
     Iterator &operator++() {
       element_ = element_->next_;
@@ -187,7 +202,10 @@ class Deque {
     }
 
     T *element() const {
-      return static_cast<T *>(element_);
+      return nullptr == element_->previous_ ?
+             nullptr : (nullptr == element_->next_ ?
+                        nullptr : (static_cast<T *>(element_)));
+
     }
 
     explicit operator bool() const {
@@ -214,11 +232,11 @@ class Deque {
     explicit ConstIterator(const BiNode *element = nullptr)
         : element_(element) {}
 
-    ConstIterator(const ConstIterator &orig) = default;
+    ConstIterator(const ConstIterator &) = default;
 
     ~ConstIterator() = default;
 
-    ConstIterator &operator=(const ConstIterator &other) = default;
+    ConstIterator &operator=(const ConstIterator &) = default;
 
     ConstIterator &operator++() {
       element_ = element_->next_;
@@ -282,15 +300,17 @@ class Deque {
 
   void Insert(T *item, int index = 0);
 
-  T *Remove(T *item);
-
   size_t GetSize() const;
 
   bool IsEmpty() const;
 
-  void Clear();
+  void Clear(const std::function<void(BiNode *)> &deleter);
 
-  T *operator[](int index) const;
+  T *operator[](int index) const {
+    return GetAt(index);
+  }
+
+  T *GetAt(int index) const;
 
   Iterator begin() const {
     return Iterator(first_.next_);
@@ -345,7 +365,7 @@ Deque<T>::Deque() {
 
 template<typename T>
 Deque<T>::~Deque() {
-  Clear();
+  Clear([](BiNode *obj) { delete obj; });
 }
 
 template<typename T>
@@ -363,34 +383,20 @@ void Deque<T>::PushBack(T *item) {
 template<typename T>
 void Deque<T>::Insert(T *item, int index) {
   if (index >= 0) {
-    T *p = first_.next_;
+    BiNode *p = first_.next_;
     while ((&last_ != p) && (index > 0)) {
       p = p->next_;
       index--;
     }
     p->PushFront(item);
   } else {
-    T *p = last_.previous_;
+    BiNode *p = last_.previous_;
     while ((&first_ != p) && (index < -1)) {
       p = p->previous_;
       index++;
     }
     p->PushBack(item);
   }
-}
-
-template<typename T>
-T *Deque<T>::Remove(T *item) {
-  if (nullptr == item) return nullptr;
-
-  for (Iterator it = begin(); it != end(); ++it) {
-    if (it == item) {
-      it.Remove();
-      return item;
-    }
-  }
-
-  return nullptr;
 }
 
 template<typename T>
@@ -412,14 +418,17 @@ bool Deque<T>::IsEmpty() const {
 }
 
 template<typename T>
-void Deque<T>::Clear() {
-  while (first_.next_ != &last_) {
-    first_.next_->Unlink();
+void Deque<T>::Clear(const std::function<void(BiNode *)> &deleter) {
+  BiNode *tmp = first_.next_;
+  while (tmp != &last_) {
+    tmp->Unlink();
+    deleter(tmp);
+    tmp = first_.next_;
   }
 }
 
 template<typename T>
-T *Deque<T>::operator[](int index) const {
+T *Deque<T>::GetAt(int index) const {
   BiNode *p = nullptr;
 
   if (index >= 0) {

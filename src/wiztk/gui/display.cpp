@@ -27,7 +27,7 @@
 namespace wiztk {
 namespace gui {
 
-using base::CompoundDeque;
+using base::CountedDeque;
 
 Display *Display::kDisplay = nullptr;
 
@@ -128,11 +128,11 @@ void Display::Disconnect() noexcept {
   wl_display_disconnect(p_->wl_display);
 }
 
-const CompoundDeque &Display::GetOutputs() {
+const CountedDeque &Display::GetOutputs() {
   return kDisplay->p_->outputs;
 }
 
-const CompoundDeque &Display::GetInputs() {
+const CountedDeque &Display::GetInputs() {
   return kDisplay->p_->inputs;
 }
 

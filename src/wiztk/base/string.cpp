@@ -47,5 +47,14 @@ std::ostream &operator<<(std::ostream &out, const String &str) {
   return out << icu::UnicodeString(str.data());
 }
 
+std::string String::ToUTF8() const {
+  std::string utf8;
+  icu::UnicodeString unicode = data();
+
+  unicode.toUTF8String(utf8);
+
+  return utf8;
+}
+
 } // namespace base
 } // namespace wiztk

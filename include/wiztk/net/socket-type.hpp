@@ -14,33 +14,32 @@
  * limitations under the License.
  */
 
-#include "wiztk/net/socket.hpp"
+#ifndef WIZTK_NET_SOCKET_TYPE_HPP_
+#define WIZTK_NET_SOCKET_TYPE_HPP_
 
-#include "wiztk/base/property.hpp"
-
-#include "wiztk/net/ip-address.hpp"
-
+#include <sys/types.h>
 #include <sys/socket.h>
-#include <unistd.h>
 
 namespace wiztk {
 namespace net {
 
-Socket::Socket()
-    : socket_(0) {
+/**
+ * @ingroup net
+ * @brief Socket type.
+ */
+enum SocketType {
 
-}
+  kSocketStream,                        //< SOCK_STREAM
+  kSocketDatagram,                      //< SOCK_DGRAM
+  kSocketSequencedPacket,               //< SOCK_SEQPACKET
+  kSocketRaw,                           //< SOCK_RAW
+  kSocketReliableDatagram,              //< SOCK_RDM
+  kSocketPacket,                        //< SOCK_PACKET
+  kSocketLast                           //< Last
+  
+};
 
-Socket::Socket(const String &host, int port)
-    : Socket() {
+}  // namespace net
+}  // namespace wiztk
 
-}
-
-Socket::~Socket() {
-  if (socket_) {
-    close(socket_);
-  }
-}
-
-} // namespace net
-} // namespace wiztk
+#endif  // WIZTK_NET_SOCKET_TYPE_HPP_

@@ -19,8 +19,17 @@
 
 #include "wiztk/base/string.hpp"
 
+#include "wiztk/net/ip-address.hpp"
+
+#include <sys/types.h>
+#include <sys/socket.h>
+
 namespace wiztk {
 namespace net {
+
+// Forward declaration:
+class IPAddress;
+class Proxy;
 
 /**
  * @ingroup net
@@ -34,17 +43,55 @@ class Socket {
 
   using String = base::String;
 
+  /**
+   * @brief Default constructor.
+   *
+   * Creates an unconnected socket.
+   */
   Socket();
 
+  /**
+   * @brief Creates a stream socket and connects it to the specified port number on the named host.
+   * @param host
+   * @param port
+   */
   Socket(const String &host, int port);
+
+  /**
+   * @brief Creates a socket and connects it to the specified remote host on the specified remote port.
+   * @param host
+   * @param port
+   * @param local_address
+   * @param local_port
+   */
+  Socket(const String &host, int port, const IPAddress &local_address, int local_port);
+
+  /**
+   * @brief Creates a stream socket and connects it to the specified port number at the specified IP address.
+   * @param address
+   * @param port
+   */
+  Socket(const IPAddress &address, int port);
+
+  Socket(const IPAddress &address, int port, const IPAddress &local_address, int local_port);
+
+  Socket(const Proxy &proxy);
 
   ~Socket();
 
+  void Bind();
+
+  void Close();
+
+  void Connect(const IPAddress &address);
+
+  void Connect(const IPAddress &address, int timeout);
+
  private:
 
-  struct Private;
+  std::unique_ptr<IPAddress> adress_;
 
-  std::unique_ptr<Private> p_;
+  int socket_;
 
 };
 

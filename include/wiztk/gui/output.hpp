@@ -20,7 +20,7 @@
 #include "wiztk/base/rect.hpp"
 #include "wiztk/base/size.hpp"
 #include "wiztk/base/sigcxx.hpp"
-#include "wiztk/base/compound-deque.hpp"
+#include "wiztk/base/counted-deque.hpp"
 
 #include <wayland-client.h>
 
@@ -30,7 +30,7 @@
 namespace wiztk {
 namespace gui {
 
-class Output : public base::CompoundDeque::Element {
+class Output : public base::CountedDeque::Element {
 
   friend class ViewSurface;
 

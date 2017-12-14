@@ -2,31 +2,27 @@
 // Created by zhanggyb on 16-9-19.
 //
 
-#include "test.hpp"
+#include "test-deque.hpp"
 
 #include <wiztk/base/deque.hpp>
 
 using namespace wiztk;
 using namespace wiztk::base;
 
-class Item : public BiNode {
+class MyElement : public BiNode {
 
  public:
 
-  explicit Item(int id)
+  explicit MyElement(int id)
       : id_(id) {}
 
-  virtual ~Item() = default;
+  ~MyElement() final = default;
 
   int id() const { return id_; };
 
-  BiNode *_previous() const {
-    return previous();
-  }
+  BiNode *_previous() const { return previous(); }
 
-  BiNode *_next() const {
-    return next();
-  }
+  BiNode *_next() const { return next(); }
 
  private:
 
@@ -34,45 +30,33 @@ class Item : public BiNode {
 
 };
 
-class TestDeque : public Deque<BiNode> {
+class MyDeque : public Deque<MyElement> {
 
  public:
 
-  TestDeque() = default;
+  MyDeque() = default;
 
-  virtual ~TestDeque() = default;
+  ~MyDeque() final = default;
 
-  const BiNode *_first() const {
-    return first();
-  }
+  const BiNode *_first() const { return first(); }
 
-  const BiNode *_last() const {
-    return last();
-  }
+  const BiNode *_last() const { return last(); }
 
 };
 
-Test::Test()
-    : testing::Test() {
-}
-
-Test::~Test() {
-
-}
-
 TEST_F(Test, push_front_1) {
-  auto item1 = new Item(1);
-  auto item2 = new Item(2);
-  auto item3 = new Item(3);
+  auto item1 = new MyElement(1);
+  auto item2 = new MyElement(2);
+  auto item3 = new MyElement(3);
 
-  TestDeque deque;
+  MyDeque deque;
   deque.PushFront(item1);
   deque.PushFront(item2);
   deque.PushFront(item3);
 
   ASSERT_TRUE(deque.GetSize() == 3);
 
-  Deque<BiNode>::ConstIterator it = deque.crbegin();
+  Deque<MyElement>::ConstIterator it = deque.crbegin();
   ASSERT_TRUE(it == item1);
 
   it = deque.cend();
@@ -91,11 +75,11 @@ TEST_F(Test, push_front_1) {
 }
 
 TEST_F(Test, push_back_1) {
-  auto item1 = new Item(1);
-  auto item2 = new Item(2);
-  auto item3 = new Item(3);
+  auto item1 = new MyElement(1);
+  auto item2 = new MyElement(2);
+  auto item3 = new MyElement(3);
 
-  TestDeque deque;
+  MyDeque deque;
   deque.PushBack(item1);
   deque.PushBack(item2);
   deque.PushBack(item3);
@@ -113,11 +97,11 @@ TEST_F(Test, push_back_1) {
 }
 
 TEST_F(Test, insert_1) {
-  auto item1 = new Item(1);
-  auto item2 = new Item(2);
-  auto item3 = new Item(3);
+  auto item1 = new MyElement(1);
+  auto item2 = new MyElement(2);
+  auto item3 = new MyElement(3);
 
-  TestDeque deque;
+  MyDeque deque;
   deque.Insert(item1);
   deque.Insert(item2);
   deque.Insert(item3);
@@ -135,16 +119,16 @@ TEST_F(Test, insert_1) {
 }
 
 TEST_F(Test, insert_2) {
-  auto item1 = new Item(1);
-  auto item2 = new Item(2);
-  auto item3 = new Item(3);
+  auto item1 = new MyElement(1);
+  auto item2 = new MyElement(2);
+  auto item3 = new MyElement(3);
 
-  TestDeque deque;
+  MyDeque deque;
   deque.Insert(item1);
   deque.Insert(item2);
   deque.Insert(item3);
 
-  auto item4 = new Item(4);
+  auto item4 = new MyElement(4);
   deque.Insert(item4);
 
   ASSERT_TRUE(item1->_previous() == item2);
@@ -154,16 +138,16 @@ TEST_F(Test, insert_2) {
 }
 
 TEST_F(Test, insert_3) {
-  auto item1 = new Item(1);
-  auto item2 = new Item(2);
-  auto item3 = new Item(3);
+  auto item1 = new MyElement(1);
+  auto item2 = new MyElement(2);
+  auto item3 = new MyElement(3);
 
-  TestDeque deque;
+  MyDeque deque;
   deque.Insert(item1);
   deque.Insert(item2);
   deque.Insert(item3);
 
-  auto item4 = new Item(4);
+  auto item4 = new MyElement(4);
   deque.Insert(item4, -1);
 
   ASSERT_TRUE(item1->_previous() == item2);
@@ -181,11 +165,11 @@ TEST_F(Test, insert_3) {
 }
 
 TEST_F(Test, get_1) {
-  auto item1 = new Item(1);
-  auto item2 = new Item(2);
-  auto item3 = new Item(3);
+  auto item1 = new MyElement(1);
+  auto item2 = new MyElement(2);
+  auto item3 = new MyElement(3);
 
-  TestDeque deque;
+  MyDeque deque;
   deque.Insert(item3);
   deque.Insert(item2);
   deque.Insert(item1);
@@ -204,16 +188,16 @@ TEST_F(Test, get_1) {
 }
 
 TEST_F(Test, iterator_1) {
-  auto item1 = new Item(1);
-  auto item2 = new Item(2);
-  auto item3 = new Item(3);
+  auto item1 = new MyElement(1);
+  auto item2 = new MyElement(2);
+  auto item3 = new MyElement(3);
 
-  TestDeque deque;
+  MyDeque deque;
   deque.Insert(item3);
   deque.Insert(item2);
   deque.Insert(item1);
 
-  TestDeque::Iterator it = deque.begin();
+  MyDeque::Iterator it = deque.begin();
 
   ASSERT_TRUE(it.element() == item1);
   ++it;
@@ -240,16 +224,16 @@ TEST_F(Test, iterator_1) {
 }
 
 TEST_F(Test, end_1) {
-  auto item1 = new Item(1);
-  auto item2 = new Item(2);
-  auto item3 = new Item(3);
+  auto item1 = new MyElement(1);
+  auto item2 = new MyElement(2);
+  auto item3 = new MyElement(3);
 
-  TestDeque deque;
+  MyDeque deque;
   deque.Insert(item3);
   deque.Insert(item2);
   deque.Insert(item1);
 
-  TestDeque::Iterator it = deque.end();
+  MyDeque::Iterator it = deque.end();
   ASSERT_TRUE(it.element() == nullptr);
 
   delete item1;
@@ -260,16 +244,16 @@ TEST_F(Test, end_1) {
 }
 
 TEST_F(Test, rend_1) {
-  auto item1 = new Item(1);
-  auto item2 = new Item(2);
-  auto item3 = new Item(3);
+  auto item1 = new MyElement(1);
+  auto item2 = new MyElement(2);
+  auto item3 = new MyElement(3);
 
-  TestDeque deque;
+  MyDeque deque;
   deque.Insert(item3);
   deque.Insert(item2);
   deque.Insert(item1);
 
-  TestDeque::Iterator it = deque.rend();
+  MyDeque::Iterator it = deque.rend();
   ASSERT_TRUE(it.element() == nullptr);
 
   delete item1;
@@ -280,16 +264,16 @@ TEST_F(Test, rend_1) {
 }
 
 TEST_F(Test, boolean_1) {
-  auto item1 = new Item(1);
-  auto item2 = new Item(2);
-  auto item3 = new Item(3);
+  auto item1 = new MyElement(1);
+  auto item2 = new MyElement(2);
+  auto item3 = new MyElement(3);
 
-  TestDeque deque;
+  MyDeque deque;
   deque.Insert(item3);
   deque.Insert(item2);
   deque.Insert(item1);
 
-  TestDeque::Iterator it = deque.end();
+  MyDeque::Iterator it = deque.end();
   ASSERT_TRUE(!it);
 
   --it;
@@ -303,16 +287,16 @@ TEST_F(Test, boolean_1) {
 }
 
 TEST_F(Test, boolean_2) {
-  auto item1 = new Item(1);
-  auto item2 = new Item(2);
-  auto item3 = new Item(3);
+  auto item1 = new MyElement(1);
+  auto item2 = new MyElement(2);
+  auto item3 = new MyElement(3);
 
-  TestDeque deque;
+  MyDeque deque;
   deque.Insert(item3);
   deque.Insert(item2);
   deque.Insert(item1);
 
-  TestDeque::Iterator it = deque.rend();
+  MyDeque::Iterator it = deque.rend();
   ASSERT_TRUE(!it);
 
   ++it;
@@ -323,4 +307,42 @@ TEST_F(Test, boolean_2) {
   delete item3;
 
   ASSERT_TRUE(deque.IsEmpty());
+}
+
+TEST_F(Test, clear_1) {
+  auto *item1 = new MyElement(1);
+  auto *item2 = new MyElement(2);
+  auto *item3 = new MyElement(3);
+
+  MyDeque deque;
+  deque.PushBack(item1);
+  deque.PushBack(item2);
+  deque.PushBack(item3);
+
+  deque.Clear([](BiNode *p) { delete p; });
+
+  ASSERT_TRUE(deque.IsEmpty());
+}
+
+TEST_F(Test, clear_2) {
+  auto *item1 = new MyElement(1);
+  auto *item2 = new MyElement(2);
+  auto *item3 = new MyElement(3);
+
+  MyDeque deque;
+  deque.PushBack(item1);
+  deque.PushBack(item2);
+  deque.PushBack(item3);
+
+  deque.Clear([](BiNode *p) {/* Do nothing. */});
+
+  ASSERT_TRUE(deque.IsEmpty());
+
+  ASSERT_TRUE(!item1->IsLinked());
+  ASSERT_TRUE(!item2->IsLinked());
+  ASSERT_TRUE(!item3->IsLinked());
+
+  delete item1;
+  delete item2;
+  delete item3;
 }

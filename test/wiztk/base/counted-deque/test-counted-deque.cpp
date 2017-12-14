@@ -2,30 +2,30 @@
 // Created by zhanggyb on 16-9-19.
 //
 
-#include "test.hpp"
+#include "test-counted-deque.hpp"
 
-#include <wiztk/base/compound-deque.hpp>
+#include <wiztk/base/counted-deque.hpp>
 
 using namespace wiztk;
 using namespace wiztk::base;
 
-class Item : public CompoundDeque::Element {
+class MyElement : public CountedDeque::Element {
 
  public:
 
-  explicit Item(int id)
+  explicit MyElement(int id)
       : id_(id) {}
 
-  virtual ~Item() = default;
+  virtual ~MyElement() = default;
 
   int id() const { return id_; };
 
-  Item *_previous() const {
-    return dynamic_cast<Item *>(CompoundDeque::Element::previous());
+  MyElement *_previous() const {
+    return dynamic_cast<MyElement *>(CountedDeque::Element::previous());
   }
 
-  Item *_next() const {
-    return dynamic_cast<Item *>(CompoundDeque::Element::next());
+  MyElement *_next() const {
+    return dynamic_cast<MyElement *>(CountedDeque::Element::next());
   }
 
  private:
@@ -34,38 +34,30 @@ class Item : public CompoundDeque::Element {
 
 };
 
-class TestDeque : public CompoundDeque {
+class MyCountedDeque : public CountedDeque {
 
  public:
 
-  TestDeque() = default;
+  MyCountedDeque() = default;
 
-  virtual ~TestDeque() = default;
+  virtual ~MyCountedDeque() = default;
 
-  CompoundDeque::Element* _first() const {
+  CountedDeque::Element *_first() const {
     return first();
   }
 
-  CompoundDeque::Element* _last() const {
+  CountedDeque::Element *_last() const {
     return last();
   }
 
 };
 
-Test::Test()
-    : testing::Test() {
-}
+TEST_F(TestCountedDeque, push_front_1) {
+  auto item1 = new MyElement(1);
+  auto item2 = new MyElement(2);
+  auto item3 = new MyElement(3);
 
-Test::~Test() {
-
-}
-
-TEST_F(Test, push_front_1) {
-  auto item1 = new Item(1);
-  auto item2 = new Item(2);
-  auto item3 = new Item(3);
-
-  TestDeque deque;
+  MyCountedDeque deque;
   deque.PushFront(item1);
   deque.PushFront(item2);
   deque.PushFront(item3);
@@ -79,12 +71,12 @@ TEST_F(Test, push_front_1) {
   ASSERT_TRUE(deque._last() == item1);
 }
 
-TEST_F(Test, push_back_1) {
-  auto item1 = new Item(1);
-  auto item2 = new Item(2);
-  auto item3 = new Item(3);
+TEST_F(TestCountedDeque, push_back_1) {
+  auto item1 = new MyElement(1);
+  auto item2 = new MyElement(2);
+  auto item3 = new MyElement(3);
 
-  TestDeque deque;
+  MyCountedDeque deque;
   deque.PushBack(item1);
   deque.PushBack(item2);
   deque.PushBack(item3);
@@ -98,12 +90,12 @@ TEST_F(Test, push_back_1) {
   ASSERT_TRUE(deque._last() == item3);
 }
 
-TEST_F(Test, insert_1) {
-  auto item1 = new Item(1);
-  auto item2 = new Item(2);
-  auto item3 = new Item(3);
+TEST_F(TestCountedDeque, insert_1) {
+  auto item1 = new MyElement(1);
+  auto item2 = new MyElement(2);
+  auto item3 = new MyElement(3);
 
-  TestDeque deque;
+  MyCountedDeque deque;
   deque.Insert(item1);
   deque.Insert(item2);
   deque.Insert(item3);
@@ -115,17 +107,17 @@ TEST_F(Test, insert_1) {
   ASSERT_TRUE(item3->_previous() == nullptr);
 }
 
-TEST_F(Test, insert_2) {
-  auto item1 = new Item(1);
-  auto item2 = new Item(2);
-  auto item3 = new Item(3);
+TEST_F(TestCountedDeque, insert_2) {
+  auto item1 = new MyElement(1);
+  auto item2 = new MyElement(2);
+  auto item3 = new MyElement(3);
 
-  TestDeque deque;
+  MyCountedDeque deque;
   deque.Insert(item1);
   deque.Insert(item2);
   deque.Insert(item3);
 
-  auto item4 = new Item(4);
+  auto item4 = new MyElement(4);
   deque.Insert(item4);
 
   ASSERT_TRUE(deque.count() == 4);
@@ -135,17 +127,17 @@ TEST_F(Test, insert_2) {
   ASSERT_TRUE(item4->_previous() == nullptr);
 }
 
-TEST_F(Test, insert_3) {
-  auto item1 = new Item(1);
-  auto item2 = new Item(2);
-  auto item3 = new Item(3);
+TEST_F(TestCountedDeque, insert_3) {
+  auto item1 = new MyElement(1);
+  auto item2 = new MyElement(2);
+  auto item3 = new MyElement(3);
 
-  TestDeque deque;
+  MyCountedDeque deque;
   deque.Insert(item1);
   deque.Insert(item2);
   deque.Insert(item3);
 
-  auto item4 = new Item(4);
+  auto item4 = new MyElement(4);
   deque.Insert(item4, -1);
 
   ASSERT_TRUE(deque.count() == 4);

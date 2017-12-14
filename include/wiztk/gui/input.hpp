@@ -17,7 +17,7 @@
 #ifndef WIZTK_GUI_INPUT_HPP_
 #define WIZTK_GUI_INPUT_HPP_
 
-#include "wiztk/base/compound-deque.hpp"
+#include "wiztk/base/counted-deque.hpp"
 
 #include "abstract-event-handler.hpp"
 
@@ -38,7 +38,7 @@ struct ViewTask;
  * @ingroup gui
  * @brief Input manager
  */
-WIZTK_EXPORT class Input : public base::CompoundDeque::Element {
+WIZTK_EXPORT class Input : public base::CountedDeque::Element {
 
   friend class ViewSurface;
 

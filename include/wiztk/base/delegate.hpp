@@ -201,25 +201,37 @@ class Delegate<ReturnType(ParamTypes...)> {
   }
 
   /**
+   * @brief Create a delegate from the given function object.
+   * @tparam T A type of function object.
+   * @param function A function object such as std::function.
+   * @return A delegate object
+   *
+   * @note Do not create and use delegate to a lambda.
+   *
+   * When you try to create a delegate to a temporary lambda, for example:
+   * @code
+   * auto my_delegate = Delegate<int(int, int)>::FromFunction([&](int a, int b) -> int {
+   *   return a + b;
+   * });
+   * @endcode
+   *
+   * The my_delegate object will be invalid as the lambda here is temporary and will be
+   * destructed out of the scope.
+   */
+  template<typename T>
+  static inline Delegate FromFunction(const T &function) {
+    typedef ReturnType (T::*TMethod)(ParamTypes...) const;
+    TMethod method = &T::operator();
+    return FromMethod(const_cast<T *>(&function), method);
+  }
+
+  /**
    * @brief Create a delegate from the given static function pointer.
    * @param fn A static function pointer
    * @return A delegate object
    */
-  static inline Delegate FromFunction(TFunction fn) {
+  static inline Delegate FromStatic(TFunction fn) {
     return Delegate(fn);
-  }
-
-  /**
-   * @brief Create a delegate from the given lambda object.
-   * @tparam T
-   * @param lambda
-   * @return
-   */
-  template<typename T>
-  static inline Delegate FromLambda(const T &lambda) {
-    typedef ReturnType (T::*TMethod)(ParamTypes...) const;
-    TMethod method = &T::operator();
-    return FromMethod(const_cast<T *>(&lambda), method);
   }
 
   /**
@@ -418,15 +430,15 @@ class Delegate<ReturnType(ParamTypes...)> {
   /**
    * @brief Compare this delegate to a lambda.
    * @tparam T
-   * @param lambda
+   * @param function
    * @return
    */
   template<typename T>
-  bool Equal(const T &lambda) {
+  bool Equal(const T &function) {
     typedef ReturnType (T::*TMethod)(ParamTypes...) const;
 
     TMethod method = &T::operator();
-    auto *object = const_cast<T *> (&lambda);
+    auto *object = const_cast<T *> (&function);
 
     return (data_.object == object) &&
         (data_.method_stub == &MethodStub<T, TMethod>::invoke) &&
@@ -589,11 +601,11 @@ class DelegateRef<ReturnType(ParamTypes...)> {
   /**
    * @brief Bind the delegate referenced to given lambda.
    * @tparam T
-   * @param lambda
+   * @param function
    */
   template<typename T>
-  void Bind(const T &lambda) {
-    *delegate_ = Delegate<ReturnType(ParamTypes...)>::template FromLambda(lambda);
+  void Bind(const T &function) {
+    *delegate_ = Delegate<ReturnType(ParamTypes...)>::template FromFunction(function);
   }
 
   /**
@@ -601,7 +613,7 @@ class DelegateRef<ReturnType(ParamTypes...)> {
    * @param fn
    */
   void BindStatic(TFunction fn) {
-    *delegate_ = Delegate<ReturnType(ParamTypes...)>::FromFunction(fn);
+    *delegate_ = Delegate<ReturnType(ParamTypes...)>::FromStatic(fn);
   }
 
   /**
@@ -636,8 +648,8 @@ class DelegateRef<ReturnType(ParamTypes...)> {
   }
 
   template<typename T>
-  bool IsBoundTo(const T &lambda) const {
-    return delegate_->Equal(lambda);
+  bool IsBoundTo(const T &function) const {
+    return delegate_->Equal(function);
   }
 
   /**

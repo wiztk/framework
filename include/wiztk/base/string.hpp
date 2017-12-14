@@ -59,6 +59,10 @@ class String : public BasicString {
    */
   String(const char32_t *str);
 
+  std::string ToUTF8() const;
+
+  std::u32string ToUTF32() const;
+
 };
 
 /**

@@ -14,33 +14,24 @@
  * limitations under the License.
  */
 
-#include "wiztk/base/compound-deque.hpp"
+#include "wiztk/base/counted-deque.hpp"
 
 #include "wiztk/base/macros.hpp"
 
 namespace wiztk {
 namespace base {
 
-CompoundDeque::Element::Element()
-    : previous_(nullptr),
-      next_(nullptr),
-      deque_(nullptr) {
-}
-
-CompoundDeque::Element::~Element() {
+CountedDeque::Element::~Element() {
   if (nullptr != deque_) deque_->Remove(this);
 }
 
-CompoundDeque::CompoundDeque()
-    : first_(nullptr), last_(nullptr), count_(0) {
+// -----
 
-}
-
-CompoundDeque::~CompoundDeque() {
+CountedDeque::~CountedDeque() {
   Clear();
 }
 
-void CompoundDeque::PushFront(Element *item) {
+void CountedDeque::PushFront(Element *item) {
   if (item->deque_ == this) return;
 
   if (nullptr != item->deque_) item->deque_->Remove(item);
@@ -63,7 +54,7 @@ void CompoundDeque::PushFront(Element *item) {
   count_++;
 }
 
-void CompoundDeque::PushBack(Element *item) {
+void CountedDeque::PushBack(Element *item) {
   if (item->deque_ == this) return;
 
   if (nullptr != item->deque_) item->deque_->Remove(item);
@@ -86,7 +77,7 @@ void CompoundDeque::PushBack(Element *item) {
   count_++;
 }
 
-void CompoundDeque::Insert(Element *item, int index) {
+void CountedDeque::Insert(Element *item, int index) {
   if (item->deque_ == this) return;
 
   if (nullptr != item->deque_) item->deque_->Remove(item);
@@ -142,7 +133,7 @@ void CompoundDeque::Insert(Element *item, int index) {
   count_++;
 }
 
-CompoundDeque::Element *CompoundDeque::Remove(Element *item) {
+CountedDeque::Element *CountedDeque::Remove(Element *item) {
   if (item->deque_ != this) return nullptr;
 
   _ASSERT(count_ > 0);
@@ -171,7 +162,7 @@ CompoundDeque::Element *CompoundDeque::Remove(Element *item) {
   return item;
 }
 
-void CompoundDeque::Clear() {
+void CountedDeque::Clear() {
   Element *ptr = first_;
   Element *next = nullptr;
 
@@ -189,7 +180,7 @@ void CompoundDeque::Clear() {
   last_ = nullptr;
 }
 
-CompoundDeque::Element *CompoundDeque::operator[](int index) const {
+CountedDeque::Element *CountedDeque::operator[](int index) const {
   if (index < 0) index = count_ + index;
 
   Element *item = nullptr;

@@ -21,10 +21,10 @@
 namespace wiztk {
 namespace gui {
 
-using base::CompoundDeque;
+using base::CountedDeque;
 
 Input::Input(uint32_t id, uint32_t version)
-    : CompoundDeque::Element() {
+    : CountedDeque::Element() {
   p_.reset(new Private);
   p_->id = id;
   p_->version = version;

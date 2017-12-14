@@ -19,7 +19,7 @@
 
 #include "wiztk/base/types.hpp"
 #include "wiztk/base/sigcxx.hpp"
-#include "wiztk/base/compound-deque.hpp"
+#include "wiztk/base/counted-deque.hpp"
 
 #include "cursor.hpp"
 
@@ -53,9 +53,9 @@ class WIZTK_EXPORT Display {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Display);
 
-  using CompoundDeque = base::CompoundDeque;
-  template<typename ... ParamTypes> using SignalRefT = typename base::SignalRef<ParamTypes...>;
-  template<typename ... ParamTypes> using SignalT = typename base::Signal<ParamTypes...>;
+  using CompoundDeque = base::CountedDeque;
+  template<typename ... Args> using SignalRef = typename base::SignalRef<Args...>;
+  template<typename ... Args> using Signal = typename base::Signal<Args...>;
 
   struct Global;
   struct Proxy;
@@ -78,7 +78,7 @@ class WIZTK_EXPORT Display {
    */
   static const std::set<uint32_t> &GetPixelFormats();
 
-  SignalRefT<const Global &> unregister() { return unregister_; }
+  SignalRef<const Global &> unregister() { return unregister_; }
 
   /**
    * @brief Get a predefined cursor
@@ -122,7 +122,7 @@ class WIZTK_EXPORT Display {
 
   std::unique_ptr<Private> p_;
 
-  SignalT<const Global &> unregister_;
+  Signal<const Global &> unregister_;
 
   static Display *kDisplay;
 

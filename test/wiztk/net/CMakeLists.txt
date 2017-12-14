@@ -14,8 +14,6 @@
 
 # set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 
-# core module
-add_subdirectory(base)
-add_subdirectory(graphic)
-add_subdirectory(net)
-add_subdirectory(gui)
+add_subdirectory(address-info)
+add_subdirectory(ip-address)
+add_subdirectory(socket)

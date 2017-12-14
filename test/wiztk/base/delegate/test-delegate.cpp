@@ -185,18 +185,18 @@ int add(int a, int b) {
 }
 
 TEST_F(TestDelegate, static_function_1) {
-  auto d = Delegate<int(int, int)>::FromFunction(&add);
+  auto d = Delegate<int(int, int)>::FromStatic(&add);
   ASSERT_TRUE(d.EqualStatic(&add));
 }
 
 TEST_F(TestDelegate, static_function_2) {
-  auto d = Delegate<int(int, int)>::FromFunction(&Mockup::Add);
+  auto d = Delegate<int(int, int)>::FromStatic(&Mockup::Add);
   ASSERT_TRUE(!d.EqualStatic(&add));
   ASSERT_TRUE(d.EqualStatic(&Mockup::Add));
 }
 
 TEST_F(TestDelegate, lambda_1) {
-  auto d = Delegate<int(int, int)>::FromFunction(
+  auto d = Delegate<int(int, int)>::FromStatic(
       [](int x, int y) -> int {
         return x + y;
       }
@@ -210,30 +210,51 @@ TEST_F(TestDelegate, lambda_2) {
 
   int foo = 0;
 
-  auto l1 = [](int a, int b) { std::cout << "No return" << std::endl; };
-  auto l2 = [&](int a, int b) -> int { return a + b + foo; };
+  auto function1 = [](int a, int b) { std::cout << "No return" << std::endl; };
+  auto function2 = [&](int a, int b) -> int { return a + b + foo; };
 
-  std::cout << "Lambda size with no capture list: " << sizeof(l1) << std::endl;
+  std::cout << "Lambda size with no capture list: " << sizeof(function1) << std::endl;
 
-  std::cout << "Lambda size with capture list: " << sizeof(l2) << std::endl;
+  std::cout << "Lambda size with capture list: " << sizeof(function2) << std::endl;
 
-  auto d1 = Delegate<int(int, int)>::FromLambda(l2);
+  auto d1 = Delegate<int(int, int)>::FromFunction(function2);
 
-  ASSERT_TRUE(d1.Equal(l2));
+  ASSERT_TRUE(d1.Equal(function2));
 
   std::cout << d1(3, 4) << std::endl;
 
-  auto d2 = Delegate<int(int, int)>::FromLambda([](int a, int b) -> int {
+  auto d2 = Delegate<int(int, int)>::FromFunction([](int a, int b) -> int {
     return a + b;
   });
 
   std::cout << d2(6, 7) << std::endl;
 
-  auto d3 = Delegate<void()>::FromLambda([] {
+  auto d3 = Delegate<void()>::FromFunction([] {
     std::cout << "lambda without params." << std::endl;
   });
 
   d3();
 
   ASSERT_TRUE(true);
+}
+
+TEST_F(TestDelegate, assignment_1) {
+  auto d1 = Delegate<int(int, int)>::FromStatic(&add);
+
+  auto d2 = d1;
+
+  ASSERT_TRUE(d1 == d2);
+}
+
+TEST_F(TestDelegate, function_1) {
+  auto d1 = Delegate<int(int, int)>::FromStatic(add);
+
+  // A delegate is also a function object:
+  auto d2 = Delegate<int(int, int)>::FromFunction(d1);
+
+  Delegate<int(int, int)> d3;
+  d3 = d1;
+
+  // In this case, invoking d2 and d3 leads to the same result:
+  ASSERT_TRUE(d3 != d2 && (d2(1, 1) == d3(1, 1)));
 }

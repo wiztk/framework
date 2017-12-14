@@ -44,7 +44,7 @@ using base::Point2F;
 using base::RectF;
 using base::RectI;
 using base::Margin;
-using base::CompoundDeque;
+using base::CountedDeque;
 
 using graphic::Canvas;
 using graphic::Paint;
@@ -337,7 +337,7 @@ void Window::OnShown() {
   // Set surface's scale
   int scale = 1;
   if (nullptr == p_->output) {
-    const CompoundDeque &outputs = Display::GetOutputs();
+    const CountedDeque &outputs = Display::GetOutputs();
     if (outputs.count() > 0) {
       p_->output = static_cast<const Output *>(outputs[0]);
     }
@@ -402,7 +402,7 @@ void Window::OnSaveSize(const Size &old_size, const Size &new_size) {
   ViewSurface *shell_surface = this->GetShellSurface();
 
   int scale = 1;
-  const CompoundDeque &outputs = Display::GetOutputs();
+  const CountedDeque &outputs = Display::GetOutputs();
   if (outputs.count() > 0) {
     p_->output = static_cast<const Output *>(outputs[0]);
     scale = p_->output->GetScale();
@@ -706,7 +706,7 @@ void Window::OnLeaveOutput(const ViewSurface *surface, const Output *output) {
   p_->output = nullptr;
 
   int scale = 1;
-  const CompoundDeque &outputs = Display::GetOutputs();
+  const CountedDeque &outputs = Display::GetOutputs();
   if (outputs.count() > 0) {
     p_->output = static_cast<const Output *>(outputs[0]);
     scale = p_->output->GetScale();
@@ -777,7 +777,7 @@ void Window::OnFullscreenButtonClicked(base::SLOT slot) {
     if (nullptr != p_->output)
       ToggleFullscreen(p_->output);
     else {
-      const CompoundDeque &outputs = Display::GetOutputs();
+      const CountedDeque &outputs = Display::GetOutputs();
       if (outputs.count() > 0) {
         p_->output = static_cast<const Output *>(outputs[0]);
         ToggleFullscreen(p_->output);
