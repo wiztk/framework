@@ -53,6 +53,32 @@ struct Token;
 template<typename ... ParamTypes>
 class SignalToken;
 
+class SlotNode : protected BiNode {
+
+ public:
+
+  SlotNode() = default;
+  ~SlotNode() override = default;
+  SlotNode(SlotNode &&) = default;
+  SlotNode &operator=(SlotNode &&) noexcept = default;
+
+  SlotNode(const SlotNode &) noexcept = delete;
+  SlotNode &operator=(const SlotNode &) = delete;
+
+  inline void push_back(SlotNode *other) { PushBack(other); }
+
+  inline void push_front(SlotNode *other) { PushFront(other); }
+
+  inline bool is_linked() const { return IsLinked(); }
+
+  inline void unlink() { Unlink(); }
+
+  inline SlotNode *previous() const { return static_cast<SlotNode *>(previous_); }
+
+  inline SlotNode *next() const { return static_cast<SlotNode *> (next_); }
+
+};
+
 /**
  * @brief A simple structure works as a list node in Trackable object
  */
@@ -87,7 +113,7 @@ struct Token {
   Token *next = nullptr;
   Binding *binding = nullptr;
 
-  BiNode slot_mark_head;
+  SlotNode slot_mark_head;
 
 };
 
@@ -189,7 +215,7 @@ class Slot {
 
  public:
 
-  class Mark : public BiNode {
+  class Mark : public internal::SlotNode {
 
    public:
 
@@ -835,7 +861,7 @@ void Signal<ParamTypes...>::Emit(ParamTypes ... Args) {
   Slot slot(first_token());
 
   while (nullptr != slot.token_) {
-    slot.token_->slot_mark_head.PushBack(&slot.mark_);
+    slot.token_->slot_mark_head.push_back(&slot.mark_);
     static_cast<internal::CallableToken<ParamTypes..., SLOT> * > (slot.token_)->Invoke(Args..., &slot);
 
     if (slot.skip_) {

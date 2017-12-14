@@ -93,11 +93,11 @@ WIZTK_EXPORT class AbstractEventHandler : public base::Trackable {
     AbstractEventHandler *event_handler() const { return event_handler_; }
 
     EventTask *GetPrevious() const {
-      return static_cast<EventTask *>(base::BiNode::previous());
+      return static_cast<EventTask *>(previous());
     }
 
     EventTask *GetNext() const {
-      return static_cast<EventTask *>(base::BiNode::next());
+      return static_cast<EventTask *>(next());
     }
 
     static EventTask *GetMouseTask(const AbstractEventHandler *event_hander);

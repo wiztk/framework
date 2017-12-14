@@ -97,7 +97,7 @@ class AddressInfoList {
 
   ~AddressInfoList();
 
-  AddressInfo *GetAt(int index) const { return deque_.GetAt(index); }
+  AddressInfo *at(int index) const { return deque_.GetAt(index); }
 
   AddressInfo *operator[](int index) const { return deque_.GetAt(index); }
 

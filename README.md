@@ -17,6 +17,6 @@ originally for my own purpose.
 
 ## Build the source code
 
-See [Build the source code](doc/markdown/build.md).
+See [Build the source code](docs/wiztk/build.md).
 
 **More details will be described later...**

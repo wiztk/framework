@@ -78,7 +78,7 @@ void AbstractShellView::Private::DispatchMouseEnterEvent(AbstractView *parent, M
     _ASSERT(sub != parent);
     sub->OnMouseEnter(event);
     if (event->IsAccepted()) {
-      tail->PushBack(EventTask::GetMouseTask(sub));
+      tail->push_back(EventTask::GetMouseTask(sub));
       tail = static_cast<EventTask *>(tail->GetNext());
       parent = sub;
       sub = parent->DispatchMouseEnterEvent(event);

@@ -494,7 +494,7 @@ void ViewSurface::Commit() {
     return;
   }
 
-  if (p_->commit_task.IsLinked())
+  if (p_->commit_task.is_linked())
     return;
 
   if (nullptr == p_->parent) {
@@ -506,7 +506,7 @@ void ViewSurface::Commit() {
     // Synchronized mode need to commit the main surface too
     ViewSurface *main_surface = GetShellSurface();
     main_surface->Commit();
-    main_surface->p_->commit_task.PushFront(&p_->commit_task);
+    main_surface->p_->commit_task.push_back(&p_->commit_task);
   } else {
     kCommitTaskDeque.PushBack(&p_->commit_task);
   }
@@ -556,11 +556,11 @@ void ViewSurface::DamageBuffer(int32_t x, int32_t y, int32_t width, int32_t heig
 
 void ViewSurface::Update(bool validate) {
   if (!validate) {
-    p_->render_task.Unlink();
+    p_->render_task.unlink();
     return;
   }
 
-  if (p_->render_task.IsLinked()) return;
+  if (p_->render_task.is_linked()) return;
   kRenderTaskDeque.PushBack(&p_->render_task);
 }
 

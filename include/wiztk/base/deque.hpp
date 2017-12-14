@@ -29,7 +29,7 @@ namespace base {
  * @ingroup base
  * @brief A bidirectional node used in deque or custom list
  *
- * You usually don't use this class directly. Instead, you use or create a subclass.
+ * You usually don't use this class directly. Instead, create and use a subclass.
  *
  * A BiNode object can be linked to another by using the PushBack(), PushFront().
  * When needed, use a Deque to manage all nodes, for example:
@@ -101,19 +101,7 @@ class BiNode {
    */
   void Unlink();
 
-  /**
-   * @brief Getter of previous node
-   * @return
-   */
-  BiNode *previous() const { return previous_; }
-
-  /**
-   * @brief Getter of next node
-   * @return
-   */
-  BiNode *next() const { return next_; }
-
- private:
+ protected:
 
   BiNode *previous_ = nullptr;
   BiNode *next_ = nullptr;

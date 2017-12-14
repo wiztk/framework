@@ -96,6 +96,10 @@ class IPv6Address : public IPAddress {
 
 };
 
+/**
+ * @ingroup net
+ * @brief A list of IPAddress.
+ */
 class IPAddressList {
 
   friend class IPAddress;
@@ -106,7 +110,7 @@ class IPAddressList {
 
   ~IPAddressList() = default;
 
-  IPAddress *GetAt(int index) const { return deque_.GetAt(index); }
+  IPAddress *at(int index) const { return deque_.GetAt(index); }
 
   IPAddress *operator[](int index) const { return deque_.GetAt(index); }
 

@@ -25,15 +25,34 @@
 namespace wiztk {
 namespace gui {
 
-WIZTK_EXPORT class Task : public base::BiNode {
+class WIZTK_EXPORT Task : protected base::BiNode {
+
+  template<typename T> friend
+  class base::Deque;
 
  public:
 
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Task);
+  WIZTK_DECLARE_NONCOPYABLE(Task);
 
   Task() = default;
 
-  virtual ~Task() = default;
+  Task(Task &&) = default;
+
+  ~Task() override = default;
+
+  Task &operator=(Task &&) = default;
+
+  inline void push_back(Task *task) { PushBack(task); }
+
+  inline void push_front(Task *task) { PushFront(task); }
+
+  inline void unlink() { Unlink(); }
+
+  inline bool is_linked() const { return IsLinked(); }
+
+  inline Task *previous() const { return static_cast<Task *>(previous_); }
+
+  inline Task *next() const { return static_cast<Task *>(next_); }
 
   virtual void Run() const {
     // override this

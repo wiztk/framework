@@ -20,9 +20,9 @@ class MyElement : public BiNode {
 
   int id() const { return id_; };
 
-  BiNode *_previous() const { return previous(); }
+  BiNode *_previous() const { return previous_; }
 
-  BiNode *_next() const { return next(); }
+  BiNode *_next() const { return next_; }
 
  private:
 
@@ -44,7 +44,7 @@ class MyDeque : public Deque<MyElement> {
 
 };
 
-TEST_F(Test, push_front_1) {
+TEST_F(TestDeque, push_front_1) {
   auto item1 = new MyElement(1);
   auto item2 = new MyElement(2);
   auto item3 = new MyElement(3);
@@ -74,7 +74,7 @@ TEST_F(Test, push_front_1) {
   ASSERT_TRUE(deque.IsEmpty());
 }
 
-TEST_F(Test, push_back_1) {
+TEST_F(TestDeque, push_back_1) {
   auto item1 = new MyElement(1);
   auto item2 = new MyElement(2);
   auto item3 = new MyElement(3);
@@ -96,7 +96,7 @@ TEST_F(Test, push_back_1) {
   ASSERT_TRUE(deque.IsEmpty());
 }
 
-TEST_F(Test, insert_1) {
+TEST_F(TestDeque, insert_1) {
   auto item1 = new MyElement(1);
   auto item2 = new MyElement(2);
   auto item3 = new MyElement(3);
@@ -118,7 +118,7 @@ TEST_F(Test, insert_1) {
   ASSERT_TRUE(deque.IsEmpty());
 }
 
-TEST_F(Test, insert_2) {
+TEST_F(TestDeque, insert_2) {
   auto item1 = new MyElement(1);
   auto item2 = new MyElement(2);
   auto item3 = new MyElement(3);
@@ -137,7 +137,7 @@ TEST_F(Test, insert_2) {
   ASSERT_TRUE(item4->_previous() == deque._first());
 }
 
-TEST_F(Test, insert_3) {
+TEST_F(TestDeque, insert_3) {
   auto item1 = new MyElement(1);
   auto item2 = new MyElement(2);
   auto item3 = new MyElement(3);
@@ -164,7 +164,7 @@ TEST_F(Test, insert_3) {
   ASSERT_TRUE(deque.IsEmpty());
 }
 
-TEST_F(Test, get_1) {
+TEST_F(TestDeque, get_1) {
   auto item1 = new MyElement(1);
   auto item2 = new MyElement(2);
   auto item3 = new MyElement(3);
@@ -187,7 +187,7 @@ TEST_F(Test, get_1) {
   ASSERT_TRUE(deque.IsEmpty());
 }
 
-TEST_F(Test, iterator_1) {
+TEST_F(TestDeque, iterator_1) {
   auto item1 = new MyElement(1);
   auto item2 = new MyElement(2);
   auto item3 = new MyElement(3);
@@ -223,7 +223,7 @@ TEST_F(Test, iterator_1) {
   ASSERT_TRUE(deque.IsEmpty());
 }
 
-TEST_F(Test, end_1) {
+TEST_F(TestDeque, end_1) {
   auto item1 = new MyElement(1);
   auto item2 = new MyElement(2);
   auto item3 = new MyElement(3);
@@ -243,7 +243,7 @@ TEST_F(Test, end_1) {
   ASSERT_TRUE(deque.IsEmpty());
 }
 
-TEST_F(Test, rend_1) {
+TEST_F(TestDeque, rend_1) {
   auto item1 = new MyElement(1);
   auto item2 = new MyElement(2);
   auto item3 = new MyElement(3);
@@ -263,7 +263,7 @@ TEST_F(Test, rend_1) {
   ASSERT_TRUE(deque.IsEmpty());
 }
 
-TEST_F(Test, boolean_1) {
+TEST_F(TestDeque, boolean_1) {
   auto item1 = new MyElement(1);
   auto item2 = new MyElement(2);
   auto item3 = new MyElement(3);
@@ -286,7 +286,7 @@ TEST_F(Test, boolean_1) {
   ASSERT_TRUE(deque.IsEmpty());
 }
 
-TEST_F(Test, boolean_2) {
+TEST_F(TestDeque, boolean_2) {
   auto item1 = new MyElement(1);
   auto item2 = new MyElement(2);
   auto item3 = new MyElement(3);
@@ -309,7 +309,7 @@ TEST_F(Test, boolean_2) {
   ASSERT_TRUE(deque.IsEmpty());
 }
 
-TEST_F(Test, clear_1) {
+TEST_F(TestDeque, clear_1) {
   auto *item1 = new MyElement(1);
   auto *item2 = new MyElement(2);
   auto *item3 = new MyElement(3);
@@ -324,7 +324,7 @@ TEST_F(Test, clear_1) {
   ASSERT_TRUE(deque.IsEmpty());
 }
 
-TEST_F(Test, clear_2) {
+TEST_F(TestDeque, clear_2) {
   auto *item1 = new MyElement(1);
   auto *item2 = new MyElement(2);
   auto *item3 = new MyElement(3);

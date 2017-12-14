@@ -14,7 +14,7 @@ TEST_F(TestIPAddress, get_by_name_1) {
 
   if (list->size() > 0) {
     for (size_t i = 0; i < list->size(); ++i) {
-      cout << "address: " << list->GetAt(i)->ToString() << endl;
+      cout << "address: " << (*list)[i]->ToString() << endl;
     }
   }
 

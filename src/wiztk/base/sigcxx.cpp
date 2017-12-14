@@ -58,7 +58,7 @@ Token::~Token() {
     mark = static_cast<Slot::Mark *>(slot_mark_head.next());
     mark->slot()->token_ = next;
     mark->slot()->skip_ = true;
-    mark->Unlink();
+    mark->unlink();
   }
 
   if (previous) previous->next = next;

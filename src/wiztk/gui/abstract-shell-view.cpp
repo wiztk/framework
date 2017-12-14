@@ -253,8 +253,8 @@ void AbstractShellView::OnKeyUp(KeyEvent *event) {
 }
 
 void AbstractShellView::OnRequestSaveGeometry(AbstractView *view) {
-  if (p_->geometry_task.IsLinked()) {
-    p_->geometry_task.PushBack(AbstractView::GeometryTask::Get(view));
+  if (p_->geometry_task.is_linked()) {
+    p_->geometry_task.push_back(AbstractView::GeometryTask::Get(view));
     return;
   }
 
@@ -299,11 +299,11 @@ bool AbstractShellView::RequestSaveSize(const Size &size) {
   p_->size = size;
 
   if (p_->last_size == p_->size) {
-    p_->geometry_task.Unlink();
+    p_->geometry_task.unlink();
     return false;
   }
 
-  if (!p_->geometry_task.IsLinked()) {
+  if (!p_->geometry_task.is_linked()) {
     Application::instance()->GetTaskDeque().PushBack(&p_->geometry_task);
   }
 
@@ -353,7 +353,7 @@ void AbstractShellView::DispatchMouseEnterEvent(AbstractView *view, MouseEvent *
     if (view->Contain(cursor.x, cursor.y)) {
       view->OnMouseEnter(event);
       if (event->IsAccepted()) {
-        mouse_task->PushBack(EventTask::GetMouseTask(view));
+        mouse_task->push_back(EventTask::GetMouseTask(view));
         mouse_task = static_cast<EventTask *>(mouse_task->GetNext());
         p_->DispatchMouseEnterEvent(view, event, mouse_task);
       } else if (event->IsIgnored()) {
@@ -371,7 +371,7 @@ void AbstractShellView::DispatchMouseEnterEvent(AbstractView *view, MouseEvent *
         break;
       }
       mouse_task = static_cast<EventTask *>(mouse_task->GetPrevious());
-      tail->Unlink();
+      tail->unlink();
       last->OnMouseLeave();
       if (nullptr == mouse_task->GetPrevious()) break;
     }
@@ -387,7 +387,7 @@ void AbstractShellView::DispatchMouseLeaveEvent() {
   while (it) {
     tmp = it;
     it = it->GetNext();
-    tmp->Unlink();
+    tmp->unlink();
     tmp->event_handler()->OnMouseLeave();
   }
 }

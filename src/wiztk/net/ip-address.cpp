@@ -42,7 +42,7 @@ std::unique_ptr<IPAddressList> IPAddress::GetByName(const char *name) {
       for (pp = host->h_addr_list; *pp != nullptr; ++pp) {
         obj = new IPv4Address;
         addr = reinterpret_cast<struct sockaddr_in *>(obj->address_);
-        memcpy(&addr->sin_addr, *pp, host->h_length);
+        memcpy(&addr->sin_addr, *pp, static_cast<size_t >(host->h_length));
         addr_list->deque_.PushBack(obj);
       }
       break;
@@ -53,7 +53,7 @@ std::unique_ptr<IPAddressList> IPAddress::GetByName(const char *name) {
       for (pp = host->h_addr_list; *pp != nullptr; ++pp) {
         obj = new IPv6Address;
         addr = reinterpret_cast<struct sockaddr_in6 *>(obj->address_);
-        memcpy(&addr->sin6_addr, *pp, host->h_length);
+        memcpy(&addr->sin6_addr, *pp, static_cast<size_t >(host->h_length));
         addr_list->deque_.PushBack(obj);
       }
       break;
@@ -118,7 +118,7 @@ std::string IPAddress::ToString() const {
     case AF_INET: {
       auto *addr = reinterpret_cast<struct sockaddr_in *>(address_);
       char buf[INET_ADDRSTRLEN];
-      str = inet_ntop(AF_INET, &addr->sin_addr, buf, INET6_ADDRSTRLEN);
+      str = inet_ntop(AF_INET, &addr->sin_addr, buf, INET_ADDRSTRLEN);
       break;
     }
     case AF_INET6: {

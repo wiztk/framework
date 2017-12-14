@@ -526,9 +526,9 @@ void AbstractView::OnLeaveOutput(const ViewSurface *surface, const Output *outpu
 }
 
 void AbstractView::OnRequestSaveGeometry(AbstractView *view) {
-  if (p_->geometry_task.IsLinked()) {
+  if (p_->geometry_task.is_linked()) {
     if (view != this) {
-      p_->geometry_task.PushBack(&view->p_->geometry_task);
+      p_->geometry_task.push_back(&view->p_->geometry_task);
     }
     return;
   }
@@ -568,22 +568,22 @@ bool AbstractView::RequestSaveGeometry(const RectF &geometry) {
   p_->geometry = geometry;
 
   if (p_->last_geometry == p_->geometry) {
-    p_->geometry_task.Unlink();
+    p_->geometry_task.unlink();
     return false;
   }
 
   bool ret = true;
 
-  if (p_->geometry_task.IsLinked()) return ret;
+  if (p_->geometry_task.is_linked()) return ret;
 
   if (nullptr != p_->parent) {
     _ASSERT(nullptr == p_->shell_view);
     p_->parent->OnRequestSaveGeometry(this);
-    ret = p_->geometry_task.IsLinked();
+    ret = p_->geometry_task.is_linked();
   } else if (nullptr != p_->shell_view) {
     _ASSERT(nullptr == p_->parent);
     p_->shell_view->OnRequestSaveGeometry(this);
-    ret = p_->geometry_task.IsLinked();
+    ret = p_->geometry_task.is_linked();
   } else {
     base::Deque<Task> &deque = Application::instance()->GetTaskDeque();
     deque.PushBack(&p_->geometry_task);

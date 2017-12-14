@@ -12,7 +12,7 @@ $ git clone --recursive https://github.com/wiztk/framework.git
 Use the shell script to install prerequisites if you're using Ubuntu or Fedora:
 
 ```shell
-$ cd <path to skland>
+$ cd <path to framework>
 $ ./scripts/install-dependencies.sh
 ```
 
@@ -21,13 +21,13 @@ $ ./scripts/install-dependencies.sh
 Create a temporary directory and generate Makefiles:
 
 ```shell
-$ cd <path to skland>
+$ cd <path to framework>
 $ mkdir build
 $ cd build
 $ cmake ..
 ```
 
-Follow the instruction to checkout or download prebuilts:
+Follow the instruction to checkout or download [prebuilts](https://github.com/wiztk/prebuilts):
 
 ```shell
 $ git clone https://github.com/wiztk/prebuilts.git --depth 1
