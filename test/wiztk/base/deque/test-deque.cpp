@@ -9,7 +9,7 @@
 using namespace wiztk;
 using namespace wiztk::base;
 
-class MyElement : public BiNode {
+class MyElement : public Binode {
 
  public:
 
@@ -20,9 +20,9 @@ class MyElement : public BiNode {
 
   int id() const { return id_; };
 
-  BiNode *_previous() const { return previous_; }
+  Binode *_previous() const { return previous_; }
 
-  BiNode *_next() const { return next_; }
+  Binode *_next() const { return next_; }
 
  private:
 
@@ -38,9 +38,9 @@ class MyDeque : public Deque<MyElement> {
 
   ~MyDeque() final = default;
 
-  const BiNode *_first() const { return first(); }
+  const Binode *_first() const { return first(); }
 
-  const BiNode *_last() const { return last(); }
+  const Binode *_last() const { return last(); }
 
 };
 
@@ -174,7 +174,7 @@ TEST_F(TestDeque, get_1) {
   deque.Insert(item2);
   deque.Insert(item1);
 
-  BiNode *item = deque[0];
+  Binode *item = deque[0];
   ASSERT_TRUE(item = item1);
 
   item = deque[-1];
@@ -319,7 +319,7 @@ TEST_F(TestDeque, clear_1) {
   deque.PushBack(item2);
   deque.PushBack(item3);
 
-  deque.Clear([](BiNode *p) { delete p; });
+  deque.Clear([](Binode *p) { delete p; });
 
   ASSERT_TRUE(deque.IsEmpty());
 }
@@ -334,7 +334,7 @@ TEST_F(TestDeque, clear_2) {
   deque.PushBack(item2);
   deque.PushBack(item3);
 
-  deque.Clear([](BiNode *p) {/* Do nothing. */});
+  deque.Clear([](Binode *p) {/* Do nothing. */});
 
   ASSERT_TRUE(deque.IsEmpty());
 

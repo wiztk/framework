@@ -42,7 +42,7 @@ class IPAddressList;
  * used by IP, a lower-level protocol on which protocols like TCP and UDP are
  * built.
  */
-class IPAddress : protected base::BiNode {
+class IPAddress : protected base::Binode {
 
   template<typename T> friend
   class base::Deque;
@@ -157,9 +157,7 @@ class IPAddressList {
 
  private:
 
-  class Deque : public base::Deque<IPAddress> {};
-
-  Deque deque_;
+  base::Deque<IPAddress> deque_;
 
 };
 

@@ -62,6 +62,8 @@ AddressInfo::~AddressInfo() {
 // --------------------------------------
 
 AddressInfoList::~AddressInfoList() {
+  typedef base::Deque<AddressInfo> Deque;
+
   if (deque_.GetSize() > 0) {
     freeaddrinfo(deque_[0]->address_info_);
   }

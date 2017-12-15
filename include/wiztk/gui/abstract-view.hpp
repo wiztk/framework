@@ -117,7 +117,7 @@ WIZTK_EXPORT class AbstractView : public AbstractEventHandler {
 
   };
 
-  class RenderNode : public base::BiNode {
+  class RenderNode : public base::Binode {
 
    public:
 
@@ -125,7 +125,7 @@ WIZTK_EXPORT class AbstractView : public AbstractEventHandler {
     RenderNode() = delete;
 
     explicit RenderNode(AbstractView *view)
-        : base::BiNode(), view_(view) {}
+        : base::Binode(), view_(view) {}
 
     virtual ~RenderNode() = default;
 

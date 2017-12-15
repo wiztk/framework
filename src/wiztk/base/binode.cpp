@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-#include "wiztk/base/deque.hpp"
-#include "wiztk/base/macros.hpp"
+#include "wiztk/base/binode.hpp"
 
 namespace wiztk {
 namespace base {
 
-BiNode::~BiNode() {
+Binode::~Binode() {
   if (nullptr != previous_) previous_->next_ = next_;
   if (nullptr != next_) next_->previous_ = previous_;
 }
 
-void BiNode::PushFront(BiNode *other) {
+void Binode::PushFront(Binode *other) {
   if (other == this) return;
 
   other->Unlink();
@@ -36,7 +35,7 @@ void BiNode::PushFront(BiNode *other) {
   other->next_ = this;
 }
 
-void BiNode::PushBack(BiNode *other) {
+void Binode::PushBack(Binode *other) {
   if (other == this) return;
 
   other->Unlink();
@@ -47,7 +46,7 @@ void BiNode::PushBack(BiNode *other) {
   other->previous_ = this;
 }
 
-void BiNode::Unlink() {
+void Binode::Unlink() {
   if (nullptr != previous_) previous_->next_ = next_;
   if (nullptr != next_) next_->previous_ = previous_;
 

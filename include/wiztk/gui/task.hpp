@@ -25,7 +25,7 @@
 namespace wiztk {
 namespace gui {
 
-class WIZTK_EXPORT Task : protected base::BiNode {
+class WIZTK_EXPORT Task : protected base::Binode {
 
   template<typename T> friend
   class base::Deque;

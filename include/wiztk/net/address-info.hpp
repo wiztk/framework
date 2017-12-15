@@ -38,7 +38,7 @@ class AddressInfoList;
  * It's unable to create a single AddressInfo object by constructor. An AddressInfo
  * object is always a node in AddressInfoList created by GetAll().
  */
-class AddressInfo : protected base::BiNode {
+class AddressInfo : protected base::Binode {
 
   template<typename T> friend
   class base::Deque;
@@ -114,10 +114,8 @@ class AddressInfoList {
 
   AddressInfoList() = default;
 
-  class Deque : public base::Deque<AddressInfo> {};
-
   // We use has-a relationship here.
-  Deque deque_;
+  base::Deque<AddressInfo> deque_;
 
 };
 

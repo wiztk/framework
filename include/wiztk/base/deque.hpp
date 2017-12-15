@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,96 +17,13 @@
 #ifndef WIZTK_BASE_DEQUE_HPP_
 #define WIZTK_BASE_DEQUE_HPP_
 
-#include "wiztk/base/macros.hpp"
+#include "wiztk/base/binode.hpp"
 
 #include <cstddef>
 #include <functional>
 
 namespace wiztk {
 namespace base {
-
-/**
- * @ingroup base
- * @brief A bidirectional node used in deque or custom list
- *
- * You usually don't use this class directly. Instead, create and use a subclass.
- *
- * A BiNode object can be linked to another by using the PushBack(), PushFront().
- * When needed, use a Deque to manage all nodes, for example:
- * @code
- *  class CustomNode: public base::BiNode {}
- *
- *  base::Deque<CustomNode> deque;
- *  auto node1 = new CustomNode;
- *  auto node2 = new CustomNode;
- *  deque.PushBack(node1);
- *  deque.Insert(node2);
- * @endcode
- */
-class BiNode {
-
-  template<typename T> friend
-  class Deque;
-
- public:
-
-  WIZTK_DECLARE_NONCOPYABLE(BiNode);
-
-  /**
-   * @brief Default constructor
-   */
-  BiNode() = default;
-
-  BiNode(BiNode &&other) noexcept
-      : previous_(other.previous_), next_(other.next_) {
-    other.previous_ = nullptr;
-    other.next_ = nullptr;
-  }
-
-  /**
-   * @brief Constructor
-   */
-  virtual ~BiNode();
-
-  BiNode &operator=(BiNode &&other) noexcept {
-    previous_ = other.previous_;
-    next_ = other.next_;
-    other.previous_ = nullptr;
-    other.next_ = nullptr;
-    return *this;
-  }
-
-  /**
-   * @brief Check if this node is linked to another
-   * @return
-   */
-  bool IsLinked() const {
-    return (nullptr != previous_) || (nullptr != next_);
-  }
-
-  /**
-   * @brief Push another node to the front
-   * @param other
-   */
-  void PushFront(BiNode *other);
-
-  /**
-   * @brief Push another node to the back
-   * @param other
-   */
-  void PushBack(BiNode *other);
-
-  /**
-   * @brief Break the link to both the previous and next node
-   */
-  void Unlink();
-
- protected:
-
-  BiNode *previous_ = nullptr;
-  BiNode *next_ = nullptr;
-
-};
 
 /**
  * @ingroup base
@@ -127,7 +44,7 @@ class Deque {
 
    public:
 
-    explicit Iterator(BiNode *element = nullptr)
+    explicit Iterator(Binode *element = nullptr)
         : element_(element) {}
 
     Iterator(const Iterator &) = default;
@@ -204,7 +121,7 @@ class Deque {
 
    private:
 
-    BiNode *element_;
+    Binode *element_;
 
   };
 
@@ -217,7 +134,7 @@ class Deque {
 
     ConstIterator() = delete;
 
-    explicit ConstIterator(const BiNode *element = nullptr)
+    explicit ConstIterator(const Binode *element = nullptr)
         : element_(element) {}
 
     ConstIterator(const ConstIterator &) = default;
@@ -274,7 +191,7 @@ class Deque {
 
    private:
 
-    const BiNode *element_;
+    const Binode *element_;
 
   };
 
@@ -292,7 +209,7 @@ class Deque {
 
   bool IsEmpty() const;
 
-  void Clear(const std::function<void(BiNode *)> &deleter);
+  void Clear(const std::function<void(Binode *)> &deleter);
 
   T *operator[](int index) const {
     return GetAt(index);
@@ -317,7 +234,7 @@ class Deque {
   }
 
   Iterator end() const {
-    return Iterator(const_cast<BiNode *>(&last_));
+    return Iterator(const_cast<Binode *>(&last_));
   }
 
   ConstIterator cend() const {
@@ -325,7 +242,7 @@ class Deque {
   }
 
   Iterator rend() const {
-    return Iterator(const_cast<BiNode *>(&first_));
+    return Iterator(const_cast<Binode *>(&first_));
   }
 
   ConstIterator crend() const {
@@ -334,14 +251,14 @@ class Deque {
 
  protected:
 
-  const BiNode *first() const { return &first_; }
+  const Binode *first() const { return &first_; }
 
-  const BiNode *last() const { return &last_; }
+  const Binode *last() const { return &last_; }
 
  private:
 
-  BiNode first_;
-  BiNode last_;
+  Binode first_;
+  Binode last_;
 
 };
 
@@ -353,7 +270,7 @@ Deque<T>::Deque() {
 
 template<typename T>
 Deque<T>::~Deque() {
-  Clear([](BiNode *obj) { delete obj; });
+  Clear([](Binode *obj) { delete obj; });
 }
 
 template<typename T>
@@ -371,14 +288,14 @@ void Deque<T>::PushBack(T *item) {
 template<typename T>
 void Deque<T>::Insert(T *item, int index) {
   if (index >= 0) {
-    BiNode *p = first_.next_;
+    Binode *p = first_.next_;
     while ((&last_ != p) && (index > 0)) {
       p = p->next_;
       index--;
     }
     p->PushFront(item);
   } else {
-    BiNode *p = last_.previous_;
+    Binode *p = last_.previous_;
     while ((&first_ != p) && (index < -1)) {
       p = p->previous_;
       index++;
@@ -391,7 +308,7 @@ template<typename T>
 size_t Deque<T>::GetSize() const {
   size_t size = 0;
 
-  BiNode *element = first_.next_;
+  Binode *element = first_.next_;
   while (element != &last_) {
     ++size;
     element = element->next_;
@@ -406,8 +323,8 @@ bool Deque<T>::IsEmpty() const {
 }
 
 template<typename T>
-void Deque<T>::Clear(const std::function<void(BiNode *)> &deleter) {
-  BiNode *tmp = first_.next_;
+void Deque<T>::Clear(const std::function<void(Binode *)> &deleter) {
+  Binode *tmp = first_.next_;
   while (tmp != &last_) {
     tmp->Unlink();
     deleter(tmp);
@@ -417,7 +334,7 @@ void Deque<T>::Clear(const std::function<void(BiNode *)> &deleter) {
 
 template<typename T>
 T *Deque<T>::GetAt(int index) const {
-  BiNode *p = nullptr;
+  Binode *p = nullptr;
 
   if (index >= 0) {
     p = first_.next_;

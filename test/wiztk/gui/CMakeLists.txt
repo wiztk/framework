@@ -15,7 +15,6 @@
 # set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 
 # gui
-add_subdirectory(idle-task)
 add_subdirectory(display)
 add_subdirectory(application)
 add_subdirectory(window)
