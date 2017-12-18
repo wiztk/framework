@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-#include "wiztk/net/socket.hpp"
+#include "wiztk/net/server-socket.hpp"
+
 #include "wiztk/net/socket-exception.hpp"
 #include "wiztk/net/io-buffer.hpp"
 
@@ -25,69 +26,62 @@
 namespace wiztk {
 namespace net {
 
-Socket::Socket(AddressFamily address_family,
-               SocketType socket_type,
-               ProtocolType protocol_type) {
+ServerSocket::ServerSocket(AddressFamily address_family,
+                           SocketType socket_type,
+                           ProtocolType protocol_type) {
   socket_ = socket(address_family, socket_type, protocol_type);
 
-  if (socket_ < 0) throw SocketException("Error! Fail to initialize a new Socket object!");
+  if (socket_ < 0) throw SocketException("Error! Fail to initialize a new ServerSocket object!");
 }
 
-Socket::Socket(const String &host, int port)
-    : Socket() {
-
-}
-
-Socket::~Socket() {
+ServerSocket::~ServerSocket() {
   if (socket_)
     close(socket_);
 }
 
-void Socket::Connect(const IPAddress &address) {
+void ServerSocket::Bind(const IPAddress &address) const {
   using _ = IPAddress::Native;
 
-  int ret = connect(socket_, _::GetSockAddr(address), _::GetLength(address));
-  if (ret < 0) {
-    throw SocketException("Error! Cannot connect this socket!");
-  }
+  int ret = bind(socket_, _::GetSockAddr(address), _::GetLength(address));
+  if (ret < 0)
+    throw SocketException("Error! Cannot bind this socket!");
 }
 
-size_t Socket::Send(const IOBuffer &buffer, size_t buffer_size) {
-  ssize_t ret = send(socket_, buffer.data(), buffer_size, 0);
+void ServerSocket::Listen(int backlog) const {
+  int ret = listen(socket_, backlog);
+
+  if (ret < 0)
+    throw SocketException("Error! Cannot listen this socket!");
+}
+
+void ServerSocket::Accept() const {
+  int ret = accept(socket_, nullptr, nullptr);
+
+  if (ret < 0)
+    throw SocketException("Error! Cannot accept this socket!");
+}
+
+size_t ServerSocket::Send(const IOBuffer &buffer, size_t size) {
+  ssize_t ret = send(socket_, buffer.data(), size, 0);
   if (ret < 0)
     throw SocketException("Error! Cannot send data to socket!");
 
   return static_cast<size_t>(ret);
 }
 
-size_t Socket::Receive(IOBuffer &buffer, size_t buffer_size) {
-  ssize_t ret = recv(socket_, buffer.data(), buffer_size, 0);
+size_t ServerSocket::Receive(IOBuffer &buffer, size_t size) {
+  ssize_t ret = recv(socket_, buffer.data(), size, 0);
   if (ret < 0)
     throw SocketException("Error! Cannot receive data from socket!");
 
   return static_cast<size_t>(ret);
 }
 
-void Socket::Close() {
+void ServerSocket::Close() {
   if (socket_) {
     close(socket_);
     socket_ = 0;
   }
-}
-
-AddressFamily Socket::GetAddressFamily() const {
-  struct sockaddr_storage buf = {0};
-  socklen_t length;
-
-  auto *addr = reinterpret_cast<struct sockaddr *>(&buf);
-
-  int ret = getsockname(socket_, addr, &length);
-
-  if (ret < 0) {
-    throw SocketException("Error! Fail to get address family!");
-  }
-
-  return static_cast<AddressFamily>(addr->sa_family);
 }
 
 } // namespace net

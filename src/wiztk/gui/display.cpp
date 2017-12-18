@@ -16,7 +16,7 @@
 
 #include "internal/display_private.hpp"
 
-#include "wiztk/base/exceptions.hpp"
+#include "wiztk/base/exception.hpp"
 
 #include <wiztk/gui/output.hpp>
 #include <wiztk/gui/input.hpp>
@@ -64,7 +64,7 @@ void Display::Connect(const char *name) {
 
   if (wl_display_roundtrip(p_->wl_display) < 0) {
     Disconnect();
-    throw CompositorError("Failed to process Wayland connection!");
+    throw std::runtime_error("Failed to process Wayland connection!");
   }
 
   // TODO: more operations

@@ -218,54 +218,48 @@ class Deque {
   T *GetAt(int index) const;
 
   Iterator begin() const {
-    return Iterator(first_.next_);
+    return Iterator(head_.next_);
   }
 
   ConstIterator cbegin() const {
-    return ConstIterator(first_.next_);
+    return ConstIterator(head_.next_);
   }
 
   Iterator rbegin() const {
-    return Iterator(last_.previous_);
+    return Iterator(tail_.previous_);
   }
 
   ConstIterator crbegin() const {
-    return ConstIterator(last_.previous_);
+    return ConstIterator(tail_.previous_);
   }
 
   Iterator end() const {
-    return Iterator(const_cast<Binode *>(&last_));
+    return Iterator(const_cast<Binode *>(&tail_));
   }
 
   ConstIterator cend() const {
-    return ConstIterator(&last_);
+    return ConstIterator(&tail_);
   }
 
   Iterator rend() const {
-    return Iterator(const_cast<Binode *>(&first_));
+    return Iterator(const_cast<Binode *>(&head_));
   }
 
   ConstIterator crend() const {
-    return ConstIterator(&first_);
+    return ConstIterator(&head_);
   }
 
  protected:
 
-  const Binode *first() const { return &first_; }
-
-  const Binode *last() const { return &last_; }
-
- private:
-
-  Binode first_;
-  Binode last_;
+  Binode head_;
+  Binode tail_;
 
 };
 
 template<typename T>
 Deque<T>::Deque() {
-  first_.next_ = &last_;
-  last_.previous_ = &first_;
+  head_.next_ = &tail_;
+  tail_.previous_ = &head_;
 }
 
 template<typename T>
@@ -276,27 +270,27 @@ Deque<T>::~Deque() {
 template<typename T>
 void Deque<T>::PushFront(T *item) {
   item->Unlink();
-  first_.PushBack(item);
+  head_.PushBack(item);
 }
 
 template<typename T>
 void Deque<T>::PushBack(T *item) {
   item->Unlink();
-  last_.PushFront(item);
+  tail_.PushFront(item);
 }
 
 template<typename T>
 void Deque<T>::Insert(T *item, int index) {
   if (index >= 0) {
-    Binode *p = first_.next_;
-    while ((&last_ != p) && (index > 0)) {
+    Binode *p = head_.next_;
+    while ((&tail_ != p) && (index > 0)) {
       p = p->next_;
       index--;
     }
     p->PushFront(item);
   } else {
-    Binode *p = last_.previous_;
-    while ((&first_ != p) && (index < -1)) {
+    Binode *p = tail_.previous_;
+    while ((&head_ != p) && (index < -1)) {
       p = p->previous_;
       index++;
     }
@@ -308,8 +302,8 @@ template<typename T>
 size_t Deque<T>::GetSize() const {
   size_t size = 0;
 
-  Binode *element = first_.next_;
-  while (element != &last_) {
+  Binode *element = head_.next_;
+  while (element != &tail_) {
     ++size;
     element = element->next_;
   }
@@ -319,16 +313,16 @@ size_t Deque<T>::GetSize() const {
 
 template<typename T>
 bool Deque<T>::IsEmpty() const {
-  return first_.next_ == &last_;
+  return head_.next_ == &tail_;
 }
 
 template<typename T>
 void Deque<T>::Clear(const std::function<void(Binode *)> &deleter) {
-  Binode *tmp = first_.next_;
-  while (tmp != &last_) {
+  Binode *tmp = head_.next_;
+  while (tmp != &tail_) {
     tmp->Unlink();
     deleter(tmp);
-    tmp = first_.next_;
+    tmp = head_.next_;
   }
 }
 
@@ -337,14 +331,14 @@ T *Deque<T>::GetAt(int index) const {
   Binode *p = nullptr;
 
   if (index >= 0) {
-    p = first_.next_;
-    while ((&last_ != p) && (index > 0)) {
+    p = head_.next_;
+    while ((&tail_ != p) && (index > 0)) {
       p = p->next_;
       index--;
     }
   } else {
-    p = last_.previous_;
-    while ((&first_ != p) && (index < -1)) {
+    p = tail_.previous_;
+    while ((&head_ != p) && (index < -1)) {
       p = p->previous_;
       index++;
     }

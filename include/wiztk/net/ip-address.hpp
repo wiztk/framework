@@ -49,6 +49,8 @@ class IPAddress : protected base::Binode {
 
  public:
 
+  class Native;
+
   /**
    * @brief A typedef of host/service pair.
    */

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,25 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_BASE_EXCEPTIONS_HPP_
-#define WIZTK_BASE_EXCEPTIONS_HPP_
+#include "wiztk/net/io-buffer.hpp"
 
-#include <stdexcept>
+#include <cstring>
 
 namespace wiztk {
+namespace net {
 
-class CompositorError: public std::runtime_error
-{
-  using std::runtime_error::runtime_error;
-};
-
-/**
- * @brief Hierarchical Error
- *
- * throw when trying to remove object from parent which not belongs to
- */
-class HierarchicalError: public std::runtime_error
-{
-  using std::runtime_error::runtime_error;
-};
-
+IOBuffer::IOBuffer(size_t size) {
+  data_ = new char[size];
 }
 
-#endif // WIZTK_BASE_EXCEPTIONS_HPP_
+IOBuffer::~IOBuffer() {
+  delete[] data_;
+}
+
+void IOBuffer::Reset(size_t size) {
+  delete[] data_;
+  data_ = new char[size];
+}
+
+}
+}

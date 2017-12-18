@@ -12,25 +12,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-file(GLOB_RECURSE base_headers "${PROJECT_SOURCE_DIR}/include/wiztk/base/*.hpp")
-file(GLOB_RECURSE base_sources "base/*.cpp")
-list(APPEND all_source_files ${base_headers} ${base_sources})
+#file(GLOB_RECURSE base_headers "${PROJECT_SOURCE_DIR}/include/wiztk/base/*.hpp")
+#file(GLOB_RECURSE base_sources "base/*.cpp")
+#list(APPEND all_source_files ${base_headers} ${base_sources})
+#
+#file(GLOB_RECURSE numerical_headers "${PROJECT_SOURCE_DIR}/include/wiztk/numerical/*.hpp")
+#file(GLOB_RECURSE numerical_sources "numerical/*.cpp")
+#list(APPEND all_source_files ${numerical_headers} ${numerical_sources})
+#
+#file(GLOB_RECURSE net_headers "${PROJECT_SOURCE_DIR}/include/wiztk/net/*.hpp")
+#file(GLOB_RECURSE net_sources "net/*.cpp")
+#file(GLOB_RECURSE net_internal_headers "net/*.hpp")
+#list(APPEND all_source_files ${net_headers} ${net_sources} ${net_internal_headers})
+#
+#file(GLOB_RECURSE graphic_headers "${PROJECT_SOURCE_DIR}/include/wiztk/graphic/*.hpp")
+#file(GLOB_RECURSE graphic_sources "graphic/*.cpp")
+#list(APPEND all_source_files ${graphic_headers} ${graphic_sources})
+#
+#file(GLOB_RECURSE gui_headers "${PROJECT_SOURCE_DIR}/include/wiztk/gui/*.hpp")
+#file(GLOB_RECURSE gui_sources "gui/*.cpp")
+#list(APPEND all_source_files ${gui_headers} ${gui_sources})
 
-file(GLOB_RECURSE numerical_headers "${PROJECT_SOURCE_DIR}/include/wiztk/numerical/*.hpp")
-file(GLOB_RECURSE numerical_sources "numerical/*.cpp")
-list(APPEND all_source_files ${numerical_headers} ${numerical_sources})
-
-file(GLOB_RECURSE net_headers "${PROJECT_SOURCE_DIR}/include/wiztk/net/*.hpp")
-file(GLOB_RECURSE net_sources "net/*.cpp")
-list(APPEND all_source_files ${net_headers} ${net_sources})
-
-file(GLOB_RECURSE graphic_headers "${PROJECT_SOURCE_DIR}/include/wiztk/graphic/*.hpp")
-file(GLOB_RECURSE graphic_sources "graphic/*.cpp")
-list(APPEND all_source_files ${graphic_headers} ${graphic_sources})
-
-file(GLOB_RECURSE gui_headers "${PROJECT_SOURCE_DIR}/include/wiztk/gui/*.hpp")
-file(GLOB_RECURSE gui_sources "gui/*.cpp")
-list(APPEND all_source_files ${gui_headers} ${gui_sources})
+file(GLOB_RECURSE public_headers "${PROJECT_SOURCE_DIR}/include/wiztk/*.hpp")
+file(GLOB_RECURSE internal_headers "./*.hpp")
+file(GLOB_RECURSE sources "./*.cpp")
+list(APPEND all_source_files ${public_headers} ${internal_headers} ${sources})
 
 set(global_header "${PROJECT_SOURCE_DIR}/include/wiztk/config.hpp")
 

@@ -102,6 +102,10 @@ class Binode {
 
  protected:
 
+  virtual void OnUnlinked() { /* Override this in subclass */ }
+
+  virtual void OnLinked() { /* Override this in subclass */ }
+
   Binode *previous_ = nullptr;
   Binode *next_ = nullptr;
 

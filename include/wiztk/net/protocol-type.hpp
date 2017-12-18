@@ -14,32 +14,22 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_NET_SOCKET_TYPE_HPP_
-#define WIZTK_NET_SOCKET_TYPE_HPP_
-
-#include <sys/types.h>
-#include <sys/socket.h>
+#ifndef WIZTK_NET_PROTOCOL_TYPE_HPP_
+#define WIZTK_NET_PROTOCOL_TYPE_HPP_
 
 namespace wiztk {
 namespace net {
 
 /**
  * @ingroup net
- * @brief Socket type.
+ * @brief Protocol type
  */
-enum SocketType {
-
-  kSocketStream = SOCK_STREAM,                        //< SOCK_STREAM
-  kSocketDatagram = SOCK_DGRAM,                      //< SOCK_DGRAM
-  kSocketSequencedPacket = SOCK_SEQPACKET,               //< SOCK_SEQPACKET
-  kSocketRaw = SOCK_RAW,                           //< SOCK_RAW
-  kSocketReliableDatagram = SOCK_RDM,              //< SOCK_RDM
-  kSocketPacket = SOCK_PACKET,                        //< SOCK_PACKET
-  kSocketLast                           //< Last
-
+enum ProtocolType {
+  kProtocolDefault = 0
+  // TODO: more protocol type
 };
 
 }  // namespace net
 }  // namespace wiztk
 
-#endif  // WIZTK_NET_SOCKET_TYPE_HPP_
+#endif  // WIZTK_NET_PROTOCOL_TYPE_HPP_

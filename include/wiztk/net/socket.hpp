@@ -17,27 +17,28 @@
 #ifndef WIZTK_NET_SOCKET_HPP_
 #define WIZTK_NET_SOCKET_HPP_
 
+#include "wiztk/base/macros.hpp"
 #include "wiztk/base/string.hpp"
 
-#include "wiztk/net/ip-address.hpp"
-
-#include <sys/types.h>
-#include <sys/socket.h>
+#include "wiztk/net/address-family.hpp"
+#include "wiztk/net/socket-type.hpp"
+#include "wiztk/net/protocol-type.hpp"
 
 namespace wiztk {
 namespace net {
 
-// Forward declaration:
+// Forward declarations:
 class IPAddress;
 class Proxy;
+class IOBuffer;
 
 /**
  * @ingroup net
- * @brief This class implements client socket.
+ * @brief Client-side socket.
  *
  * A socket is an endpoint for communication between two machines.
  */
-class Socket {
+class WIZTK_EXPORT Socket {
 
  public:
 
@@ -48,7 +49,17 @@ class Socket {
    *
    * Creates an unconnected socket.
    */
-  Socket();
+  Socket() = default;
+
+  /**
+   * @brief Constructor which creates an endpoint for communication.
+   * @param address_family
+   * @param socket_type
+   * @param protocol_type
+   */
+  Socket(AddressFamily address_family,
+         SocketType socket_type,
+         ProtocolType protocol_type = kProtocolDefault);
 
   /**
    * @brief Creates a stream socket and connects it to the specified port number on the named host.
@@ -79,19 +90,21 @@ class Socket {
 
   ~Socket();
 
-  void Bind();
-
-  void Close();
-
   void Connect(const IPAddress &address);
 
   void Connect(const IPAddress &address, int timeout);
 
+  size_t Send(const IOBuffer &buffer, size_t buffer_size);
+
+  size_t Receive(IOBuffer &buffer, size_t buffer_size);
+
+  void Close();
+
+  AddressFamily GetAddressFamily() const;
+
  private:
 
-  std::unique_ptr<IPAddress> adress_;
-
-  int socket_;
+  int socket_ = 0;
 
 };
 

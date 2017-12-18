@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "wiztk/net/ip-address.hpp"
+#include "internal/ip-address_native.hpp"
 
 #include "wiztk/net/address-info.hpp"
 
