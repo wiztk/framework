@@ -20,9 +20,9 @@ class MyElement : public Binode {
 
   int id() const { return id_; };
 
-  Binode *_previous() const { return previous_; }
+  Binode *previous() const { return previous_; }
 
-  Binode *_next() const { return next_; }
+  Binode *next() const { return next_; }
 
  private:
 
@@ -36,11 +36,14 @@ class MyDeque : public Deque<MyElement> {
 
   MyDeque() = default;
 
+  explicit MyDeque(const DeleterType &deleter)
+      : Deque<MyElement>(deleter) {}
+
   ~MyDeque() final = default;
 
-  const Binode *_first() const { return first(); }
+  const Binode *head() const { return &head_; }
 
-  const Binode *_last() const { return last(); }
+  const Binode *tail() const { return &tail_; }
 
 };
 
@@ -54,7 +57,7 @@ TEST_F(TestDeque, push_front_1) {
   deque.PushFront(item2);
   deque.PushFront(item3);
 
-  ASSERT_TRUE(deque.GetSize() == 3);
+  ASSERT_TRUE(deque.GetCount() == 3);
 
   Deque<MyElement>::ConstIterator it = deque.crbegin();
   ASSERT_TRUE(it == item1);
@@ -62,10 +65,10 @@ TEST_F(TestDeque, push_front_1) {
   it = deque.cend();
   ASSERT_TRUE(it != item1);
 
-  ASSERT_TRUE(item1->_next() == deque._last());
-  ASSERT_TRUE(item1->_previous() == item2);
-  ASSERT_TRUE(item2->_previous() == item3);
-  ASSERT_TRUE(item3->_previous() == deque._first());
+  ASSERT_TRUE(item1->next() == deque.tail());
+  ASSERT_TRUE(item1->previous() == item2);
+  ASSERT_TRUE(item2->previous() == item3);
+  ASSERT_TRUE(item3->previous() == deque.head());
 
   delete item1;
   delete item2;
@@ -84,10 +87,10 @@ TEST_F(TestDeque, push_back_1) {
   deque.PushBack(item2);
   deque.PushBack(item3);
 
-  ASSERT_TRUE(item1->_previous() == deque._first());
-  ASSERT_TRUE(item1->_next() == item2);
-  ASSERT_TRUE(item2->_next() == item3);
-  ASSERT_TRUE(item3->_next() == deque._last());
+  ASSERT_TRUE(item1->previous() == deque.head());
+  ASSERT_TRUE(item1->next() == item2);
+  ASSERT_TRUE(item2->next() == item3);
+  ASSERT_TRUE(item3->next() == deque.tail());
 
   delete item1;
   delete item2;
@@ -106,10 +109,10 @@ TEST_F(TestDeque, insert_1) {
   deque.Insert(item2);
   deque.Insert(item3);
 
-  ASSERT_TRUE(item1->_next() == deque._last());
-  ASSERT_TRUE(item1->_previous() == item2);
-  ASSERT_TRUE(item2->_previous() == item3);
-  ASSERT_TRUE(item3->_previous() == deque._first());
+  ASSERT_TRUE(item1->next() == deque.tail());
+  ASSERT_TRUE(item1->previous() == item2);
+  ASSERT_TRUE(item2->previous() == item3);
+  ASSERT_TRUE(item3->previous() == deque.head());
 
   delete item1;
   delete item2;
@@ -123,7 +126,7 @@ TEST_F(TestDeque, insert_2) {
   auto item2 = new MyElement(2);
   auto item3 = new MyElement(3);
 
-  MyDeque deque;
+  MyDeque deque([](Binode *obj) { delete obj; });
   deque.Insert(item1);
   deque.Insert(item2);
   deque.Insert(item3);
@@ -131,10 +134,10 @@ TEST_F(TestDeque, insert_2) {
   auto item4 = new MyElement(4);
   deque.Insert(item4);
 
-  ASSERT_TRUE(item1->_previous() == item2);
-  ASSERT_TRUE(item2->_previous() == item3);
-  ASSERT_TRUE(item3->_previous() == item4);
-  ASSERT_TRUE(item4->_previous() == deque._first());
+  ASSERT_TRUE(item1->previous() == item2);
+  ASSERT_TRUE(item2->previous() == item3);
+  ASSERT_TRUE(item3->previous() == item4);
+  ASSERT_TRUE(item4->previous() == deque.head());
 }
 
 TEST_F(TestDeque, insert_3) {
@@ -150,11 +153,11 @@ TEST_F(TestDeque, insert_3) {
   auto item4 = new MyElement(4);
   deque.Insert(item4, -1);
 
-  ASSERT_TRUE(item1->_previous() == item2);
-  ASSERT_TRUE(item2->_previous() == item3);
-  ASSERT_TRUE(item3->_previous() == deque._first());
-  ASSERT_TRUE(item1->_next() == item4);
-  ASSERT_TRUE(item4->_next() == deque._last());
+  ASSERT_TRUE(item1->previous() == item2);
+  ASSERT_TRUE(item2->previous() == item3);
+  ASSERT_TRUE(item3->previous() == deque.head());
+  ASSERT_TRUE(item1->next() == item4);
+  ASSERT_TRUE(item4->next() == deque.tail());
 
   delete item1;
   delete item2;
@@ -319,7 +322,7 @@ TEST_F(TestDeque, clear_1) {
   deque.PushBack(item2);
   deque.PushBack(item3);
 
-  deque.Clear([](Binode *p) { delete p; });
+  deque.Clear([](Binode *obj) { delete obj; });
 
   ASSERT_TRUE(deque.IsEmpty());
 }
@@ -334,7 +337,7 @@ TEST_F(TestDeque, clear_2) {
   deque.PushBack(item2);
   deque.PushBack(item3);
 
-  deque.Clear([](Binode *p) {/* Do nothing. */});
+  deque.Clear();
 
   ASSERT_TRUE(deque.IsEmpty());
 

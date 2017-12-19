@@ -320,5 +320,11 @@ IPv6Address::IPv6Address() {
   address_ = reinterpret_cast<struct sockaddr *>(addr);
 }
 
+// -----------------
+
+IPAddressList::~IPAddressList() {
+  deque_.Clear([](base::Binode *obj) { delete obj; });
+}
+
 } // namespace net
 } // namespace wiztk

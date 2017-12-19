@@ -24,11 +24,12 @@ namespace base {
 
 /**
  * @ingroup base
- * @brief A bidirectional node used in deque or custom list
+ * @brief Base class for bidirectional node.
  *
- * You usually don't use this class directly. Instead, create and use a subclass.
+ * You cannot initialize an instance of this base class directly. Instead, create and
+ * use a subclass.
  *
- * A BiNode object can be linked to another by using the PushBack(), PushFront().
+ * A Binode object can be linked to another by using the PushBack(), PushFront().
  * When needed, use a Deque to manage all nodes, for example:
  * @code
  *  class CustomNode: public base::BiNode {}
@@ -48,11 +49,6 @@ class Binode {
  public:
 
   WIZTK_DECLARE_NONCOPYABLE(Binode);
-
-  /**
-   * @brief Default constructor
-   */
-  Binode() = default;
 
   Binode(Binode &&other) noexcept
       : previous_(other.previous_), next_(other.next_) {
@@ -101,6 +97,11 @@ class Binode {
   void Unlink();
 
  protected:
+
+  /**
+    * @brief Default constructor
+    */
+  Binode() = default;
 
   virtual void OnUnlinked() { /* Override this in subclass */ }
 

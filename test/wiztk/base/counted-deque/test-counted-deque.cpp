@@ -20,11 +20,11 @@ class MyElement : public CountedDeque::Element {
 
   int id() const { return id_; };
 
-  MyElement *_previous() const {
+  MyElement *previous() const {
     return dynamic_cast<MyElement *>(CountedDeque::Element::previous());
   }
 
-  MyElement *_next() const {
+  MyElement *next() const {
     return dynamic_cast<MyElement *>(CountedDeque::Element::next());
   }
 
@@ -63,10 +63,10 @@ TEST_F(TestCountedDeque, push_front_1) {
   deque.PushFront(item3);
 
   ASSERT_TRUE(deque.count() == 3);
-  ASSERT_TRUE(item1->_next() == nullptr);
-  ASSERT_TRUE(item1->_previous() == item2);
-  ASSERT_TRUE(item2->_previous() == item3);
-  ASSERT_TRUE(item3->_previous() == nullptr);
+  ASSERT_TRUE(item1->next() == nullptr);
+  ASSERT_TRUE(item1->previous() == item2);
+  ASSERT_TRUE(item2->previous() == item3);
+  ASSERT_TRUE(item3->previous() == nullptr);
   ASSERT_TRUE(deque._first() == item3);
   ASSERT_TRUE(deque._last() == item1);
 }
@@ -82,10 +82,10 @@ TEST_F(TestCountedDeque, push_back_1) {
   deque.PushBack(item3);
 
   ASSERT_TRUE(deque.count() == 3);
-  ASSERT_TRUE(item1->_previous() == nullptr);
-  ASSERT_TRUE(item1->_next() == item2);
-  ASSERT_TRUE(item2->_next() == item3);
-  ASSERT_TRUE(item3->_next() == nullptr);
+  ASSERT_TRUE(item1->previous() == nullptr);
+  ASSERT_TRUE(item1->next() == item2);
+  ASSERT_TRUE(item2->next() == item3);
+  ASSERT_TRUE(item3->next() == nullptr);
   ASSERT_TRUE(deque._first() == item1);
   ASSERT_TRUE(deque._last() == item3);
 }
@@ -101,10 +101,10 @@ TEST_F(TestCountedDeque, insert_1) {
   deque.Insert(item3);
 
   ASSERT_TRUE(deque.count() == 3);
-  ASSERT_TRUE(item1->_next() == nullptr);
-  ASSERT_TRUE(item1->_previous() == item2);
-  ASSERT_TRUE(item2->_previous() == item3);
-  ASSERT_TRUE(item3->_previous() == nullptr);
+  ASSERT_TRUE(item1->next() == nullptr);
+  ASSERT_TRUE(item1->previous() == item2);
+  ASSERT_TRUE(item2->previous() == item3);
+  ASSERT_TRUE(item3->previous() == nullptr);
 }
 
 TEST_F(TestCountedDeque, insert_2) {
@@ -121,10 +121,10 @@ TEST_F(TestCountedDeque, insert_2) {
   deque.Insert(item4);
 
   ASSERT_TRUE(deque.count() == 4);
-  ASSERT_TRUE(item1->_previous() == item2);
-  ASSERT_TRUE(item2->_previous() == item3);
-  ASSERT_TRUE(item3->_previous() == item4);
-  ASSERT_TRUE(item4->_previous() == nullptr);
+  ASSERT_TRUE(item1->previous() == item2);
+  ASSERT_TRUE(item2->previous() == item3);
+  ASSERT_TRUE(item3->previous() == item4);
+  ASSERT_TRUE(item4->previous() == nullptr);
 }
 
 TEST_F(TestCountedDeque, insert_3) {
@@ -141,9 +141,9 @@ TEST_F(TestCountedDeque, insert_3) {
   deque.Insert(item4, -1);
 
   ASSERT_TRUE(deque.count() == 4);
-  ASSERT_TRUE(item1->_previous() == item2);
-  ASSERT_TRUE(item2->_previous() == item3);
-  ASSERT_TRUE(item3->_previous() == nullptr);
-  ASSERT_TRUE(item1->_next() == item4);
-  ASSERT_TRUE(item4->_next() == nullptr);
+  ASSERT_TRUE(item1->previous() == item2);
+  ASSERT_TRUE(item2->previous() == item3);
+  ASSERT_TRUE(item3->previous() == nullptr);
+  ASSERT_TRUE(item1->next() == item4);
+  ASSERT_TRUE(item4->next() == nullptr);
 }

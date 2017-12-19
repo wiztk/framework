@@ -108,7 +108,7 @@ class AddressInfoList {
 
   AddressInfo *operator[](int index) const { return deque_.GetAt(index); }
 
-  size_t size() const { return deque_.GetSize(); }
+  size_t size() const { return deque_.GetCount(); }
 
  private:
 

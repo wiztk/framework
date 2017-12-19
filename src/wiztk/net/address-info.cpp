@@ -64,13 +64,15 @@ AddressInfo::~AddressInfo() {
 AddressInfoList::~AddressInfoList() {
   typedef base::Deque<AddressInfo> Deque;
 
-  if (deque_.GetSize() > 0) {
+  if (deque_.GetCount() > 0) {
     freeaddrinfo(deque_[0]->address_info_);
   }
 
   for (Deque::Iterator it = deque_.begin(); it; ++it) {
     it.element()->address_info_ = nullptr;
   }
+
+  deque_.Clear([](base::Binode *obj) { delete obj; });
 }
 
 } // namespace net

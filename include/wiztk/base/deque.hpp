@@ -28,7 +28,7 @@ namespace base {
 /**
  * @ingroup base
  * @brief A simple double-ended queue container
- * @tparam T Must be a BiNode class or subclass
+ * @tparam T Must be a subclass of Binode
  */
 template<typename T>
 class Deque {
@@ -36,6 +36,8 @@ class Deque {
  public:
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Deque);
+
+  typedef std::function<void(Binode *)> DeleterType;
 
   /**
    * @brief A nested iterator for deque
@@ -197,6 +199,8 @@ class Deque {
 
   Deque();
 
+  explicit Deque(const DeleterType &deleter);
+
   virtual ~Deque();
 
   void PushFront(T *item);
@@ -205,11 +209,16 @@ class Deque {
 
   void Insert(T *item, int index = 0);
 
-  size_t GetSize() const;
+  size_t GetCount() const;
 
   bool IsEmpty() const;
 
-  void Clear(const std::function<void(Binode *)> &deleter);
+  /**
+   * @brief Use the member deleter to remove all nodes.
+   */
+  void Clear();
+
+  void Clear(const DeleterType &deleter);
 
   T *operator[](int index) const {
     return GetAt(index);
@@ -254,6 +263,7 @@ class Deque {
   Binode head_;
   Binode tail_;
 
+  std::function<void(Binode *)> deleter_;
 };
 
 template<typename T>
@@ -263,8 +273,14 @@ Deque<T>::Deque() {
 }
 
 template<typename T>
+Deque<T>::Deque(const DeleterType &deleter)
+    : Deque() {
+  deleter_ = deleter;
+}
+
+template<typename T>
 Deque<T>::~Deque() {
-  Clear([](Binode *obj) { delete obj; });
+  Clear();
 }
 
 template<typename T>
@@ -299,7 +315,7 @@ void Deque<T>::Insert(T *item, int index) {
 }
 
 template<typename T>
-size_t Deque<T>::GetSize() const {
+size_t Deque<T>::GetCount() const {
   size_t size = 0;
 
   Binode *element = head_.next_;
@@ -317,11 +333,21 @@ bool Deque<T>::IsEmpty() const {
 }
 
 template<typename T>
-void Deque<T>::Clear(const std::function<void(Binode *)> &deleter) {
+void Deque<T>::Clear() {
   Binode *tmp = head_.next_;
   while (tmp != &tail_) {
     tmp->Unlink();
-    deleter(tmp);
+    if (deleter_) deleter_(tmp);
+    tmp = head_.next_;
+  }
+}
+
+template<typename T>
+void Deque<T>::Clear(const DeleterType &deleter) {
+  Binode *tmp = head_.next_;
+  while (tmp != &tail_) {
+    tmp->Unlink();
+    if (deleter) deleter(tmp);
     tmp = head_.next_;
   }
 }
