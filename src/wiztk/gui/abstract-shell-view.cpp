@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,8 @@ AbstractShellView::AbstractShellView(int width,
     ViewSurface::Shell::Toplevel *top_level_role = ViewSurface::Shell::Toplevel::Get(p_->shell_surface);
     top_level_role->SetTitle(title);
   } else {
-    p_->shell_surface = ViewSurface::Shell::Popup::Create(p_->parent->p_->shell_surface, this, Theme::GetShadowMargin());
+    p_->shell_surface =
+        ViewSurface::Shell::Popup::Create(p_->parent->p_->shell_surface, this, Theme::GetShadowMargin());
     // TODO: create popup shell surface
   }
 
@@ -345,35 +346,35 @@ void AbstractShellView::Draw(AbstractView *view, const Context &context) {
 
 void AbstractShellView::DispatchMouseEnterEvent(AbstractView *view, MouseEvent *event) {
   Point cursor = event->GetWindowXY();
-  EventTask *mouse_task = EventTask::GetMouseTask(this);
+  MouseEventNode *mouse_task = MouseEventNode::Get(this);
 
-  if (nullptr == mouse_task->GetNext()) {
+  if (nullptr == mouse_task->next()) {
     _ASSERT(mouse_task->event_handler() == this);
-    _ASSERT(nullptr == mouse_task->GetPrevious());
+    _ASSERT(nullptr == mouse_task->previous());
     if (view->Contain(cursor.x, cursor.y)) {
       view->OnMouseEnter(event);
       if (event->IsAccepted()) {
-        mouse_task->push_back(EventTask::GetMouseTask(view));
-        mouse_task = static_cast<EventTask *>(mouse_task->GetNext());
+        mouse_task->push_back(MouseEventNode::Get(view));
+        mouse_task = mouse_task->next();
         p_->DispatchMouseEnterEvent(view, event, mouse_task);
       } else if (event->IsIgnored()) {
         p_->DispatchMouseEnterEvent(view, event, mouse_task);
       }
     }
   } else {
-    while (mouse_task->GetNext()) mouse_task = static_cast<EventTask *>(mouse_task->GetNext()); // move to tail
+    while (mouse_task->next()) mouse_task = mouse_task->next(); // move to tail
     AbstractView *last = nullptr;
-    EventTask *tail = nullptr;
-    while (mouse_task->GetPrevious()) {
+    MouseEventNode *tail = nullptr;
+    while (mouse_task->previous()) {
       tail = mouse_task;
       last = static_cast<AbstractView *>(tail->event_handler());
       if (last->Contain(cursor.x, cursor.y)) {
         break;
       }
-      mouse_task = static_cast<EventTask *>(mouse_task->GetPrevious());
+      mouse_task = mouse_task->previous();
       tail->unlink();
       last->OnMouseLeave();
-      if (nullptr == mouse_task->GetPrevious()) break;
+      if (nullptr == mouse_task->previous()) break;
     }
 
     p_->DispatchMouseEnterEvent(last, event, mouse_task);
@@ -381,12 +382,12 @@ void AbstractShellView::DispatchMouseEnterEvent(AbstractView *view, MouseEvent *
 }
 
 void AbstractShellView::DispatchMouseLeaveEvent() {
-  EventTask *it = EventTask::GetMouseTask(this)->GetNext();
+  MouseEventNode *it = MouseEventNode::Get(this)->next();
 
-  EventTask *tmp = nullptr;
+  MouseEventNode *tmp = nullptr;
   while (it) {
     tmp = it;
-    it = it->GetNext();
+    it = it->next();
     tmp->unlink();
     tmp->event_handler()->OnMouseLeave();
   }
@@ -395,22 +396,22 @@ void AbstractShellView::DispatchMouseLeaveEvent() {
 void AbstractShellView::DispatchMouseDownEvent(MouseEvent *event) {
   _ASSERT(event->GetState() == kMouseButtonPressed);
 
-  EventTask *it = EventTask::GetMouseTask(this)->GetNext();
+  MouseEventNode *it = MouseEventNode::Get(this)->next();
   while (it) {
     it->event_handler()->OnMouseDown(event);
     if (event->IsRejected()) break;
-    it = it->GetNext();
+    it = it->next();
   }
 }
 
 void AbstractShellView::DispatchMouseUpEvent(MouseEvent *event) {
   _ASSERT(event->GetState() == kMouseButtonReleased);
 
-  EventTask *it = EventTask::GetMouseTask(this)->GetNext();
+  MouseEventNode *it = MouseEventNode::Get(this)->next();
   while (it) {
     it->event_handler()->OnMouseUp(event);
     if (event->IsRejected()) break;
-    it = it->GetNext();
+    it = it->next();
   }
 }
 
@@ -509,7 +510,7 @@ void AbstractShellView::GeometryTask::Run() const {
   shell_view_->OnSaveSize(shell_view_->p_->last_size, shell_view_->p_->size);
   shell_view_->p_->last_size = shell_view_->p_->size;
   ViewSurface::Shell::Get(shell_view_->p_->shell_surface)->ResizeWindow(shell_view_->p_->size.width,
-                                                                    shell_view_->p_->size.height);  // Call xdg surface api
+                                                                        shell_view_->p_->size.height);  // Call xdg surface api
 }
 
 } // namespace gui

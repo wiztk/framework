@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@
 
 #include "wiztk/base/rect.hpp"
 #include "wiztk/base/margin.hpp"
+
+#include "wiztk/gui/runnable-event-node.hpp"
 
 #include <cstdint>
 #include <string>
@@ -60,17 +62,17 @@ WIZTK_EXPORT class AbstractShellView : public AbstractEventHandler {
   /**
    * @brief A nested class to update the size
    */
-  class GeometryTask : public Task {
+  class GeometryTask : public RunnableEventNode {
 
    public:
 
     WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(GeometryTask);
     GeometryTask() = delete;
 
-    GeometryTask(AbstractShellView *shell_view)
-        : Task(), shell_view_(shell_view) {}
+    explicit GeometryTask(AbstractShellView *shell_view)
+        : RunnableEventNode(), shell_view_(shell_view) {}
 
-    virtual ~GeometryTask() = default;
+    ~GeometryTask() final = default;
 
     /**
      * @brief Do the task to resize the shell view
@@ -78,7 +80,7 @@ WIZTK_EXPORT class AbstractShellView : public AbstractEventHandler {
      * This method will call AbstractShellView::OnSaveSize(), record the last size and
      * use the xdg shell api to set the window geometry.
      */
-    virtual void Run() const final;
+    void Run() const final;
 
    private:
 
@@ -114,8 +116,8 @@ WIZTK_EXPORT class AbstractShellView : public AbstractEventHandler {
    * @param parent Parent shell view
    * @param frame The frame used to show the background and title bar
    */
-  AbstractShellView(const char *title,
-                    AbstractShellView *parent = nullptr);
+  explicit AbstractShellView(const char *title,
+                             AbstractShellView *parent = nullptr);
 
   /**
    * @brief Constructor

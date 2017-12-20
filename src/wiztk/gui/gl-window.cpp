@@ -278,7 +278,7 @@ void GLWindow::OnRenderSurface(ViewSurface *surface) {
   ViewSurface *shell_surface = GetShellSurface();
   const Margin &margin = shell_surface->margin();
   _ASSERT(shell_surface == surface);
-  
+
   Canvas canvas((unsigned char *) p_->frame_buffer.GetData(),
                 p_->frame_buffer.GetSize().width,
                 p_->frame_buffer.GetSize().height);
@@ -356,7 +356,7 @@ void GLWindow::OnMouseDown(MouseEvent *event) {
 
     int location = p_->GetMouseLocation(event);
 
-    if (location == kClientArea && (nullptr == EventTask::GetMouseTask(this)->GetNext())) {
+    if (location == kClientArea && (nullptr == MouseEventNode::Get(this)->next())) {
       MoveWithMouse(event);
       event->Ignore();
       return;

@@ -50,6 +50,10 @@ class Binode {
 
   WIZTK_DECLARE_NONCOPYABLE(Binode);
 
+  /**
+   * @brief Move constructor.
+   * @param other
+   */
   Binode(Binode &&other) noexcept
       : previous_(other.previous_), next_(other.next_) {
     other.previous_ = nullptr;
@@ -63,6 +67,11 @@ class Binode {
    */
   virtual ~Binode();
 
+  /**
+   * @brief Move operator.
+   * @param other
+   * @return
+   */
   Binode &operator=(Binode &&other) noexcept {
     previous_ = other.previous_;
     next_ = other.next_;
@@ -102,10 +111,6 @@ class Binode {
     * @brief Default constructor
     */
   Binode() = default;
-
-  virtual void OnUnlinked() { /* Override this in subclass */ }
-
-  virtual void OnLinked() { /* Override this in subclass */ }
 
   Binode *previous_ = nullptr;
   Binode *next_ = nullptr;

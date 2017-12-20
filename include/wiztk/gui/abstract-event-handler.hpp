@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 #include "wiztk/base/sigcxx.hpp"
 #include "wiztk/base/string.hpp"
 
-#include "wiztk/gui/task.hpp"
+#include "wiztk/gui/event-node.hpp"
 
 #include <memory>
 
@@ -52,7 +52,7 @@ class Output;
  * @see Input
  * @see Surface
  */
-WIZTK_EXPORT class AbstractEventHandler : public base::Trackable {
+class WIZTK_EXPORT AbstractEventHandler : public base::Trackable {
 
   friend class Input;
   friend class Display;
@@ -69,12 +69,15 @@ WIZTK_EXPORT class AbstractEventHandler : public base::Trackable {
 
   WIZTK_DECLARE_NONCOPYABLE(AbstractEventHandler);
 
-  class EventTask : public Task {
+  /**
+   * @brief Nested class represents an mouse event node.
+   */
+  class MouseEventNode : public EventNode<MouseEventNode> {
 
    public:
 
-    WIZTK_DECLARE_NONCOPYABLE(EventTask);
-    EventTask() = delete;
+    WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(MouseEventNode);
+    MouseEventNode() = delete;
 
     /**
      * @brief Constructor
@@ -82,33 +85,54 @@ WIZTK_EXPORT class AbstractEventHandler : public base::Trackable {
      *
      * @note The parameter cannot be nullptr.
      */
-    EventTask(AbstractEventHandler *event_handler)
-        : Task(), event_handler_(event_handler) {}
+    explicit MouseEventNode(AbstractEventHandler *event_handler)
+        : EventNode<MouseEventNode>(), event_handler_(event_handler) {}
 
     /**
      * @brief Destructor
      */
-    ~EventTask() override {}
+    ~MouseEventNode() override = default;
 
-    AbstractEventHandler *event_handler() const { return event_handler_; }
+    inline AbstractEventHandler *event_handler() const { return event_handler_; }
 
-    EventTask *GetPrevious() const {
-      return static_cast<EventTask *>(previous());
-    }
-
-    EventTask *GetNext() const {
-      return static_cast<EventTask *>(next());
-    }
-
-    static EventTask *GetMouseTask(const AbstractEventHandler *event_hander);
-
-    static EventTask *GetMouseMotionTask(const AbstractEventHandler *event_handler);
+    static MouseEventNode *Get(const AbstractEventHandler *event_hander);
 
    private:
 
+    AbstractEventHandler *event_handler_;
+
+  };
+
+  /**
+    * @brief Nested class represents an mouse motion event node.
+    */
+  class MouseMotionEventNode : public EventNode<MouseMotionEventNode> {
+
+   public:
+
+    WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(MouseMotionEventNode);
+    MouseMotionEventNode() = delete;
+
     /**
-     * @brief A pointer to an AbstractEventHandler object
+     * @brief Constructor
+     * @param event_handler An AbstractEventHandler object
+     *
+     * @note The parameter cannot be nullptr.
      */
+    explicit MouseMotionEventNode(AbstractEventHandler *event_handler)
+        : EventNode<MouseMotionEventNode>(), event_handler_(event_handler) {}
+
+    /**
+     * @brief Destructor
+     */
+    ~MouseMotionEventNode() override = default;
+
+    inline AbstractEventHandler *event_handler() const { return event_handler_; }
+
+    static MouseMotionEventNode *Get(const AbstractEventHandler *event_handler);
+
+   private:
+
     AbstractEventHandler *event_handler_;
 
   };

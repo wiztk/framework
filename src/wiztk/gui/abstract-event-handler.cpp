@@ -44,12 +44,14 @@ void AbstractEventHandler::AuditDestroyingToken(base::internal::Token */*token*/
 
 // --------------------
 
-AbstractEventHandler::EventTask *AbstractEventHandler::EventTask::GetMouseTask(const AbstractEventHandler *event_hander) {
-  return &event_hander->__PROPERTY__(mouse_task);
+AbstractEventHandler::MouseEventNode *
+AbstractEventHandler::MouseEventNode::Get(const AbstractEventHandler *event_hander) {
+  return &event_hander->__PROPERTY__(mouse_event_node);
 }
 
-AbstractEventHandler::EventTask *AbstractEventHandler::EventTask::GetMouseMotionTask(const AbstractEventHandler *event_handler) {
-  return &event_handler->__PROPERTY__(mouse_motion_task);
+AbstractEventHandler::MouseMotionEventNode *
+AbstractEventHandler::MouseMotionEventNode::Get(const AbstractEventHandler *event_handler) {
+  return &event_handler->__PROPERTY__(mouse_motion_event_node);
 }
 
 } // namespace gui

@@ -75,7 +75,7 @@ struct Application::Private {
 
   std::thread::id thread_id;
 
-  base::Deque<Task> task_deque;
+  base::Deque<RunnableEventNode> task_deque;
 
   /**
 * @brief Create an epoll file descriptor
@@ -234,8 +234,8 @@ int Application::Run() {
   struct epoll_event ep[Private::kMaxEpollEvents];
   int count = 0;
   int ret = 0;
-  Task *task = nullptr;
-  base::Deque<Task>::Iterator task_deque_iterator;
+  RunnableEventNode *task = nullptr;
+  base::Deque<RunnableEventNode>::Iterator task_deque_iterator;
   base::Deque<ViewSurface::RenderTask>::Iterator render_task_iterator;
   base::Deque<ViewSurface::CommitTask>::Iterator commit_task_iterator;
 
@@ -329,7 +329,7 @@ const std::thread::id &Application::GetThreadID() {
   return p_->thread_id;
 }
 
-base::Deque<Task> &Application::GetTaskDeque() {
+base::Deque<RunnableEventNode> &Application::GetTaskDeque() {
   return p_->task_deque;
 }
 

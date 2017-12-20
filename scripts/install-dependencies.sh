@@ -1,8 +1,18 @@
 #!/usr/bin/env sh
 
-OS=$(lsb_release -si)
+which lsb_release 1>/dev/null 2>&1
+
+if [ $? = 0 ]; then
+    OS=$(lsb_release -si)
+elif [ -f /etc/os-release ]; then
+    source /etc/os-release
+    OS=${NAME}
+else
+    echo "Unknown OS"
+fi
+
 ARCH=$(uname -m | sed 's/x86_//;s/i[3-6]86/32/')
-VER=$(lsb_release -sr)
+# VER=$(lsb_release -sr)
 PACKAGES=""
 
 if [ "$OS" = "Ubuntu" ]; then
@@ -34,6 +44,7 @@ if [ "$OS" = "Ubuntu" ]; then
 		graphviz"
 	sudo apt install ${PACKAGES}
 elif [ "$OS" = "Fedora" ]; then
+    echo "Please make sure that rpmfusion repos were loaded."
 	PACKAGES="gcc-c++ \
 		cmake \
 		wayland-devel \
@@ -53,11 +64,15 @@ elif [ "$OS" = "Fedora" ]; then
 		freetype-devel \
 		fontconfig-devel \
 		ffmpeg-devel \
+		OpenImageIO-devel \
+		libicu-devel \
+		OpenEXR-devel \
 		doxygen \
 		graphviz"
-	sudo dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+	# sudo dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 	sudo dnf install ${PACKAGES}
 else
 	echo "Unsupported Linux distribution!"
 fi
 
+# Recommended to install ccache.

@@ -33,8 +33,6 @@ void Binode::PushFront(Binode *other) {
   other->previous_ = previous_;
   previous_ = other;
   other->next_ = this;
-
-  OnLinked();
 }
 
 void Binode::PushBack(Binode *other) {
@@ -46,8 +44,6 @@ void Binode::PushBack(Binode *other) {
   other->next_ = next_;
   next_ = other;
   other->previous_ = this;
-
-  OnLinked();
 }
 
 void Binode::Unlink() {
@@ -56,8 +52,6 @@ void Binode::Unlink() {
 
   previous_ = nullptr;
   next_ = nullptr;
-
-  OnUnlinked();
 }
 
 } // namespace base

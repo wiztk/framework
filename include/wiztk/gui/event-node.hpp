@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,53 +14,49 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_TASK_HPP_
-#define WIZTK_GUI_TASK_HPP_
+#ifndef WIZTK_GUI_EVENT_NODE_HPP_
+#define WIZTK_GUI_EVENT_NODE_HPP_
 
 #include "wiztk/base/macros.hpp"
-#include "wiztk/base/deque.hpp"
-
-#include <cstdint>
+#include "wiztk/base/binode.hpp"
 
 namespace wiztk {
 namespace gui {
 
-class WIZTK_EXPORT Task : protected base::Binode {
+/**
+ * @ingroup gui
+ * @brief A template class represents an event in queue.
+ * @tparam T Usually a type of subclass
+ */
+template<typename T>
+class EventNode : protected base::Binode {
 
-  template<typename T> friend
+  template<typename R> friend
   class base::Deque;
 
  public:
 
-  WIZTK_DECLARE_NONCOPYABLE(Task);
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(EventNode);
 
-  Task() = default;
+  EventNode() = default;
 
-  Task(Task &&) = default;
+  ~EventNode() override = default;
 
-  ~Task() override = default;
+  inline void push_back(T *node) { PushBack(node); }
 
-  Task &operator=(Task &&) = default;
-
-  inline void push_back(Task *task) { PushBack(task); }
-
-  inline void push_front(Task *task) { PushFront(task); }
+  inline void push_front(T *node) { PushFront(node); }
 
   inline void unlink() { Unlink(); }
 
   inline bool is_linked() const { return IsLinked(); }
 
-  inline Task *previous() const { return static_cast<Task *>(previous_); }
+  inline T *previous() const { return static_cast<T *>(previous_); }
 
-  inline Task *next() const { return static_cast<Task *>(next_); }
-
-  virtual void Run() const {
-    // override this
-  }
+  inline T *next() const { return static_cast<T *>(next_); }
 
 };
 
 } // namespace gui
 } // namespace wiztk
 
-#endif // WIZTK_GUI_TASK_HPP_
+#endif // WIZTK_GUI_EVENT_NODE_HPP_

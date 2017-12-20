@@ -116,7 +116,7 @@ struct AbstractShellView::Private : public base::Property<AbstractShellView> {
 
   void DispatchMouseEnterEvent(AbstractView *parent,
                                MouseEvent *event,
-                               EventTask *tail);
+                               MouseEventNode *tail);
 
 };
 

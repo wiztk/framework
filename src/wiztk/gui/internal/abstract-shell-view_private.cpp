@@ -72,14 +72,16 @@ void AbstractShellView::Private::OnXdgToplevelClose() {
   owner()->Close();
 }
 
-void AbstractShellView::Private::DispatchMouseEnterEvent(AbstractView *parent, MouseEvent *event, EventTask *tail) {
+void AbstractShellView::Private::DispatchMouseEnterEvent(AbstractView *parent,
+                                                         MouseEvent *event,
+                                                         MouseEventNode *tail) {
   AbstractView *sub = parent->DispatchMouseEnterEvent(event);
   while (nullptr != sub) {
     _ASSERT(sub != parent);
     sub->OnMouseEnter(event);
     if (event->IsAccepted()) {
-      tail->push_back(EventTask::GetMouseTask(sub));
-      tail = static_cast<EventTask *>(tail->GetNext());
+      tail->push_back(MouseEventNode::Get(sub));
+      tail = static_cast<MouseEventNode *>(tail->next());
       parent = sub;
       sub = parent->DispatchMouseEnterEvent(event);
     } else if (event->IsIgnored()) {

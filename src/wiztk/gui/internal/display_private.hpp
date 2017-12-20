@@ -19,7 +19,7 @@
 
 #include "wiztk/gui/display.hpp"
 
-#include "wiztk/gui/task.hpp"
+#include "wiztk/gui/runnable-event-node.hpp"
 #include "wiztk/gui/abstract-epoll-task.hpp"
 
 #include "xdg-shell-unstable-v6-client-protocol.h"

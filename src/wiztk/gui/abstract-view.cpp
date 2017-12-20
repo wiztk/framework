@@ -403,7 +403,7 @@ const AnchorGroup &AbstractView::GetAnchorGroup(Alignment align) const {
 
 void AbstractView::Update(bool validate) {
   if (!validate) {
-    p_->redraw_node.Unlink();
+    p_->redraw_node.unlink();
     return;
   }
 
@@ -496,10 +496,10 @@ void AbstractView::DispatchUpdate() {
 }
 
 void AbstractView::OnRequestUpdateFrom(AbstractView *view) {
-  if (p_->redraw_node.IsLinked()) {
+  if (p_->redraw_node.is_linked()) {
     if (view != this) {
       // This view is going to be redrawn, just push back the task of the sub view
-      p_->redraw_node.PushBack(&view->p_->redraw_node);
+      p_->redraw_node.push_back(&view->p_->redraw_node);
       return;
     }
   }
@@ -585,7 +585,7 @@ bool AbstractView::RequestSaveGeometry(const RectF &geometry) {
     p_->shell_view->OnRequestSaveGeometry(this);
     ret = p_->geometry_task.is_linked();
   } else {
-    base::Deque<Task> &deque = Application::instance()->GetTaskDeque();
+    base::Deque<RunnableEventNode> &deque = Application::instance()->GetTaskDeque();
     deque.PushBack(&p_->geometry_task);
   }
 

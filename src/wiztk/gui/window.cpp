@@ -633,7 +633,7 @@ void Window::OnMouseDown(MouseEvent *event) {
 
     int location = GetMouseLocation(event);
 
-    if (location == kTitleBar && (nullptr == EventTask::GetMouseTask(this)->GetNext())) {
+    if (location == kTitleBar && (nullptr == MouseEventNode::Get(this)->next())) {
       MoveWithMouse(event);
       event->Ignore();
       return;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,15 @@
 #ifndef WIZTK_GUI_ABSTRACT_VIEW_HPP_
 #define WIZTK_GUI_ABSTRACT_VIEW_HPP_
 
-#include "abstract-event-handler.hpp"
+#include "wiztk/gui/abstract-event-handler.hpp"
 
 #include "wiztk/base/types.hpp"
 #include "wiztk/base/size.hpp"
 #include "wiztk/base/rect.hpp"
 #include "wiztk/base/padding.hpp"
 
-#include "anchor-group.hpp"
+#include "wiztk/gui/anchor-group.hpp"
+#include "wiztk/gui/runnable-event-node.hpp"
 
 #include <memory>
 
@@ -95,7 +96,7 @@ WIZTK_EXPORT class AbstractView : public AbstractEventHandler {
   class Iterator;
   class ConstIterator;
 
-  class GeometryTask : public Task {
+  class GeometryTask : public RunnableEventNode {
 
    public:
 
@@ -103,11 +104,11 @@ WIZTK_EXPORT class AbstractView : public AbstractEventHandler {
     GeometryTask() = delete;
 
     explicit GeometryTask(AbstractView *view)
-        : Task(), view_(view) {}
+        : RunnableEventNode(), view_(view) {}
 
-    virtual ~GeometryTask() = default;
+    ~GeometryTask() final = default;
 
-    virtual void Run() const final;
+    void Run() const final;
 
     static GeometryTask *Get(const AbstractView *view);
 
@@ -117,7 +118,7 @@ WIZTK_EXPORT class AbstractView : public AbstractEventHandler {
 
   };
 
-  class RenderNode : public base::Binode {
+  class RenderNode : public EventNode<RenderNode> {
 
    public:
 
@@ -125,11 +126,11 @@ WIZTK_EXPORT class AbstractView : public AbstractEventHandler {
     RenderNode() = delete;
 
     explicit RenderNode(AbstractView *view)
-        : base::Binode(), view_(view) {}
+        : EventNode<RenderNode>(), view_(view) {}
 
-    virtual ~RenderNode() = default;
+    ~RenderNode() final = default;
 
-    AbstractView *view() const { return view_; }
+    inline AbstractView *view() const { return view_; }
 
     static RenderNode *Get(const AbstractView *view);
 
