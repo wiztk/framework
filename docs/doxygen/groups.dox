@@ -23,12 +23,6 @@
  */
 
 /**
- * @ingroup base
- * @defgroup base_threading Threading
- * @brief High-level threading interface
- */
-
-/**
  * @defgroup numerical Numerical
  * @brief The numerical algorithm module
  *
@@ -63,19 +57,21 @@
  */
 
 /**
+ * @defgroup system System
+ * @brief System related code.
+ */
+
+/**
+ * @ingroup system
+ * @defgroup system_threading Threading
+ * @brief High-level threading interface
+ */
+
+/**
  * @defgroup gui GUI
  * @brief The main module provides GUI elements
  *
  * The gui module provides classes to build user interface displayed on the screen.
- *
- * The most important base classes in this module are:
- *
- * - skland::AbstractEventHandler: the abstract class represents an object to handle input events and interact with skland::Surface.
- * - skland::Surface: represents the surface on screen, it contains a native wayland surface.
- * - skland::AbstractShellView: the base class for windows/menu/popup which use the shell surface for display and contain views.
- * - skland::AbstractView: the base class for all views such as label/buttons/slider etc.
- * - skland::Application: class for the singleton application instance.
- * - skland::Display: class for the singleton connection to the compositor, which contains the native wayland display.
  */
 
 /**

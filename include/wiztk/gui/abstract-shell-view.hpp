@@ -22,7 +22,7 @@
 #include "wiztk/base/rect.hpp"
 #include "wiztk/base/margin.hpp"
 
-#include "wiztk/gui/runnable-event-node.hpp"
+#include "wiztk/gui/task-node.hpp"
 
 #include <cstdint>
 #include <string>
@@ -62,7 +62,7 @@ WIZTK_EXPORT class AbstractShellView : public AbstractEventHandler {
   /**
    * @brief A nested class to update the size
    */
-  class GeometryTask : public RunnableEventNode {
+  class GeometryTask : public TaskNode {
 
    public:
 
@@ -70,7 +70,7 @@ WIZTK_EXPORT class AbstractShellView : public AbstractEventHandler {
     GeometryTask() = delete;
 
     explicit GeometryTask(AbstractShellView *shell_view)
-        : RunnableEventNode(), shell_view_(shell_view) {}
+        : TaskNode(), shell_view_(shell_view) {}
 
     ~GeometryTask() final = default;
 

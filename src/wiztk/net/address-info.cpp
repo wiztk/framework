@@ -69,10 +69,10 @@ AddressInfoList::~AddressInfoList() {
   }
 
   for (Deque::Iterator it = deque_.begin(); it; ++it) {
-    it.element()->address_info_ = nullptr;
+    it.get()->address_info_ = nullptr;
   }
 
-  deque_.Clear([](base::Binode *obj) { delete obj; });
+  deque_.Clear([](base::BinodeBase *obj) { delete obj; });
 }
 
 } // namespace net

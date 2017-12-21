@@ -22,7 +22,7 @@
 
 #include "wiztk/base/deque.hpp"
 
-#include "runnable-event-node.hpp"
+#include "task-node.hpp"
 #include "display.hpp"
 
 namespace wiztk {
@@ -105,7 +105,7 @@ class WIZTK_EXPORT Application {
    * @brief Get the defferred task deque
    * @return
    */
-  base::Deque<RunnableEventNode> &GetTaskDeque();
+  base::Deque<TaskNode> &GetTaskDeque();
 
   static inline Application *instance() { return kInstance; }
 

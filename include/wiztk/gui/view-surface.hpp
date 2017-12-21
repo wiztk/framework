@@ -24,7 +24,7 @@
 #include "wiztk/graphic/abstract-surface.hpp"
 
 #include "abstract-view.hpp"
-#include "runnable-event-node.hpp"
+#include "task-node.hpp"
 
 #include <wayland-egl.h>
 #include <memory>
@@ -218,7 +218,7 @@ class ViewSurface : public graphic::AbstractSurface, public base::Trackable {
 
  private:
 
-  class RenderTask : public RunnableEventNode {
+  class RenderTask : public TaskNode {
 
    public:
 
@@ -238,7 +238,7 @@ class ViewSurface : public graphic::AbstractSurface, public base::Trackable {
 
   };
 
-  class CommitTask : public RunnableEventNode {
+  class CommitTask : public TaskNode {
 
    public:
 

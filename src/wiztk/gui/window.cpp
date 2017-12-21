@@ -485,8 +485,8 @@ void Window::OnRenderSurface(ViewSurface *surface) {
 
   AbstractView *view = nullptr;
   while (it != deque.end()) {
-    view = it.element()->view();
-    it.Remove();
+    view = it.get()->view();
+    it.remove();
     p_->RecursiveDraw(view, context);
     surface->Damage(view->GetX() + margin.l,
                     view->GetY() + margin.t,

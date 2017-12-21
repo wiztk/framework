@@ -19,8 +19,152 @@
 
 #include "wiztk/base/macros.hpp"
 
+#include "wiztk/base/binode.hpp"
+#include "wiztk/base/deque.hpp"
+
 namespace wiztk {
 namespace base {
+
+// Foward declaration:
+class CountedDequeBase;
+
+class CountedBinodeBase : public BinodeBase {
+
+  friend class CountedDequeBase;
+
+  template<typename T> friend
+  class CountedBinode;
+
+  template<typename T> friend
+  class CountedDequeExt;
+
+ public:
+
+  ~CountedBinodeBase() override;
+
+ protected:
+
+  CountedDequeBase *deque_ = nullptr;
+
+ private:
+
+  CountedBinodeBase() = default;
+
+};
+
+template<typename T>
+class CountedBinode : protected CountedBinodeBase {
+
+  template<typename R> friend
+  class CountedDequeExt;
+
+ public:
+
+  CountedBinode() = default;
+
+  ~CountedBinode() override = default;
+
+  void unlink();
+
+  bool is_linked() const;
+
+  T *previous() const { return static_cast<T *>(previous_); }
+
+  T *next() const { return static_cast<T *>(next_); }
+
+};
+
+class CountedDequeBase : public Deque<CountedBinodeBase> {
+
+  friend class CountedBinodeBase;
+
+  template<typename T> friend
+  class CountedBinode;
+
+  template<typename T> friend
+  class CountedDequeExt;
+
+ public:
+
+  ~CountedDequeBase() override;
+
+ protected:
+
+  size_t count_ = 0;
+
+ private:
+
+  CountedDequeBase() = default;
+
+  explicit CountedDequeBase(const DeleterType &deleter)
+      : Deque<CountedBinodeBase>(deleter) {}
+
+};
+
+template<typename T>
+class CountedDequeExt : protected CountedDequeBase {
+
+ public:
+
+  CountedDequeExt() = default;
+
+  explicit CountedDequeExt(const DeleterType &deleter)
+      : CountedDequeBase(deleter) {}
+
+  ~CountedDequeExt() override = default;
+
+  void push_back(T *obj) {
+    obj->unlink();
+    PushBack(obj);
+    obj->deque_ = this;
+    count_++;
+  }
+
+  void push_front(T *obj) {
+    obj->unlink();
+    PushFront(obj);
+    obj->deque_ = this;
+    count_++;
+  }
+
+  void insert(T *obj, int index = 0) {
+    obj->unlink();
+    Insert(obj, index);
+    obj->deque_ = this;
+    count_++;
+  }
+
+  void clear() { Clear(); }
+
+  void clear(const DeleterType &deleter) { Clear(deleter); }
+
+  size_t count() const { return count_; }
+
+};
+
+template<typename T>
+void CountedBinode<T>::unlink() {
+  Unlink();
+
+  if (nullptr != deque_) {
+    _ASSERT(deque_->count_ > 0);
+    deque_->count_--;
+    deque_ = nullptr;
+  }
+}
+
+template<typename T>
+bool CountedBinode<T>::is_linked() const {
+  bool ret = IsLinked();
+
+  if (ret) {
+    _ASSERT(nullptr != deque_);
+  }
+
+  return ret;
+}
+
+// ------
 
 /**
  * @ingroup base

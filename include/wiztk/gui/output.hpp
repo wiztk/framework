@@ -22,8 +22,6 @@
 #include "wiztk/base/sigcxx.hpp"
 #include "wiztk/base/counted-deque.hpp"
 
-#include <wayland-client.h>
-
 #include <string>
 #include <memory>
 
@@ -43,7 +41,7 @@ class Output : public base::CountedDeque::Element {
 
   Output(uint32_t id, uint32_t version);
 
-  virtual ~Output();
+  ~Output() final;
 
   SignalRefT<Output *> destroyed() { return destroyed_; }
 

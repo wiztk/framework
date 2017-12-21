@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,31 +14,29 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_RUNNABLE_EVENT_NODE_HPP_
-#define WIZTK_GUI_RUNNABLE_EVENT_NODE_HPP_
+/**
+ * @file Header file for Thread class.
+ */
 
-#include "wiztk/gui/event-node.hpp"
+#ifndef WIZTK_SYSTEM_THREADING_THREAD_HPP_
+#define WIZTK_SYSTEM_THREADING_THREAD_HPP_
 
 namespace wiztk {
-namespace gui {
+namespace system {
 
-class WIZTK_EXPORT RunnableEventNode : public EventNode<RunnableEventNode> {
+/**
+ * @ingroup system
+ * @brief A class to create and control a thread.
+ */
+class Thread {
 
  public:
 
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(RunnableEventNode);
-
-  RunnableEventNode() = default;
-
-  ~RunnableEventNode() override = default;
-
-  virtual void Run() const {
-    // override this
-  }
+ private:
 
 };
 
-} // namespace gui
-} // namespace wiztk
+}
+}
 
-#endif // WIZTK_GUI_RUNNABLE_EVENT_NODE_HPP_
+#endif // WIZTK_BASE_THREADING_THREAD_HPP_

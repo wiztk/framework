@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 
+/**
+ * @file binode.hpp
+ * @brief Header file for bidirectional node classes.
+ */
+
 #ifndef WIZTK_BASE_BINODE_HPP_
 #define WIZTK_BASE_BINODE_HPP_
 
@@ -28,33 +33,21 @@ namespace base {
  *
  * You cannot initialize an instance of this base class directly. Instead, create and
  * use a subclass.
- *
- * A Binode object can be linked to another by using the PushBack(), PushFront().
- * When needed, use a Deque to manage all nodes, for example:
- * @code
- *  class CustomNode: public base::BiNode {}
- *
- *  base::Deque<CustomNode> deque;
- *  auto node1 = new CustomNode;
- *  auto node2 = new CustomNode;
- *  deque.PushBack(node1);
- *  deque.Insert(node2);
- * @endcode
  */
-class Binode {
+class WIZTK_EXPORT BinodeBase {
 
   template<typename T> friend
   class Deque;
 
  public:
 
-  WIZTK_DECLARE_NONCOPYABLE(Binode);
+  WIZTK_DECLARE_NONCOPYABLE(BinodeBase);
 
   /**
    * @brief Move constructor.
    * @param other
    */
-  Binode(Binode &&other) noexcept
+  BinodeBase(BinodeBase &&other) noexcept
       : previous_(other.previous_), next_(other.next_) {
     other.previous_ = nullptr;
     other.next_ = nullptr;
@@ -65,14 +58,14 @@ class Binode {
    *
    * The destructor will break the link to other node.
    */
-  virtual ~Binode();
+  virtual ~BinodeBase();
 
   /**
    * @brief Move operator.
    * @param other
    * @return
    */
-  Binode &operator=(Binode &&other) noexcept {
+  BinodeBase &operator=(BinodeBase &&other) noexcept {
     previous_ = other.previous_;
     next_ = other.next_;
     other.previous_ = nullptr;
@@ -92,13 +85,13 @@ class Binode {
    * @brief Push another node to the front
    * @param other
    */
-  void PushFront(Binode *other);
+  void PushFront(BinodeBase *other);
 
   /**
    * @brief Push another node to the back
    * @param other
    */
-  void PushBack(Binode *other);
+  void PushBack(BinodeBase *other);
 
   /**
    * @brief Break the link to both the previous and next node
@@ -110,10 +103,47 @@ class Binode {
   /**
     * @brief Default constructor
     */
+  BinodeBase() = default;
+
+  BinodeBase *previous_ = nullptr;
+  BinodeBase *next_ = nullptr;
+
+};
+
+/**
+ * @ingroup base
+ * @brief A template class represents a bidirectional node.
+ * @tparam T Usually a type of subclass
+ */
+template<typename T>
+class WIZTK_EXPORT Binode : protected BinodeBase {
+
+  template<typename R> friend
+  class Deque;
+
+ public:
+
+  WIZTK_DECLARE_NONCOPYABLE(Binode);
+
   Binode() = default;
 
-  Binode *previous_ = nullptr;
-  Binode *next_ = nullptr;
+  Binode(Binode &&) noexcept = default;
+
+  ~Binode() override = default;
+
+  Binode &operator=(Binode &&) noexcept = default;
+
+  inline void push_back(T *node) { PushBack(node); }
+
+  inline void push_front(T *node) { PushFront(node); }
+
+  inline void unlink() { Unlink(); }
+
+  inline bool is_linked() const { return IsLinked(); }
+
+  inline T *previous() const { return static_cast<T *>(previous_); }
+
+  inline T *next() const { return static_cast<T *>(next_); }
 
 };
 

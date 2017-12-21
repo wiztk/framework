@@ -14,55 +14,35 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_INPUT_HPP_
-#define WIZTK_GUI_INPUT_HPP_
+#ifndef WIZTK_GUI_TASK_NODE_HPP_
+#define WIZTK_GUI_TASK_NODE_HPP_
 
-#include "wiztk/base/counted-deque.hpp"
-
-#include <memory>
+#include "wiztk/base/binode.hpp"
 
 namespace wiztk {
 namespace gui {
 
-class Cursor;
-class KeyEvent;
-class MouseEvent;
-class TouchEvent;
-class AbstractView;
-struct ViewTask;
-
 /**
  * @ingroup gui
- * @brief Input manager
+ * @brief Task node which is runnable.
  */
-class WIZTK_EXPORT Input : public base::CountedDeque::Element {
-
-  friend class ViewSurface;
+class WIZTK_EXPORT TaskNode : public base::Binode<TaskNode> {
 
  public:
 
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Input);
-  Input() = delete;
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(TaskNode);
 
-  Input(uint32_t id, uint32_t version);
+  TaskNode() = default;
 
-  ~Input() final;
+  ~TaskNode() override = default;
 
-  void SetCursor(const Cursor *cursor) const;
-
-  uint32_t GetID() const;
-
-  uint32_t GetVersion() const;
-
- private:
-
-  struct Private;
-
-  std::unique_ptr<Private> p_;
+  virtual void Run() const {
+    // override this
+  }
 
 };
 
 } // namespace gui
 } // namespace wiztk
 
-#endif // WIZTK_GUI_INPUT_HPP_
+#endif // WIZTK_GUI_TASK_NODE_HPP_

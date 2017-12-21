@@ -19,8 +19,7 @@
 
 #include "wiztk/base/sigcxx.hpp"
 #include "wiztk/base/string.hpp"
-
-#include "wiztk/gui/event-node.hpp"
+#include "wiztk/base/binode.hpp"
 
 #include <memory>
 
@@ -72,7 +71,7 @@ class WIZTK_EXPORT AbstractEventHandler : public base::Trackable {
   /**
    * @brief Nested class represents an mouse event node.
    */
-  class MouseEventNode : public EventNode<MouseEventNode> {
+  class MouseEventNode : public base::Binode<MouseEventNode> {
 
    public:
 
@@ -86,7 +85,7 @@ class WIZTK_EXPORT AbstractEventHandler : public base::Trackable {
      * @note The parameter cannot be nullptr.
      */
     explicit MouseEventNode(AbstractEventHandler *event_handler)
-        : EventNode<MouseEventNode>(), event_handler_(event_handler) {}
+        : base::Binode<MouseEventNode>(), event_handler_(event_handler) {}
 
     /**
      * @brief Destructor
@@ -106,7 +105,7 @@ class WIZTK_EXPORT AbstractEventHandler : public base::Trackable {
   /**
     * @brief Nested class represents an mouse motion event node.
     */
-  class MouseMotionEventNode : public EventNode<MouseMotionEventNode> {
+  class MouseMotionEventNode : public base::Binode<MouseMotionEventNode> {
 
    public:
 
@@ -120,7 +119,7 @@ class WIZTK_EXPORT AbstractEventHandler : public base::Trackable {
      * @note The parameter cannot be nullptr.
      */
     explicit MouseMotionEventNode(AbstractEventHandler *event_handler)
-        : EventNode<MouseMotionEventNode>(), event_handler_(event_handler) {}
+        : base::Binode<MouseMotionEventNode>(), event_handler_(event_handler) {}
 
     /**
      * @brief Destructor

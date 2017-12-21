@@ -19,6 +19,8 @@
 
 #include <wiztk/gui/output.hpp>
 
+#include <wayland-client.h>
+
 namespace wiztk {
 namespace gui {
 

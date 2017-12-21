@@ -21,6 +21,20 @@
 namespace wiztk {
 namespace base {
 
+CountedBinodeBase::~CountedBinodeBase() {
+  if (nullptr != deque_) {
+    _ASSERT(deque_->count_ > 0);
+    deque_->count_--;
+    deque_ = nullptr;
+  }
+}
+
+CountedDequeBase::~CountedDequeBase() {
+  _ASSERT(count_ >= 0);
+}
+
+// --------
+
 CountedDeque::Element::~Element() {
   if (nullptr != deque_) deque_->Remove(this);
 }

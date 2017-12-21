@@ -53,7 +53,7 @@ struct Token;
 template<typename ... ParamTypes>
 class SignalToken;
 
-class SlotNode : protected Binode {
+class SlotNode : protected BinodeBase {
 
  public:
 

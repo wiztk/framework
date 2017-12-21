@@ -147,3 +147,22 @@ TEST_F(TestCountedDeque, insert_3) {
   ASSERT_TRUE(item1->next() == item4);
   ASSERT_TRUE(item4->next() == nullptr);
 }
+
+class MyNode : public CountedBinode<MyNode> {};
+
+TEST_F(TestCountedDeque, foo_1) {
+  CountedDequeExt<MyNode> deque([](BinodeBase *obj) { delete obj; });
+
+  auto item1 = new MyNode;
+  auto item2 = new MyNode;
+  auto item3 = new MyNode;
+
+  deque.insert(item1);
+  deque.insert(item2);
+  deque.insert(item3);
+
+  ASSERT_TRUE(deque.count() == 3);
+
+  deque.clear();
+  ASSERT_TRUE(deque.count() == 0);
+}

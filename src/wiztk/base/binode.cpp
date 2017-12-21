@@ -19,12 +19,12 @@
 namespace wiztk {
 namespace base {
 
-Binode::~Binode() {
+BinodeBase::~BinodeBase() {
   if (nullptr != previous_) previous_->next_ = next_;
   if (nullptr != next_) next_->previous_ = previous_;
 }
 
-void Binode::PushFront(Binode *other) {
+void BinodeBase::PushFront(BinodeBase *other) {
   if (other == this) return;
 
   other->Unlink();
@@ -35,7 +35,7 @@ void Binode::PushFront(Binode *other) {
   other->next_ = this;
 }
 
-void Binode::PushBack(Binode *other) {
+void BinodeBase::PushBack(BinodeBase *other) {
   if (other == this) return;
 
   other->Unlink();
@@ -46,7 +46,7 @@ void Binode::PushBack(Binode *other) {
   other->previous_ = this;
 }
 
-void Binode::Unlink() {
+void BinodeBase::Unlink() {
   if (nullptr != previous_) previous_->next_ = next_;
   if (nullptr != next_) next_->previous_ = previous_;
 

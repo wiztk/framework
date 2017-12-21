@@ -1,0 +1,24 @@
+/**
+ * @dir include/wiztk
+ * @brief Directory for public header files of this project.
+ */
+
+/**
+ * @dir include/wiztk/base
+ * @brief Header files in 'base' module.
+ */
+
+/**
+ * @dir include/wiztk/base/memory
+ * @brief Header files of memory management.
+ */
+
+/**
+ * @dir include/wiztk/system
+ * @brief Header files in 'system' module.
+ */
+
+/**
+ * @dir include/wiztk/gui
+ * @brief Header files in 'gui' module.
+ */

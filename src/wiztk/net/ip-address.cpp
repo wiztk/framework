@@ -323,7 +323,7 @@ IPv6Address::IPv6Address() {
 // -----------------
 
 IPAddressList::~IPAddressList() {
-  deque_.Clear([](base::Binode *obj) { delete obj; });
+  deque_.Clear([](base::BinodeBase *obj) { delete obj; });
 }
 
 } // namespace net

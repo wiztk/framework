@@ -9,7 +9,7 @@
 using namespace wiztk;
 using namespace wiztk::base;
 
-class MyElement : public Binode {
+class MyElement : public BinodeBase {
 
  public:
 
@@ -20,9 +20,9 @@ class MyElement : public Binode {
 
   int id() const { return id_; };
 
-  Binode *previous() const { return previous_; }
+  BinodeBase *previous() const { return previous_; }
 
-  Binode *next() const { return next_; }
+  BinodeBase *next() const { return next_; }
 
  private:
 
@@ -41,9 +41,9 @@ class MyDeque : public Deque<MyElement> {
 
   ~MyDeque() final = default;
 
-  const Binode *head() const { return &head_; }
+  const BinodeBase *head() const { return &head_; }
 
-  const Binode *tail() const { return &tail_; }
+  const BinodeBase *tail() const { return &tail_; }
 
 };
 
@@ -126,7 +126,7 @@ TEST_F(TestDeque, insert_2) {
   auto item2 = new MyElement(2);
   auto item3 = new MyElement(3);
 
-  MyDeque deque([](Binode *obj) { delete obj; });
+  MyDeque deque([](BinodeBase *obj) { delete obj; });
   deque.Insert(item1);
   deque.Insert(item2);
   deque.Insert(item3);
@@ -177,7 +177,7 @@ TEST_F(TestDeque, get_1) {
   deque.Insert(item2);
   deque.Insert(item1);
 
-  Binode *item = deque[0];
+  BinodeBase *item = deque[0];
   ASSERT_TRUE(item = item1);
 
   item = deque[-1];
@@ -202,20 +202,20 @@ TEST_F(TestDeque, iterator_1) {
 
   MyDeque::Iterator it = deque.begin();
 
-  ASSERT_TRUE(it.element() == item1);
+  ASSERT_TRUE(it.get() == item1);
   ++it;
-  ASSERT_TRUE(it.element() == item2);
+  ASSERT_TRUE(it.get() == item2);
   ++it;
-  ASSERT_TRUE(it.element() == item3);
+  ASSERT_TRUE(it.get() == item3);
   ++it;
   ASSERT_TRUE(it == deque.end());
 
   it = deque.rbegin();
-  ASSERT_TRUE(it.element() == item3);
+  ASSERT_TRUE(it.get() == item3);
   --it;
-  ASSERT_TRUE(it.element() == item2);
+  ASSERT_TRUE(it.get() == item2);
   --it;
-  ASSERT_TRUE(it.element() == item1);
+  ASSERT_TRUE(it.get() == item1);
   --it;
   ASSERT_TRUE(it == deque.rend());
 
@@ -237,7 +237,7 @@ TEST_F(TestDeque, end_1) {
   deque.Insert(item1);
 
   MyDeque::Iterator it = deque.end();
-  ASSERT_TRUE(it.element() == nullptr);
+  ASSERT_TRUE(it.get() == nullptr);
 
   delete item1;
   delete item2;
@@ -257,7 +257,7 @@ TEST_F(TestDeque, rend_1) {
   deque.Insert(item1);
 
   MyDeque::Iterator it = deque.rend();
-  ASSERT_TRUE(it.element() == nullptr);
+  ASSERT_TRUE(it.get() == nullptr);
 
   delete item1;
   delete item2;
@@ -322,7 +322,7 @@ TEST_F(TestDeque, clear_1) {
   deque.PushBack(item2);
   deque.PushBack(item3);
 
-  deque.Clear([](Binode *obj) { delete obj; });
+  deque.Clear([](BinodeBase *obj) { delete obj; });
 
   ASSERT_TRUE(deque.IsEmpty());
 }

@@ -25,7 +25,7 @@
 #include "wiztk/base/padding.hpp"
 
 #include "wiztk/gui/anchor-group.hpp"
-#include "wiztk/gui/runnable-event-node.hpp"
+#include "wiztk/gui/task-node.hpp"
 
 #include <memory>
 
@@ -96,7 +96,7 @@ WIZTK_EXPORT class AbstractView : public AbstractEventHandler {
   class Iterator;
   class ConstIterator;
 
-  class GeometryTask : public RunnableEventNode {
+  class GeometryTask : public TaskNode {
 
    public:
 
@@ -104,7 +104,7 @@ WIZTK_EXPORT class AbstractView : public AbstractEventHandler {
     GeometryTask() = delete;
 
     explicit GeometryTask(AbstractView *view)
-        : RunnableEventNode(), view_(view) {}
+        : TaskNode(), view_(view) {}
 
     ~GeometryTask() final = default;
 
@@ -114,11 +114,11 @@ WIZTK_EXPORT class AbstractView : public AbstractEventHandler {
 
    private:
 
-    AbstractView *view_;
+    AbstractView *view_ = nullptr;
 
   };
 
-  class RenderNode : public EventNode<RenderNode> {
+  class RenderNode : public base::Binode<RenderNode> {
 
    public:
 
@@ -126,7 +126,7 @@ WIZTK_EXPORT class AbstractView : public AbstractEventHandler {
     RenderNode() = delete;
 
     explicit RenderNode(AbstractView *view)
-        : EventNode<RenderNode>(), view_(view) {}
+        : base::Binode<RenderNode>(), view_(view) {}
 
     ~RenderNode() final = default;
 
@@ -136,7 +136,7 @@ WIZTK_EXPORT class AbstractView : public AbstractEventHandler {
 
    private:
 
-    AbstractView *view_;
+    AbstractView *view_ = nullptr;
 
   };
 

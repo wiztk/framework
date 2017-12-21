@@ -14,25 +14,5 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_BASE_THREADING_THREAD_HPP_
-#define WIZTK_BASE_THREADING_THREAD_HPP_
+#include "wiztk/system/threading/thread.hpp"
 
-namespace wiztk {
-namespace base {
-
-/**
- * @ingroup base_threading
- * @brief A class to create and control a thread.
- */
-class Thread {
-
- public:
-
- private:
-
-};
-
-}
-}
-
-#endif // WIZTK_BASE_THREADING_THREAD_HPP_

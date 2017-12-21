@@ -75,7 +75,7 @@ struct Application::Private {
 
   std::thread::id thread_id;
 
-  base::Deque<RunnableEventNode> task_deque;
+  base::Deque<TaskNode> task_deque;
 
   /**
 * @brief Create an epoll file descriptor
@@ -234,8 +234,8 @@ int Application::Run() {
   struct epoll_event ep[Private::kMaxEpollEvents];
   int count = 0;
   int ret = 0;
-  RunnableEventNode *task = nullptr;
-  base::Deque<RunnableEventNode>::Iterator task_deque_iterator;
+  TaskNode *task = nullptr;
+  base::Deque<TaskNode>::Iterator task_deque_iterator;
   base::Deque<ViewSurface::RenderTask>::Iterator render_task_iterator;
   base::Deque<ViewSurface::CommitTask>::Iterator commit_task_iterator;
 
@@ -246,8 +246,8 @@ int Application::Run() {
      */
     task_deque_iterator = p_->task_deque.begin();
     while (task_deque_iterator != p_->task_deque.end()) {
-      task = task_deque_iterator.element();
-      task_deque_iterator.Remove();
+      task = task_deque_iterator.get();
+      task_deque_iterator.remove();
       task->Run();
       task_deque_iterator = p_->task_deque.begin();
     }
@@ -257,8 +257,8 @@ int Application::Run() {
      */
     render_task_iterator = ViewSurface::kRenderTaskDeque.begin();
     while (render_task_iterator != ViewSurface::kRenderTaskDeque.end()) {
-      task = render_task_iterator.element();
-      render_task_iterator.Remove();
+      task = render_task_iterator.get();
+      render_task_iterator.remove();
       task->Run();
       render_task_iterator = ViewSurface::kRenderTaskDeque.begin();
     }
@@ -268,8 +268,8 @@ int Application::Run() {
      */
     commit_task_iterator = ViewSurface::kCommitTaskDeque.begin();
     while (commit_task_iterator != ViewSurface::kCommitTaskDeque.end()) {
-      task = commit_task_iterator.element();
-      commit_task_iterator.Remove();
+      task = commit_task_iterator.get();
+      commit_task_iterator.remove();
       task->Run();
       commit_task_iterator = ViewSurface::kCommitTaskDeque.begin();
     }
@@ -329,7 +329,7 @@ const std::thread::id &Application::GetThreadID() {
   return p_->thread_id;
 }
 
-base::Deque<RunnableEventNode> &Application::GetTaskDeque() {
+base::Deque<TaskNode> &Application::GetTaskDeque() {
   return p_->task_deque;
 }
 
