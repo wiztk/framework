@@ -42,7 +42,7 @@ std::unique_ptr<IPAddressList> IPAddress::GetByName(const char *name) {
         obj = new IPv4Address;
         addr = reinterpret_cast<struct sockaddr_in *>(obj->address_);
         memcpy(&addr->sin_addr, *pp, static_cast<size_t >(host->h_length));
-        addr_list->deque_.PushBack(obj);
+        addr_list->deque_.push_back(obj);
       }
       break;
     }
@@ -53,7 +53,7 @@ std::unique_ptr<IPAddressList> IPAddress::GetByName(const char *name) {
         obj = new IPv6Address;
         addr = reinterpret_cast<struct sockaddr_in6 *>(obj->address_);
         memcpy(&addr->sin6_addr, *pp, static_cast<size_t >(host->h_length));
-        addr_list->deque_.PushBack(obj);
+        addr_list->deque_.push_back(obj);
       }
       break;
     }
@@ -94,7 +94,7 @@ std::unique_ptr<IPAddressList> IPAddress::GetByHostAndService(const char *host,
         auto *addr = new struct sockaddr_in;
         memcpy(addr, ai_ptr->ai_addr, ai_ptr->ai_addrlen);
         obj->address_ = reinterpret_cast<struct sockaddr *>(addr);
-        list_ptr->deque_.PushBack(obj);
+        list_ptr->deque_.push_back(obj);
         break;
       }
       case AF_INET6: {
@@ -102,7 +102,7 @@ std::unique_ptr<IPAddressList> IPAddress::GetByHostAndService(const char *host,
         auto *addr = new struct sockaddr_in6;
         memcpy(addr, ai_ptr->ai_addr, ai_ptr->ai_addrlen);
         obj->address_ = reinterpret_cast<struct sockaddr *>(addr);
-        list_ptr->deque_.PushBack(obj);
+        list_ptr->deque_.push_back(obj);
         break;
       }
       default: {
@@ -323,7 +323,7 @@ IPv6Address::IPv6Address() {
 // -----------------
 
 IPAddressList::~IPAddressList() {
-  deque_.Clear([](base::BinodeBase *obj) { delete obj; });
+  deque_.clear([](base::BinodeBase *obj) { delete obj; });
 }
 
 } // namespace net

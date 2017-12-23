@@ -35,7 +35,7 @@ struct ViewTask;
  * @ingroup gui
  * @brief Input manager
  */
-class WIZTK_EXPORT Input : public base::CountedDeque::Element {
+class WIZTK_EXPORT Input : public base::CountedDequeNode<Input> {
 
   friend class ViewSurface;
 

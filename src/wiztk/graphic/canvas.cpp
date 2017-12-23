@@ -219,7 +219,7 @@ void Canvas::SaveLayer(const RectF *bounds, unsigned char alpha) {
 }
 
 void Canvas::Restore() {
-  if (p_->lock_guard_deque.IsEmpty()) {
+  if (p_->lock_guard_deque.is_empty()) {
     p_->sk_canvas.restore();
     return;
   }
@@ -234,7 +234,7 @@ int Canvas::GetSaveCount() const {
 }
 
 void Canvas::RestoreToCount(int save_count) {
-  if (p_->lock_guard_deque.IsEmpty()) {
+  if (p_->lock_guard_deque.is_empty()) {
     p_->sk_canvas.restoreToCount(save_count);
     return;
   }
@@ -259,7 +259,7 @@ SkCanvas *Canvas::GetSkCanvas() const {
 // ----------
 
 Canvas::LockGuard::~LockGuard() {
-  if (node_.IsLinked()) {
+  if (node_.is_linked()) {
     base::Deque<LockGuardNode>::Iterator it = canvas_->p_->lock_guard_deque.rbegin();
     while (it.get() != &node_) {
       it.remove();
@@ -270,52 +270,52 @@ Canvas::LockGuard::~LockGuard() {
 }
 
 void Canvas::LockGuard::Lock(const RectF &rect, bool antilias) {
-  if (node_.IsLinked()) return;
+  if (node_.is_linked()) return;
 
-  canvas_->p_->lock_guard_deque.PushBack(&node_);
+  canvas_->p_->lock_guard_deque.push_back(&node_);
   node_.depth = canvas_->GetSaveCount();
   canvas_->Save();
   canvas_->ClipRect(rect, antilias);
 }
 
 void Canvas::LockGuard::Lock(const RectF &rect, ClipOperation op, bool antialias) {
-  if (node_.IsLinked()) return;
+  if (node_.is_linked()) return;
 
-  canvas_->p_->lock_guard_deque.PushBack(&node_);
+  canvas_->p_->lock_guard_deque.push_back(&node_);
   node_.depth = canvas_->GetSaveCount();
   canvas_->Save();
   canvas_->ClipRect(rect, op, antialias);
 }
 
 void Canvas::LockGuard::Lock(const Path &path, bool antialias) {
-  if (node_.IsLinked()) return;
+  if (node_.is_linked()) return;
 
-  canvas_->p_->lock_guard_deque.PushBack(&node_);
+  canvas_->p_->lock_guard_deque.push_back(&node_);
   node_.depth = canvas_->GetSaveCount();
   canvas_->Save();
   canvas_->ClipPath(path, antialias);
 }
 
 void Canvas::LockGuard::Lock(const Path &path, ClipOperation op, bool antialias) {
-  if (node_.IsLinked()) return;
+  if (node_.is_linked()) return;
 
-  canvas_->p_->lock_guard_deque.PushBack(&node_);
+  canvas_->p_->lock_guard_deque.push_back(&node_);
   node_.depth = canvas_->GetSaveCount();
   canvas_->Save();
   canvas_->ClipPath(path, op, antialias);
 }
 
 void Canvas::LockGuard::Lock(float dx, float dy) {
-  if (node_.IsLinked()) return;
+  if (node_.is_linked()) return;
 
-  canvas_->p_->lock_guard_deque.PushBack(&node_);
+  canvas_->p_->lock_guard_deque.push_back(&node_);
   node_.depth = canvas_->GetSaveCount();
   canvas_->Save();
   canvas_->Translate(dx, dy);
 }
 
 void Canvas::LockGuard::Unlock() {
-  if (!node_.IsLinked()) return;
+  if (!node_.is_linked()) return;
 
   base::Deque<LockGuardNode>::Iterator it = canvas_->p_->lock_guard_deque.rbegin();
   while (it.get() != &node_) {
@@ -323,7 +323,7 @@ void Canvas::LockGuard::Unlock() {
     it = canvas_->p_->lock_guard_deque.rbegin();
   }
   canvas_->p_->sk_canvas.restoreToCount(node_.depth);
-  node_.Unlink();
+  node_.unlink();
 }
 
 } // namespace graphic

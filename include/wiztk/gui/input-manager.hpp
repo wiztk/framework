@@ -14,24 +14,39 @@
  * limitations under the License.
  */
 
+#ifndef WIZTK_INPUT_MANAGER_HPP
+#define WIZTK_INPUT_MANAGER_HPP
+
 #include "wiztk/base/counted-deque.hpp"
 
-#include "wiztk/base/macros.hpp"
+#include "wiztk/gui/input.hpp"
 
 namespace wiztk {
-namespace base {
+namespace gui {
 
-CountedDequeNodeBase::~CountedDequeNodeBase() {
-  if (nullptr != deque_) {
-    _ASSERT(deque_->count_ > 0);
-    deque_->count_--;
-    deque_ = nullptr;
+class InputManager {
+
+ public:
+
+  InputManager() = default;
+
+  ~InputManager() = default;
+
+  void Insert(Input *input, int index) {
+    deque_.insert(input, index);
   }
+
+  void Clear() {
+    deque_.clear([](base::BinodeBase *obj) { delete obj; });
+  }
+
+ private:
+
+  base::CountedDeque<Input> deque_;
+
+};
+
+}
 }
 
-CountedDequeBase::~CountedDequeBase() {
-  _ASSERT(count_ >= 0);
-}
-
-} // namespace base
-} // namespace wiz-vision
+#endif //WIZTK_INPUT_MANAGER_HPP

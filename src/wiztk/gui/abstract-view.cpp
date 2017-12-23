@@ -586,7 +586,7 @@ bool AbstractView::RequestSaveGeometry(const RectF &geometry) {
     ret = p_->geometry_task.is_linked();
   } else {
     base::Deque<TaskNode> &deque = Application::instance()->GetTaskDeque();
-    deque.PushBack(&p_->geometry_task);
+    deque.push_back(&p_->geometry_task);
   }
 
   return ret;

@@ -259,7 +259,7 @@ void AbstractShellView::OnRequestSaveGeometry(AbstractView *view) {
     return;
   }
 
-  Application::instance()->GetTaskDeque().PushBack(AbstractView::GeometryTask::Get(view));
+  Application::instance()->GetTaskDeque().push_back(AbstractView::GeometryTask::Get(view));
 }
 
 void AbstractShellView::OnRequestUpdateFrom(AbstractView *view) {
@@ -305,7 +305,7 @@ bool AbstractShellView::RequestSaveSize(const Size &size) {
   }
 
   if (!p_->geometry_task.is_linked()) {
-    Application::instance()->GetTaskDeque().PushBack(&p_->geometry_task);
+    Application::instance()->GetTaskDeque().push_back(&p_->geometry_task);
   }
 
   return true;

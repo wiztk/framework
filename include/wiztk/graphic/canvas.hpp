@@ -177,7 +177,7 @@ class Canvas {
 
 };
 
-struct Canvas::LockGuardNode : public base::BinodeBase {
+struct Canvas::LockGuardNode : public base::DequeNode<Canvas::LockGuardNode> {
 
   LockGuardNode() = default;
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(LockGuardNode);

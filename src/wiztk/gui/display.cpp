@@ -27,8 +27,6 @@
 namespace wiztk {
 namespace gui {
 
-using base::CountedDeque;
-
 Display *Display::kDisplay = nullptr;
 
 Display::Display() {
@@ -77,8 +75,8 @@ void Display::Disconnect() noexcept {
 
   // TODO: other operations
 
-  p_->outputs.Clear();
-  p_->inputs.Clear();
+  p_->output_manager.Clear();
+  p_->input_manager.Clear();
   ViewSurface::Clear();
 
   if (p_->wl_data_device_manager) {
@@ -128,12 +126,12 @@ void Display::Disconnect() noexcept {
   wl_display_disconnect(p_->wl_display);
 }
 
-const CountedDeque &Display::GetOutputs() {
-  return kDisplay->p_->outputs;
+const OutputManager &Display::GetOutputManager() {
+  return kDisplay->p_->output_manager;
 }
 
-const CountedDeque &Display::GetInputs() {
-  return kDisplay->p_->inputs;
+const InputManager &Display::GetInputManager() {
+  return kDisplay->p_->input_manager;
 }
 
 const std::set<uint32_t> &Display::GetPixelFormats() {
@@ -145,13 +143,15 @@ const Cursor *Display::GetCursor(CursorType cursor_type) {
 }
 
 void Display::AddOutput(Output *output, int index) {
-  p_->outputs.Insert(output, index);
+  p_->output_manager.Insert(output, index);
 }
 
 void Display::DestroyOutput(uint32_t id) {
   Output *output = nullptr;
-  for (CompoundDeque::Iterator it = p_->outputs.begin(); it != p_->outputs.end(); ++it) {
-    output = it.cast<Output>();
+
+  // TODO: use iterator
+  for (int i = 0; i < p_->output_manager.size(); i++) {
+    output = p_->output_manager.at(i);
     if (output->GetID() == id) {
       delete output;
       break;
@@ -160,7 +160,7 @@ void Display::DestroyOutput(uint32_t id) {
 }
 
 void Display::AddInput(Input *input, int index) {
-  p_->inputs.Insert(input, index);
+  p_->input_manager.Insert(input, index);
 }
 
 void Display::InitializeCursors() {

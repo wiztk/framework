@@ -25,19 +25,86 @@
 namespace wiztk {
 namespace base {
 
+// Forward declarations:
+template<typename T>
+class Deque;
+
+namespace internal {
+
+/**
+ * @ingroup base_intern
+ * @brief Endpoint used in Deque.
+ */
+class DequeEndpoint : public BinodeBase {
+
+  template<typename T> friend
+  class wiztk::base::Deque;
+
+ protected:
+
+  DequeEndpoint() = default;
+
+ private:
+
+  ~DequeEndpoint() final = default;
+
+};
+
+} // namespace internal
+
+/**
+ * @ingroup base
+ * @brief Bidirectional node used in Deque.
+ */
+class DequeNodeBase : public BinodeBase {};
+
+/**
+ * @ingroup base
+ * @brief Bidirectional node used in Deque only.
+ * @tparam T
+ */
+template<typename T>
+class DequeNode : public DequeNodeBase {
+
+  template<typename R> friend
+  class Deque;
+
+ public:
+
+  DequeNode() = default;
+
+  ~DequeNode() override = default;
+
+  void push_back(T *other) { PushBack(this, other); }
+
+  void push_front(T *other) { PushFront(this, other); }
+
+  void unlink() { Unlink(this); }
+
+  bool is_linked() const { return IsLinked(this); }
+
+  T *previous() const { return dynamic_cast<T *>(previous_); }
+
+  T *next() const { return dynamic_cast<T *>(next_); }
+
+};
+
 /**
  * @ingroup base
  * @brief A simple double-ended queue container
- * @tparam T Must be a subclass of BinodeBase
+ * @tparam T Must be a subclass of DequeNode
  */
 template<typename T>
 class Deque {
+
+  template<typename R> friend
+  class CountedDeque;
 
  public:
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Deque);
 
-  typedef std::function<void(BinodeBase *)> DeleterType;
+  typedef std::function<void(BinodeBase * )> DeleterType;
 
   /**
    * @brief A nested iterator for deque
@@ -46,14 +113,14 @@ class Deque {
 
    public:
 
-    explicit Iterator(BinodeBase *element = nullptr)
-        : current_(element) {}
+    explicit Iterator(BinodeBase *obj = nullptr)
+        : current_(obj) {}
 
     Iterator(const Iterator &) = default;
-
+    Iterator(Iterator &&) noexcept = default;
     ~Iterator() = default;
-
     Iterator &operator=(const Iterator &) = default;
+    Iterator &operator=(Iterator &&) noexcept = default;
 
     Iterator &operator++() {
       current_ = current_->next_;
@@ -69,9 +136,9 @@ class Deque {
 
     Iterator operator--(int) { return Iterator(current_->previous_); }
 
-    void push_front(T *element) { current_->PushFront(element); }
+    void push_front(T *element) { BinodeBase::PushFront(current_, element); }
 
-    void push_back(T *element) { current_->PushBack(element); }
+    void push_back(T *element) { BinodeBase::PushBack(current_, element); }
 
     /**
      * @brief Unlink the bi-node object and invalidate this iterator
@@ -80,7 +147,7 @@ class Deque {
      * should not be used, but it can be assigned to another one.
      */
     void remove() {
-      current_->Unlink();
+      BinodeBase::Unlink(current_);
       current_ = nullptr;
     }
 
@@ -98,7 +165,6 @@ class Deque {
       return nullptr == current_->previous_ ?
              nullptr : (nullptr == current_->next_ ?
                         nullptr : (static_cast<T *>(current_)));
-
     }
 
     explicit operator bool() const {
@@ -179,67 +245,51 @@ class Deque {
 
   virtual ~Deque();
 
-  void PushFront(T *item);
+  void push_front(DequeNodeBase *item) { BinodeBase::PushBack(&head_, item); }
 
-  void PushBack(T *item);
+  void push_back(DequeNodeBase *item) { BinodeBase::PushFront(&tail_, item); }
 
-  void Insert(T *item, int index = 0);
+  void insert(DequeNodeBase *item, int index = 0);
 
-  size_t GetCount() const;
+  size_t count() const;
 
-  bool IsEmpty() const;
+  bool is_empty() const;
 
   /**
    * @brief Use the member deleter to remove all nodes.
    */
-  void Clear();
+  void clear();
 
-  void Clear(const DeleterType &deleter);
+  void clear(const DeleterType &deleter);
 
   T *operator[](int index) const {
-    return GetAt(index);
+    return at(index);
   }
 
-  T *GetAt(int index) const;
+  T *at(int index) const;
 
-  Iterator begin() const {
-    return Iterator(head_.next_);
-  }
+  Iterator begin() const { return Iterator(head_.next_); }
 
-  ConstIterator cbegin() const {
-    return ConstIterator(head_.next_);
-  }
+  ConstIterator cbegin() const { return ConstIterator(head_.next_); }
 
-  Iterator rbegin() const {
-    return Iterator(tail_.previous_);
-  }
+  Iterator rbegin() const { return Iterator(tail_.previous_); }
 
-  ConstIterator crbegin() const {
-    return ConstIterator(tail_.previous_);
-  }
+  ConstIterator crbegin() const { return ConstIterator(tail_.previous_); }
 
-  Iterator end() const {
-    return Iterator(const_cast<BinodeBase *>(&tail_));
-  }
+  Iterator end() { return Iterator(&tail_); }
 
-  ConstIterator cend() const {
-    return ConstIterator(&tail_);
-  }
+  ConstIterator cend() const { return ConstIterator(&tail_); }
 
-  Iterator rend() const {
-    return Iterator(const_cast<BinodeBase *>(&head_));
-  }
+  Iterator rend() { return Iterator(&head_); }
 
-  ConstIterator crend() const {
-    return ConstIterator(&head_);
-  }
+  ConstIterator crend() const { return ConstIterator(&head_); }
 
  protected:
 
-  BinodeBase head_;
-  BinodeBase tail_;
+  internal::DequeEndpoint head_;
+  internal::DequeEndpoint tail_;
 
-  std::function<void(BinodeBase *)> deleter_;
+  std::function<void(BinodeBase * )> deleter_;
 };
 
 template<typename T>
@@ -256,42 +306,30 @@ Deque<T>::Deque(const DeleterType &deleter)
 
 template<typename T>
 Deque<T>::~Deque() {
-  Clear();
+  clear();
 }
 
 template<typename T>
-void Deque<T>::PushFront(T *item) {
-  item->Unlink();
-  head_.PushBack(item);
-}
-
-template<typename T>
-void Deque<T>::PushBack(T *item) {
-  item->Unlink();
-  tail_.PushFront(item);
-}
-
-template<typename T>
-void Deque<T>::Insert(T *item, int index) {
+void Deque<T>::insert(DequeNodeBase *item, int index) {
   if (index >= 0) {
     BinodeBase *p = head_.next_;
     while ((&tail_ != p) && (index > 0)) {
       p = p->next_;
       index--;
     }
-    p->PushFront(item);
+    BinodeBase::PushFront(p, item);
   } else {
     BinodeBase *p = tail_.previous_;
     while ((&head_ != p) && (index < -1)) {
       p = p->previous_;
       index++;
     }
-    p->PushBack(item);
+    BinodeBase::PushBack(p, item);
   }
 }
 
 template<typename T>
-size_t Deque<T>::GetCount() const {
+size_t Deque<T>::count() const {
   size_t size = 0;
 
   BinodeBase *element = head_.next_;
@@ -304,32 +342,32 @@ size_t Deque<T>::GetCount() const {
 }
 
 template<typename T>
-bool Deque<T>::IsEmpty() const {
+bool Deque<T>::is_empty() const {
   return head_.next_ == &tail_;
 }
 
 template<typename T>
-void Deque<T>::Clear() {
-  BinodeBase *tmp = head_.next_;
-  while (tmp != &tail_) {
-    tmp->Unlink();
+void Deque<T>::clear() {
+  BinodeBase *tmp = nullptr;
+  while (!is_empty()) {
+    tmp = begin().get();
+    BinodeBase::Unlink(tmp);
     if (deleter_) deleter_(tmp);
-    tmp = head_.next_;
   }
 }
 
 template<typename T>
-void Deque<T>::Clear(const DeleterType &deleter) {
-  BinodeBase *tmp = head_.next_;
-  while (tmp != &tail_) {
-    tmp->Unlink();
+void Deque<T>::clear(const DeleterType &deleter) {
+  BinodeBase *tmp = nullptr;
+  while (!is_empty()) {
+    tmp = begin().get();
+    BinodeBase::Unlink(tmp);
     if (deleter) deleter(tmp);
-    tmp = head_.next_;
   }
 }
 
 template<typename T>
-T *Deque<T>::GetAt(int index) const {
+T *Deque<T>::at(int index) const {
   BinodeBase *p = nullptr;
 
   if (index >= 0) {

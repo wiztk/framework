@@ -16,7 +16,6 @@
 
 #include "wiztk/gui/window.hpp"
 
-#include "wiztk/base/macros.hpp"
 #include "wiztk/base/property.hpp"
 
 #include "wiztk/gui/application.hpp"
@@ -28,6 +27,7 @@
 #include "wiztk/gui/buffer.hpp"
 #include "wiztk/gui/region.hpp"
 #include "wiztk/gui/output.hpp"
+#include "wiztk/gui/output-manager.hpp"
 #include "wiztk/gui/context.hpp"
 
 #include "wiztk/gui/theme.hpp"
@@ -44,7 +44,6 @@ using base::Point2F;
 using base::RectF;
 using base::RectI;
 using base::Margin;
-using base::CountedDeque;
 
 using graphic::Canvas;
 using graphic::Paint;
@@ -337,9 +336,9 @@ void Window::OnShown() {
   // Set surface's scale
   int scale = 1;
   if (nullptr == p_->output) {
-    const CountedDeque &outputs = Display::GetOutputs();
-    if (outputs.count() > 0) {
-      p_->output = static_cast<const Output *>(outputs[0]);
+    const OutputManager &outputs = Display::GetOutputManager();
+    if (outputs.size() > 0) {
+      p_->output = static_cast<const Output *>(outputs.at(0));
     }
   }
   if (nullptr != p_->output) scale = p_->output->GetScale();
@@ -376,7 +375,7 @@ void Window::OnRequestUpdateFrom(AbstractView *view) {
   if (p_->inhibit_update) return;
 
   ViewSurface *surface = GetShellSurface();
-  surface->GetViewRenderDeque().PushBack(AbstractView::RenderNode::Get(view));
+  surface->GetViewRenderDeque().push_back(AbstractView::RenderNode::Get(view));
   surface->Update();
 }
 
@@ -402,9 +401,9 @@ void Window::OnSaveSize(const Size &old_size, const Size &new_size) {
   ViewSurface *shell_surface = this->GetShellSurface();
 
   int scale = 1;
-  const CountedDeque &outputs = Display::GetOutputs();
-  if (outputs.count() > 0) {
-    p_->output = static_cast<const Output *>(outputs[0]);
+  const OutputManager &outputs = Display::GetOutputManager();
+  if (outputs.size() > 0) {
+    p_->output = static_cast<const Output *>(outputs.at(0));
     scale = p_->output->GetScale();
   }
   shell_surface->SetScale(scale);
@@ -706,9 +705,9 @@ void Window::OnLeaveOutput(const ViewSurface *surface, const Output *output) {
   p_->output = nullptr;
 
   int scale = 1;
-  const CountedDeque &outputs = Display::GetOutputs();
-  if (outputs.count() > 0) {
-    p_->output = static_cast<const Output *>(outputs[0]);
+  const OutputManager &outputs = Display::GetOutputManager();
+  if (outputs.size() > 0) {
+    p_->output = static_cast<const Output *>(outputs.at(0));
     scale = p_->output->GetScale();
   }
 
@@ -777,9 +776,9 @@ void Window::OnFullscreenButtonClicked(base::SLOT slot) {
     if (nullptr != p_->output)
       ToggleFullscreen(p_->output);
     else {
-      const CountedDeque &outputs = Display::GetOutputs();
-      if (outputs.count() > 0) {
-        p_->output = static_cast<const Output *>(outputs[0]);
+      const OutputManager &outputs = Display::GetOutputManager();
+      if (outputs.size() > 0) {
+        p_->output = static_cast<const Output *>(outputs.at(0));
         ToggleFullscreen(p_->output);
       }
     }

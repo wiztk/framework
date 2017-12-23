@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
+/**
+ * @file counted-deque.hpp
+ *
+ * @brief Header file for fast countable deque.
+ */
+
 #ifndef WIZTK_BASE_COUNTED_DEQUE_HPP_
 #define WIZTK_BASE_COUNTED_DEQUE_HPP_
 
-#include "wiztk/base/macros.hpp"
-
-#include "wiztk/base/binode.hpp"
 #include "wiztk/base/deque.hpp"
 
 namespace wiztk {
@@ -28,67 +31,100 @@ namespace base {
 // Foward declaration:
 class CountedDequeBase;
 
-class CountedBinodeBase : public BinodeBase {
+/**
+ * @ingroup base
+ * @brief The basic class for bidirectional node with pointer to a countable deque.
+ */
+class CountedDequeNodeBase : public DequeNodeBase {
+
+  template<typename T> friend
+  class CountedDequeNode;
 
   friend class CountedDequeBase;
 
   template<typename T> friend
-  class CountedBinode;
-
-  template<typename T> friend
-  class CountedDequeExt;
+  class CountedDeque;
 
  public:
 
-  ~CountedBinodeBase() override;
+  /**
+   * @brief Destructor.
+   *
+   * This will decrease the count in deque.
+   */
+  ~CountedDequeNodeBase() override;
 
  protected:
 
+  /**
+   * @brief A pointer to a fast countable deque object.
+   */
   CountedDequeBase *deque_ = nullptr;
 
  private:
 
-  CountedBinodeBase() = default;
+  CountedDequeNodeBase() = default;
 
 };
 
+/**
+ * @ingroup base
+ * @brief Template class for bidirectional node used in fast countable deque.
+ * @tparam T Must be a subclass of CountedBinodeBase.
+ */
 template<typename T>
-class CountedBinode : protected CountedBinodeBase {
+class CountedDequeNode : public CountedDequeNodeBase {
 
   template<typename R> friend
-  class CountedDequeExt;
+  class CountedDeque;
 
  public:
 
-  CountedBinode() = default;
+  /**
+   * @brief Default constructor.
+   */
+  CountedDequeNode() = default;
 
-  ~CountedBinode() override = default;
+  /**
+   * @brief Default destructor.
+   */
+  ~CountedDequeNode() override = default;
 
   void unlink();
 
   bool is_linked() const;
 
-  T *previous() const { return static_cast<T *>(previous_); }
+  T *previous() const { return dynamic_cast<T *>(previous_); }
 
-  T *next() const { return static_cast<T *>(next_); }
+  T *next() const { return dynamic_cast<T *>(next_); }
+
+  CountedDequeBase *deque() const { return deque_; }
 
 };
 
-class CountedDequeBase : public Deque<CountedBinodeBase> {
+/**
+ * @ingroup base
+ * @brief Counted deque base
+ */
+class CountedDequeBase {
 
-  friend class CountedBinodeBase;
+  friend class CountedDequeNodeBase;
 
   template<typename T> friend
-  class CountedBinode;
+  class CountedDequeNode;
 
   template<typename T> friend
-  class CountedDequeExt;
+  class CountedDeque;
 
  public:
 
-  ~CountedDequeBase() override;
+  typedef std::function<void(BinodeBase *)> DeleterType;
+
+  virtual ~CountedDequeBase();
 
  protected:
+
+  Deque<CountedDequeNodeBase> deque_;
 
   size_t count_ = 0;
 
@@ -97,54 +133,137 @@ class CountedDequeBase : public Deque<CountedBinodeBase> {
   CountedDequeBase() = default;
 
   explicit CountedDequeBase(const DeleterType &deleter)
-      : Deque<CountedBinodeBase>(deleter) {}
+      : deque_(deleter) {}
 
 };
 
+/**
+ * @ingroup base
+ * @brief Counted deque.
+ * @tparam T
+ */
 template<typename T>
-class CountedDequeExt : protected CountedDequeBase {
+class CountedDeque : public CountedDequeBase {
 
  public:
 
-  CountedDequeExt() = default;
+  /**
+    * @brief A nested iterator for CountedDeque.
+    */
+  class Iterator {
 
-  explicit CountedDequeExt(const DeleterType &deleter)
+   public:
+
+    explicit Iterator(T *obj = nullptr)
+        : current_(obj) {}
+
+    Iterator(const Iterator &) = default;
+    Iterator(Iterator &&) noexcept = default;
+    ~Iterator() = default;
+    Iterator &operator=(const Iterator &) = default;
+    Iterator &operator=(Iterator &&) noexcept = default;
+
+    Iterator &operator++() {
+      current_ = current_->next_;
+      return *this;
+    }
+
+    Iterator operator++(int) { return Iterator(current_->next_); }
+
+    Iterator &operator--() {
+      current_ = current_->previous_;
+      return *this;
+    }
+
+    Iterator operator--(int) { return Iterator(current_->previous_); }
+
+    bool operator==(const Iterator &other) const { return current_ == other.current_; }
+
+    bool operator==(const T *element) const { return current_ == element; }
+
+    bool operator!=(const Iterator &other) const { return current_ != other.current_; }
+
+    bool operator!=(const T *element) const { return current_ != element; }
+
+    T *get() const noexcept {
+      return nullptr == current_->previous_ ?
+             nullptr : (nullptr == current_->next_ ?
+                        nullptr : current_);
+    }
+
+    explicit operator bool() const {
+      return nullptr == current_ ?
+             false : (nullptr == current_->previous_ ?
+                      false : (nullptr != current_->next_));
+    }
+
+   private:
+
+    T *current_;
+
+  };
+
+  CountedDeque() = default;
+
+  explicit CountedDeque(const DeleterType &deleter)
       : CountedDequeBase(deleter) {}
 
-  ~CountedDequeExt() override = default;
+  ~CountedDeque() override = default;
+
+  T *at(int index) const { return static_cast<T *>(deque_.at(index)); }
 
   void push_back(T *obj) {
     obj->unlink();
-    PushBack(obj);
+    deque_.push_back(obj);
     obj->deque_ = this;
     count_++;
   }
 
   void push_front(T *obj) {
     obj->unlink();
-    PushFront(obj);
+    deque_.push_front(obj);
     obj->deque_ = this;
     count_++;
   }
 
   void insert(T *obj, int index = 0) {
     obj->unlink();
-    Insert(obj, index);
+    deque_.insert(obj, index);
     obj->deque_ = this;
     count_++;
   }
 
-  void clear() { Clear(); }
+  void clear() {
+    CountedDequeNodeBase *tmp = nullptr;
+    while (!deque_.is_empty()) {
+      tmp = deque_.begin().get();
+      BinodeBase::Unlink(tmp);
+      tmp->deque_ = nullptr;
+      if (deque_.deleter_) deque_.deleter_(tmp);
+    }
 
-  void clear(const DeleterType &deleter) { Clear(deleter); }
+    count_ = 0;
+  }
+
+  void clear(const DeleterType &deleter) {
+    CountedDequeNodeBase *tmp = nullptr;
+    while (!deque_.is_empty()) {
+      tmp = deque_.begin().get();
+      BinodeBase::Unlink(tmp);
+      tmp->deque_ = nullptr;
+      if (deleter) deleter(tmp);
+    }
+
+    count_ = 0;
+  }
 
   size_t count() const { return count_; }
 
 };
 
 template<typename T>
-void CountedBinode<T>::unlink() {
-  Unlink();
+void CountedDequeNode<T>::unlink() {
+  Unlink(this);
 
   if (nullptr != deque_) {
     _ASSERT(deque_->count_ > 0);
@@ -154,8 +273,8 @@ void CountedBinode<T>::unlink() {
 }
 
 template<typename T>
-bool CountedBinode<T>::is_linked() const {
-  bool ret = IsLinked();
+bool CountedDequeNode<T>::is_linked() const {
+  bool ret = IsLinked(this);
 
   if (ret) {
     _ASSERT(nullptr != deque_);
@@ -163,162 +282,6 @@ bool CountedBinode<T>::is_linked() const {
 
   return ret;
 }
-
-// ------
-
-/**
- * @ingroup base
- * @brief A double-ended queue container with an element counter.
- */
-class CountedDeque {
-
- public:
-
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(CountedDeque);
-
-  /**
- * @brief A nested class represents an element in a deque
- */
-  class Element {
-
-    friend class CountedDeque;
-
-   public:
-
-    WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Element);
-
-    Element() = default;
-
-    virtual ~Element();
-
-    Element *previous() const { return previous_; }
-
-    Element *next() const { return next_; }
-
-    CountedDeque *deque() const { return deque_; }
-
-   private:
-
-    Element *previous_ = nullptr;
-    Element *next_ = nullptr;
-    CountedDeque *deque_ = nullptr;
-
-  };
-
-  /**
-   * @brief A nested iterator for deque
-   */
-  class Iterator {
-
-   public:
-
-    explicit Iterator(Element *element = nullptr)
-        : element_(element) {}
-
-    Iterator(const Iterator &orig) = default;
-
-    ~Iterator() = default;
-
-    Iterator &operator=(const Iterator &other) = default;
-
-    Iterator &operator++() {
-      element_ = element_->next_;
-      return *this;
-    }
-
-    Iterator operator++(int) {
-      Iterator retval;
-      retval.element_ = element_->next_;
-      return retval;
-    }
-
-    Iterator &operator--() {
-      element_ = element_->previous_;
-      return *this;
-    }
-
-    Iterator operator--(int) {
-      Iterator retval;
-      retval.element_ = element_->previous_;
-      return retval;
-    }
-
-    bool operator==(const Iterator &other) const {
-      return element_ == other.element_;
-    }
-
-    bool operator==(const Element *element) const {
-      return element_ == element;
-    }
-
-    bool operator!=(const Iterator &other) const {
-      return element_ != other.element_;
-    }
-
-    bool operator!=(const Element *element) const {
-      return element_ != element;
-    }
-
-    template<typename T>
-    T *cast() const {
-      return static_cast<T *>(element_);
-    }
-
-    explicit operator bool() const {
-      return nullptr != element_;
-    }
-
-   private:
-
-    Element *element_;
-
-  };
-
-  CountedDeque() = default;
-
-  virtual ~CountedDeque();
-
-  void PushFront(Element *item);
-
-  void PushBack(Element *item);
-
-  void Insert(Element *item, int index = 0);
-
-  Element *Remove(Element *item);
-
-  void Clear();
-
-  Element *operator[](int index) const;
-
-  Iterator begin() const {
-    return Iterator(first_);
-  }
-
-  Iterator rbegin() const {
-    return Iterator(last_);
-  }
-
-  Iterator end() const {
-    return Iterator(last_->next_);
-  }
-
-  Iterator rend() const {
-    return Iterator(first_->previous_);
-  }
-
-  int count() const { return count_; }
-
-  Element *first() const { return first_; }
-
-  Element *last() const { return last_; }
-
- private:
-
-  Element *first_ = nullptr;
-  Element *last_ = nullptr;
-  int count_ = 0;
-
-};
 
 } // namespace base
 } // namespace wiztk

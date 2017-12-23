@@ -14,24 +14,45 @@
  * limitations under the License.
  */
 
+#ifndef WIZTK_OUTPUT_MANAGER_HPP
+#define WIZTK_OUTPUT_MANAGER_HPP
+
 #include "wiztk/base/counted-deque.hpp"
 
-#include "wiztk/base/macros.hpp"
+#include "wiztk/gui/output.hpp"
 
 namespace wiztk {
-namespace base {
+namespace gui {
 
-CountedDequeNodeBase::~CountedDequeNodeBase() {
-  if (nullptr != deque_) {
-    _ASSERT(deque_->count_ > 0);
-    deque_->count_--;
-    deque_ = nullptr;
+class OutputManager {
+
+ public:
+
+  OutputManager() = default;
+
+  ~OutputManager() = default;
+
+  void Insert(Output *output, int index) {
+    deque_.insert(output, index);
   }
+
+  void Clear() {
+    deque_.clear([](base::BinodeBase *obj) { delete obj; });
+  }
+
+  size_t size() const { return deque_.count(); }
+
+  Output *at(int index) const {
+    return deque_.at(index);
+  }
+
+ private:
+
+  base::CountedDeque<Output> deque_;
+
+};
+
+}
 }
 
-CountedDequeBase::~CountedDequeBase() {
-  _ASSERT(count_ >= 0);
-}
-
-} // namespace base
-} // namespace wiz-vision
+#endif //WIZTK_OUTPUT_MANAGER_HPP

@@ -20,6 +20,7 @@
 #include "wiztk/base/sigcxx.hpp"
 #include "wiztk/base/margin.hpp"
 #include "wiztk/base/point.hpp"
+#include "wiztk/base/deque.hpp"
 
 #include "wiztk/graphic/abstract-surface.hpp"
 

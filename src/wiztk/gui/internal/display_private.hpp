@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@
 
 #include "wiztk/gui/task-node.hpp"
 #include "wiztk/gui/abstract-epoll-task.hpp"
+#include "wiztk/gui/input-manager.hpp"
+#include "wiztk/gui/output-manager.hpp"
 
 #include "xdg-shell-unstable-v6-client-protocol.h"
 
@@ -59,7 +61,7 @@ struct Display::Private {
         fd(0),
         epoll_events(0) {}
 
-  ~Private() {}
+  ~Private() = default;
 
   void InitializeEGLDisplay();
 
@@ -95,8 +97,8 @@ struct Display::Private {
   int fd;
   uint32_t epoll_events;
 
-  CompoundDeque outputs;
-  CompoundDeque inputs;
+  InputManager input_manager;
+  OutputManager output_manager;
 
   std::list<Global *> globals;
   std::set<uint32_t> pixel_formats;

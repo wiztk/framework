@@ -20,38 +20,37 @@ namespace wiztk {
 namespace base {
 
 BinodeBase::~BinodeBase() {
-  if (nullptr != previous_) previous_->next_ = next_;
-  if (nullptr != next_) next_->previous_ = previous_;
+  Unlink(this);
 }
 
-void BinodeBase::PushFront(BinodeBase *other) {
-  if (other == this) return;
+void BinodeBase::PushFront(BinodeBase *node, BinodeBase *other) {
+  if (other == node) return;
 
-  other->Unlink();
+  Unlink(other);
 
-  if (nullptr != previous_) previous_->next_ = other;
-  other->previous_ = previous_;
-  previous_ = other;
-  other->next_ = this;
+  if (nullptr != node->previous_) node->previous_->next_ = other;
+  other->previous_ = node->previous_;
+  node->previous_ = other;
+  other->next_ = node;
 }
 
-void BinodeBase::PushBack(BinodeBase *other) {
-  if (other == this) return;
+void BinodeBase::PushBack(BinodeBase *node, BinodeBase *other) {
+  if (other == node) return;
 
-  other->Unlink();
+  Unlink(other);
 
-  if (nullptr != next_) next_->previous_ = other;
-  other->next_ = next_;
-  next_ = other;
-  other->previous_ = this;
+  if (nullptr != node->next_) node->next_->previous_ = other;
+  other->next_ = node->next_;
+  node->next_ = other;
+  other->previous_ = node;
 }
 
-void BinodeBase::Unlink() {
-  if (nullptr != previous_) previous_->next_ = next_;
-  if (nullptr != next_) next_->previous_ = previous_;
+void BinodeBase::Unlink(BinodeBase *node) {
+  if (nullptr != node->previous_) node->previous_->next_ = node->next_;
+  if (nullptr != node->next_) node->next_->previous_ = node->previous_;
 
-  previous_ = nullptr;
-  next_ = nullptr;
+  node->previous_ = nullptr;
+  node->next_ = nullptr;
 }
 
 } // namespace base

@@ -14,24 +14,4 @@
  * limitations under the License.
  */
 
-#include "wiztk/base/counted-deque.hpp"
-
-#include "wiztk/base/macros.hpp"
-
-namespace wiztk {
-namespace base {
-
-CountedDequeNodeBase::~CountedDequeNodeBase() {
-  if (nullptr != deque_) {
-    _ASSERT(deque_->count_ > 0);
-    deque_->count_--;
-    deque_ = nullptr;
-  }
-}
-
-CountedDequeBase::~CountedDequeBase() {
-  _ASSERT(count_ >= 0);
-}
-
-} // namespace base
-} // namespace wiz-vision
+#include "wiztk/gui/output-manager.hpp"

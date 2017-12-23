@@ -37,6 +37,8 @@ namespace gui {
 
 class Output;
 class Input;
+class InputManager;
+class OutputManager;
 
 /**
  * @ingroup gui
@@ -48,12 +50,13 @@ class WIZTK_EXPORT Display {
   friend class Output;
   friend class Input;
   friend class Callback;
+  friend class InputManager;
+  friend class OutputManager;
 
  public:
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Display);
 
-  using CompoundDeque = base::CountedDeque;
   template<typename ... Args> using SignalRef = typename base::SignalRef<Args...>;
   template<typename ... Args> using Signal = typename base::Signal<Args...>;
 
@@ -64,13 +67,13 @@ class WIZTK_EXPORT Display {
    * @brief Get a deque of outputs
    * @return
    */
-  static const CompoundDeque &GetOutputs();
+  static const OutputManager &GetOutputManager();
 
   /**
-   * @brief Get a deque of inputs
+   * @brief Get the InputManager which contains a deque of input devices.
    * @return
    */
-  static const CompoundDeque &GetInputs();
+  static const InputManager &GetInputManager();
 
   /**
    * @brief Get a set of supported pixel formats

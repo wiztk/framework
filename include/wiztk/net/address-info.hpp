@@ -38,10 +38,7 @@ class AddressInfoList;
  * It's unable to create a single AddressInfo object by constructor. An AddressInfo
  * object is always a node in AddressInfoList created by GetAll().
  */
-class AddressInfo : protected base::BinodeBase {
-
-  template<typename T> friend
-  class base::Deque;
+class AddressInfo : public base::DequeNodeBase {
 
   friend class AddressInfoList;
   friend class IPAddress;
@@ -104,11 +101,11 @@ class AddressInfoList {
 
   ~AddressInfoList();
 
-  AddressInfo *at(int index) const { return deque_.GetAt(index); }
+  AddressInfo *at(int index) const { return deque_.at(index); }
 
-  AddressInfo *operator[](int index) const { return deque_.GetAt(index); }
+  AddressInfo *operator[](int index) const { return deque_.at(index); }
 
-  size_t size() const { return deque_.GetCount(); }
+  size_t size() const { return deque_.count(); }
 
  private:
 

@@ -42,10 +42,7 @@ class IPAddressList;
  * used by IP, a lower-level protocol on which protocols like TCP and UDP are
  * built.
  */
-class IPAddress : protected base::BinodeBase {
-
-  template<typename T> friend
-  class base::Deque;
+class IPAddress : public base::DequeNodeBase {
 
  public:
 
@@ -151,11 +148,11 @@ class IPAddressList {
 
   ~IPAddressList();
 
-  IPAddress *at(int index) const { return deque_.GetAt(index); }
+  IPAddress *at(int index) const { return deque_.at(index); }
 
-  IPAddress *operator[](int index) const { return deque_.GetAt(index); }
+  IPAddress *operator[](int index) const { return deque_.at(index); }
 
-  size_t size() const { return deque_.GetCount(); }
+  size_t size() const { return deque_.count(); }
 
  private:
 

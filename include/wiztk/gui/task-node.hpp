@@ -17,7 +17,7 @@
 #ifndef WIZTK_GUI_TASK_NODE_HPP_
 #define WIZTK_GUI_TASK_NODE_HPP_
 
-#include "wiztk/base/binode.hpp"
+#include "wiztk/base/deque.hpp"
 
 namespace wiztk {
 namespace gui {
@@ -26,7 +26,7 @@ namespace gui {
  * @ingroup gui
  * @brief Task node which is runnable.
  */
-class WIZTK_EXPORT TaskNode : public base::Binode<TaskNode> {
+class WIZTK_EXPORT TaskNode : public base::DequeNode<TaskNode> {
 
  public:
 

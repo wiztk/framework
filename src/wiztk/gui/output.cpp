@@ -23,10 +23,8 @@
 namespace wiztk {
 namespace gui {
 
-using base::CountedDeque;
-
 Output::Output(uint32_t id, uint32_t version)
-    : CountedDeque::Element() {
+    : base::CountedDequeNode<Output>() {
   p_.reset(new Private);
   p_->id = id;
   p_->version = version;

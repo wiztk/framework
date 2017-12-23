@@ -18,7 +18,7 @@
 #define WIZTK_BASE_SIGCXX_HPP_
 
 #include "wiztk/base/delegate.hpp"
-#include "wiztk/base/deque.hpp"
+#include "wiztk/base/binode.hpp"
 
 #include <cstddef>
 #ifdef __DEBUG__
@@ -53,7 +53,7 @@ struct Token;
 template<typename ... ParamTypes>
 class SignalToken;
 
-class SlotNode : protected BinodeBase {
+class SlotNode : public Binode<SlotNode> {
 
  public:
 
@@ -64,18 +64,6 @@ class SlotNode : protected BinodeBase {
 
   SlotNode(const SlotNode &) noexcept = delete;
   SlotNode &operator=(const SlotNode &) = delete;
-
-  inline void push_back(SlotNode *other) { PushBack(other); }
-
-  inline void push_front(SlotNode *other) { PushFront(other); }
-
-  inline bool is_linked() const { return IsLinked(); }
-
-  inline void unlink() { Unlink(); }
-
-  inline SlotNode *previous() const { return static_cast<SlotNode *>(previous_); }
-
-  inline SlotNode *next() const { return static_cast<SlotNode *> (next_); }
 
 };
 

@@ -31,8 +31,8 @@ namespace base {
  * @ingroup base
  * @brief Base class for bidirectional node.
  *
- * You cannot initialize an instance of this base class directly. Instead, create and
- * use a subclass.
+ * You cannot initialize an instance of this base class directly. Instead,
+ * create and use a subclass.
  */
 class WIZTK_EXPORT BinodeBase {
 
@@ -73,37 +73,22 @@ class WIZTK_EXPORT BinodeBase {
     return *this;
   }
 
-  /**
-   * @brief Check if this node is linked to another
-   * @return
-   */
-  bool IsLinked() const {
-    return (nullptr != previous_) || (nullptr != next_);
-  }
-
-  /**
-   * @brief Push another node to the front
-   * @param other
-   */
-  void PushFront(BinodeBase *other);
-
-  /**
-   * @brief Push another node to the back
-   * @param other
-   */
-  void PushBack(BinodeBase *other);
-
-  /**
-   * @brief Break the link to both the previous and next node
-   */
-  void Unlink();
-
  protected:
 
   /**
     * @brief Default constructor
     */
   BinodeBase() = default;
+
+  static void PushFront(BinodeBase *node, BinodeBase *other);
+
+  static void PushBack(BinodeBase *node, BinodeBase *other);
+
+  static void Unlink(BinodeBase *node);
+
+  static bool IsLinked(const BinodeBase *node) {
+    return (nullptr != node->previous_) || (nullptr != node->next_);
+  }
 
   BinodeBase *previous_ = nullptr;
   BinodeBase *next_ = nullptr;
@@ -116,10 +101,7 @@ class WIZTK_EXPORT BinodeBase {
  * @tparam T Usually a type of subclass
  */
 template<typename T>
-class WIZTK_EXPORT Binode : protected BinodeBase {
-
-  template<typename R> friend
-  class Deque;
+class WIZTK_EXPORT Binode : public BinodeBase {
 
  public:
 
@@ -133,13 +115,13 @@ class WIZTK_EXPORT Binode : protected BinodeBase {
 
   Binode &operator=(Binode &&) noexcept = default;
 
-  inline void push_back(T *node) { PushBack(node); }
+  inline void push_back(T *node) { PushBack(this, node); }
 
-  inline void push_front(T *node) { PushFront(node); }
+  inline void push_front(T *node) { PushFront(this, node); }
 
-  inline void unlink() { Unlink(); }
+  inline void unlink() { Unlink(this); }
 
-  inline bool is_linked() const { return IsLinked(); }
+  inline bool is_linked() const { return IsLinked(this); }
 
   inline T *previous() const { return static_cast<T *>(previous_); }
 

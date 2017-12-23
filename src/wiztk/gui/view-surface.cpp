@@ -193,7 +193,9 @@ ViewSurface::Shell::Toplevel::~Toplevel() {
 
 // ------
 
-ViewSurface *ViewSurface::Shell::Popup::Create(ViewSurface *parent, AbstractEventHandler *event_handler, const Margin &margin) {
+ViewSurface *ViewSurface::Shell::Popup::Create(ViewSurface *parent,
+                                               AbstractEventHandler *event_handler,
+                                               const Margin &margin) {
   if (nullptr == parent) throw std::runtime_error("Error! parent is nullptr!");
 
   if (nullptr == Shell::Get(parent)) throw std::runtime_error("Error! parent is not a shell surface!");
@@ -498,7 +500,7 @@ void ViewSurface::Commit() {
     return;
 
   if (nullptr == p_->parent) {
-    kCommitTaskDeque.PushBack(&p_->commit_task);
+    kCommitTaskDeque.push_back(&p_->commit_task);
     return;
   }
 
@@ -508,7 +510,7 @@ void ViewSurface::Commit() {
     main_surface->Commit();
     main_surface->p_->commit_task.push_back(&p_->commit_task);
   } else {
-    kCommitTaskDeque.PushBack(&p_->commit_task);
+    kCommitTaskDeque.push_back(&p_->commit_task);
   }
 }
 
@@ -561,7 +563,7 @@ void ViewSurface::Update(bool validate) {
   }
 
   if (p_->render_task.is_linked()) return;
-  kRenderTaskDeque.PushBack(&p_->render_task);
+  kRenderTaskDeque.push_back(&p_->render_task);
 }
 
 base::Deque<AbstractView::RenderNode> &ViewSurface::GetViewRenderDeque() const {

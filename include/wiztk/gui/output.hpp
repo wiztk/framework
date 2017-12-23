@@ -28,7 +28,7 @@
 namespace wiztk {
 namespace gui {
 
-class Output : public base::CountedDeque::Element {
+class Output : public base::CountedDequeNode<Output> {
 
   friend class ViewSurface;
 
@@ -36,14 +36,14 @@ class Output : public base::CountedDeque::Element {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Output);
 
-  template<typename ... Args> using SignalRefT = typename base::SignalRef<Args...>;
-  template<typename ... Args> using SignalT = typename base::Signal<Args...>;
+  template<typename ... Args> using SignalRef = typename base::SignalRef<Args...>;
+  template<typename ... Args> using Signal = typename base::Signal<Args...>;
 
   Output(uint32_t id, uint32_t version);
 
   ~Output() final;
 
-  SignalRefT<Output *> destroyed() { return destroyed_; }
+  SignalRef<Output *> destroyed() { return destroyed_; }
 
   int GetSubPixel() const;
 
@@ -65,7 +65,7 @@ class Output : public base::CountedDeque::Element {
 
   std::unique_ptr<Private> p_;
 
-  SignalT<Output *> destroyed_;
+  Signal<Output *> destroyed_;
 
 };
 
