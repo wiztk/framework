@@ -16,10 +16,7 @@
 
 #include "internal/display_private.hpp"
 
-#include "wiztk/base/exception.hpp"
-
-#include <wiztk/gui/output.hpp>
-#include <wiztk/gui/input.hpp>
+#include "wiztk/base/property.hpp"
 #include <wiztk/gui/view-surface.hpp>
 
 #include <iostream>
@@ -142,21 +139,9 @@ const Cursor *Display::GetCursor(CursorType cursor_type) {
   return kDisplay->p_->cursors[cursor_type];
 }
 
-void Display::AddOutput(Output *output, int index) {
-  p_->output_manager.Insert(output, index);
-}
-
 void Display::DestroyOutput(uint32_t id) {
-  Output *output = nullptr;
-
-  // TODO: use iterator
-  for (int i = 0; i < p_->output_manager.size(); i++) {
-    output = p_->output_manager.at(i);
-    if (output->GetID() == id) {
-      delete output;
-      break;
-    }
-  }
+  Output *output = __PROPERTY__(output_manager).FindByID(id);
+  delete output;
 }
 
 void Display::AddInput(Input *input, int index) {

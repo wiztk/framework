@@ -60,14 +60,37 @@ class DequeNodeBase : public BinodeBase {};
 
 /**
  * @ingroup base
- * @brief Bidirectional node used in Deque only.
- * @tparam T
+ * @brief A helper template class represents a DequeNodeBase with default
+ * methods.
+ * @tparam T Must be a subclass of DequeNodeBase.
+ *
+ * You usually use this template class in this way:
+ *
+ * @code
+ * class MyNode : public DequeNode<MyNode>;
+ * @endcode
+ *
+ * This is the same as:
+ *
+ * @code
+ * class MyNode : public DequeNodeBase {
+ *
+ *   public:
+ *
+ *     // ...
+ *
+ *     void push_back(MyNode *other);
+ *     void push_front(MyNode *other);
+ *     void unlink();
+ *     bool is_linked() const;
+ *     MyNode* previous() const;
+ *     MyNode* next() const;
+ *
+ * };
+ * @endcode
  */
 template<typename T>
 class DequeNode : public DequeNodeBase {
-
-  template<typename R> friend
-  class Deque;
 
  public:
 
@@ -91,8 +114,17 @@ class DequeNode : public DequeNodeBase {
 
 /**
  * @ingroup base
- * @brief A simple double-ended queue container
- * @tparam T Must be a subclass of DequeNode
+ * @brief A simple double-ended queue container.
+ * @tparam T Must be a subclass of DequeNodeBase
+ *
+ * This class represents a double-ended queue which contains pointers to
+ * DequeNodeBase.
+ *
+ * Internally it contains 2 node objects as the endpoints.
+ *
+ * When a Deque object is destroyed, it will remove all nodes but not delete
+ * them by default. You can assign a deleter with in constructor, or use
+ * particular clear(const DeleteType&) method.
  */
 template<typename T>
 class Deque {
@@ -102,8 +134,12 @@ class Deque {
 
  public:
 
+  /** @brief This class is non-copyable and non-movable */
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Deque);
 
+  /**
+   * @brief A typedef of a function object to remove node in clear().
+   */
   typedef std::function<void(BinodeBase * )> DeleterType;
 
   /**
@@ -239,20 +275,53 @@ class Deque {
 
   };
 
+  /**
+   * @brief Default constructor.
+   */
   Deque();
 
+  /**
+   * @brief Constructor by given deleter object.
+   * @param deleter
+   */
   explicit Deque(const DeleterType &deleter);
 
+  /**
+   * @brief Destructor.
+   */
   virtual ~Deque();
 
-  void push_front(DequeNodeBase *item) { BinodeBase::PushBack(&head_, item); }
+  /**
+   * @brief Push a node at the beginning.
+   * @param node
+   */
+  void push_front(T *node) { BinodeBase::PushBack(&head_, node); }
 
-  void push_back(DequeNodeBase *item) { BinodeBase::PushFront(&tail_, item); }
+  /**
+   * @brief Push a node at the end.
+   * @param node
+   */
+  void push_back(T *node) { BinodeBase::PushFront(&tail_, node); }
 
-  void insert(DequeNodeBase *item, int index = 0);
+  /**
+   * @brief Insert a node at the given index.
+   * @param node
+   * @param index
+   */
+  void insert(T *node, int index = 0);
 
+  /**
+   * @brief Get the count of all nodes contained in this Deque.
+   * @return The count number.
+   */
   size_t count() const;
 
+  /**
+   * @brief Returns if this deque is empty (count() == 0).
+   * @return
+   *   - true: Is empty.
+   *   - false: Not empty.
+   */
   bool is_empty() const;
 
   /**
@@ -260,35 +329,96 @@ class Deque {
    */
   void clear();
 
+  /**
+   * @brief Use the particular deleter to remove all nodes.
+   */
   void clear(const DeleterType &deleter);
 
+  /**
+   * @brief Get the node at the index.
+   * @param index
+   * @return
+   */
   T *operator[](int index) const {
     return at(index);
   }
 
+  /**
+   * @brief Get the node at the index.
+   * @param index
+   * @return
+   */
   T *at(int index) const;
 
+  /**
+   * @brief Returns an iterator points to the first node.
+   * @return
+   */
   Iterator begin() const { return Iterator(head_.next_); }
 
+  /**
+   * @brief Returns a const iterator points to the first node.
+   * @return
+   */
   ConstIterator cbegin() const { return ConstIterator(head_.next_); }
 
+  /**
+   * @brief Returns an iterator points to the reverse first node.
+   * @return
+   */
   Iterator rbegin() const { return Iterator(tail_.previous_); }
 
+  /**
+   * @brief Returns a const iterator points to the reverse first node.
+   * @return
+   */
   ConstIterator crbegin() const { return ConstIterator(tail_.previous_); }
 
-  Iterator end() { return Iterator(&tail_); }
+  /**
+   * @brief Returns an iterator points to the end.
+   * @return
+   */
+  Iterator end() const {
+    const BinodeBase *p = &tail_;
+    return Iterator(const_cast<BinodeBase *>(p));
+  }
 
+  /**
+   * @brief Returns a const iterator points to the end.
+   * @return
+   */
   ConstIterator cend() const { return ConstIterator(&tail_); }
 
-  Iterator rend() { return Iterator(&head_); }
+  /**
+   * @brief Returns an iterator points to the reverse end.
+   * @return
+   */
+  Iterator rend() const {
+    const BinodeBase *p = &head_;
+    return Iterator(const_cast<BinodeBase *>(p));
+  }
 
+  /**
+   * @brief Returns a const iterator points to the reverse end.
+   * @return
+   */
   ConstIterator crend() const { return ConstIterator(&head_); }
 
  protected:
 
+  /**
+   * @brief The head of this deque.
+   */
   internal::DequeEndpoint head_;
+
+  /**
+   * @brief The tail of this deque.
+   */
   internal::DequeEndpoint tail_;
 
+  /**
+   * @brief A function object to process node when removing it in clear();
+   */
   std::function<void(BinodeBase * )> deleter_;
 };
 
@@ -310,21 +440,21 @@ Deque<T>::~Deque() {
 }
 
 template<typename T>
-void Deque<T>::insert(DequeNodeBase *item, int index) {
+void Deque<T>::insert(T *node, int index) {
   if (index >= 0) {
     BinodeBase *p = head_.next_;
     while ((&tail_ != p) && (index > 0)) {
       p = p->next_;
       index--;
     }
-    BinodeBase::PushFront(p, item);
+    BinodeBase::PushFront(p, node);
   } else {
     BinodeBase *p = tail_.previous_;
     while ((&head_ != p) && (index < -1)) {
       p = p->previous_;
       index++;
     }
-    BinodeBase::PushBack(p, item);
+    BinodeBase::PushBack(p, node);
   }
 }
 
@@ -343,7 +473,13 @@ size_t Deque<T>::count() const {
 
 template<typename T>
 bool Deque<T>::is_empty() const {
-  return head_.next_ == &tail_;
+  bool ret = head_.next_ == &tail_;
+
+  if (ret) {
+    _ASSERT(tail_.previous_ == &head_);
+  }
+
+  return ret;
 }
 
 template<typename T>

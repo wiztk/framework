@@ -22,22 +22,26 @@
 namespace wiztk {
 namespace base {
 
+/**
+ * @ingroup base
+ * @brief The basic exception class.
+ */
 class Exception : public std::exception {
  public:
 
   explicit Exception(const std::string &what_arg)
-      : what_(what_arg) {}
+      : msg_(what_arg) {}
 
   explicit Exception(const char *what_arg)
-      : what_(what_arg) {}
+      : msg_(what_arg) {}
 
   const char *what() const noexcept override {
-    return what_.c_str();
+    return msg_.c_str();
   };
 
  private:
 
-  std::string what_;
+  std::string msg_;
 
 };
 

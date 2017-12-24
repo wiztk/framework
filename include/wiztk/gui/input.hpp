@@ -24,29 +24,27 @@
 namespace wiztk {
 namespace gui {
 
+// Forward declarations:
 class Cursor;
-class KeyEvent;
-class MouseEvent;
-class TouchEvent;
-class AbstractView;
-struct ViewTask;
 
 /**
  * @ingroup gui
- * @brief Input manager
+ * @brief Logical input.
  */
-class WIZTK_EXPORT Input : public base::CountedDequeNode<Input> {
+class WIZTK_EXPORT Input : public base::CountedDequeNodeBase {
 
+  friend class Display;
   friend class ViewSurface;
 
  public:
 
+  /** @brief Declare non-copyable and non-movable. */
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Input);
+
+  /** @brief Disable default constructor. */
   Input() = delete;
 
-  Input(uint32_t id, uint32_t version);
-
-  ~Input() final;
+ public:
 
   void SetCursor(const Cursor *cursor) const;
 
@@ -55,6 +53,10 @@ class WIZTK_EXPORT Input : public base::CountedDequeNode<Input> {
   uint32_t GetVersion() const;
 
  private:
+
+  Input(uint32_t id, uint32_t version);
+
+  ~Input() final;
 
   struct Private;
 

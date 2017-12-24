@@ -39,6 +39,9 @@ class WIZTK_EXPORT BinodeBase {
   template<typename T> friend
   class Deque;
 
+  template<typename T> friend
+  class CountedDeque;
+
  public:
 
   WIZTK_DECLARE_NONCOPYABLE(BinodeBase);
@@ -74,6 +77,8 @@ class WIZTK_EXPORT BinodeBase {
   }
 
  protected:
+
+  virtual void OnUnlinked() {/* override this in subclass */}
 
   /**
     * @brief Default constructor

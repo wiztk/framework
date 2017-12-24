@@ -279,7 +279,7 @@ void Display::Private::OnGlobal(void *data,
     _this->InitializeCursors();
   } else if (strcmp(interface, wl_output_interface.name) == 0) {
     auto *output = new Output(id, version);
-    _this->AddOutput(output);
+    _this->p_->output_manager.AddOutput(output);
   } else if (strcmp(interface, zxdg_shell_v6_interface.name) == 0) {
     _this->p_->xdg_shell =
         static_cast<struct zxdg_shell_v6 *>(wl_registry_bind(_this->p_->wl_registry,

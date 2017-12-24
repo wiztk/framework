@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_INPUT_MANAGER_HPP
-#define WIZTK_INPUT_MANAGER_HPP
+#ifndef WIZTK_GUI_INPUT_MANAGER_HPP_
+#define WIZTK_GUI_INPUT_MANAGER_HPP_
 
 #include "wiztk/base/counted-deque.hpp"
 
@@ -24,6 +24,10 @@
 namespace wiztk {
 namespace gui {
 
+/**
+ * @ingroup gui
+ * @brief Input manager controlled by Display.
+ */
 class InputManager {
 
  public:
@@ -46,7 +50,7 @@ class InputManager {
 
 };
 
-}
-}
+} // namespace gui
+} // namespace wiztk
 
-#endif //WIZTK_INPUT_MANAGER_HPP
+#endif // WIZTK_GUI_INPUT_MANAGER_HPP_

@@ -37,9 +37,6 @@ class CountedDequeBase;
  */
 class CountedDequeNodeBase : public DequeNodeBase {
 
-  template<typename T> friend
-  class CountedDequeNode;
-
   friend class CountedDequeBase;
 
   template<typename T> friend
@@ -57,13 +54,29 @@ class CountedDequeNodeBase : public DequeNodeBase {
  protected:
 
   /**
+   * @brief Default constructor.
+   */
+  CountedDequeNodeBase() = default;
+
+  void OnUnlinked() override;
+
+  /**
    * @brief A pointer to a fast countable deque object.
    */
   CountedDequeBase *deque_ = nullptr;
 
- private:
+  /**
+   * @brief Unlink a node and decrease the count in counted deque.
+   * @param node
+   */
+  static void Unlink(CountedDequeNodeBase *node);
 
-  CountedDequeNodeBase() = default;
+  /**
+   * @brief Returns if a node is linked.
+   * @param node
+   * @return
+   */
+  static bool IsLinked(CountedDequeNodeBase *node);
 
 };
 
@@ -74,9 +87,6 @@ class CountedDequeNodeBase : public DequeNodeBase {
  */
 template<typename T>
 class CountedDequeNode : public CountedDequeNodeBase {
-
-  template<typename R> friend
-  class CountedDeque;
 
  public:
 
@@ -154,7 +164,7 @@ class CountedDeque : public CountedDequeBase {
 
    public:
 
-    explicit Iterator(T *obj = nullptr)
+    explicit Iterator(BinodeBase *obj = nullptr)
         : current_(obj) {}
 
     Iterator(const Iterator &) = default;
@@ -185,10 +195,12 @@ class CountedDeque : public CountedDequeBase {
 
     bool operator!=(const T *element) const { return current_ != element; }
 
+    T *operator->() const noexcept { return get(); }
+
     T *get() const noexcept {
       return nullptr == current_->previous_ ?
              nullptr : (nullptr == current_->next_ ?
-                        nullptr : current_);
+                        nullptr : static_cast<T *>(current_));
     }
 
     explicit operator bool() const {
@@ -199,10 +211,13 @@ class CountedDeque : public CountedDequeBase {
 
    private:
 
-    T *current_;
+    BinodeBase *current_;
 
   };
 
+  /**
+   * @brief Default constructor.
+   */
   CountedDeque() = default;
 
   explicit CountedDeque(const DeleterType &deleter)
@@ -210,24 +225,26 @@ class CountedDeque : public CountedDequeBase {
 
   ~CountedDeque() override = default;
 
+  T *operator[](int index) const { return at(index); }
+
   T *at(int index) const { return static_cast<T *>(deque_.at(index)); }
 
   void push_back(T *obj) {
-    obj->unlink();
+    CountedDequeNodeBase::Unlink(obj);
     deque_.push_back(obj);
     obj->deque_ = this;
     count_++;
   }
 
   void push_front(T *obj) {
-    obj->unlink();
+    CountedDequeNodeBase::Unlink(obj);
     deque_.push_front(obj);
     obj->deque_ = this;
     count_++;
   }
 
   void insert(T *obj, int index = 0) {
-    obj->unlink();
+    CountedDequeNodeBase::Unlink(obj);
     deque_.insert(obj, index);
     obj->deque_ = this;
     count_++;
@@ -237,33 +254,44 @@ class CountedDeque : public CountedDequeBase {
     CountedDequeNodeBase *tmp = nullptr;
     while (!deque_.is_empty()) {
       tmp = deque_.begin().get();
-      BinodeBase::Unlink(tmp);
+      CountedDequeNodeBase::Unlink(tmp);
       tmp->deque_ = nullptr;
       if (deque_.deleter_) deque_.deleter_(tmp);
     }
 
-    count_ = 0;
+    _ASSERT(count_ == 0);
+//    count_ = 0;
   }
 
   void clear(const DeleterType &deleter) {
     CountedDequeNodeBase *tmp = nullptr;
     while (!deque_.is_empty()) {
       tmp = deque_.begin().get();
-      BinodeBase::Unlink(tmp);
+      CountedDequeNodeBase::Unlink(tmp);
       tmp->deque_ = nullptr;
       if (deleter) deleter(tmp);
     }
 
+    _ASSERT(count_ == 0);
     count_ = 0;
   }
 
   size_t count() const { return count_; }
 
+  bool is_empty() const { return 0 == count_; }
+
+  Iterator begin() const { return Iterator(deque_.head_.next_); }
+
+  Iterator end() const {
+    const BinodeBase *p = &deque_.tail_;
+    return Iterator(const_cast<BinodeBase *>(p));
+  }
+
 };
 
 template<typename T>
 void CountedDequeNode<T>::unlink() {
-  Unlink(this);
+  BinodeBase::Unlink(this);
 
   if (nullptr != deque_) {
     _ASSERT(deque_->count_ > 0);
@@ -274,7 +302,7 @@ void CountedDequeNode<T>::unlink() {
 
 template<typename T>
 bool CountedDequeNode<T>::is_linked() const {
-  bool ret = IsLinked(this);
+  bool ret = BinodeBase::IsLinked(this);
 
   if (ret) {
     _ASSERT(nullptr != deque_);

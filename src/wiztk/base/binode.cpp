@@ -25,6 +25,7 @@ BinodeBase::~BinodeBase() {
 
 void BinodeBase::PushFront(BinodeBase *node, BinodeBase *other) {
   if (other == node) return;
+  if (node->previous_ == other) return;
 
   Unlink(other);
 
@@ -36,6 +37,7 @@ void BinodeBase::PushFront(BinodeBase *node, BinodeBase *other) {
 
 void BinodeBase::PushBack(BinodeBase *node, BinodeBase *other) {
   if (other == node) return;
+  if (node->next_ == other)return;
 
   Unlink(other);
 
@@ -46,11 +48,22 @@ void BinodeBase::PushBack(BinodeBase *node, BinodeBase *other) {
 }
 
 void BinodeBase::Unlink(BinodeBase *node) {
-  if (nullptr != node->previous_) node->previous_->next_ = node->next_;
-  if (nullptr != node->next_) node->next_->previous_ = node->previous_;
+  bool notify = false;
+
+  if (nullptr != node->previous_) {
+    notify = true;
+    node->previous_->next_ = node->next_;
+  }
+
+  if (nullptr != node->next_) {
+    notify = true;
+    node->next_->previous_ = node->previous_;
+  }
 
   node->previous_ = nullptr;
   node->next_ = nullptr;
+
+  if (notify) node->OnUnlinked();
 }
 
 } // namespace base

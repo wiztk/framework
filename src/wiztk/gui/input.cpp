@@ -22,7 +22,7 @@ namespace wiztk {
 namespace gui {
 
 Input::Input(uint32_t id, uint32_t version)
-    : base::CountedDequeNode<Input>() {
+    : base::CountedDequeNodeBase() {
   p_ = std::make_unique<Private>();
   p_->id = id;
   p_->version = version;

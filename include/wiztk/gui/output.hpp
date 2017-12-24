@@ -28,22 +28,30 @@
 namespace wiztk {
 namespace gui {
 
-class Output : public base::CountedDequeNode<Output> {
+/**
+ * @ingroup gui
+ * @brief Display output.
+ */
+class Output : public base::CountedDequeNodeBase {
 
+  friend class Display;
   friend class ViewSurface;
 
  public:
 
+  /** @brief Declare non-copyable and non-movable */
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Output);
 
+  /** @brief Disable the default constructor */
+  Output() = delete;
+
+  /** @brief Alias name for short. */
   template<typename ... Args> using SignalRef = typename base::SignalRef<Args...>;
+
+  /** @brief Alias name for short. */
   template<typename ... Args> using Signal = typename base::Signal<Args...>;
 
-  Output(uint32_t id, uint32_t version);
-
-  ~Output() final;
-
-  SignalRef<Output *> destroyed() { return destroyed_; }
+ public:
 
   int GetSubPixel() const;
 
@@ -59,7 +67,13 @@ class Output : public base::CountedDequeNode<Output> {
 
   uint32_t GetVersion() const;
 
+  SignalRef<Output *> destroyed() { return destroyed_; }
+
  private:
+
+  Output(uint32_t id, uint32_t version);
+
+  ~Output() final;
 
   struct Private;
 

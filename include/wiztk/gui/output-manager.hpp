@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_OUTPUT_MANAGER_HPP
-#define WIZTK_OUTPUT_MANAGER_HPP
+#ifndef WIZTK_GUI_OUTPUT_MANAGER_HPP_
+#define WIZTK_GUI_OUTPUT_MANAGER_HPP_
 
 #include "wiztk/base/counted-deque.hpp"
 
@@ -24,17 +24,39 @@
 namespace wiztk {
 namespace gui {
 
+/**
+ * @ingroup gui
+ * @brief Output manager controlled by Display.
+ */
 class OutputManager {
+
+  friend class Display;
 
  public:
 
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(OutputManager);
+
+  typedef base::CountedDeque<Output> OutputDeque;
+
+ public:
+
+  /**
+   * @brief Default constructor.
+   */
   OutputManager() = default;
 
+  /**
+   * @brief Destructor.
+   */
   ~OutputManager() = default;
 
-  void Insert(Output *output, int index) {
-    deque_.insert(output, index);
-  }
+  /**
+   * @brief Add a output.
+   * @param output
+   */
+  void AddOutput(Output *output);
+
+  Output *GetActiveOutput() const;
 
   void Clear() {
     deque_.clear([](base::BinodeBase *obj) { delete obj; });
@@ -42,17 +64,21 @@ class OutputManager {
 
   size_t size() const { return deque_.count(); }
 
+  Output *operator[](int index) const { return deque_.at(index); }
+
   Output *at(int index) const {
     return deque_.at(index);
   }
 
+  Output *FindByID(uint32_t id) const;
+
  private:
 
-  base::CountedDeque<Output> deque_;
+  OutputDeque deque_;
 
 };
 
-}
-}
+} // namespace gui
+} // namespace wiztk
 
-#endif //WIZTK_OUTPUT_MANAGER_HPP
+#endif // WIZTK_GUI_OUTPUT_MANAGER_HPP_

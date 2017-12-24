@@ -15,3 +15,30 @@
  */
 
 #include "wiztk/gui/output-manager.hpp"
+
+namespace wiztk {
+namespace gui {
+
+void OutputManager::AddOutput(Output *output) {
+  deque_.push_front(output);
+}
+
+Output *OutputManager::GetActiveOutput() const {
+  return deque_.count() > 0 ? deque_[0] : nullptr;
+}
+
+Output *OutputManager::FindByID(uint32_t id) const {
+  Output *output = nullptr;
+
+  for (OutputDeque::Iterator it = deque_.begin(); it != deque_.end(); ++it) {
+    if (it->GetID() == id) {
+      output = it.get();
+      break;
+    }
+  }
+
+  return output;
+}
+
+}
+}

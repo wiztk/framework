@@ -24,10 +24,13 @@
 namespace wiztk {
 namespace gui {
 
+/**
+ * @ingroup gui_intern
+ * @brief Private data in Output.
+ */
 struct Output::Private {
 
-  Private(const Private &) = delete;
-  Private &operator=(const Private &) = delete;
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
 
   Private()
       : wl_output(nullptr),

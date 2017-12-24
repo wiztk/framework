@@ -113,8 +113,6 @@ class WIZTK_EXPORT Display {
    */
   void Disconnect() noexcept;
 
-  void AddOutput(Output *output, int index = 0);
-
   void DestroyOutput(uint32_t id);
 
   void AddInput(Input *input, int index = 0);

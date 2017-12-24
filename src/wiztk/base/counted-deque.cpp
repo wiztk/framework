@@ -29,6 +29,34 @@ CountedDequeNodeBase::~CountedDequeNodeBase() {
   }
 }
 
+void CountedDequeNodeBase::OnUnlinked() {
+  if (nullptr != deque_) {
+    _ASSERT(deque_->count_ > 0);
+    deque_->count_--;
+    deque_ = nullptr;
+  }
+}
+
+void CountedDequeNodeBase::Unlink(CountedDequeNodeBase *node) {
+  if (nullptr != node->deque_) {
+    _ASSERT(node->deque_->count_ > 0);
+    node->deque_->count_--;
+    node->deque_ = nullptr;
+  }
+
+  BinodeBase::Unlink(node);
+}
+
+bool CountedDequeNodeBase::IsLinked(CountedDequeNodeBase *node) {
+  bool ret = BinodeBase::IsLinked(node);
+
+  if (ret) {
+    _ASSERT(nullptr != node->deque_);
+  }
+
+  return ret;
+}
+
 CountedDequeBase::~CountedDequeBase() {
   _ASSERT(count_ >= 0);
 }
