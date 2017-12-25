@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-#include "wiztk/base/time.hpp"
+#include "wiztk/system/time.hpp"
 
 #include "numerical/clamp.hpp"
 
 namespace wiztk {
-namespace base {
+namespace system {
+
+using base::String;
 
 Time::Time(int year, int month, int day, int hour, int minute, int second, int ms, int us, int ns) {
   using numerical::Clamp;

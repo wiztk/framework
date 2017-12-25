@@ -17,19 +17,23 @@
 #ifndef WIZTK_NET_INTERNAL_IP_ADDRESS_NATIVE_HPP_
 #define WIZTK_NET_INTERNAL_IP_ADDRESS_NATIVE_HPP_
 
-#include "wiztk/net/ip-address.hpp"
+#include "ip-address_private.hpp"
 
 namespace wiztk {
 namespace net {
 
-class IPAddress::Native {
+/**
+ * @ingroup net_intern
+ * @brief Proxy class to get native structure in IPAddress.
+ */
+class WIZTK_NO_EXPORT IPAddress::Native {
 
  public:
 
   static socklen_t GetLength(const IPAddress &address);
 
   static const struct sockaddr *GetSockAddr(const IPAddress &address) {
-    return address.address_;
+    return address.p_->socket_address;
   }
 
 };

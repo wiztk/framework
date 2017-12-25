@@ -14,28 +14,29 @@
  * limitations under the License.
  */
 
-#include "ip-address_native.hpp"
+#ifndef WIZTK_NET_INTERNAL_ADDRESS_INFO_PRIVATE_HPP_
+#define WIZTK_NET_INTERNAL_ADDRESS_INFO_PRIVATE_HPP_
+
+#include "wiztk/net/address-info.hpp"
 
 namespace wiztk {
 namespace net {
 
-socklen_t IPAddress::Native::GetLength(const IPAddress &address) {
-  socklen_t length = 0;
+struct WIZTK_NO_EXPORT AddressInfo::Private : public base::CountedDequeNodeBase {
 
-  switch (address.p_->socket_address->sa_family) {
-    case AF_INET: {
-      length = sizeof(struct sockaddr_in);
-      break;
-    }
-    case AF_INET6: {
-      length = sizeof(struct sockaddr_in6);
-      break;
-    }
-    default:break;
-  }
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
+  Private() = delete;
 
-  return length;
-}
+  explicit Private(AddressInfo *addr_info)
+      : proprietor(addr_info) {}
+
+  AddressInfo *proprietor = nullptr;
+
+  struct addrinfo *address_info = nullptr;
+
+};
 
 }
 }
+
+#endif // WIZTK_NET_INTERNAL_ADDRESS_INFO_PRIVATE_HPP_

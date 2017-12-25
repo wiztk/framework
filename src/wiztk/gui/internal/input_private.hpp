@@ -17,7 +17,9 @@
 #ifndef WIZTK_GUI_INTERNAL_INPUT_PRIVATE_HPP_
 #define WIZTK_GUI_INTERNAL_INPUT_PRIVATE_HPP_
 
-#include <wiztk/gui/input.hpp>
+#include "wiztk/gui/input.hpp"
+
+#include "wiztk/base/counted-deque.hpp"
 
 #include <wiztk/gui/view-surface.hpp>
 #include <wiztk/gui/key-event.hpp>
@@ -30,20 +32,17 @@
 namespace wiztk {
 namespace gui {
 
-struct Input::Private {
+/**
+ * @ingroup gui_intern
+ * @brief Private data used in Input.
+ */
+struct WIZTK_NO_EXPORT Input::Private : public base::CountedDequeNodeBase {
 
-  Private(const Private &) = delete;
-  Private &operator=(const Private &) = delete;
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
+  Private() = delete;
 
-  Private()
-      : wl_seat(nullptr),
-        wl_keyboard(nullptr),
-        wl_pointer(nullptr),
-        wl_touch(nullptr),
-        key_event(nullptr),
-        mouse_event(nullptr),
-        touch_event(nullptr),
-        id(0), version(0) {}
+  Private(Input *input)
+      : proprietor(input) {}
 
   ~Private() {
     keyboard_state.Destroy();
@@ -66,22 +65,24 @@ struct Input::Private {
       wl_seat_destroy(wl_seat);
   }
 
-  struct wl_seat *wl_seat;
-  struct wl_keyboard *wl_keyboard;
-  struct wl_pointer *wl_pointer;
-  struct wl_touch *wl_touch;
+  Input *proprietor = nullptr;
 
-  KeyEvent *key_event;
-  MouseEvent *mouse_event;
-  TouchEvent *touch_event;
+  struct wl_seat *wl_seat = nullptr;
+  struct wl_keyboard *wl_keyboard = nullptr;
+  struct wl_pointer *wl_pointer = nullptr;
+  struct wl_touch *wl_touch = nullptr;
+
+  KeyEvent *key_event = nullptr;
+  MouseEvent *mouse_event = nullptr;
+  TouchEvent *touch_event = nullptr;
 
   std::string name;
 
   Keymap keymap;
   KeyboardState keyboard_state;
 
-  uint32_t id;
-  uint32_t version;
+  uint32_t id = 0;
+  uint32_t version = 0;
 
   // seat:
 

@@ -14,47 +14,33 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_INPUT_MANAGER_HPP_
-#define WIZTK_GUI_INPUT_MANAGER_HPP_
+#ifndef WIZTK_NET_INTERNAL_IP_ADDRESS_PRIVATE_HPP_
+#define WIZTK_NET_INTERNAL_IP_ADDRESS_PRIVATE_HPP_
 
-#include "wiztk/base/counted-deque.hpp"
-
-#include "wiztk/gui/input.hpp"
+#include "wiztk/net/ip-address.hpp"
 
 namespace wiztk {
-namespace gui {
+namespace net {
 
 /**
- * @ingroup gui
- * @brief Input manager controlled by Display.
+ * @ingroup net_intern
+ * @brief Private data in IPAddress.
  */
-class WIZTK_EXPORT InputManager {
+struct IPAddress::Private : public base::CountedDequeNodeBase {
 
-  friend class Display;
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
+  Private() = delete;
 
- public:
+  explicit Private(IPAddress *address)
+      : proprietor(address) {}
 
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(InputManager);
+  IPAddress *proprietor = nullptr;
 
-  typedef base::CountedDeque<Input::Private> InputPrivateDeque;
-
- public:
-
-  InputManager() = default;
-
-  ~InputManager();
-
-  void AddInput(Input *input);
-
-  void Clear();
-
- private:
-
-  InputPrivateDeque deque_;
+  struct sockaddr *socket_address = nullptr;
 
 };
 
-} // namespace gui
-} // namespace wiztk
+}
+}
 
-#endif // WIZTK_GUI_INPUT_MANAGER_HPP_
+#endif // WIZTK_NET_INTERNAL_IP_ADDRESS_PRIVATE_HPP_

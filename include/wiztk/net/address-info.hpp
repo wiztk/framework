@@ -17,7 +17,7 @@
 #ifndef WIZTK_NET_ADDRESS_INFO_HPP_
 #define WIZTK_NET_ADDRESS_INFO_HPP_
 
-#include "wiztk/base/deque.hpp"
+#include "wiztk/base/counted-deque.hpp"
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -38,7 +38,7 @@ class AddressInfoList;
  * It's unable to create a single AddressInfo object by constructor. An AddressInfo
  * object is always a node in AddressInfoList created by GetAll().
  */
-class AddressInfo : public base::DequeNodeBase {
+class WIZTK_EXPORT AddressInfo {
 
   friend class AddressInfoList;
   friend class IPAddress;
@@ -59,9 +59,9 @@ class AddressInfo : public base::DequeNodeBase {
   /**
    * @brief Destructor.
    */
-  ~AddressInfo() final;
+  ~AddressInfo();
 
-  int flags() const { return address_info_->ai_flags; }
+  int GetFlags() const;
 
   /**
    * @brief Returns address family.
@@ -69,23 +69,29 @@ class AddressInfo : public base::DequeNodeBase {
    *
    * Valid values include AF_INET and AF_INET6.
    */
-  int family() const { return address_info_->ai_family; }
+  int GetFamily() const;
 
-  int socket_type() const { return address_info_->ai_socktype; }
+  int GetSocketType() const;
 
-  int protocol() const { return address_info_->ai_protocol; }
+  int GetProtocol() const;
 
-  socklen_t addrlen() const { return address_info_->ai_addrlen; }
+  socklen_t GetAddressLength() const;
 
-  struct sockaddr *addr() const { return address_info_->ai_addr; }
+  struct sockaddr *GetAddress() const;
 
-  const char *canonical_name() const { return address_info_->ai_canonname; }
+  const char *GetCanonicalName() const;
 
  private:
 
-  AddressInfo() = default;
+  // Forward declaration:
+  struct Private;
 
-  struct addrinfo *address_info_ = nullptr;
+  /**
+   * @brief Default constructor.
+   */
+  AddressInfo();
+
+  std::unique_ptr<Private> p_;
 
 };
 
@@ -93,17 +99,21 @@ class AddressInfo : public base::DequeNodeBase {
  * @ingroup net
  * @brief A list of AddressInfo related to the same host and service.
  */
-class AddressInfoList {
+class WIZTK_EXPORT AddressInfoList {
 
   friend class AddressInfo;
 
  public:
 
+  typedef base::CountedDeque<AddressInfo::Private> AddressInfoDeque;
+
   ~AddressInfoList();
 
-  AddressInfo *at(int index) const { return deque_.at(index); }
+  AddressInfo *at(int index) const {
+    return operator[](index);
+  }
 
-  AddressInfo *operator[](int index) const { return deque_.at(index); }
+  AddressInfo *operator[](int index) const;
 
   size_t size() const { return deque_.count(); }
 
@@ -111,8 +121,10 @@ class AddressInfoList {
 
   AddressInfoList() = default;
 
+  void Clear();
+
   // We use has-a relationship here.
-  base::Deque<AddressInfo> deque_;
+  AddressInfoDeque deque_;
 
 };
 

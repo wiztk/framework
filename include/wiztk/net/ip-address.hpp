@@ -17,7 +17,7 @@
 #ifndef WIZTK_NET_IP_ADDRESS_HPP_
 #define WIZTK_NET_IP_ADDRESS_HPP_
 
-#include "wiztk/base/deque.hpp"
+#include "wiztk/base/counted-deque.hpp"
 
 #include "wiztk/net/address-family.hpp"
 
@@ -42,7 +42,9 @@ class IPAddressList;
  * used by IP, a lower-level protocol on which protocols like TCP and UDP are
  * built.
  */
-class IPAddress : public base::DequeNodeBase {
+class WIZTK_EXPORT IPAddress {
+
+  friend class IPAddressList;
 
  public:
 
@@ -84,7 +86,7 @@ class IPAddress : public base::DequeNodeBase {
 
   IPAddress &operator=(IPAddress &&other) noexcept = default;
 
-  ~IPAddress() override;
+  virtual ~IPAddress();
 
   AddressFamily GetAddressFamily() const;
 
@@ -96,9 +98,11 @@ class IPAddress : public base::DequeNodeBase {
 
  protected:
 
-  IPAddress() = default;
+  IPAddress();
 
-  struct sockaddr *address_ = nullptr;
+  struct Private;
+
+  std::unique_ptr<Private> p_;
 
  private:
 
@@ -144,19 +148,23 @@ class IPAddressList {
 
  public:
 
+  typedef base::CountedDeque<IPAddress::Private> IPAddressDeque;
+
   IPAddressList() = default;
 
   ~IPAddressList();
 
-  IPAddress *at(int index) const { return deque_.at(index); }
+  IPAddress *at(int index) const {
+    return operator[](index);
+  }
 
-  IPAddress *operator[](int index) const { return deque_.at(index); }
+  IPAddress *operator[](int index) const;
 
   size_t size() const { return deque_.count(); }
 
  private:
 
-  base::Deque<IPAddress> deque_;
+  IPAddressDeque deque_;
 
 };
 

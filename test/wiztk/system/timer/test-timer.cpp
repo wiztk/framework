@@ -4,10 +4,10 @@
 
 #include "test-timer.hpp"
 
-#include <wiztk/base/timer.hpp>
+#include <wiztk/system/timer.hpp>
 #include <iostream>
 
-using wiztk::base::Timer;
+using wiztk::system::Timer;
 
 class Response {
  public:

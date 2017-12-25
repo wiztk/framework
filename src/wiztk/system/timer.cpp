@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-#include "wiztk/base/timer.hpp"
+#include "wiztk/system/timer.hpp"
 
 #include <cerrno>
 
 namespace wiztk {
-namespace base {
+namespace system {
 
 Timer::Timer()
     : id_(nullptr),

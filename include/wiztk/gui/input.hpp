@@ -17,7 +17,7 @@
 #ifndef WIZTK_GUI_INPUT_HPP_
 #define WIZTK_GUI_INPUT_HPP_
 
-#include "wiztk/base/counted-deque.hpp"
+#include "wiztk/base/macros.hpp"
 
 #include <memory>
 
@@ -31,10 +31,11 @@ class Cursor;
  * @ingroup gui
  * @brief Logical input.
  */
-class WIZTK_EXPORT Input : public base::CountedDequeNodeBase {
+class WIZTK_EXPORT Input {
 
   friend class Display;
   friend class ViewSurface;
+  friend class InputManager;
 
  public:
 
@@ -54,11 +55,11 @@ class WIZTK_EXPORT Input : public base::CountedDequeNodeBase {
 
  private:
 
+  struct Private;
+
   Input(uint32_t id, uint32_t version);
 
-  ~Input() final;
-
-  struct Private;
+  ~Input();
 
   std::unique_ptr<Private> p_;
 

@@ -15,8 +15,7 @@
  */
 
 #include "internal/ip-address_native.hpp"
-
-#include "wiztk/net/address-info.hpp"
+#include "internal/address-info_private.hpp"
 
 #include <arpa/inet.h>
 
@@ -40,9 +39,9 @@ std::unique_ptr<IPAddressList> IPAddress::GetByName(const char *name) {
       struct sockaddr_in *addr = nullptr;
       for (pp = host->h_addr_list; *pp != nullptr; ++pp) {
         obj = new IPv4Address;
-        addr = reinterpret_cast<struct sockaddr_in *>(obj->address_);
+        addr = reinterpret_cast<struct sockaddr_in *>(obj->p_->socket_address);
         memcpy(&addr->sin_addr, *pp, static_cast<size_t >(host->h_length));
-        addr_list->deque_.push_back(obj);
+        addr_list->deque_.push_back(obj->p_.get());
       }
       break;
     }
@@ -51,9 +50,9 @@ std::unique_ptr<IPAddressList> IPAddress::GetByName(const char *name) {
       struct sockaddr_in6 *addr = nullptr;
       for (pp = host->h_addr_list; *pp != nullptr; ++pp) {
         obj = new IPv6Address;
-        addr = reinterpret_cast<struct sockaddr_in6 *>(obj->address_);
+        addr = reinterpret_cast<struct sockaddr_in6 *>(obj->p_->socket_address);
         memcpy(&addr->sin6_addr, *pp, static_cast<size_t >(host->h_length));
-        addr_list->deque_.push_back(obj);
+        addr_list->deque_.push_back(obj->p_.get());
       }
       break;
     }
@@ -72,7 +71,7 @@ std::unique_ptr<IPAddressList> IPAddress::GetByHostAndService(const char *host,
 
   int result = getaddrinfo(host,
                            service,
-                           nullptr == hints ? nullptr : hints->address_info_,
+                           nullptr == hints ? nullptr : hints->p_->address_info,
                            &addr_info);
 
   if (result) {
@@ -93,16 +92,16 @@ std::unique_ptr<IPAddressList> IPAddress::GetByHostAndService(const char *host,
         obj = new IPAddress;
         auto *addr = new struct sockaddr_in;
         memcpy(addr, ai_ptr->ai_addr, ai_ptr->ai_addrlen);
-        obj->address_ = reinterpret_cast<struct sockaddr *>(addr);
-        list_ptr->deque_.push_back(obj);
+        obj->p_->socket_address = reinterpret_cast<struct sockaddr *>(addr);
+        list_ptr->deque_.push_back(obj->p_.get());
         break;
       }
       case AF_INET6: {
         obj = new IPAddress;
         auto *addr = new struct sockaddr_in6;
         memcpy(addr, ai_ptr->ai_addr, ai_ptr->ai_addrlen);
-        obj->address_ = reinterpret_cast<struct sockaddr *>(addr);
-        list_ptr->deque_.push_back(obj);
+        obj->p_->socket_address = reinterpret_cast<struct sockaddr *>(addr);
+        list_ptr->deque_.push_back(obj->p_.get());
         break;
       }
       default: {
@@ -117,41 +116,47 @@ std::unique_ptr<IPAddressList> IPAddress::GetByHostAndService(const char *host,
 
 }
 
-IPAddress::IPAddress(const AddressInfo &address_info) {
-  switch (address_info.addr()->sa_family) {
+IPAddress::IPAddress() {
+  p_ = std::make_unique<Private>(this);
+}
+
+IPAddress::IPAddress(const AddressInfo &address_info)
+    : IPAddress() {
+  switch (address_info.GetAddress()->sa_family) {
     case AF_INET: {
       auto *addr = new struct sockaddr_in;
-      memcpy(addr, address_info.addr(), address_info.addrlen());
-      address_ = reinterpret_cast<struct sockaddr *>(addr);
+      memcpy(addr, address_info.GetAddress(), address_info.GetAddressLength());
+      p_->socket_address = reinterpret_cast<struct sockaddr *>(addr);
       break;
     }
     case AF_INET6: {
       auto *addr = new struct sockaddr_in6;
-      memcpy(addr, address_info.addr(), address_info.addrlen());
-      address_ = reinterpret_cast<struct sockaddr *>(addr);
+      memcpy(addr, address_info.GetAddress(), address_info.GetAddressLength());
+      p_->socket_address = reinterpret_cast<struct sockaddr *>(addr);
       break;
     }
     default:break;
   }
 }
 
-IPAddress::IPAddress(const IPAddress &other) {
-  if (nullptr != other.address_) {
-    switch (other.address_->sa_family) {
+IPAddress::IPAddress(const IPAddress &other)
+    : IPAddress() {
+  if (nullptr != other.p_->socket_address) {
+    switch (other.p_->socket_address->sa_family) {
       case AF_INET: {
         auto *addr = new struct sockaddr_in;
         memcpy(addr,
-               reinterpret_cast<struct sockaddr_in *>(other.address_),
+               reinterpret_cast<struct sockaddr_in *>(other.p_->socket_address),
                sizeof(struct sockaddr_in));
-        address_ = reinterpret_cast<struct sockaddr *>(addr);
+        p_->socket_address = reinterpret_cast<struct sockaddr *>(addr);
         break;
       }
       case AF_INET6: {
         auto *addr = new struct sockaddr_in6;
         memcpy(addr,
-               reinterpret_cast<struct sockaddr_in6 *>(other.address_),
+               reinterpret_cast<struct sockaddr_in6 *>(other.p_->socket_address),
                sizeof(struct sockaddr_in6));
-        address_ = reinterpret_cast<struct sockaddr *>(addr);
+        p_->socket_address = reinterpret_cast<struct sockaddr *>(addr);
         break;
       }
       default:break;
@@ -162,22 +167,22 @@ IPAddress::IPAddress(const IPAddress &other) {
 IPAddress &IPAddress::operator=(const IPAddress &other) {
   Clear();
 
-  if (nullptr != other.address_) {
-    switch (other.address_->sa_family) {
+  if (nullptr != other.p_->socket_address) {
+    switch (other.p_->socket_address->sa_family) {
       case AF_INET: {
         auto *addr = new struct sockaddr_in;
         memcpy(addr,
-               reinterpret_cast<struct sockaddr_in *>(other.address_),
+               reinterpret_cast<struct sockaddr_in *>(other.p_->socket_address),
                sizeof(struct sockaddr_in));
-        address_ = reinterpret_cast<struct sockaddr *>(addr);
+        p_->socket_address = reinterpret_cast<struct sockaddr *>(addr);
         break;
       }
       case AF_INET6: {
         auto *addr = new struct sockaddr_in6;
         memcpy(addr,
-               reinterpret_cast<struct sockaddr_in6 *>(other.address_),
+               reinterpret_cast<struct sockaddr_in6 *>(other.p_->socket_address),
                sizeof(struct sockaddr_in6));
-        address_ = reinterpret_cast<struct sockaddr *>(addr);
+        p_->socket_address = reinterpret_cast<struct sockaddr *>(addr);
         break;
       }
       default:break;
@@ -193,8 +198,8 @@ IPAddress::~IPAddress() {
 
 AddressFamily IPAddress::GetAddressFamily() const {
   AddressFamily addr_family = kAddressFamilyUnspecified;
-  if (nullptr != address_) {
-    switch (address_->sa_family) {
+  if (nullptr != p_->socket_address) {
+    switch (p_->socket_address->sa_family) {
       case AF_INET: {
         addr_family = kAddressFamilyINET;
         break;
@@ -213,17 +218,17 @@ AddressFamily IPAddress::GetAddressFamily() const {
 std::string IPAddress::ToString() const {
   std::string str;
 
-  if (nullptr == address_) return str;
+  if (nullptr == p_->socket_address) return str;
 
-  switch (address_->sa_family) {
+  switch (p_->socket_address->sa_family) {
     case AF_INET: {
-      auto *addr = reinterpret_cast<struct sockaddr_in *>(address_);
+      auto *addr = reinterpret_cast<struct sockaddr_in *>(p_->socket_address);
       char buf[INET_ADDRSTRLEN];
       str = inet_ntop(AF_INET, &addr->sin_addr, buf, INET_ADDRSTRLEN);
       break;
     }
     case AF_INET6: {
-      auto *addr = reinterpret_cast<struct sockaddr_in6 *>(address_);
+      auto *addr = reinterpret_cast<struct sockaddr_in6 *>(p_->socket_address);
       char buf[INET6_ADDRSTRLEN];
       str = inet_ntop(AF_INET6, &addr->sin6_addr, buf, INET6_ADDRSTRLEN);
       break;
@@ -235,7 +240,7 @@ std::string IPAddress::ToString() const {
 }
 
 bool IPAddress::ToHostAndService(std::string *host, std::string *service) {
-  if (nullptr == address_) return false;
+  if (nullptr == p_->socket_address) return false;
   if (nullptr == host && nullptr == service) return false;
 
   char buf_host[NI_MAXHOST];
@@ -243,7 +248,7 @@ bool IPAddress::ToHostAndService(std::string *host, std::string *service) {
 
   socklen_t addrlen = sizeof(struct sockaddr_storage);
 
-  if (0 == getnameinfo(address_, addrlen, buf_host, NI_MAXHOST, buf_service, NI_MAXSERV, 0)) {
+  if (0 == getnameinfo(p_->socket_address, addrlen, buf_host, NI_MAXHOST, buf_service, NI_MAXSERV, 0)) {
     if (nullptr != host) {
       host->assign(buf_host);
     }
@@ -259,14 +264,14 @@ bool IPAddress::ToHostAndService(std::string *host, std::string *service) {
 IPAddress::NameInfo IPAddress::ToHostAndService() {
   NameInfo pair;
 
-  if (nullptr == address_) return std::pair<std::string, std::string>();
+  if (nullptr == p_->socket_address) return std::pair<std::string, std::string>();
 
   char buf_host[NI_MAXHOST];
   char buf_service[NI_MAXSERV];
 
   socklen_t addrlen = sizeof(struct sockaddr_storage);
 
-  if (0 == getnameinfo(address_, addrlen, buf_host, NI_MAXHOST, buf_service, NI_MAXSERV, 0)) {
+  if (0 == getnameinfo(p_->socket_address, addrlen, buf_host, NI_MAXHOST, buf_service, NI_MAXSERV, 0)) {
     pair.first.assign(buf_host);
     pair.second.assign(buf_service);
   }
@@ -275,29 +280,29 @@ IPAddress::NameInfo IPAddress::ToHostAndService() {
 }
 
 void IPAddress::Clear() {
-  if (nullptr == address_) return;;
+  if (nullptr == p_->socket_address) return;;
 
-  switch (address_->sa_family) {
+  switch (p_->socket_address->sa_family) {
     case AF_INET: {
       // IPv4
-      auto *ipv4_address = reinterpret_cast<struct sockaddr_in *>(address_);
+      auto *ipv4_address = reinterpret_cast<struct sockaddr_in *>(p_->socket_address);
       delete ipv4_address;
       break;
     }
     case AF_INET6: {
       // IPv6
-      auto *ipv6_address = reinterpret_cast<struct sockaddr_in6 *>(address_);
+      auto *ipv6_address = reinterpret_cast<struct sockaddr_in6 *>(p_->socket_address);
       delete ipv6_address;
       break;
     }
     default: {
       // TODO: check the address type
-      delete address_;
+      delete p_->socket_address;
       break;
     }
   }
 
-  address_ = nullptr;
+  p_->socket_address = nullptr;
 }
 
 // -------------
@@ -308,7 +313,7 @@ IPv4Address::IPv4Address() {
   bzero(addr, sizeof(struct sockaddr_in));
   addr->sin_family = AF_INET;
 
-  address_ = reinterpret_cast<struct sockaddr *>(addr);
+  p_->socket_address = reinterpret_cast<struct sockaddr *>(addr);
 }
 
 IPv6Address::IPv6Address() {
@@ -317,13 +322,21 @@ IPv6Address::IPv6Address() {
   bzero(addr, sizeof(struct sockaddr_in6));
   addr->sin6_family = AF_INET6;
 
-  address_ = reinterpret_cast<struct sockaddr *>(addr);
+  p_->socket_address = reinterpret_cast<struct sockaddr *>(addr);
 }
 
 // -----------------
 
 IPAddressList::~IPAddressList() {
-  deque_.clear([](base::BinodeBase *obj) { delete obj; });
+  deque_.clear([](base::BinodeBase *obj) {
+    auto *node = static_cast<IPAddress::Private *>(obj);
+    IPAddress *addr = node->proprietor;
+    delete addr;
+  });
+}
+
+IPAddress *IPAddressList::operator[](int index) const {
+  return deque_.at(index)->proprietor;
 }
 
 } // namespace net

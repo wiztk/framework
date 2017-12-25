@@ -294,7 +294,7 @@ void Display::Private::OnGlobal(void *data,
                                                         version));
   } else if (strcmp(interface, wl_seat_interface.name) == 0) {
     auto *input = new Input(id, version);
-    _this->AddInput(input);
+    _this->p_->input_manager.AddInput(input);
   } else if (strcmp(interface, wl_data_device_manager_interface.name) == 0) {
     _this->p_->wl_data_device_manager =
         static_cast<struct wl_data_device_manager *>(wl_registry_bind(_this->p_->wl_registry,

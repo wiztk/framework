@@ -1,4 +1,4 @@
-# Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+# Copyright 2017 The WizTK Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,9 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
-
-add_subdirectory(address-info)
-add_subdirectory(ip-address)
-add_subdirectory(socket)
-add_subdirectory(server-socket)
+add_subdirectory(time)
+add_subdirectory(timer)

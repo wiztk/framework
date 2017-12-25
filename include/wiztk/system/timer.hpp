@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_BASE_TIMER_HPP_
-#define WIZTK_BASE_TIMER_HPP_
+#ifndef WIZTK_SYSTEM_TIMER_HPP_
+#define WIZTK_SYSTEM_TIMER_HPP_
 
 #include "wiztk/base/macros.hpp"
 #include "wiztk/base/delegate.hpp"
@@ -25,7 +25,7 @@
 #include <cstdint>
 
 namespace wiztk {
-namespace base {
+namespace system {
 
 /**
  * @ingroup base
@@ -36,6 +36,11 @@ class WIZTK_EXPORT Timer {
  public:
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Timer);
+
+  template<typename ... Args> using DelegateRef = typename base::DelegateRef<Args...>;
+  template<typename ... Args> using Delegate = typename base::Delegate<Args...>;
+
+ public:
 
   Timer();
 
@@ -86,7 +91,7 @@ class WIZTK_EXPORT Timer {
 
 };
 
-} // namespace base
+} // namespace system
 } // namespace wiztk
 
 #endif // WIZTK_CORE_TIMER_HPP_

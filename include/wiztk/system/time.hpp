@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_BASE_TIME_HPP_
-#define WIZTK_BASE_TIME_HPP_
+#ifndef WIZTK_SYSTEM_TIME_HPP_
+#define WIZTK_SYSTEM_TIME_HPP_
 
 #include "wiztk/base/macros.hpp"
 #include "wiztk/base/string.hpp"
@@ -23,7 +23,7 @@
 #include <ctime>
 
 namespace wiztk {
-namespace base {
+namespace system {
 
 /**
  * @ingroup base
@@ -32,6 +32,8 @@ namespace base {
 class WIZTK_EXPORT Time {
 
  public:
+
+  using String = base::String;
 
   class Delta;
 
@@ -252,7 +254,7 @@ WIZTK_EXPORT inline bool operator>=(const Time::Delta &d1, const Time::Delta &d2
   return d1.sec() >= d2.sec() ? d1.nsec() >= d2.nsec() : false;
 }
 
-} // namespace base
+} // namespace system
 } // namespace wiztk
 
 #endif // WIZTK_BASE_TIME_HPP_

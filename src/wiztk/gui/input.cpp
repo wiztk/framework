@@ -21,9 +21,8 @@
 namespace wiztk {
 namespace gui {
 
-Input::Input(uint32_t id, uint32_t version)
-    : base::CountedDequeNodeBase() {
-  p_ = std::make_unique<Private>();
+Input::Input(uint32_t id, uint32_t version) {
+  p_ = std::make_unique<Private>(this);
   p_->id = id;
   p_->version = version;
 
@@ -36,7 +35,7 @@ Input::Input(uint32_t id, uint32_t version)
 }
 
 Input::~Input() {
-  p_.reset();
+
 }
 
 void Input::SetCursor(const Cursor *cursor) const {

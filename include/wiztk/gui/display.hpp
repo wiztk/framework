@@ -115,8 +115,6 @@ class WIZTK_EXPORT Display {
 
   void DestroyOutput(uint32_t id);
 
-  void AddInput(Input *input, int index = 0);
-
   void InitializeCursors();
 
   void ReleaseCursors();

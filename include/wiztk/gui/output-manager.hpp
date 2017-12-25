@@ -28,7 +28,7 @@ namespace gui {
  * @ingroup gui
  * @brief Output manager controlled by Display.
  */
-class OutputManager {
+class WIZTK_EXPORT OutputManager {
 
   friend class Display;
 

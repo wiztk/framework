@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "wiztk/net/address-info.hpp"
+#include "internal/address-info_private.hpp"
 
 namespace wiztk {
 namespace net {
@@ -28,7 +28,7 @@ std::unique_ptr<AddressInfoList> AddressInfo::GetAll(const char *host,
 
   int result = getaddrinfo(host,
                            service,
-                           nullptr == hints ? nullptr : hints->address_info_,
+                           nullptr == hints ? nullptr : hints->p_->address_info,
                            &addr_info);
 
   if (result) {
@@ -45,34 +45,76 @@ std::unique_ptr<AddressInfoList> AddressInfo::GetAll(const char *host,
   AddressInfo *tmp = nullptr;
   while (nullptr != ai_ptr) {
     tmp = new AddressInfo;
-    tmp->address_info_ = ai_ptr;
-    list_ptr->deque_.push_back(tmp);
+    tmp->p_->address_info = ai_ptr;
+    list_ptr->deque_.push_back(tmp->p_.get());
     ai_ptr = ai_ptr->ai_next;
   }
 
   return list_ptr;
 }
 
+AddressInfo::AddressInfo() {
+  p_ = std::make_unique<Private>(this);
+}
+
 AddressInfo::~AddressInfo() {
-  if (nullptr != address_info_) {
-    freeaddrinfo(address_info_);
+  if (nullptr != p_->address_info) {
+    freeaddrinfo(p_->address_info);
   }
+}
+
+int AddressInfo::GetFlags() const {
+  return p_->address_info->ai_flags;
+}
+
+int AddressInfo::GetFamily() const {
+  return p_->address_info->ai_family;
+}
+
+int AddressInfo::GetSocketType() const {
+  return p_->address_info->ai_socktype;
+}
+
+int AddressInfo::GetProtocol() const {
+  return p_->address_info->ai_protocol;
+}
+
+socklen_t AddressInfo::GetAddressLength() const {
+  return p_->address_info->ai_addrlen;
+}
+
+struct sockaddr *AddressInfo::GetAddress() const {
+  return p_->address_info->ai_addr;
+}
+
+const char *AddressInfo::GetCanonicalName() const {
+  return p_->address_info->ai_canonname;
 }
 
 // --------------------------------------
 
 AddressInfoList::~AddressInfoList() {
-  typedef base::Deque<AddressInfo> Deque;
-
   if (deque_.count() > 0) {
-    freeaddrinfo(deque_[0]->address_info_);
+    freeaddrinfo(deque_[0]->address_info);
   }
 
-  for (Deque::Iterator it = deque_.begin(); it; ++it) {
-    it.get()->address_info_ = nullptr;
+  for (AddressInfoDeque::Iterator it = deque_.begin(); it; ++it) {
+    it.get()->address_info = nullptr;
   }
 
-  deque_.clear([](base::BinodeBase *obj) { delete obj; });
+  Clear();
+}
+
+AddressInfo *AddressInfoList::operator[](int index) const {
+  return deque_.at(index)->proprietor;
+}
+
+void AddressInfoList::Clear() {
+  deque_.clear([](base::BinodeBase *obj) {
+    auto *node = static_cast<AddressInfo::Private *>(obj);
+    AddressInfo *addr_info = node->proprietor;
+    delete addr_info;
+  });
 }
 
 } // namespace net

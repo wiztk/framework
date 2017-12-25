@@ -144,10 +144,6 @@ void Display::DestroyOutput(uint32_t id) {
   delete output;
 }
 
-void Display::AddInput(Input *input, int index) {
-  p_->input_manager.Insert(input, index);
-}
-
 void Display::InitializeCursors() {
   p_->cursors[kCursorBottomLeft] =
       Cursor::Create(wl_cursor_theme_get_cursor(p_->wl_cursor_theme, "bottom_left_corner"));

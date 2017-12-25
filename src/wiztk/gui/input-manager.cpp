@@ -15,3 +15,28 @@
  */
 
 #include "wiztk/gui/input-manager.hpp"
+
+#include "internal/input_private.hpp"
+
+namespace wiztk {
+namespace gui {
+
+InputManager::~InputManager() {
+  Clear();
+}
+
+void InputManager::AddInput(Input *input) {
+  auto *node = input->p_.get();
+  deque_.push_back(node);
+}
+
+void InputManager::Clear() {
+  deque_.clear([](base::BinodeBase *obj) {
+    auto *node = static_cast<Input::Private *>(obj);
+    Input *input = node->proprietor;
+    delete input;
+  });
+}
+
+}
+}

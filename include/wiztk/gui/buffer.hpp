@@ -46,8 +46,10 @@ class Buffer {
 
   using Point = base::Point2I;
   using Size = base::SizeI;
-  template<typename ... Args> using SignalRefT = typename base::SignalRef<Args...>;
-  template<typename ... Args> using SignalT = typename base::Signal<Args...>;
+  template<typename ... Args> using SignalRef = typename base::SignalRef<Args...>;
+  template<typename ... Args> using Signal = typename base::Signal<Args...>;
+
+ public:
 
   Buffer();
 
@@ -78,9 +80,9 @@ class Buffer {
 
   int GetHeight() const;
 
-  SignalRefT<> release() { return release_; }
+  SignalRef<> release() { return release_; }
 
-  SignalRefT<> destroyed() { return destroyed_; }
+  SignalRef<> destroyed() { return destroyed_; }
 
  private:
 
@@ -88,9 +90,9 @@ class Buffer {
 
   std::unique_ptr<Private> p_;
 
-  SignalT<> release_;
+  Signal<> release_;
 
-  SignalT<> destroyed_;
+  Signal<> destroyed_;
 
 };
 
