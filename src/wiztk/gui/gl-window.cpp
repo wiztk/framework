@@ -91,9 +91,9 @@ void GLWindow::Private::DrawFrame(const Context &context) {
   canvas->Clear();
 
   Path path;
-  RectF geometry = RectF::FromXYWH(0.f, 0.f, owner()->GetWidth(), owner()->GetHeight());
+  RectF geometry = RectF::FromXYWH(0.f, 0.f, proprietor()->GetWidth(), proprietor()->GetHeight());
 
-  if ((!owner()->IsMaximized()) || (!owner()->IsFullscreen())) {
+  if ((!proprietor()->IsMaximized()) || (!proprietor()->IsFullscreen())) {
     // Drop shadow:
 //    float radii[] = {
 //        7.f, 7.f, // top-left
@@ -105,7 +105,7 @@ void GLWindow::Private::DrawFrame(const Context &context) {
     path.AddRect(geometry);
     canvas->Save();
     canvas->ClipPath(path, ClipOperation::kClipDifference, true);
-    owner()->DropShadow(context);
+    proprietor()->DropShadow(context);
     canvas->Restore();
   } else {
     path.AddRect(geometry);
@@ -140,9 +140,9 @@ int GLWindow::Private::GetMouseLocation(const MouseEvent *event) const {
     hlocation = AbstractShellView::kExterior;
   else if (x < Theme::GetShadowMargin().left + kResizingMargin.left)
     hlocation = AbstractShellView::kResizeLeft;
-  else if (x < Theme::GetShadowMargin().left + owner()->GetWidth() - kResizingMargin.right)
+  else if (x < Theme::GetShadowMargin().left + proprietor()->GetWidth() - kResizingMargin.right)
     hlocation = AbstractShellView::kInterior;
-  else if (x < Theme::GetShadowMargin().left + owner()->GetWidth() + kResizingMargin.right)
+  else if (x < Theme::GetShadowMargin().left + proprietor()->GetWidth() + kResizingMargin.right)
     hlocation = AbstractShellView::kResizeRight;
   else
     hlocation = AbstractShellView::kExterior;
@@ -151,9 +151,9 @@ int GLWindow::Private::GetMouseLocation(const MouseEvent *event) const {
     vlocation = AbstractShellView::kExterior;
   else if (y < Theme::GetShadowMargin().top + kResizingMargin.top)
     vlocation = AbstractShellView::kResizeTop;
-  else if (y < Theme::GetShadowMargin().top + owner()->GetHeight() - kResizingMargin.bottom)
+  else if (y < Theme::GetShadowMargin().top + proprietor()->GetHeight() - kResizingMargin.bottom)
     vlocation = AbstractShellView::kInterior;
-  else if (y < Theme::GetShadowMargin().top + owner()->GetHeight() + kResizingMargin.bottom)
+  else if (y < Theme::GetShadowMargin().top + proprietor()->GetHeight() + kResizingMargin.bottom)
     vlocation = AbstractShellView::kResizeBottom;
   else
     vlocation = AbstractShellView::kExterior;
@@ -174,7 +174,7 @@ int GLWindow::Private::GetMouseLocation(const MouseEvent *event) const {
 
 void GLWindow::Private::OnFrame(uint32_t serial) {
   callback.Setup(*gl_surface);
-  owner()->OnRender();
+  proprietor()->OnRender();
   gl_surface->Commit();
 }
 

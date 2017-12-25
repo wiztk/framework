@@ -22,28 +22,15 @@ namespace wiztk {
 namespace base {
 
 CountedDequeNodeBase::~CountedDequeNodeBase() {
-  if (nullptr != deque_) {
-    _ASSERT(deque_->count_ > 0);
-    deque_->count_--;
-    deque_ = nullptr;
-  }
+  ResetCountedDeque();
 }
 
 void CountedDequeNodeBase::OnUnlinked() {
-  if (nullptr != deque_) {
-    _ASSERT(deque_->count_ > 0);
-    deque_->count_--;
-    deque_ = nullptr;
-  }
+  ResetCountedDeque();
 }
 
 void CountedDequeNodeBase::Unlink(CountedDequeNodeBase *node) {
-  if (nullptr != node->deque_) {
-    _ASSERT(node->deque_->count_ > 0);
-    node->deque_->count_--;
-    node->deque_ = nullptr;
-  }
-
+  node->ResetCountedDeque();
   BinodeBase::Unlink(node);
 }
 
@@ -55,6 +42,14 @@ bool CountedDequeNodeBase::IsLinked(CountedDequeNodeBase *node) {
   }
 
   return ret;
+}
+
+void CountedDequeNodeBase::ResetCountedDeque() {
+  if (nullptr != deque_) {
+    _ASSERT(deque_->count_ > 0);
+    deque_->count_--;
+    deque_ = nullptr;
+  }
 }
 
 CountedDequeBase::~CountedDequeBase() {

@@ -28,12 +28,15 @@ namespace gui {
  * @ingroup gui_intern
  * @brief Private data in Output.
  */
-struct Output::Private {
+struct Output::Private : public base::CountedDequeNodeBase {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
+  Private() = delete;
 
-  Private()
-      : wl_output(nullptr),
+  explicit Private(Output *output)
+      : base::CountedDequeNodeBase(),
+        proprietor(output),
+        wl_output(nullptr),
         current_refresh_rate(0),
         preferred_refresh_rate(0),
         subpixel(0),
@@ -42,10 +45,12 @@ struct Output::Private {
         id(0),
         version(0) {}
 
-  ~Private() {
+  ~Private() final {
     if (wl_output)
       wl_output_destroy(wl_output);
   }
+
+  Output *proprietor = nullptr;
 
   struct wl_output *wl_output;
 

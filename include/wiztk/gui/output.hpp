@@ -32,10 +32,11 @@ namespace gui {
  * @ingroup gui
  * @brief Display output.
  */
-class Output : public base::CountedDequeNodeBase {
+class Output {
 
   friend class Display;
   friend class ViewSurface;
+  friend class OutputManager;
 
  public:
 
@@ -71,11 +72,11 @@ class Output : public base::CountedDequeNodeBase {
 
  private:
 
+  struct Private;
+
   Output(uint32_t id, uint32_t version);
 
-  ~Output() final;
-
-  struct Private;
+  ~Output();
 
   std::unique_ptr<Private> p_;
 

@@ -113,13 +113,13 @@ std::vector<float> Window::Private::kOutlineRadii = {
 };
 
 void Window::Private::DrawBody() {
-  ViewSurface *shell_surface = owner()->GetShellSurface();
+  ViewSurface *shell_surface = proprietor()->GetShellSurface();
   _ASSERT(nullptr != shell_surface);
 
   const Margin &margin = shell_surface->margin();
   int scale = shell_surface->GetScale();
-  int pixel_width = owner()->GetWidth() * scale;
-  int pixel_height = owner()->GetHeight() * scale;
+  int pixel_width = proprietor()->GetWidth() * scale;
+  int pixel_height = proprietor()->GetHeight() * scale;
 
   RectF body_geometry = RectF::FromXYWH(0.f, 0.f, pixel_width, pixel_height);
   Path body_path;
@@ -132,7 +132,7 @@ void Window::Private::DrawBody() {
 
   Context context(shell_surface, &canvas);
 
-  if (owner()->IsMaximized() || owner()->IsFullscreen()) {
+  if (proprietor()->IsMaximized() || proprietor()->IsFullscreen()) {
     body_path.AddRect(body_geometry);
     DrawInner(context, body_path);
   } else {
@@ -154,7 +154,7 @@ void Window::Private::DrawBody() {
 
   canvas.Flush();
 
-  shell_surface->Damage(0, 0, owner()->GetWidth() + margin.lr(), owner()->GetHeight() + margin.tb());
+  shell_surface->Damage(0, 0, proprietor()->GetWidth() + margin.lr(), proprietor()->GetHeight() + margin.tb());
   shell_surface->Commit();
 }
 
@@ -185,7 +185,7 @@ void Window::Private::DrawOutline(const Context &context, const Path &path) {
 void Window::Private::DrawShadow(const Context &context, const Path &path) {
   Canvas::LockGuard guard(context.canvas(), path, ClipOperation::kClipDifference, true);
   context.canvas()->Clear();
-  owner()->DropShadow(context);
+  proprietor()->DropShadow(context);
 }
 
 void Window::Private::RecursiveDraw(AbstractView *view, const Context &context) {
@@ -205,14 +205,14 @@ void Window::Private::RecursiveDraw(AbstractView *view, const Context &context) 
   } else {
     context.canvas()->Clear();
 
-    int pixel_width = owner()->GetWidth() * scale;
-    int pixel_height = owner()->GetHeight() * scale;
+    int pixel_width = proprietor()->GetWidth() * scale;
+    int pixel_height = proprietor()->GetHeight() * scale;
 
     RectF body_geometry = RectF::FromXYWH(0.f, 0.f, pixel_width, pixel_height);
 
     Path body_path;
 
-    if (owner()->IsMaximized() || owner()->IsFullscreen()) {
+    if (proprietor()->IsMaximized() || proprietor()->IsFullscreen()) {
       body_path.AddRect(body_geometry);
       DrawInner(context, body_path);
     } else {
@@ -236,7 +236,7 @@ void Window::Private::RecursiveDraw(AbstractView *view, const Context &context) 
 }
 
 void Window::Private::SetContentViewGeometry() {
-  const RectI geometry = owner()->GetContentGeometry();
+  const RectI geometry = proprietor()->GetContentGeometry();
   content_view->MoveTo(geometry.x(), geometry.y());
   content_view->Resize(geometry.width(), geometry.height());
 }
@@ -338,7 +338,7 @@ void Window::OnShown() {
   if (nullptr == p_->output) {
     const OutputManager &outputs = Display::GetOutputManager();
     if (outputs.size() > 0) {
-      p_->output = static_cast<const Output *>(outputs.at(0));
+      p_->output = outputs.GetActiveOutput();
     }
   }
   if (nullptr != p_->output) scale = p_->output->GetScale();
@@ -403,7 +403,7 @@ void Window::OnSaveSize(const Size &old_size, const Size &new_size) {
   int scale = 1;
   const OutputManager &outputs = Display::GetOutputManager();
   if (outputs.size() > 0) {
-    p_->output = static_cast<const Output *>(outputs.at(0));
+    p_->output = outputs.GetActiveOutput();
     scale = p_->output->GetScale();
   }
   shell_surface->SetScale(scale);
@@ -707,7 +707,7 @@ void Window::OnLeaveOutput(const ViewSurface *surface, const Output *output) {
   int scale = 1;
   const OutputManager &outputs = Display::GetOutputManager();
   if (outputs.size() > 0) {
-    p_->output = static_cast<const Output *>(outputs.at(0));
+    p_->output = outputs.GetActiveOutput();
     scale = p_->output->GetScale();
   }
 
@@ -778,7 +778,7 @@ void Window::OnFullscreenButtonClicked(base::SLOT slot) {
     else {
       const OutputManager &outputs = Display::GetOutputManager();
       if (outputs.size() > 0) {
-        p_->output = static_cast<const Output *>(outputs.at(0));
+        p_->output = outputs.GetActiveOutput();
         ToggleFullscreen(p_->output);
       }
     }

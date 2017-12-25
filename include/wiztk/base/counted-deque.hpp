@@ -58,8 +58,6 @@ class CountedDequeNodeBase : public DequeNodeBase {
    */
   CountedDequeNodeBase() = default;
 
-  void OnUnlinked() override;
-
   /**
    * @brief A pointer to a fast countable deque object.
    */
@@ -77,6 +75,12 @@ class CountedDequeNodeBase : public DequeNodeBase {
    * @return
    */
   static bool IsLinked(CountedDequeNodeBase *node);
+
+ private:
+
+  void OnUnlinked() final;
+
+  void ResetCountedDeque();
 
 };
 

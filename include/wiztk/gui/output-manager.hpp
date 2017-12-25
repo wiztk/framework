@@ -36,7 +36,7 @@ class OutputManager {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(OutputManager);
 
-  typedef base::CountedDeque<Output> OutputDeque;
+  typedef base::CountedDeque<Output::Private> OutputPrivateDeque;
 
  public:
 
@@ -48,7 +48,7 @@ class OutputManager {
   /**
    * @brief Destructor.
    */
-  ~OutputManager() = default;
+  ~OutputManager();
 
   /**
    * @brief Add a output.
@@ -58,23 +58,15 @@ class OutputManager {
 
   Output *GetActiveOutput() const;
 
-  void Clear() {
-    deque_.clear([](base::BinodeBase *obj) { delete obj; });
-  }
+  void Clear();
 
   size_t size() const { return deque_.count(); }
-
-  Output *operator[](int index) const { return deque_.at(index); }
-
-  Output *at(int index) const {
-    return deque_.at(index);
-  }
 
   Output *FindByID(uint32_t id) const;
 
  private:
 
-  OutputDeque deque_;
+  OutputPrivateDeque deque_;
 
 };
 

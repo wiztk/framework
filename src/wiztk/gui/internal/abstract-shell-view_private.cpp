@@ -30,10 +30,10 @@ void AbstractShellView::Private::OnXdgSurfaceConfigure(uint32_t serial) {
   ViewSurface::Shell *shell = ViewSurface::Shell::Get(shell_surface);
   shell->AckConfigure(serial);
 
-  if (!owner()->IsShown()) {
+  if (!proprietor()->IsShown()) {
     Bit::Set<int>(flags, kFlagMaskShown);
     shell->ResizeWindow(size.width, size.height);
-    owner()->OnShown();
+    proprietor()->OnShown();
   }
 }
 
@@ -43,33 +43,33 @@ void AbstractShellView::Private::OnXdgToplevelConfigure(int width, int height, i
   bool resizing = (0 != (states & ViewSurface::Shell::Toplevel::kStateMaskResizing));
   bool focus = (0 != (states & ViewSurface::Shell::Toplevel::kStateMaskActivated));
 
-  if (maximized != owner()->IsMaximized()) {
+  if (maximized != proprietor()->IsMaximized()) {
     Bit::Inverse<int>(flags, kFlagMaskMaximized);
-    owner()->OnMaximized(maximized);
+    proprietor()->OnMaximized(maximized);
   }
 
-  if (fullscreen != owner()->IsFullscreen()) {
+  if (fullscreen != proprietor()->IsFullscreen()) {
     Bit::Inverse<int>(flags, kFlagMaskFullscreen);
-    owner()->OnFullscreen(fullscreen);
+    proprietor()->OnFullscreen(fullscreen);
   }
 
-  if (resizing != owner()->IsResizing()) {
+  if (resizing != proprietor()->IsResizing()) {
     // TODO: no need to use this flag
     Bit::Inverse<int>(flags, kFlagMaskResizing);
   }
 
-  if (focus != owner()->IsFocused()) {
+  if (focus != proprietor()->IsFocused()) {
     Bit::Inverse<int>(flags, kFlagMaskFocused);
-    owner()->OnFocus(focus);
+    proprietor()->OnFocus(focus);
   }
 
   if (width > 0 && height > 0) {
-    owner()->OnConfigureSize(last_size, Size(width, height));
+    proprietor()->OnConfigureSize(last_size, Size(width, height));
   }
 }
 
 void AbstractShellView::Private::OnXdgToplevelClose() {
-  owner()->Close();
+  proprietor()->Close();
 }
 
 void AbstractShellView::Private::DispatchMouseEnterEvent(AbstractView *parent,

@@ -66,7 +66,7 @@ void Spinner::Private::Draw(const Context &context) {
   int scale = context.surface()->GetScale();
   canvas->Scale(scale, scale);
 
-  const RectF &rect = owner()->GetBounds();
+  const RectF &rect = proprietor()->GetBounds();
   float radius = Clamp(std::min(rect.width(), rect.height()) / 2.f - 50.f,
                        50.f, 200.f);
 
@@ -91,7 +91,7 @@ void Spinner::Private::Draw(const Context &context) {
 }
 
 void Spinner::Private::OnFrame(uint32_t serial) {
-  owner()->Update();
+  proprietor()->Update();
 }
 
 Spinner::Spinner() {

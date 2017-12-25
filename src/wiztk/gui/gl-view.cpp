@@ -55,7 +55,7 @@ struct GLView::Private : public base::Property<GLView> {
 
 void GLView::Private::OnFrame(uint32_t serial) {
   callback.Setup(*gl_surface);
-  owner()->OnRender();
+  proprietor()->OnRender();
   gl_surface->Commit();
 }
 

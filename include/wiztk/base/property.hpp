@@ -61,7 +61,7 @@ namespace base {
  *
  * @code
  * #include "wiztk/base/property.hpp"
- * #include "wiztk/base/memory.hpp"
+ * #include <memory.hpp>
  *
  * struct MyView::Private : public base::Property<MyView> {
  *
@@ -70,14 +70,14 @@ namespace base {
  * };
  *
  * MyView::MyView {
- *   p_ = base::make_unique<Private>(this);
+ *   p_ = std::make_unique<Private>(this);
  * }
  * @endcode
  *
  * In this way, the public header files can provide clean and understandable
  * code and hide the details.
  *
- * A Property object can know the owner it belongs to with the owner member
+ * A Property object can know the proprietor it belongs to with the proprietor member
  * variable.
  */
 template<typename T>
@@ -89,15 +89,15 @@ class Property {
   Property() = delete;
 
   inline explicit Property(T *owner)
-      : owner_(owner) {}
+      : proprietor_(owner) {}
 
   virtual ~Property() = default;
 
-  T *owner() const { return owner_; }
+  T *proprietor() const { return proprietor_; }
 
  private:
 
-  T *owner_ = nullptr;
+  T *proprietor_ = nullptr;
 
 };
 

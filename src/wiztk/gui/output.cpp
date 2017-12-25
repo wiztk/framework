@@ -23,9 +23,8 @@
 namespace wiztk {
 namespace gui {
 
-Output::Output(uint32_t id, uint32_t version)
-    : base::CountedDequeNodeBase() {
-  p_ = std::make_unique<Private>();
+Output::Output(uint32_t id, uint32_t version) {
+  p_ = std::make_unique<Private>(this);
   p_->id = id;
   p_->version = version;
 

@@ -16,23 +16,38 @@
 
 #include "wiztk/gui/output-manager.hpp"
 
+#include "internal/output_private.hpp"
+
 namespace wiztk {
 namespace gui {
 
+OutputManager::~OutputManager() {
+  Clear();
+}
+
 void OutputManager::AddOutput(Output *output) {
-  deque_.push_front(output);
+  auto *node = output->p_.get();
+  deque_.push_front(node);
 }
 
 Output *OutputManager::GetActiveOutput() const {
-  return deque_.count() > 0 ? deque_[0] : nullptr;
+  return deque_.count() > 0 ? deque_[0]->proprietor : nullptr;
+}
+
+void OutputManager::Clear() {
+  deque_.clear([](base::BinodeBase *obj) {
+    auto *node = static_cast<Output::Private *>(obj);
+    Output *output = node->proprietor;
+    delete output;
+  });
 }
 
 Output *OutputManager::FindByID(uint32_t id) const {
   Output *output = nullptr;
 
-  for (OutputDeque::Iterator it = deque_.begin(); it != deque_.end(); ++it) {
-    if (it->GetID() == id) {
-      output = it.get();
+  for (OutputPrivateDeque::Iterator it = deque_.begin(); it != deque_.end(); ++it) {
+    if (it->proprietor->GetID() == id) {
+      output = it->proprietor;
       break;
     }
   }
