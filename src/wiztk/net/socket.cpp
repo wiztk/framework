@@ -46,7 +46,7 @@ Socket::~Socket() {
 void Socket::Connect(const IPAddress &address) {
   using _ = IPAddress::Native;
 
-  int ret = connect(socket_, _::GetSockAddr(address), _::GetLength(address));
+  int ret = connect(socket_, _::GetSocketAddress(address), _::GetLength(address));
   if (ret < 0) {
     throw SocketException("Error! Cannot connect this socket!");
   }

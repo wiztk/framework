@@ -32,7 +32,7 @@ class WIZTK_NO_EXPORT IPAddress::Native {
 
   static socklen_t GetLength(const IPAddress &address);
 
-  static const struct sockaddr *GetSockAddr(const IPAddress &address) {
+  static const struct sockaddr *GetSocketAddress(const IPAddress &address) {
     return address.p_->socket_address;
   }
 

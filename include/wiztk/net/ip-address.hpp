@@ -55,8 +55,6 @@ class WIZTK_EXPORT IPAddress {
    */
   typedef std::pair<std::string, std::string> NameInfo;
 
-  static std::unique_ptr<IPAddressList> GetByName(const char *name);
-
   /**
    * @brief Get an IPAddressList by given address info.
    * @param host
@@ -147,9 +145,7 @@ class IPAddressList {
   friend class IPAddress;
 
  public:
-
-  typedef base::CountedDeque<IPAddress::Private> IPAddressDeque;
-
+  
   IPAddressList() = default;
 
   ~IPAddressList();
@@ -163,6 +159,8 @@ class IPAddressList {
   size_t size() const { return deque_.count(); }
 
  private:
+
+  typedef base::CountedDeque<IPAddress::Private> IPAddressDeque;
 
   IPAddressDeque deque_;
 

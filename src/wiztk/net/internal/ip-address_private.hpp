@@ -22,11 +22,13 @@
 namespace wiztk {
 namespace net {
 
+using base::CountedDequeNode;
+
 /**
  * @ingroup net_intern
  * @brief Private data in IPAddress.
  */
-struct IPAddress::Private : public base::CountedDequeNodeBase {
+struct IPAddress::Private : public CountedDequeNode<IPAddress::Private> {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
   Private() = delete;
@@ -40,7 +42,7 @@ struct IPAddress::Private : public base::CountedDequeNodeBase {
 
 };
 
-}
-}
+} // namespace net
+} // namespace wiztk
 
 #endif // WIZTK_NET_INTERNAL_IP_ADDRESS_PRIVATE_HPP_

@@ -22,7 +22,9 @@
 namespace wiztk {
 namespace net {
 
-struct WIZTK_NO_EXPORT AddressInfo::Private : public base::CountedDequeNodeBase {
+using base::CountedDequeNode;
+
+struct WIZTK_NO_EXPORT AddressInfo::Private : public CountedDequeNode<AddressInfo::Private> {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
   Private() = delete;
@@ -36,7 +38,7 @@ struct WIZTK_NO_EXPORT AddressInfo::Private : public base::CountedDequeNodeBase 
 
 };
 
-}
-}
+} // namespace net
+} // namespace wiztk
 
 #endif // WIZTK_NET_INTERNAL_ADDRESS_INFO_PRIVATE_HPP_

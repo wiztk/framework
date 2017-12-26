@@ -42,7 +42,7 @@ ServerSocket::~ServerSocket() {
 void ServerSocket::Bind(const IPAddress &address) const {
   using _ = IPAddress::Native;
 
-  int ret = bind(socket_, _::GetSockAddr(address), _::GetLength(address));
+  int ret = bind(socket_, _::GetSocketAddress(address), _::GetLength(address));
   if (ret < 0)
     throw SocketException("Error! Cannot bind this socket!");
 }

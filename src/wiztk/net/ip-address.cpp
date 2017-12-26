@@ -24,44 +24,6 @@
 namespace wiztk {
 namespace net {
 
-std::unique_ptr<IPAddressList> IPAddress::GetByName(const char *name) {
-  std::unique_ptr<IPAddressList> addr_list(new IPAddressList);
-
-  struct hostent *host = gethostbyname(name);
-  if (nullptr == host)
-    throw std::runtime_error("Error! Fail to get host by name!");
-
-  char **pp = nullptr;
-
-  switch (host->h_addrtype) {
-    case AF_INET: {
-      IPv4Address *obj = nullptr;
-      struct sockaddr_in *addr = nullptr;
-      for (pp = host->h_addr_list; *pp != nullptr; ++pp) {
-        obj = new IPv4Address;
-        addr = reinterpret_cast<struct sockaddr_in *>(obj->p_->socket_address);
-        memcpy(&addr->sin_addr, *pp, static_cast<size_t >(host->h_length));
-        addr_list->deque_.push_back(obj->p_.get());
-      }
-      break;
-    }
-    case AF_INET6: {
-      IPv6Address *obj = nullptr;
-      struct sockaddr_in6 *addr = nullptr;
-      for (pp = host->h_addr_list; *pp != nullptr; ++pp) {
-        obj = new IPv6Address;
-        addr = reinterpret_cast<struct sockaddr_in6 *>(obj->p_->socket_address);
-        memcpy(&addr->sin6_addr, *pp, static_cast<size_t >(host->h_length));
-        addr_list->deque_.push_back(obj->p_.get());
-      }
-      break;
-    }
-    default:break;
-  }
-
-  return addr_list;
-}
-
 std::unique_ptr<IPAddressList> IPAddress::GetByHostAndService(const char *host,
                                                               const char *service,
                                                               const AddressInfo *hints) {
@@ -86,34 +48,40 @@ std::unique_ptr<IPAddressList> IPAddress::GetByHostAndService(const char *host,
 
   IPAddress *obj = nullptr;
   struct addrinfo *ai_ptr = addr_info;
-  while (nullptr != ai_ptr) {
-    switch (ai_ptr->ai_family) {
-      case AF_INET: {
+
+  switch (ai_ptr->ai_family) {
+    case AF_INET: {
+      while (nullptr != ai_ptr) {
         obj = new IPAddress;
         auto *addr = new struct sockaddr_in;
         memcpy(addr, ai_ptr->ai_addr, ai_ptr->ai_addrlen);
         obj->p_->socket_address = reinterpret_cast<struct sockaddr *>(addr);
         list_ptr->deque_.push_back(obj->p_.get());
-        break;
+        ai_ptr = ai_ptr->ai_next;
       }
-      case AF_INET6: {
+      break;
+    }
+    case AF_INET6: {
+      while (nullptr != ai_ptr) {
         obj = new IPAddress;
         auto *addr = new struct sockaddr_in6;
         memcpy(addr, ai_ptr->ai_addr, ai_ptr->ai_addrlen);
         obj->p_->socket_address = reinterpret_cast<struct sockaddr *>(addr);
         list_ptr->deque_.push_back(obj->p_.get());
-        break;
+        ai_ptr = ai_ptr->ai_next;
       }
-      default: {
-        fprintf(stderr, "%s\n", "Error! Unspecified family!");
-        break;
-      }
+      break;
     }
-    ai_ptr = ai_ptr->ai_next;
+    default: {
+      fprintf(stderr, "%s\n", "Error! Unspecified family!");
+      break;
+    }
   }
 
-  return list_ptr;
+  // Do not forget free addr_info:
+  freeaddrinfo(addr_info);
 
+  return list_ptr;
 }
 
 IPAddress::IPAddress() {

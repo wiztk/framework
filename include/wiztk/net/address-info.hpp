@@ -105,8 +105,6 @@ class WIZTK_EXPORT AddressInfoList {
 
  public:
 
-  typedef base::CountedDeque<AddressInfo::Private> AddressInfoDeque;
-
   ~AddressInfoList();
 
   AddressInfo *at(int index) const {
@@ -118,6 +116,8 @@ class WIZTK_EXPORT AddressInfoList {
   size_t size() const { return deque_.count(); }
 
  private:
+
+  typedef base::CountedDeque<AddressInfo::Private> AddressInfoDeque;
 
   AddressInfoList() = default;
 
