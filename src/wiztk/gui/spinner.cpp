@@ -87,7 +87,7 @@ void Spinner::Private::Draw(const Context &context) {
                         rect.center_y() + radius),
                   angle, 300.f, false, paint);
 
-  frame_callback.Setup(*context.surface());
+  frame_callback.Setup(context.surface());
 }
 
 void Spinner::Private::OnFrame(uint32_t serial) {

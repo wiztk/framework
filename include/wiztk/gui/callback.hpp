@@ -36,22 +36,26 @@ class Callback {
 
  public:
 
+  // Declarations
+
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Callback);
 
   template<typename R, typename ... P> using DelegateRef = typename base::DelegateRef<R, P...>;
   template<typename R, typename ... P> using Delegate = typename base::Delegate<R, P...>;
 
+ public:
+
   Callback();
 
-  explicit Callback(const Display &display);
+  explicit Callback(const Display *display);
 
-  explicit Callback(const ViewSurface &surface);
+  explicit Callback(const ViewSurface *surface);
 
   ~Callback();
 
-  void Setup(const Display &display);
+  void Setup(const Display *display);
 
-  void Setup(const ViewSurface &surface);
+  void Setup(const ViewSurface *surface);
 
   /**
    * @brief A delegate to the 'done' event

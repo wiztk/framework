@@ -54,7 +54,7 @@ struct GLView::Private : public base::Property<GLView> {
 };
 
 void GLView::Private::OnFrame(uint32_t serial) {
-  callback.Setup(*gl_surface);
+  callback.Setup(gl_surface);
   proprietor()->OnRender();
   gl_surface->Commit();
 }
@@ -136,7 +136,7 @@ void GLView::OnDraw(const Context &context) {
     p_->rendering_api->SetViewportSize(GetWidth(), GetHeight());
     ViewSurface::Sub::Get(p_->gl_surface)->SetWindowPosition(GetX(), GetY());
 
-    p_->callback.Setup(*p_->gl_surface);
+    p_->callback.Setup(p_->gl_surface);
     OnInitialize();
     p_->gl_surface->Commit();
   }

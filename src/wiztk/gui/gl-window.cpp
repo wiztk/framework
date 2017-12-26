@@ -16,7 +16,7 @@
 
 #include "wiztk/gui/gl-window.hpp"
 
-#include "wiztk/base/macros.hpp"
+#include "wiztk/gui/application.hpp"
 #include "wiztk/base/property.hpp"
 
 #include "wiztk/gui/key-event.hpp"
@@ -173,7 +173,7 @@ int GLWindow::Private::GetMouseLocation(const MouseEvent *event) const {
 }
 
 void GLWindow::Private::OnFrame(uint32_t serial) {
-  callback.Setup(*gl_surface);
+  callback.Setup(gl_surface);
   proprietor()->OnRender();
   gl_surface->Commit();
 }
@@ -224,7 +224,7 @@ void GLWindow::OnShown() {
   ViewSurface::Sub::Get(p_->gl_surface)->SetWindowPosition(0, 0);
 
   // p_->gl_surface->Update();
-  p_->callback.Setup(*p_->gl_surface);
+  p_->callback.Setup(p_->gl_surface);
   OnInitialize();
   p_->gl_surface->Commit();
 }
@@ -289,60 +289,62 @@ void GLWindow::OnRenderSurface(ViewSurface *surface) {
 }
 
 void GLWindow::OnMouseMove(MouseEvent *event) {
+  Display *display = Application::GetInstance()->GetDisplay();
+  
 //  AbstractView *view = nullptr;
   switch (p_->GetMouseLocation(event)) {
     case kResizeTop: {
       DispatchMouseLeaveEvent();
-      event->SetCursor(Display::GetCursor(kCursorTop));
+      event->SetCursor(display->GetCursor(kCursorTop));
       break;
     }
     case kResizeBottom: {
       DispatchMouseLeaveEvent();
-      event->SetCursor(Display::GetCursor(kCursorBottom));
+      event->SetCursor(display->GetCursor(kCursorBottom));
       break;
     }
     case kResizeLeft: {
       DispatchMouseLeaveEvent();
-      event->SetCursor(Display::GetCursor(kCursorLeft));
+      event->SetCursor(display->GetCursor(kCursorLeft));
       break;
     }
     case kResizeRight: {
       DispatchMouseLeaveEvent();
-      event->SetCursor(Display::GetCursor(kCursorRight));
+      event->SetCursor(display->GetCursor(kCursorRight));
       break;
     }
     case kResizeTopLeft: {
       DispatchMouseLeaveEvent();
-      event->SetCursor(Display::GetCursor(kCursorTopLeft));
+      event->SetCursor(display->GetCursor(kCursorTopLeft));
       break;
     }
     case kResizeTopRight: {
       DispatchMouseLeaveEvent();
-      event->SetCursor(Display::GetCursor(kCursorTopRight));
+      event->SetCursor(display->GetCursor(kCursorTopRight));
       break;
     }
     case kResizeBottomLeft: {
       DispatchMouseLeaveEvent();
-      event->SetCursor(Display::GetCursor(kCursorBottomLeft));
+      event->SetCursor(display->GetCursor(kCursorBottomLeft));
       break;
     }
     case kResizeBottomRight: {
       DispatchMouseLeaveEvent();
-      event->SetCursor(Display::GetCursor(kCursorBottomRight));
+      event->SetCursor(display->GetCursor(kCursorBottomRight));
       break;
     }
     case kTitleBar: {
-      event->SetCursor(Display::GetCursor(kCursorLeftPtr));
+      event->SetCursor(display->GetCursor(kCursorLeftPtr));
 //      view = p_->title_bar;
       break;
     }
     case kClientArea: {
-      event->SetCursor(Display::GetCursor(kCursorLeftPtr));
+      event->SetCursor(display->GetCursor(kCursorLeftPtr));
 //      view = p_->content_view;
       break;
     }
     default: {
-      event->SetCursor(Display::GetCursor(kCursorLeftPtr));
+      event->SetCursor(display->GetCursor(kCursorLeftPtr));
       break;
     }
   }

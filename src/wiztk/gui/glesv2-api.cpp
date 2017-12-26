@@ -16,7 +16,7 @@
 
 #include "wiztk/gui/glesv2-api.hpp"
 
-#include "wiztk/base/macros.hpp"
+#include "wiztk/gui/application.hpp"
 
 #include "internal/abstract-rendering-api_proxy.hpp"
 #include "internal/display_proxy.hpp"
@@ -55,22 +55,26 @@ void GLESV2API::SetViewportSize(int width, int height) {
 }
 
 void GLESV2API::MakeCurrent() {
-  eglMakeCurrent(Display::Proxy::egl_display(),
+  Display *display = Application::GetInstance()->GetDisplay();
+
+  eglMakeCurrent(Display::Proxy::egl_display(display),
                  p_->egl_surface,
                  p_->egl_surface,
-                 Display::Proxy::egl_context());
+                 Display::Proxy::egl_context(display));
 }
 
 void GLESV2API::SwapBuffers() {
-  eglSwapBuffers(Display::Proxy::egl_display(), p_->egl_surface);
+  Display *display = Application::GetInstance()->GetDisplay();
+  eglSwapBuffers(Display::Proxy::egl_display(display), p_->egl_surface);
 }
 
 void GLESV2API::OnSetup(ViewSurface *surface) {
   Destroy();
 
+  Display *display = Application::GetInstance()->GetDisplay();
   p_->wl_egl_window = wl_egl_window_create(Proxy::GetWaylandSurface(surface), 400, 300);
-  p_->egl_surface = eglCreatePlatformWindowSurface(Display::Proxy::egl_display(),
-                                                   Display::Proxy::egl_config(),
+  p_->egl_surface = eglCreatePlatformWindowSurface(Display::Proxy::egl_display(display),
+                                                   Display::Proxy::egl_config(display),
                                                    p_->wl_egl_window,
                                                    nullptr);
 }
@@ -82,7 +86,8 @@ void GLESV2API::OnRelease(ViewSurface *surface) {
 void GLESV2API::Destroy() {
   if (nullptr != p_->egl_surface) {
     _ASSERT(nullptr != p_->wl_egl_window);
-    eglDestroySurface(Display::Proxy::egl_display(), p_->egl_surface);
+    Display *display = Application::GetInstance()->GetDisplay();
+    eglDestroySurface(Display::Proxy::egl_display(display), p_->egl_surface);
     wl_egl_window_destroy(p_->wl_egl_window);
     p_->wl_egl_window = nullptr;
     p_->egl_surface = nullptr;

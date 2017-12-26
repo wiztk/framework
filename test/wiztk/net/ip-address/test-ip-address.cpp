@@ -10,8 +10,8 @@ using std::endl;
 using namespace wiztk;
 using namespace wiztk::net;
 
-TEST_F(TestIPAddress, get_by_name_1) {
-  std::unique_ptr<IPAddressList> list = IPAddress::GetByHostAndService("www.baidu.com");
+TEST_F(TestIPAddress, get_by_host_and_service_1) {
+  std::unique_ptr<IPAddressList> list = IPAddress::GetByHostAndService("localhost");
 
   if (list->size() > 0) {
     for (size_t i = 0; i < list->size(); ++i) {
@@ -22,7 +22,7 @@ TEST_F(TestIPAddress, get_by_name_1) {
   ASSERT_TRUE(list->size() > 0);
 }
 
-TEST_F(TestIPAddress, get_by_host_and_service_1) {
+TEST_F(TestIPAddress, get_by_host_and_service_2) {
   std::unique_ptr<IPAddressList> list = IPAddress::GetByHostAndService("www.baidu.com");
 
   if (list->size() > 0) {

@@ -18,12 +18,15 @@
 
 #include "internal/display_proxy.hpp"
 
+#include "wiztk/gui/application.hpp"
+
 namespace wiztk {
 namespace gui {
 
 Region::Region()
     : wl_region_(nullptr) {
-  wl_region_ = wl_compositor_create_region(Display::Proxy::wl_compositor());
+  Display *display = Application::GetInstance()->GetDisplay();
+  wl_region_ = wl_compositor_create_region(Display::Proxy::wl_compositor(display));
 }
 
 Region::~Region() {

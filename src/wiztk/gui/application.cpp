@@ -14,7 +14,15 @@
  * limitations under the License.
  */
 
-#include <wiztk/gui/application.hpp>
+#include "wiztk/gui/application.hpp"
+
+#include "wiztk/base/property.hpp"
+
+#include "wiztk/gui/theme.hpp"
+#include "wiztk/gui/abstract-view.hpp"
+#include "wiztk/gui/view-surface.hpp"
+
+#include "internal/display_private.hpp"
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -22,12 +30,6 @@
 
 #include <csignal>
 #include <iostream>
-
-#include <wiztk/gui/theme.hpp>
-#include <wiztk/gui/abstract-view.hpp>
-#include <wiztk/gui/view-surface.hpp>
-
-#include "internal/display_private.hpp"
 
 using std::cerr;
 using std::endl;
@@ -61,17 +63,21 @@ struct Application::Private {
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
 
   explicit Private(Application *app)
-      : running(true), epoll_fd(-1), epoll_task(app), argc(0), argv(nullptr) {}
+      : epoll_task(app) {}
 
   ~Private() = default;
 
-  bool running;
-  int epoll_fd;
+  Display *display = nullptr;
+
+  bool running = false;
+
+  int epoll_fd = -1;
+
+  int argc = 0;
+
+  char **argv = nullptr;
 
   EpollTask epoll_task;
-
-  int argc;
-  char **argv;
 
   std::thread::id thread_id;
 
@@ -151,26 +157,30 @@ void Application::Private::HandleSignalInt(int) {
 
 // ----------
 
+Application *Application::GetInstance() {
+  return kInstance;
+}
+
 void Application::EpollTask::Run(uint32_t events) {
-  Display::kDisplay->p_->epoll_events = events;
+  kInstance->__PROPERTY__(display)->__PROPERTY__(epoll_events) = events;
   if (events & EPOLLERR || events & EPOLLHUP) {
     Application::kInstance->Exit();
     return;
   }
   if (events & EPOLLIN) {
-    if (wl_display_dispatch(Display::kDisplay->p_->wl_display) == -1) {
+    if (wl_display_dispatch(kInstance->p_->display->p_->wl_display) == -1) {
       Application::kInstance->Exit();
       return;
     }
   }
   if (events & EPOLLOUT) {
     struct epoll_event ep;
-    int ret = wl_display_flush(Display::kDisplay->p_->wl_display);
+    int ret = wl_display_flush(kInstance->__PROPERTY__(display)->__PROPERTY__(wl_display));
     if (ret == 0) {
       ep.events = EPOLLIN | EPOLLERR | EPOLLHUP;
       ep.data.ptr = &app_->p_->epoll_task;
       epoll_ctl(app_->p_->epoll_fd, EPOLL_CTL_MOD,
-                Display::kDisplay->p_->fd, &ep);
+                kInstance->__PROPERTY__(display)->__PROPERTY__(fd), &ep);
     } else if (ret == -1 && errno != EAGAIN) {
       Application::kInstance->Exit();
       return;
@@ -181,14 +191,14 @@ void Application::EpollTask::Run(uint32_t events) {
 Application *Application::kInstance = nullptr;
 
 Application::Application(int argc, char *argv[]) {
+  if (kInstance != nullptr)
+    throw std::runtime_error("Error! There should be only one application instance!");
+
   p_ = std::make_unique<Private>(this);
 
   p_->argc = argc;
   p_->argv = argv;
   p_->thread_id = std::this_thread::get_id();
-
-  if (kInstance != nullptr)
-    throw std::runtime_error("Error! There should be only one application instance!");
 
   kInstance = this;
 
@@ -197,10 +207,10 @@ Application::Application(int argc, char *argv[]) {
     vfprintf(stderr, format, args);
   });
 
-  Display::kDisplay = new Display;
+  __PROPERTY__(display) = new Display;
 
   try {
-    Display::kDisplay->Connect(NULL);
+    __PROPERTY__(display)->Connect(NULL);
   } catch (const std::runtime_error &e) {
     cerr << e.what() << endl;
     exit(EXIT_FAILURE);
@@ -210,16 +220,18 @@ Application::Application(int argc, char *argv[]) {
   Theme::Initialize();
 
   p_->epoll_fd = Private::CreateEpollFd();
-  WatchFileDescriptor(Display::kDisplay->p_->fd, EPOLLIN | EPOLLERR | EPOLLHUP, &p_->epoll_task);
+  WatchFileDescriptor(__PROPERTY__(display)->__PROPERTY__(fd),
+                      EPOLLIN | EPOLLERR | EPOLLHUP,
+                      &p_->epoll_task);
 }
 
 Application::~Application() {
   close(p_->epoll_fd);
-  Display::kDisplay->Disconnect();
+  __PROPERTY__(display)->Disconnect();
 
   Theme::Release();
-  delete Display::kDisplay;
-  Display::kDisplay = nullptr;
+  delete __PROPERTY__(display);
+  __PROPERTY__(display) = nullptr;
 
   kInstance = nullptr;
 }
@@ -239,6 +251,7 @@ int Application::Run() {
   base::Deque<ViewSurface::RenderTask>::Iterator render_task_iterator;
   base::Deque<ViewSurface::CommitTask>::Iterator commit_task_iterator;
 
+  p_->running = true;
   while (true) {
 
     /*
@@ -274,17 +287,19 @@ int Application::Run() {
       commit_task_iterator = ViewSurface::kCommitTaskDeque.begin();
     }
 
-    wl_display_dispatch_pending(Display::kDisplay->p_->wl_display);
+    wl_display_dispatch_pending(__PROPERTY__(display)->__PROPERTY__(wl_display));
 
     if (!p_->running) break;
 
-    ret = wl_display_flush(Display::kDisplay->p_->wl_display);
+    ret = wl_display_flush(__PROPERTY__(display)->__PROPERTY__(wl_display));
     if (ret < 0 && errno == EAGAIN) {
       _DEBUG("%s\n", "Error when flush display");
       ep[0].events = EPOLLIN | EPOLLOUT | EPOLLERR | EPOLLHUP;
       ep[0].data.ptr = &p_->epoll_task;
-      epoll_ctl(p_->epoll_fd, EPOLL_CTL_MOD,
-                Display::kDisplay->p_->fd, &ep[0]);
+      epoll_ctl(p_->epoll_fd,
+                EPOLL_CTL_MOD,
+                __PROPERTY__(display)->__PROPERTY__(fd),
+                &ep[0]);
     } else if (ret < 0) {
       break;
     }
@@ -323,6 +338,10 @@ int Application::GetArgC() {
 
 char **Application::GetArgV() const {
   return p_->argv;
+}
+
+Display* Application::GetDisplay() const {
+  return __PROPERTY__(display);
 }
 
 const std::thread::id &Application::GetThreadID() {

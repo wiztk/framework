@@ -62,7 +62,7 @@ class WIZTK_EXPORT IPAddress {
    * @param hints
    * @return
    */
-  static std::unique_ptr<IPAddressList> GetByHostAndService(const char *host = nullptr,
+  static std::unique_ptr<IPAddressList> GetByHostAndService(const char *host,
                                                             const char *service = nullptr,
                                                             const AddressInfo *hints = nullptr);
 

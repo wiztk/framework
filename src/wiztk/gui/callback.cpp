@@ -16,7 +16,9 @@
 
 #include "wiztk/gui/callback.hpp"
 
-#include "internal/display_private.hpp"
+#include "wiztk/base/property.hpp"
+
+#include "internal/display_proxy.hpp"
 #include "internal/view-surface_private.hpp"
 
 namespace wiztk {
@@ -63,12 +65,12 @@ Callback::Callback() {
   p_ = std::make_unique<Private>();
 }
 
-Callback::Callback(const Display &display)
+Callback::Callback(const Display *display)
     : Callback() {
   Setup(display);
 }
 
-Callback::Callback(const ViewSurface &surface)
+Callback::Callback(const ViewSurface *surface)
     : Callback() {
   Setup(surface);
 }
@@ -77,15 +79,16 @@ Callback::~Callback() {
 
 }
 
-void Callback::Setup(const Display &display) {
+void Callback::Setup(const Display *display) {
   p_->Destroy();
-  p_->wl_callback = wl_display_sync(display.p_->wl_display);
-  wl_callback_add_listener(p_->wl_callback, &Private::kListener, this);
+
+  p_->wl_callback = wl_display_sync(Display::Proxy::wl_display(display));
+  wl_callback_add_listener(__PROPERTY__(wl_callback), &Private::kListener, this);
 }
 
-void Callback::Setup(const ViewSurface &surface) {
+void Callback::Setup(const ViewSurface *surface) {
   p_->Destroy();
-  p_->wl_callback = wl_surface_frame(surface.p_->wl_surface);
+  p_->wl_callback = wl_surface_frame(surface->__PROPERTY__(wl_surface));
   wl_callback_add_listener(p_->wl_callback, &Private::kListener, this);
 }
 

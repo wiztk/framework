@@ -38,8 +38,14 @@ class WIZTK_EXPORT Application {
 
  public:
 
+  // Declaration:
+
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Application);
   Application() = delete;
+
+ public:
+
+  static Application *GetInstance();
 
   /**
    * @brief Construct a single application instance
@@ -96,6 +102,12 @@ class WIZTK_EXPORT Application {
   char **GetArgV() const;
 
   /**
+   * @brief Get the the wayland client display.
+   * @return
+   */
+  Display *GetDisplay() const;
+
+  /**
    * @brief Get the main thread id
    * @return A const reference to the main thread id
    */
@@ -106,8 +118,6 @@ class WIZTK_EXPORT Application {
    * @return
    */
   base::Deque<TaskNode> &GetTaskDeque();
-
-  static inline Application *instance() { return kInstance; }
 
  private:
 

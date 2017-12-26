@@ -107,7 +107,7 @@ void AbstractShellView::Show() {
 
 void AbstractShellView::Close(SLOT) {
   if (ViewSurface::GetShellSurfaceCount() == 1) {
-    Application::instance()->Exit();
+    Application::GetInstance()->Exit();
   }
 
   // TODO: use a close task if there's more than 1 windows in an application
@@ -259,7 +259,7 @@ void AbstractShellView::OnRequestSaveGeometry(AbstractView *view) {
     return;
   }
 
-  Application::instance()->GetTaskDeque().push_back(AbstractView::GeometryTask::Get(view));
+  Application::GetInstance()->GetTaskDeque().push_back(AbstractView::GeometryTask::Get(view));
 }
 
 void AbstractShellView::OnRequestUpdateFrom(AbstractView *view) {
@@ -305,7 +305,7 @@ bool AbstractShellView::RequestSaveSize(const Size &size) {
   }
 
   if (!p_->geometry_task.is_linked()) {
-    Application::instance()->GetTaskDeque().push_back(&p_->geometry_task);
+    Application::GetInstance()->GetTaskDeque().push_back(&p_->geometry_task);
   }
 
   return true;

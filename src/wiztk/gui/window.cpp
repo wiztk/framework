@@ -336,9 +336,9 @@ void Window::OnShown() {
   // Set surface's scale
   int scale = 1;
   if (nullptr == p_->output) {
-    const OutputManager &outputs = Display::GetOutputManager();
-    if (outputs.size() > 0) {
-      p_->output = outputs.GetActiveOutput();
+    OutputManager *outputs = Application::GetInstance()->GetDisplay()->GetOutputManager();
+    if (outputs->size() > 0) {
+      p_->output = outputs->GetActiveOutput();
     }
   }
   if (nullptr != p_->output) scale = p_->output->GetScale();
@@ -401,9 +401,9 @@ void Window::OnSaveSize(const Size &old_size, const Size &new_size) {
   ViewSurface *shell_surface = this->GetShellSurface();
 
   int scale = 1;
-  const OutputManager &outputs = Display::GetOutputManager();
-  if (outputs.size() > 0) {
-    p_->output = outputs.GetActiveOutput();
+  OutputManager *outputs = Application::GetInstance()->GetDisplay()->GetOutputManager();
+  if (outputs->size() > 0) {
+    p_->output = outputs->GetActiveOutput();
     scale = p_->output->GetScale();
   }
   shell_surface->SetScale(scale);
@@ -500,39 +500,40 @@ void Window::OnRenderSurface(ViewSurface *surface) {
 }
 
 void Window::OnMouseEnter(MouseEvent *event) {
+  Display *display = Application::GetInstance()->GetDisplay();
   AbstractView *view = nullptr;
   int location = GetMouseLocation(event);
   switch (location) {
     case kResizeTop: {
-      event->SetCursor(Display::GetCursor(kCursorTop));
+      event->SetCursor(display->GetCursor(kCursorTop));
       break;
     }
     case kResizeBottom: {
-      event->SetCursor(Display::GetCursor(kCursorBottom));
+      event->SetCursor(display->GetCursor(kCursorBottom));
       break;
     }
     case kResizeLeft: {
-      event->SetCursor(Display::GetCursor(kCursorLeft));
+      event->SetCursor(display->GetCursor(kCursorLeft));
       break;
     }
     case kResizeRight: {
-      event->SetCursor(Display::GetCursor(kCursorRight));
+      event->SetCursor(display->GetCursor(kCursorRight));
       break;
     }
     case kResizeTopLeft: {
-      event->SetCursor(Display::GetCursor(kCursorTopLeft));
+      event->SetCursor(display->GetCursor(kCursorTopLeft));
       break;
     }
     case kResizeTopRight: {
-      event->SetCursor(Display::GetCursor(kCursorTopRight));
+      event->SetCursor(display->GetCursor(kCursorTopRight));
       break;
     }
     case kResizeBottomLeft: {
-      event->SetCursor(Display::GetCursor(kCursorBottomLeft));
+      event->SetCursor(display->GetCursor(kCursorBottomLeft));
       break;
     }
     case kResizeBottomRight: {
-      event->SetCursor(Display::GetCursor(kCursorBottomRight));
+      event->SetCursor(display->GetCursor(kCursorBottomRight));
       break;
     }
     case kTitleBar: {
@@ -544,7 +545,7 @@ void Window::OnMouseEnter(MouseEvent *event) {
       break;
     }
     default: {
-      event->SetCursor(Display::GetCursor(kCursorLeftPtr));
+      event->SetCursor(display->GetCursor(kCursorLeftPtr));
       break;
     }
   }
@@ -557,60 +558,61 @@ void Window::OnMouseLeave() {
 }
 
 void Window::OnMouseMove(MouseEvent *event) {
+  Display *display = Application::GetInstance()->GetDisplay();
   AbstractView *view = nullptr;
   switch (GetMouseLocation(event)) {
     case kResizeTop: {
       DispatchMouseLeaveEvent();
-      event->SetCursor(Display::GetCursor(kCursorTop));
+      event->SetCursor(display->GetCursor(kCursorTop));
       break;
     }
     case kResizeBottom: {
       DispatchMouseLeaveEvent();
-      event->SetCursor(Display::GetCursor(kCursorBottom));
+      event->SetCursor(display->GetCursor(kCursorBottom));
       break;
     }
     case kResizeLeft: {
       DispatchMouseLeaveEvent();
-      event->SetCursor(Display::GetCursor(kCursorLeft));
+      event->SetCursor(display->GetCursor(kCursorLeft));
       break;
     }
     case kResizeRight: {
       DispatchMouseLeaveEvent();
-      event->SetCursor(Display::GetCursor(kCursorRight));
+      event->SetCursor(display->GetCursor(kCursorRight));
       break;
     }
     case kResizeTopLeft: {
       DispatchMouseLeaveEvent();
-      event->SetCursor(Display::GetCursor(kCursorTopLeft));
+      event->SetCursor(display->GetCursor(kCursorTopLeft));
       break;
     }
     case kResizeTopRight: {
       DispatchMouseLeaveEvent();
-      event->SetCursor(Display::GetCursor(kCursorTopRight));
+      event->SetCursor(display->GetCursor(kCursorTopRight));
       break;
     }
     case kResizeBottomLeft: {
       DispatchMouseLeaveEvent();
-      event->SetCursor(Display::GetCursor(kCursorBottomLeft));
+      event->SetCursor(display->GetCursor(kCursorBottomLeft));
       break;
     }
     case kResizeBottomRight: {
       DispatchMouseLeaveEvent();
-      event->SetCursor(Display::GetCursor(kCursorBottomRight));
+      event->SetCursor(display->GetCursor(kCursorBottomRight));
       break;
     }
     case kTitleBar: {
-      event->SetCursor(Display::GetCursor(kCursorLeftPtr));
+      event->SetCursor(display->GetCursor(kCursorLeftPtr));
       view = p_->title_bar;
       break;
     }
     case kClientArea: {
-      event->SetCursor(Display::GetCursor(kCursorLeftPtr));
+      event->SetCursor(display->GetCursor(kCursorLeftPtr));
       view = p_->content_view;
       break;
     }
     default: {
-      event->SetCursor(Display::GetCursor(kCursorLeftPtr));
+      event->SetCursor(display->GetCursor(kCursorLeftPtr));
       break;
     }
   }
@@ -654,7 +656,7 @@ void Window::OnMouseUp(MouseEvent *event) {
 
 void Window::OnKeyDown(KeyEvent *event) {
   if (event->key() == kKey_ESC) {
-    Application::instance()->Exit();
+    Application::GetInstance()->Exit();
   }
   event->Accept();
 }
@@ -705,9 +707,9 @@ void Window::OnLeaveOutput(const ViewSurface *surface, const Output *output) {
   p_->output = nullptr;
 
   int scale = 1;
-  const OutputManager &outputs = Display::GetOutputManager();
-  if (outputs.size() > 0) {
-    p_->output = outputs.GetActiveOutput();
+  OutputManager *outputs = Application::GetInstance()->GetDisplay()->GetOutputManager();
+  if (outputs->size() > 0) {
+    p_->output = outputs->GetActiveOutput();
     scale = p_->output->GetScale();
   }
 
@@ -776,9 +778,9 @@ void Window::OnFullscreenButtonClicked(base::SLOT slot) {
     if (nullptr != p_->output)
       ToggleFullscreen(p_->output);
     else {
-      const OutputManager &outputs = Display::GetOutputManager();
-      if (outputs.size() > 0) {
-        p_->output = outputs.GetActiveOutput();
+      OutputManager *outputs = Application::GetInstance()->GetDisplay()->GetOutputManager();
+      if (outputs->size() > 0) {
+        p_->output = outputs->GetActiveOutput();
         ToggleFullscreen(p_->output);
       }
     }

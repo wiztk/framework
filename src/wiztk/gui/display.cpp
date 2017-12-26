@@ -24,8 +24,6 @@
 namespace wiztk {
 namespace gui {
 
-Display *Display::kDisplay = nullptr;
-
 Display::Display() {
   p_ = std::make_unique<Private>();
   p_->cursors.resize(kCursorBlank, nullptr);
@@ -123,20 +121,20 @@ void Display::Disconnect() noexcept {
   wl_display_disconnect(p_->wl_display);
 }
 
-const OutputManager &Display::GetOutputManager() {
-  return kDisplay->p_->output_manager;
+OutputManager *Display::GetOutputManager() const {
+  return &__PROPERTY__(output_manager);
 }
 
-const InputManager &Display::GetInputManager() {
-  return kDisplay->p_->input_manager;
+InputManager *Display::GetInputManager() const {
+  return &__PROPERTY__(input_manager);
 }
 
-const std::set<uint32_t> &Display::GetPixelFormats() {
-  return kDisplay->p_->pixel_formats;
+const std::set<uint32_t> &Display::GetPixelFormats() const {
+  return __PROPERTY__(pixel_formats);
 }
 
-const Cursor *Display::GetCursor(CursorType cursor_type) {
-  return kDisplay->p_->cursors[cursor_type];
+const Cursor *Display::GetCursor(CursorType cursor_type) const {
+  return __PROPERTY__(cursors)[cursor_type];
 }
 
 void Display::DestroyOutput(uint32_t id) {

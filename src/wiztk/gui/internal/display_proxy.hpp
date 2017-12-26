@@ -17,19 +17,20 @@
 #ifndef WIZTK_GUI_INTERNAL_DISPLAY_REGISTRY_HPP_
 #define WIZTK_GUI_INTERNAL_DISPLAY_REGISTRY_HPP_
 
-#include <wiztk/gui/display.hpp>
 #include "display_private.hpp"
+
+#include "wiztk/base/property.hpp"
 
 namespace wiztk {
 namespace gui {
 
 /**
  * @ingroup gui_intern
- * @brief An nested class to get native platform objects from the private properties of Display
+ * @brief A nested class to get native platform objects from the private
+ * properties of Display.
  */
-WIZTK_NO_EXPORT struct Display::Proxy {
+struct WIZTK_NO_EXPORT Display::Proxy {
 
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Proxy);
   Proxy() = delete;
   ~Proxy() = delete;
 
@@ -37,104 +38,104 @@ WIZTK_NO_EXPORT struct Display::Proxy {
    * @brief Get the native wayland display object
    * @return
    */
-  static struct wl_display *wl_display() {
-    return Display::kDisplay->p_->wl_display;
+  static struct wl_display *wl_display(const Display *display) {
+    return display->__PROPERTY__(wl_display);
   }
 
   /**
    * @brief Get the native wayland registry object
    * @return
    */
-  static struct wl_registry *wl_registry() {
-    return Display::kDisplay->p_->wl_registry;
+  static struct wl_registry *wl_registry(const Display *display) {
+    return display->__PROPERTY__(wl_registry);
   }
 
   /**
    * @brief Get the native wayland compositor object
    * @return
    */
-  static struct wl_compositor *wl_compositor() {
-    return Display::kDisplay->p_->wl_compositor;
+  static struct wl_compositor *wl_compositor(const Display *display) {
+    return display->__PROPERTY__(wl_compositor);
   }
 
   /**
    * @brief Get the native wayland subcompositor object
    * @return
    */
-  static struct wl_subcompositor *wl_subcompositor() {
-    return Display::kDisplay->p_->wl_subcompositor;
+  static struct wl_subcompositor *wl_subcompositor(const Display *display) {
+    return display->__PROPERTY__(wl_subcompositor);
   }
 
   /**
    * @brief Get the native wayland shm object
    * @return
    */
-  static struct wl_shm *wl_shm() {
-    return Display::kDisplay->p_->wl_shm;
+  static struct wl_shm *wl_shm(const Display *display) {
+    return display->__PROPERTY__(wl_shm);
   }
 
   /**
    * @brief Get the native xdg shell (in unstable protocol) object
    * @return
    */
-  static struct zxdg_shell_v6 *xdg_shell() {
-    return Display::kDisplay->p_->xdg_shell;
+  static struct zxdg_shell_v6 *xdg_shell(const Display *display) {
+    return display->__PROPERTY__(xdg_shell);
   }
 
   /**
    * @brief Get the native wayland shell object
    * @return
    */
-  static struct wl_shell *wl_shell() {
-    return Display::kDisplay->p_->wl_shell;
+  static struct wl_shell *wl_shell(const Display *display) {
+    return display->__PROPERTY__(wl_shell);
   }
 
   /**
    * @brief Get the native wayland data device manager
    * @return
    */
-  static struct wl_data_device_manager *wl_data_device_manager() {
-    return Display::kDisplay->p_->wl_data_device_manager;
+  static struct wl_data_device_manager *wl_data_device_manager(const Display *display) {
+    return display->__PROPERTY__(wl_data_device_manager);
   }
 
   /**
    * @brief Get the native EGL display
    * @return
    */
-  static EGLDisplay egl_display() {
-    return Display::kDisplay->p_->egl_display;
+  static EGLDisplay egl_display(const Display *display) {
+    return display->__PROPERTY__(egl_display);
   }
 
   /**
    * @brief Get the native EGL config
    * @return
    */
-  static EGLConfig egl_config() {
-    return Display::kDisplay->p_->egl_config;
+  static EGLConfig egl_config(const Display *display) {
+    return display->__PROPERTY__(egl_config);
   }
 
   /**
    * @brief Get the native EGL context
    * @return
    */
-  static EGLContext egl_context() {
-    return Display::kDisplay->p_->egl_context;
+  static EGLContext egl_context(const Display *display) {
+    return display->__PROPERTY__(egl_context);
   }
 
   /**
    * @brief Get the native C++ Vulkan instance
    * @return
    */
-  static const vk::Instance vk_instance() {
-    return Display::kDisplay->p_->vk_instance;
+  static const vk::Instance vk_instance(const Display *display) {
+    return display->__PROPERTY__(vk_instance);
   }
 
   /**
    * @brief Get the native xkb context
    * @return The xkb_context object for keymap
    */
-  static struct xkb_context *xkb_context() {
-    return Display::kDisplay->p_->xkb_context;
+  static struct xkb_context *xkb_context(const Display *display) {
+    return display->__PROPERTY__(xkb_context);
   }
 
   static PFNEGLSWAPBUFFERSWITHDAMAGEEXTPROC kSwapBuffersWithDamageAPI;

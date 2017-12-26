@@ -18,16 +18,19 @@
 
 #include "internal/display_proxy.hpp"
 
+#include "wiztk/gui/application.hpp"
+
 namespace wiztk {
 namespace gui {
 
 Input::Input(uint32_t id, uint32_t version) {
+  Display *display = Application::GetInstance()->GetDisplay();
   p_ = std::make_unique<Private>(this);
   p_->id = id;
   p_->version = version;
 
   p_->wl_seat =
-      static_cast<struct wl_seat *>(wl_registry_bind(Display::Proxy::wl_registry(),
+      static_cast<struct wl_seat *>(wl_registry_bind(Display::Proxy::wl_registry(display),
                                                      id,
                                                      &wl_seat_interface,
                                                      version));

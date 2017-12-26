@@ -34,7 +34,7 @@ class TimerWatcher : public Trackable {
     count_++;
     if (count_ == 10) {
       timer_->Stop();
-      Application::instance()->Exit();
+      Application::GetInstance()->Exit();
     }
   }
 

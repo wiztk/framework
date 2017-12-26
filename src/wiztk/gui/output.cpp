@@ -16,7 +16,8 @@
 
 #include "internal/output_private.hpp"
 
-#include <wiztk/gui/display.hpp>
+#include "wiztk/gui/display.hpp"
+#include "wiztk/gui/application.hpp"
 
 #include "internal/display_proxy.hpp"
 
@@ -28,8 +29,9 @@ Output::Output(uint32_t id, uint32_t version) {
   p_->id = id;
   p_->version = version;
 
+  Display *display = Application::GetInstance()->GetDisplay();
   p_->wl_output =
-      static_cast<struct wl_output *>(wl_registry_bind(Display::Proxy::wl_registry(),
+      static_cast<struct wl_output *>(wl_registry_bind(Display::Proxy::wl_registry(display),
                                                        id,
                                                        &wl_output_interface,
                                                        version));

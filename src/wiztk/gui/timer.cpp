@@ -93,7 +93,7 @@ Timer::~Timer() {
 void Timer::Start() {
   if (p_->is_armed) return;
 
-  Application::instance()->WatchFileDescriptor(p_->fd, EPOLLIN, &p_->epoll_task);
+  Application::GetInstance()->WatchFileDescriptor(p_->fd, EPOLLIN, &p_->epoll_task);
   SetTime();
   p_->is_armed = true;
 }
@@ -113,7 +113,7 @@ void Timer::Stop() {
     _DEBUG("%s\n", "Fail to stop timer!");
   }
 
-  Application::instance()->UnwatchFileDescriptor(p_->fd);
+  Application::GetInstance()->UnwatchFileDescriptor(p_->fd);
 
   p_->is_armed = false;
 }

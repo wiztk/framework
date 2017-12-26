@@ -16,7 +16,7 @@
 
 #include <wiztk/gui/shared-memory-pool.hpp>
 
-#include "wiztk/base/macros.hpp"
+#include "wiztk/gui/application.hpp"
 
 #include <sys/mman.h>
 
@@ -51,7 +51,8 @@ void SharedMemoryPool::Setup(int32_t size) {
     throw std::runtime_error("Cannot map shared memory");
   }
 
-  wl_shm_pool_ = wl_shm_create_pool(Display::Proxy::wl_shm(), fd, size);
+  Display *display = Application::GetInstance()->GetDisplay();
+  wl_shm_pool_ = wl_shm_create_pool(Display::Proxy::wl_shm(display), fd, size);
 
   size_ = size;
   close(fd);

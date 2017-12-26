@@ -26,7 +26,21 @@ namespace gui {
 
 /**
  * @ingroup gui
- * @brief Output manager controlled by Display.
+ * @brief Singleton output manager controlled by Display.
+ *
+ * The OutputManager is created when connecting a client display and destroyed
+ * when disconnecting. To get the singleton instance, use the method in Display,
+ * for example:
+ *
+ * @code
+ * #include "wiztk/gui/application.hpp"
+ * #include "wiztk/gui/display.hpp"
+ *
+ * // ...
+ *
+ * Display* display = Application::GetInstance()->GetDisplay();
+ * InputManager *input_mgr = display->GetOutputManager();
+ * @endcode
  */
 class WIZTK_EXPORT OutputManager {
 
@@ -36,9 +50,17 @@ class WIZTK_EXPORT OutputManager {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(OutputManager);
 
-  typedef base::CountedDeque<Output::Private> OutputPrivateDeque;
-
  public:
+
+  Output *GetActiveOutput() const;
+
+  size_t size() const { return deque_.count(); }
+
+  Output *FindByID(uint32_t id) const;
+
+ private:
+
+  typedef base::CountedDeque<Output::Private> OutputPrivateDeque;
 
   /**
    * @brief Default constructor.
@@ -56,15 +78,7 @@ class WIZTK_EXPORT OutputManager {
    */
   void AddOutput(Output *output);
 
-  Output *GetActiveOutput() const;
-
   void Clear();
-
-  size_t size() const { return deque_.count(); }
-
-  Output *FindByID(uint32_t id) const;
-
- private:
 
   OutputPrivateDeque deque_;
 

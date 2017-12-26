@@ -16,13 +16,15 @@
 
 #include "ip-address_native.hpp"
 
+#include "wiztk/base/property.hpp"
+
 namespace wiztk {
 namespace net {
 
-socklen_t IPAddress::Native::GetLength(const IPAddress &address) {
+socklen_t IPAddress::Native::GetSocketLength(const IPAddress &address) {
   socklen_t length = 0;
 
-  switch (address.p_->socket_address->sa_family) {
+  switch (address.__PROPERTY__(socket_address)->sa_family) {
     case AF_INET: {
       length = sizeof(struct sockaddr_in);
       break;
@@ -37,5 +39,5 @@ socklen_t IPAddress::Native::GetLength(const IPAddress &address) {
   return length;
 }
 
-}
-}
+} // namespace net
+} // namespace wiztk

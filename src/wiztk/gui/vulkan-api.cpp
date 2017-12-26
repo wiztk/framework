@@ -16,6 +16,8 @@
 
 #include "wiztk/gui/vulkan-api.hpp"
 
+#include "wiztk/gui/application.hpp"
+
 #include "internal/display_proxy.hpp"
 #include "internal/view-surface_private.hpp"
 #include "internal/abstract-rendering-api_proxy.hpp"
@@ -33,13 +35,15 @@ VulkanAPI::~VulkanAPI() {
 }
 
 void VulkanAPI::OnSetup() {
+  Display *display = Application::GetInstance()->GetDisplay();
+
   vk::WaylandSurfaceCreateInfoKHR info = {
       vk::WaylandSurfaceCreateFlagsKHR(),
-      Display::Proxy::wl_display(),
+      Display::Proxy::wl_display(display),
 //      Proxy::GetWaylandSurface(GetSurface())
   };
 
-  vk_surface_ = Display::Proxy::vk_instance().createWaylandSurfaceKHR(info);
+  vk_surface_ = Display::Proxy::vk_instance(display).createWaylandSurfaceKHR(info);
 }
 
 } // namespace gui

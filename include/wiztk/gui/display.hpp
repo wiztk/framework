@@ -42,18 +42,27 @@ class OutputManager;
 
 /**
  * @ingroup gui
- * @brief The global display which serves as the connection to the compositor
+ * @brief The global display which serves as the connection to the compositor.
+ *
+ * The display object can only be created and destroyed in Application. To get
+ * the global display object, use the singleton application instance, for
+ * example:
+ *
+ * @code
+ * #include "wiztk/gui/application.hpp"
+ *
+ * // ...
+ *
+ * Display *display = Application::GetInstance()->GetDisplay();
+ * @endcode
  */
 class WIZTK_EXPORT Display {
 
   friend class Application;
-  friend class Output;
-  friend class Input;
-  friend class Callback;
-  friend class InputManager;
-  friend class OutputManager;
 
  public:
+
+  // Declarations:
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Display);
 
@@ -63,23 +72,25 @@ class WIZTK_EXPORT Display {
   struct Global;
   struct Proxy;
 
+ public:
+
   /**
    * @brief Get a deque of outputs
    * @return
    */
-  static const OutputManager &GetOutputManager();
+  OutputManager *GetOutputManager() const;
 
   /**
    * @brief Get the InputManager which contains a deque of input devices.
    * @return
    */
-  static const InputManager &GetInputManager();
+  InputManager *GetInputManager() const;
 
   /**
    * @brief Get a set of supported pixel formats
    * @return
    */
-  static const std::set<uint32_t> &GetPixelFormats();
+  const std::set<uint32_t> &GetPixelFormats() const;
 
   SignalRef<const Global &> unregister() { return unregister_; }
 
@@ -88,7 +99,7 @@ class WIZTK_EXPORT Display {
    * @param cursor_type An enumeration of cursor type
    * @return
    */
-  static const Cursor *GetCursor(CursorType cursor_type);
+  const Cursor *GetCursor(CursorType cursor_type) const;
 
  private:
 
@@ -122,8 +133,6 @@ class WIZTK_EXPORT Display {
   std::unique_ptr<Private> p_;
 
   Signal<const Global &> unregister_;
-
-  static Display *kDisplay;
 
 };
 

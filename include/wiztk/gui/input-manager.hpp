@@ -26,7 +26,21 @@ namespace gui {
 
 /**
  * @ingroup gui
- * @brief Input manager controlled by Display.
+ * @brief Singleton input manager controlled by Display.
+ *
+ * The InputManager is created when connecting a client display and destroyed
+ * when disconnecting. To get the singleton instance, use the method in Display,
+ * for example:
+ *
+ * @code
+ * #include "wiztk/gui/application.hpp"
+ * #include "wiztk/gui/display.hpp"
+ *
+ * // ...
+ *
+ * Display* display = Application::GetInstance()->GetDisplay();
+ * InputManager *input_mgr = display->GetInputManager();
+ * @endcode
  */
 class WIZTK_EXPORT InputManager {
 
@@ -36,9 +50,11 @@ class WIZTK_EXPORT InputManager {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(InputManager);
 
-  typedef base::CountedDeque<Input::Private> InputPrivateDeque;
-
  public:
+
+ private:
+
+  typedef base::CountedDeque<Input::Private> InputPrivateDeque;
 
   InputManager() = default;
 
@@ -47,8 +63,6 @@ class WIZTK_EXPORT InputManager {
   void AddInput(Input *input);
 
   void Clear();
-
- private:
 
   InputPrivateDeque deque_;
 
