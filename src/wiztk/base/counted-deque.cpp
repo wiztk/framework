@@ -21,35 +21,51 @@
 namespace wiztk {
 namespace base {
 
-CountedDequeNodeBase::~CountedDequeNodeBase() {
-  ResetCountedDeque();
+namespace internal {
+
+void CountedDequeNodeTraits::OnUnlinked() {
+  if (nullptr != node_->deque_) {
+    _ASSERT(node_->deque_->count_ > 0);
+    --node_->deque_->count_;
+    node_->deque_ = nullptr;
+  }
 }
 
-void CountedDequeNodeBase::OnUnlinked() {
-  ResetCountedDeque();
+}
+
+// -----
+
+void CountedDequeNodeBase::PushFront(CountedDequeNodeBase *node, CountedDequeNodeBase *other) {
+  if (other == node) return;
+  if (node->traits_.previous_ == &other->traits_) return;
+
+  internal::CountedDequeNodeTraits::PushFront(&node->traits_, &other->traits_);
+  _ASSERT(other->deque_ == nullptr);
+
+  other->deque_ = node->deque_;
+  if (nullptr != node->deque_) ++node->deque_;
+}
+
+void CountedDequeNodeBase::PushBack(CountedDequeNodeBase *node, CountedDequeNodeBase *other) {
+  if (other == node) return;;
+  if (node->traits_.next_ == &other->traits_) return;
+
+  internal::CountedDequeNodeTraits::PushBack(&node->traits_, &other->traits_);
+  _ASSERT(other->deque_ == nullptr);
+
+  other->deque_ = node->deque_;
+  if (nullptr != node->deque_) ++node->deque_;
 }
 
 void CountedDequeNodeBase::Unlink(CountedDequeNodeBase *node) {
-  node->ResetCountedDeque();
-  BinodeBase::Unlink(node);
+  internal::CountedDequeNodeTraits::Unlink(&node->traits_);
+  _ASSERT(node->deque_ == nullptr);
 }
 
-bool CountedDequeNodeBase::IsLinked(CountedDequeNodeBase *node) {
-  bool ret = BinodeBase::IsLinked(node);
-
-  if (ret) {
-    _ASSERT(nullptr != node->deque_);
-  }
-
+bool CountedDequeNodeBase::IsLinked(const CountedDequeNodeBase *node) {
+  bool ret = internal::CountedDequeNodeTraits::IsLinked(&node->traits_);
+  if (ret) _ASSERT(nullptr != node->deque_);
   return ret;
-}
-
-void CountedDequeNodeBase::ResetCountedDeque() {
-  if (nullptr != deque_) {
-    _ASSERT(deque_->count_ > 0);
-    deque_->count_--;
-    deque_ = nullptr;
-  }
 }
 
 CountedDequeBase::~CountedDequeBase() {

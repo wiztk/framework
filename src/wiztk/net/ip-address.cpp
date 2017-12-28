@@ -296,7 +296,7 @@ IPv6Address::IPv6Address() {
 // -----------------
 
 IPAddressList::~IPAddressList() {
-  deque_.clear([](base::BinodeBase *obj) {
+  deque_.clear([](base::CountedDequeNodeBase *obj) {
     auto *node = static_cast<IPAddress::Private *>(obj);
     IPAddress *addr = node->proprietor;
     delete addr;

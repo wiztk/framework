@@ -35,7 +35,7 @@ Output *OutputManager::GetActiveOutput() const {
 }
 
 void OutputManager::Clear() {
-  deque_.clear([](base::BinodeBase *obj) {
+  deque_.clear([](base::CountedDequeNodeBase *obj) {
     auto *node = static_cast<Output::Private *>(obj);
     Output *output = node->proprietor;
     delete output;

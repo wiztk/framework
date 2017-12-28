@@ -31,7 +31,7 @@ void InputManager::AddInput(Input *input) {
 }
 
 void InputManager::Clear() {
-  deque_.clear([](base::BinodeBase *obj) {
+  deque_.clear([](base::CountedDequeNodeBase *obj) {
     auto *node = static_cast<Input::Private *>(obj);
     Input *input = node->proprietor;
     delete input;

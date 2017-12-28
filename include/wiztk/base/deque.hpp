@@ -38,7 +38,7 @@ namespace internal {
 class DequeEndpoint : public BinodeBase {
 
   template<typename T> friend
-  class wiztk::base::Deque;
+  class base::Deque;
 
  protected:
 
@@ -129,9 +129,6 @@ class DequeNode : public DequeNodeBase {
 template<typename T>
 class Deque {
 
-  template<typename R> friend
-  class CountedDeque;
-
  public:
 
   /** @brief This class is non-copyable and non-movable */
@@ -140,7 +137,7 @@ class Deque {
   /**
    * @brief A typedef of a function object to remove node in clear().
    */
-  typedef std::function<void(BinodeBase * )> DeleterType;
+  typedef std::function<void(BinodeBase *)> DeleterType;
 
   /**
    * @brief A nested iterator for deque
@@ -211,7 +208,7 @@ class Deque {
 
    private:
 
-    BinodeBase *current_;
+    BinodeBase *current_ = nullptr;
 
   };
 
@@ -271,9 +268,11 @@ class Deque {
 
    private:
 
-    const BinodeBase *current_;
+    const BinodeBase *current_ = nullptr;
 
   };
+
+ public:
 
   /**
    * @brief Default constructor.
@@ -419,7 +418,7 @@ class Deque {
   /**
    * @brief A function object to process node when removing it in clear();
    */
-  std::function<void(BinodeBase * )> deleter_;
+  DeleterType deleter_;
 };
 
 template<typename T>

@@ -39,6 +39,9 @@ class WIZTK_EXPORT BinodeBase {
   template<typename T> friend
   class Deque;
 
+  friend class CountedDequeNodeBase;
+  friend class CountedDequeBase;
+
   template<typename T> friend
   class CountedDeque;
 
@@ -78,13 +81,6 @@ class WIZTK_EXPORT BinodeBase {
 
  protected:
 
-  virtual void OnUnlinked() {/* override this in subclass */}
-
-  /**
-    * @brief Default constructor
-    */
-  BinodeBase() = default;
-
   static void PushFront(BinodeBase *node, BinodeBase *other);
 
   static void PushBack(BinodeBase *node, BinodeBase *other);
@@ -94,6 +90,13 @@ class WIZTK_EXPORT BinodeBase {
   static bool IsLinked(const BinodeBase *node) {
     return (nullptr != node->previous_) || (nullptr != node->next_);
   }
+
+  virtual void OnUnlinked() {/* override this in subclass */}
+
+  /**
+    * @brief Default constructor
+    */
+  BinodeBase() = default;
 
   BinodeBase *previous_ = nullptr;
   BinodeBase *next_ = nullptr;

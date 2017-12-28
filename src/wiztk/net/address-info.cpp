@@ -110,7 +110,7 @@ AddressInfo *AddressInfoList::operator[](int index) const {
 }
 
 void AddressInfoList::Clear() {
-  deque_.clear([](base::BinodeBase *obj) {
+  deque_.clear([](base::CountedDequeNodeBase *obj) {
     auto *node = static_cast<AddressInfo::Private *>(obj);
     AddressInfo *addr_info = node->proprietor;
     delete addr_info;

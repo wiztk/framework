@@ -29,14 +29,79 @@ namespace wiztk {
 namespace base {
 
 // Foward declaration:
+class CountedDequeNodeBase;
+template<typename T>
+class CountedDequeNode;
 class CountedDequeBase;
+template<typename T>
+class CountedDeque;
+
+namespace internal {
+
+/**
+ * @ingroup base_intern
+ * @brief Endpoint used in CountedDeque.
+ */
+class CountedDequeEndpoint : public BinodeBase {
+
+  friend class base::CountedDequeBase;
+
+  template<typename T> friend
+  class base::CountedDeque;
+
+ protected:
+
+  CountedDequeEndpoint() = default;
+
+ private:
+
+  ~CountedDequeEndpoint() final = default;
+
+};
+
+/**
+ * @ingroup base_intern
+ * @brief Bidrectional node represents traits in CountedDequeNode.
+ */
+class CountedDequeNodeTraits : public BinodeBase {
+
+  friend class base::CountedDequeNodeBase;
+  template<typename T> friend
+  class base::CountedDequeNode;
+  template<typename T> friend
+  class base::CountedDeque;
+
+ public:
+
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(CountedDequeNodeTraits);
+  CountedDequeNodeTraits() = delete;
+
+ public:
+
+  explicit CountedDequeNodeTraits(CountedDequeNodeBase *node)
+      : node_(node) {}
+
+  ~CountedDequeNodeTraits() final = default;
+
+ protected:
+
+  void OnUnlinked() final;
+
+ private:
+
+  CountedDequeNodeBase *node_ = nullptr;
+
+};
+
+} // namespace internal
 
 /**
  * @ingroup base
  * @brief The basic class for bidirectional node with pointer to a countable deque.
  */
-class CountedDequeNodeBase : public DequeNodeBase {
+class CountedDequeNodeBase {
 
+  friend class internal::CountedDequeNodeTraits;
   friend class CountedDequeBase;
 
   template<typename T> friend
@@ -49,24 +114,20 @@ class CountedDequeNodeBase : public DequeNodeBase {
    *
    * This will decrease the count in deque.
    */
-  ~CountedDequeNodeBase() override;
+  virtual ~CountedDequeNodeBase() = default;
 
  protected:
 
   /**
    * @brief Default constructor.
    */
-  CountedDequeNodeBase() = default;
+  CountedDequeNodeBase()
+      : traits_(this) {}
 
-  /**
-   * @brief A pointer to a fast countable deque object.
-   */
-  CountedDequeBase *deque_ = nullptr;
+  static void PushFront(CountedDequeNodeBase *node, CountedDequeNodeBase *other);
 
-  /**
-   * @brief Unlink a node and decrease the count in counted deque.
-   * @param node
-   */
+  static void PushBack(CountedDequeNodeBase *node, CountedDequeNodeBase *other);
+
   static void Unlink(CountedDequeNodeBase *node);
 
   /**
@@ -74,13 +135,14 @@ class CountedDequeNodeBase : public DequeNodeBase {
    * @param node
    * @return
    */
-  static bool IsLinked(CountedDequeNodeBase *node);
+  static bool IsLinked(const CountedDequeNodeBase *node);
 
- private:
+  /**
+   * @brief A pointer to a fast countable deque object.
+   */
+  CountedDequeBase *deque_ = nullptr;
 
-  void OnUnlinked() final;
-
-  void ResetCountedDeque();
+  internal::CountedDequeNodeTraits traits_;
 
 };
 
@@ -108,9 +170,15 @@ class CountedDequeNode : public CountedDequeNodeBase {
 
   bool is_linked() const;
 
-  T *previous() const { return dynamic_cast<T *>(previous_); }
+  T *previous() const {
+    auto *previous = dynamic_cast<internal::CountedDequeNodeTraits *>(traits_.previous_);
+    return nullptr == previous ? nullptr : static_cast<T *> (previous->node_);
+  }
 
-  T *next() const { return dynamic_cast<T *>(next_); }
+  T *next() const {
+    auto *next = dynamic_cast<internal::CountedDequeNodeTraits *>(traits_.next_);
+    return nullptr == next ? nullptr : static_cast<T *>(next->node_);
+  }
 
   CountedDequeBase *deque() const { return deque_; }
 
@@ -122,6 +190,7 @@ class CountedDequeNode : public CountedDequeNodeBase {
  */
 class CountedDequeBase {
 
+  friend class internal::CountedDequeNodeTraits;
   friend class CountedDequeNodeBase;
 
   template<typename T> friend
@@ -132,29 +201,37 @@ class CountedDequeBase {
 
  public:
 
-  typedef std::function<void(BinodeBase *)> DeleterType;
+  typedef std::function<void(CountedDequeNodeBase *)> DeleterType;
 
   virtual ~CountedDequeBase();
 
  protected:
 
-  Deque<CountedDequeNodeBase> deque_;
+  internal::CountedDequeEndpoint head_;
+  internal::CountedDequeEndpoint tail_;
 
   size_t count_ = 0;
 
+  DeleterType deleter_;
+
  private:
 
-  CountedDequeBase() = default;
+  CountedDequeBase() {
+    head_.next_ = &tail_;
+    tail_.previous_ = &head_;
+  }
 
   explicit CountedDequeBase(const DeleterType &deleter)
-      : deque_(deleter) {}
+      : CountedDequeBase() {
+    deleter_ = deleter;
+  }
 
 };
 
 /**
  * @ingroup base
  * @brief Counted deque.
- * @tparam T
+ * @tparam T Must be a subclass of CountedDequeNodeBase.
  */
 template<typename T>
 class CountedDeque : public CountedDequeBase {
@@ -202,9 +279,10 @@ class CountedDeque : public CountedDequeBase {
     T *operator->() const noexcept { return get(); }
 
     T *get() const noexcept {
+      using Traits = internal::CountedDequeNodeTraits;
       return nullptr == current_->previous_ ?
              nullptr : (nullptr == current_->next_ ?
-                        nullptr : static_cast<T *>(current_));
+                        nullptr : static_cast<T *>(static_cast<Traits *>(current_)->node_));
     }
 
     explicit operator bool() const {
@@ -215,7 +293,7 @@ class CountedDeque : public CountedDequeBase {
 
    private:
 
-    BinodeBase *current_;
+    BinodeBase *current_ = nullptr;
 
   };
 
@@ -227,67 +305,38 @@ class CountedDeque : public CountedDequeBase {
   explicit CountedDeque(const DeleterType &deleter)
       : CountedDequeBase(deleter) {}
 
-  ~CountedDeque() override = default;
+  ~CountedDeque() override { clear(); }
 
   T *operator[](int index) const { return at(index); }
 
-  T *at(int index) const { return static_cast<T *>(deque_.at(index)); }
+  T *at(int index) const;
 
-  void push_back(T *obj) {
-    CountedDequeNodeBase::Unlink(obj);
-    deque_.push_back(obj);
-    obj->deque_ = this;
-    count_++;
-  }
+  void push_front(T *obj);
 
-  void push_front(T *obj) {
-    CountedDequeNodeBase::Unlink(obj);
-    deque_.push_front(obj);
-    obj->deque_ = this;
-    count_++;
-  }
+  void push_back(T *obj);
 
-  void insert(T *obj, int index = 0) {
-    CountedDequeNodeBase::Unlink(obj);
-    deque_.insert(obj, index);
-    obj->deque_ = this;
-    count_++;
-  }
-
-  void clear() {
-    CountedDequeNodeBase *tmp = nullptr;
-    while (!deque_.is_empty()) {
-      tmp = deque_.begin().get();
-      CountedDequeNodeBase::Unlink(tmp);
-      tmp->deque_ = nullptr;
-      if (deque_.deleter_) deque_.deleter_(tmp);
-    }
-
-    _ASSERT(count_ == 0);
-//    count_ = 0;
-  }
-
-  void clear(const DeleterType &deleter) {
-    CountedDequeNodeBase *tmp = nullptr;
-    while (!deque_.is_empty()) {
-      tmp = deque_.begin().get();
-      CountedDequeNodeBase::Unlink(tmp);
-      tmp->deque_ = nullptr;
-      if (deleter) deleter(tmp);
-    }
-
-    _ASSERT(count_ == 0);
-    count_ = 0;
-  }
+  void insert(T *obj, int index = 0);
 
   size_t count() const { return count_; }
 
   bool is_empty() const { return 0 == count_; }
 
-  Iterator begin() const { return Iterator(deque_.head_.next_); }
+  void clear();
+
+  void clear(const DeleterType &deleter);
+
+  Iterator begin() const {
+    if (head_.next_ == &tail_) {
+      _ASSERT(tail_.previous_ == &head_);
+      return Iterator();
+    }
+
+    const BinodeBase *p = head_.next_;
+    return Iterator(const_cast<BinodeBase *>(p));
+  }
 
   Iterator end() const {
-    const BinodeBase *p = &deque_.tail_;
+    const BinodeBase *p = &tail_;
     return Iterator(const_cast<BinodeBase *>(p));
   }
 
@@ -295,24 +344,112 @@ class CountedDeque : public CountedDequeBase {
 
 template<typename T>
 void CountedDequeNode<T>::unlink() {
-  BinodeBase::Unlink(this);
-
-  if (nullptr != deque_) {
-    _ASSERT(deque_->count_ > 0);
-    deque_->count_--;
-    deque_ = nullptr;
-  }
+  CountedDequeNodeBase::Unlink(this);
+  _ASSERT(deque_ == nullptr);
 }
 
 template<typename T>
 bool CountedDequeNode<T>::is_linked() const {
-  bool ret = BinodeBase::IsLinked(this);
+  bool ret = CountedDequeNodeBase::IsLinked(this);
 
   if (ret) {
     _ASSERT(nullptr != deque_);
   }
 
   return ret;
+}
+
+template<typename T>
+void CountedDeque<T>::clear() {
+  CountedDequeNodeBase *tmp = nullptr;
+  while (!is_empty()) {
+    _ASSERT(head_.next_ != &tail_);
+    _ASSERT(tail_.previous_ != &head_);
+
+    tmp = static_cast<internal::CountedDequeNodeTraits *>(head_.next_)->node_;
+    CountedDequeNodeBase::Unlink(tmp);
+    _ASSERT(tmp->deque_ == nullptr);
+    if (deleter_) deleter_(tmp);
+  }
+
+  _ASSERT(count_ == 0);
+//    count_ = 0;
+}
+
+template<typename T>
+void CountedDeque<T>::clear(const DeleterType &deleter) {
+  CountedDequeNodeBase *tmp = nullptr;
+  while (!is_empty()) {
+    _ASSERT(head_.next_ != &tail_);
+    _ASSERT(tail_.previous_ != &head_);
+
+    tmp = static_cast<internal::CountedDequeNodeTraits *>(head_.next_)->node_;
+    CountedDequeNodeBase::Unlink(tmp);
+    _ASSERT(tmp->deque_ == nullptr);
+    if (deleter) deleter(tmp);
+  }
+
+  _ASSERT(count_ == 0);
+//  count_ = 0;
+}
+
+template<typename T>
+T *CountedDeque<T>::at(int index) const {
+  BinodeBase *p = nullptr;
+
+  if (index >= 0) {
+    p = head_.next_;
+    while ((&tail_ != p) && (index > 0)) {
+      p = p->next_;
+      index--;
+    }
+  } else {
+    p = tail_.previous_;
+    while ((&head_ != p) && (index < -1)) {
+      p = p->previous_;
+      index++;
+    }
+  }
+
+  return static_cast<T *>(static_cast<internal::CountedDequeNodeTraits *>(p)->node_);
+}
+
+template<typename T>
+void CountedDeque<T>::push_front(T *obj) {
+  BinodeBase::PushBack(&head_, &obj->traits_);
+  obj->deque_ = this;
+  ++count_;
+}
+
+template<typename T>
+void CountedDeque<T>::push_back(T *obj) {
+  BinodeBase::PushFront(&tail_, &obj->traits_);
+  obj->deque_ = this;
+  ++count_;
+}
+
+template<typename T>
+void CountedDeque<T>::insert(T *obj, int index) {
+  CountedDequeNodeBase::Unlink(obj);
+
+  if (index >= 0) {
+    BinodeBase *p = head_.next_;
+    while ((&tail_ != p) && (index > 0)) {
+      p = p->next_;
+      index--;
+    }
+    BinodeBase::PushFront(p, &obj->traits_);
+  } else {
+    BinodeBase *p = tail_.previous_;
+    while ((&head_ != p) && (index < -1)) {
+      p = p->previous_;
+      index++;
+    }
+    BinodeBase::PushBack(p, &obj->traits_);
+  }
+
+  obj->deque_ = this;
+  count_++;
 }
 
 } // namespace base
