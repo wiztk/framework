@@ -21,6 +21,7 @@
 
 using namespace wiztk;
 using namespace wiztk::base;
+using namespace wiztk::base::memory;
 
 class MyRefCounted : public RefCountedBase<> {
 

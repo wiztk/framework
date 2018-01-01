@@ -21,6 +21,7 @@
 
 namespace wiztk {
 namespace base {
+namespace memory {
 
 /**
  * @ingroup base_memory
@@ -68,7 +69,8 @@ class RefCount {
 
 };
 
-}
-}
+} // namespace memory
+} // namespace base
+} // namespace wiztk
 
-#endif //WIZTK_REF_COUNT_HPP
+#endif // WIZTK_BASE_MEMORY_REF_COUNT_HPP_

@@ -6,11 +6,6 @@
  */
 
 /**
- * @namespace base
- * @brief The base module
- */
-
-/**
  * @ingroup base
  * @defgroup base_intern Internal
  * @brief Private code used in Base module only
@@ -30,24 +25,10 @@
  */
 
 /**
- * @namespace numerical
- * @brief The numerical algorithm
- *
- * ...
- */
-
-/**
  * @defgroup graphic Graphic
  * @brief Graphic classes based on Google Skia
  *
  * Code using Google Skia for drawing 2D in GUI views.
- */
-
-/**
- * @namespace graphic
- * @brief The graphic code based on Skia
- *
- * ...
  */
 
 /**
@@ -64,7 +45,25 @@
 /**
  * @ingroup system
  * @defgroup system_threading Threading
- * @brief High-level threading interface
+ * @brief High-level threading interface.
+ *
+ * ...
+ */
+
+/**
+ * @ingroup system_threading
+ * @defgroup system_threading_intern Internal
+ * @brief Internal code used in system::threading only.
+ *
+ * ...
+ */
+
+/**
+ * @ingroup system
+ * @defgroup system_time Time
+ * @brief High resolution of time.
+ *
+ * ...
  */
 
 /**
@@ -72,13 +71,6 @@
  * @brief The main module provides GUI elements
  *
  * The gui module provides classes to build user interface displayed on the screen.
- */
-
-/**
- * @namespace gui
- * @brief The main GUI code.
- *
- * ...
  */
 
 /**
@@ -95,11 +87,6 @@
  */
 
 /**
- * @namespace net
- * @brief Network module
- */
-
-/**
  * @ingroup net
  * @defgroup net_intern Internal
  * @brief Private code used in Network module only
@@ -110,9 +97,4 @@
  * @brief Media
  *
  * ...
- */
-
-/**
- * @namespace media
- * @brief Media module
  */

@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-/**
- * @file Header file for Thread class.
- */
+#ifndef WIZTK_SYSTEM_THREADING_THREAD_ID_HPP_
+#define WIZTK_SYSTEM_THREADING_THREAD_ID_HPP_
 
-#ifndef WIZTK_SYSTEM_THREADING_THREAD_HPP_
-#define WIZTK_SYSTEM_THREADING_THREAD_HPP_
-
-#include "wiztk/system/threading/thread-id.hpp"
-#include "wiztk/system/threading/thread-attribute.hpp"
+#include <pthread.h>
 
 namespace wiztk {
 namespace system {
@@ -30,31 +25,21 @@ namespace threading {
 
 /**
  * @ingroup system_threading
- * @brief A class to create and control a thread.
+ * @brief Thread ID.
  */
-class Thread {
+class ThreadID {
+
+  friend class Thread;
 
  public:
 
-  Thread() = default;
+  ThreadID() = default;
 
-  virtual ~Thread() = default;
-
-  void Start();
-
-  void Join();
-
-  const ThreadID &id() const { return id_; }
-
- protected:
-
-  virtual void Run() {/* Override in sub class */}
+  ~ThreadID() = default;
 
  private:
 
-  struct Private;
-
-  ThreadID id_;
+  pthread_t pthread_id_ = 0;
 
 };
 
@@ -62,4 +47,4 @@ class Thread {
 } // namespace system
 } // namespace wiztk
 
-#endif // WIZTK_BASE_THREADING_THREAD_HPP_
+#endif // WIZTK_SYSTEM_THREADING_THREAD_ID_HPP_

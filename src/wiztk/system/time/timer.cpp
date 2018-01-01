@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-#include "wiztk/system/timer.hpp"
+#include "wiztk/system/time/timer.hpp"
 
 #include <cerrno>
 
 namespace wiztk {
 namespace system {
+namespace time {
 
 Timer::Timer()
     : id_(nullptr),
@@ -113,5 +114,6 @@ void Timer::OnExpire(union sigval sigev_value) {
   if (_this->expire_) _this->expire_.Invoke();
 }
 
+} // namespace time
 } // namespace base
 } // namespace wiztk

@@ -105,14 +105,33 @@ class WIZTK_EXPORT AddressInfoList {
 
  public:
 
+  /**
+   * @brief Destructor.
+   *
+   * Clean and destroy all AddressInfo objects.
+   */
   ~AddressInfoList();
 
+  /**
+   * @brief Get the AddressInfo object at the given index.
+   * @param index
+   * @return
+   */
   AddressInfo *at(int index) const {
     return operator[](index);
   }
 
+  /**
+   * @brief Get the AddressInfo object at the given index.
+   * @param index
+   * @return
+   */
   AddressInfo *operator[](int index) const;
 
+  /**
+   * @brief Get the size of this list.
+   * @return
+   */
   size_t size() const { return deque_.count(); }
 
  private:

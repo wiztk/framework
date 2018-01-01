@@ -22,6 +22,7 @@
 
 namespace wiztk {
 namespace base {
+namespace memory {
 
 /**
  * @ingroup base_memory
@@ -165,7 +166,8 @@ class WeakPtr {
 
 };
 
+} // namespace memory
 } // namespace base
 } // namespace wiztk
 
-#endif //WIZTK_WEAK_PTR_HPP
+#endif // WIZTK_BASE_MEMORY_WEAK_PTR_HPP_

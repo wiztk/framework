@@ -22,6 +22,7 @@
 
 namespace wiztk {
 namespace base {
+namespace memory {
 
 /**
  * @ingroup base_memory
@@ -75,6 +76,7 @@ class RefCountedBase : public AbstractRefCounted {
 
 };
 
+} // namespace memory
 } // namespace base
 } // namespace wiztk
 

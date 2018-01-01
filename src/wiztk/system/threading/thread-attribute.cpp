@@ -14,52 +14,40 @@
  * limitations under the License.
  */
 
-/**
- * @file Header file for Thread class.
- */
-
-#ifndef WIZTK_SYSTEM_THREADING_THREAD_HPP_
-#define WIZTK_SYSTEM_THREADING_THREAD_HPP_
-
-#include "wiztk/system/threading/thread-id.hpp"
 #include "wiztk/system/threading/thread-attribute.hpp"
 
 namespace wiztk {
 namespace system {
 namespace threading {
 
-/**
- * @ingroup system_threading
- * @brief A class to create and control a thread.
- */
-class Thread {
+ThreadAttribute::ThreadAttribute() {
+  pthread_attr_init(&pthread_attribute_);
+}
 
- public:
+ThreadAttribute::~ThreadAttribute() {
+  pthread_attr_destroy(&pthread_attribute_);
+}
 
-  Thread() = default;
+void ThreadAttribute::SetDetachState(DetachStateType state_type) {
+  pthread_attr_setdetachstate(&pthread_attribute_, state_type);
+}
 
-  virtual ~Thread() = default;
+ThreadAttribute::DetachStateType ThreadAttribute::GetDetachState() const {
+  int val = 0;
+  pthread_attr_getdetachstate(&pthread_attribute_, &val);
+  return static_cast<DetachStateType>(val);
+}
 
-  void Start();
+void ThreadAttribute::SetScope(ScopeType scope_type) {
+  pthread_attr_setscope(&pthread_attribute_, scope_type);
+}
 
-  void Join();
-
-  const ThreadID &id() const { return id_; }
-
- protected:
-
-  virtual void Run() {/* Override in sub class */}
-
- private:
-
-  struct Private;
-
-  ThreadID id_;
-
-};
+ThreadAttribute::ScopeType ThreadAttribute::GetScope() const {
+  int val = 0;
+  pthread_attr_getscope(&pthread_attribute_, &val);
+  return static_cast<ScopeType>(val);
+}
 
 } // namespace threading
 } // namespace system
 } // namespace wiztk
-
-#endif // WIZTK_BASE_THREADING_THREAD_HPP_

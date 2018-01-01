@@ -24,6 +24,7 @@
 
 namespace wiztk {
 namespace base {
+namespace memory {
 
 /**
  * @ingroup base_memory
@@ -164,6 +165,7 @@ SharedPtr<T> MakeShared(Args &&... args) {
   return SharedPtr<T>(new T(std::forward<Args>(args)...));
 };
 
+} // namespace memory
 } // namespace base
 } // namespace wiztk
 

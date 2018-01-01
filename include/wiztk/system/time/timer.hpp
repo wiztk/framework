@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_SYSTEM_TIMER_HPP_
-#define WIZTK_SYSTEM_TIMER_HPP_
+#ifndef WIZTK_SYSTEM_TIME_TIMER_HPP_
+#define WIZTK_SYSTEM_TIME_TIMER_HPP_
 
 #include "wiztk/base/macros.hpp"
 #include "wiztk/base/delegate.hpp"
@@ -26,9 +26,10 @@
 
 namespace wiztk {
 namespace system {
+namespace time {
 
 /**
- * @ingroup base
+ * @ingroup system_time
  * @brief A wrapper class to use posix timer
  */
 class WIZTK_EXPORT Timer {
@@ -91,7 +92,8 @@ class WIZTK_EXPORT Timer {
 
 };
 
+} // namespace time
 } // namespace system
 } // namespace wiztk
 
-#endif // WIZTK_CORE_TIMER_HPP_
+#endif // WIZTK_SYSTEM_TIME_TIMER_HPP_

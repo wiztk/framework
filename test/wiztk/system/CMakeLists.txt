@@ -13,4 +13,4 @@
 # limitations under the License.
 
 add_subdirectory(time)
-add_subdirectory(timer)
+add_subdirectory(threading)

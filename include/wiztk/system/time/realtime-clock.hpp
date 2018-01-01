@@ -14,46 +14,33 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_BASE_MEMORY_ABSTRACT_REF_COUNT_HPP_
-#define WIZTK_BASE_MEMORY_ABSTRACT_REF_COUNT_HPP_
+#ifndef WIZTK_SYSTEM_TIME_REALTIME_CLOCK_HPP_
+#define WIZTK_SYSTEM_TIME_REALTIME_CLOCK_HPP_
+
+#include "wiztk/system/time/clock.hpp"
 
 namespace wiztk {
-namespace base {
-namespace memory {
+namespace system {
+namespace time {
 
 /**
- * @ingroup base_memory
- * @brief Abstract class with reference count.
+ * @ingroup system_time
+ * @brief System-wide clock that measures real (i.e.,  wall-clock)  time.
  */
-class AbstractRefCounted {
+class WIZTK_EXPORT RealtimeClock : public Clock {
 
  public:
 
-  struct DefaultDeleter {
+  using Clock::Clock;
 
-    template<typename T>
-    void operator()(T *p) {
-      delete p;
-    }
+  ~RealtimeClock() final = default;
 
-  };
-
-  AbstractRefCounted() = default;
-
-  virtual ~AbstractRefCounted() = default;
-
- protected:
-
-  virtual void Reference() = 0;
-
-  virtual void Unreference() = 0;
-
-  virtual void Destroy() = 0;
+  static RealtimeClock Now(Precision precision = kMilliseconds);
 
 };
 
-} // namespace memory
-} // namespace base
+} // namespace time
+} // namespace system
 } // namespace wiztk
 
-#endif // WIZTK_BASE_MEMORY_ABSTRACT_REF_COUNT_HPP_
+#endif // WIZTK_SYSTEM_TIME_REALTIME_CLOCK_HPP_

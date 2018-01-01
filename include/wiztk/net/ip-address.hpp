@@ -145,22 +145,44 @@ class IPAddressList {
   friend class IPAddress;
 
  public:
-  
-  IPAddressList() = default;
 
+  /**
+   * @brief Destructor.
+   *
+   * Clean and destroy all IPAddress objects.
+   */
   ~IPAddressList();
 
+  /**
+   * @brief Get the IPAddress object at the given index.
+   * @param index
+   * @return
+   */
   IPAddress *at(int index) const {
     return operator[](index);
   }
 
+  /**
+   * @brief Get the IPAddress object at the given index.
+   * @param index
+   * @return
+   */
   IPAddress *operator[](int index) const;
 
+  /**
+   * @brief Get the size of this list.
+   * @return
+   */
   size_t size() const { return deque_.count(); }
 
  private:
 
   typedef base::CountedDeque<IPAddress::Private> IPAddressDeque;
+
+  /**
+   * @brief Default constructor.
+   */
+  IPAddressList() = default;
 
   IPAddressDeque deque_;
 

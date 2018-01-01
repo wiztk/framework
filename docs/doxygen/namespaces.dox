@@ -1,0 +1,77 @@
+/**
+ * @namespace wiztk
+ * @brief The root namespace
+ *
+ * ...
+ */
+
+/**
+ * @namespace wiztk::base
+ * @brief The base module
+ */
+
+/**
+ * @namespace wiztk::base::internal
+ * @brief Private code used in Base module only
+ *
+ * ...
+ */
+
+/**
+ * @namespace wiztk::base::memory
+ * @brief Memory management
+ *
+ * ...
+ */
+
+/**
+ * @namespace wiztk::numerical
+ * @brief The numerical algorithm
+ *
+ * ...
+ */
+
+/**
+ * @namespace wiztk::graphic
+ * @brief The graphic code based on Skia
+ *
+ * ...
+ */
+
+/**
+ * @namespace wiztk::system
+ * @brief Platform dependent code.
+ *
+ * ...
+ */
+
+/**
+ * @namespace wiztk::system::threading
+ * @brief High-level threading interface.
+ *
+ * ...
+ */
+
+/**
+ * @namespace wiztk::system::time
+ * @brief Time related classes
+ *
+ * ...
+ */
+
+/**
+ * @namespace wiztk::gui
+ * @brief The main GUI code.
+ *
+ * ...
+ */
+
+/**
+ * @namespace wiztk::net
+ * @brief Network module
+ */
+
+/**
+ * @namespace wiztk::media
+ * @brief Media module
+ */

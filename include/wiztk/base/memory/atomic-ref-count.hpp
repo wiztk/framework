@@ -23,6 +23,7 @@
 
 namespace wiztk {
 namespace base {
+namespace memory {
 
 /**
  * @ingroup base_memory
@@ -60,7 +61,8 @@ class WIZTK_EXPORT AtomicRefCount {
 
 };
 
-}
-}
+} // namespace memory
+} // namespace base
+} // namespace wiztk
 
-#endif // WIZTK_BASE_ATOMIC_REF_COUNT_HPP_
+#endif // WIZTK_BASE_MEMORY_ATOMIC_REF_COUNT_HPP_
