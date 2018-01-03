@@ -48,6 +48,16 @@ ThreadAttribute::ScopeType ThreadAttribute::GetScope() const {
   return static_cast<ScopeType>(val);
 }
 
+void ThreadAttribute::SetStackSize(size_t stack_size) {
+  pthread_attr_setstacksize(&pthread_attribute_, stack_size);
+}
+
+size_t ThreadAttribute::GetStackSize() const {
+  size_t stack_size = 0;
+  pthread_attr_getstacksize(&pthread_attribute_, &stack_size);
+  return stack_size;
+}
+
 } // namespace threading
 } // namespace system
 } // namespace wiztk

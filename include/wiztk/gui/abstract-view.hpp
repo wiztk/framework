@@ -84,6 +84,16 @@ WIZTK_EXPORT class AbstractView : public AbstractEventHandler {
   using RectF   = base::RectF;          /**< @brief Alias of base::RectF */
   using Padding = base::Padding;        /**< @brief Alias of base::Padding */
 
+  class GeometryTask;
+  class RenderNode;
+
+  // Internal nested classes:
+  class Iterator;
+  class ConstIterator;
+
+  /**
+   * @brief Bitwise enums represents geometry dirty flag in private data.
+   */
   enum GeometryDirtyFlagMask {
     kDirtyLeftMask = 0x1 << 0,
     kDirtyTopMask = 0x1 << 1,
@@ -93,64 +103,29 @@ WIZTK_EXPORT class AbstractView : public AbstractEventHandler {
     kDirtyHeightMask = 0x1 << 5
   };
 
-  class Iterator;
-  class ConstIterator;
+  /**
+   * @brief A typedef of a function object used when destroying a view object.
+   */
+  typedef std::function<void(AbstractView *obj)> DeleterType;
 
-  class GeometryTask : public TaskNode {
+ public:
 
-   public:
-
-    WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(GeometryTask);
-    GeometryTask() = delete;
-
-    explicit GeometryTask(AbstractView *view)
-        : TaskNode(), view_(view) {}
-
-    ~GeometryTask() final = default;
-
-    void Run() const final;
-
-    static GeometryTask *Get(const AbstractView *view);
-
-   private:
-
-    AbstractView *view_ = nullptr;
-
-  };
-
-  class RenderNode : public base::DequeNode<RenderNode> {
-
-   public:
-
-    WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(RenderNode);
-    RenderNode() = delete;
-
-    explicit RenderNode(AbstractView *view)
-        : base::DequeNode<RenderNode>(), view_(view) {}
-
-    ~RenderNode() final = default;
-
-    inline AbstractView *view() const { return view_; }
-
-    static RenderNode *Get(const AbstractView *view);
-
-   private:
-
-    AbstractView *view_ = nullptr;
-
-  };
+  /**
+   * @brief Default deleter used in constructor, simply delete the View object.
+   */
+  static DeleterType kDefaultDeleter;
 
   /**
    * @brief Default constructor
    *
    * This create a 400 x 300 view.
    */
-  AbstractView();
+  explicit AbstractView(const DeleterType &deleter = kDefaultDeleter);
 
   /**
    * @brief Create a view by given size
    */
-  AbstractView(int width, int height);
+  AbstractView(int width, int height, const DeleterType &deleter = kDefaultDeleter);
 
   /**
    * @brief Set the minimal width
@@ -665,6 +640,56 @@ WIZTK_EXPORT class AbstractView : public AbstractEventHandler {
   std::unique_ptr<Private> p_;
 
   base::Signal<AbstractView *> destroyed_;
+
+};
+
+/**
+ * @brief Nested class represents a geometry task in main loop.
+ */
+class AbstractView::GeometryTask : public TaskNode {
+
+ public:
+
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(GeometryTask);
+  GeometryTask() = delete;
+
+  explicit GeometryTask(AbstractView *view)
+      : TaskNode(), view_(view) {}
+
+  ~GeometryTask() final = default;
+
+  void Run() const final;
+
+  static GeometryTask *Get(const AbstractView *view);
+
+ private:
+
+  AbstractView *view_ = nullptr;
+
+};
+
+/**
+ * @brief Nested class represents a render node in a view surface.
+ */
+class AbstractView::RenderNode : public base::DequeNode<RenderNode> {
+
+ public:
+
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(RenderNode);
+  RenderNode() = delete;
+
+  explicit RenderNode(AbstractView *view)
+      : base::DequeNode<RenderNode>(), view_(view) {}
+
+  ~RenderNode() final = default;
+
+  inline AbstractView *view() const { return view_; }
+
+  static RenderNode *Get(const AbstractView *view);
+
+ private:
+
+  AbstractView *view_ = nullptr;
 
 };
 

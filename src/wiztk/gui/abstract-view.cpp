@@ -16,8 +16,6 @@
 
 #include "internal/abstract-view_private.hpp"
 
-#include "wiztk/base/macros.hpp"
-
 #include "wiztk/numerical/bit.hpp"
 #include "wiztk/numerical/clamp.hpp"
 
@@ -37,14 +35,19 @@ using base::RectF;
 using numerical::Clamp;
 using numerical::Bit;
 
-AbstractView::AbstractView()
+AbstractView::DeleterType AbstractView::kDefaultDeleter = [](AbstractView *obj) {
+  delete obj;
+};
+
+AbstractView::AbstractView(const DeleterType &deleter)
     : AbstractView(400, 300) {
 
 }
 
-AbstractView::AbstractView(int width, int height)
+AbstractView::AbstractView(int width, int height, const DeleterType &deleter)
     : AbstractEventHandler() {
   p_ = std::make_unique<Private>(this);
+  p_->deleter = deleter;
   p_->geometry.Resize(width, height);
   p_->last_geometry.Resize(width, height);
   p_->bounds.Resize(width, height);
@@ -439,7 +442,7 @@ void AbstractView::Destroy() {
     ClearChildren();
   }
 
-  delete this;
+  if (p_->deleter) p_->deleter(this);
 }
 
 AbstractView *AbstractView::GetParent() const {

@@ -60,6 +60,10 @@ class ThreadAttribute {
 
   ScopeType GetScope() const;
 
+  void SetStackSize(size_t stack_size);
+
+  size_t GetStackSize() const;
+
  private:
 
   pthread_attr_t pthread_attribute_;

@@ -105,7 +105,9 @@ WIZTK_NO_EXPORT struct AbstractView::Private {
   AbstractLayout *layout;
 
   std::string name;
-  
+
+  DeleterType deleter;
+
 };
 
 } // namespace gui

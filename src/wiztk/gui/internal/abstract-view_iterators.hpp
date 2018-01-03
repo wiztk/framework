@@ -31,21 +31,17 @@ WIZTK_NO_EXPORT class AbstractView::Iterator {
 
  public:
 
-  Iterator(AbstractView *view = nullptr)
-      : view_(view) {}
+  explicit Iterator(AbstractView *view = nullptr)
+      : current_(view) {}
 
-  Iterator(const Iterator &orig)
-      : view_(orig.view_) {}
-
-  ~Iterator() {}
-
-  Iterator &operator=(const Iterator &other) {
-    view_ = other.view_;
-    return *this;
-  }
+  Iterator(const Iterator &) = default;
+  Iterator(Iterator &&) = default;
+  ~Iterator() = default;
+  Iterator &operator=(const Iterator &) = default;
+  Iterator &operator=(Iterator &&) = default;
 
   Iterator &operator=(AbstractView *view) {
-    view_ = view;
+    current_ = view;
     return *this;
   }
 
@@ -56,7 +52,7 @@ WIZTK_NO_EXPORT class AbstractView::Iterator {
    * @note It's recommended to use this operator
    */
   Iterator &operator++() {
-    view_ = view_->p_->next;
+    current_ = current_->p_->next;
     return *this;
   }
 
@@ -65,7 +61,7 @@ WIZTK_NO_EXPORT class AbstractView::Iterator {
    * @return A new iterator object
    */
   Iterator operator++(int) {
-    Iterator it(view_->p_->next);
+    Iterator it(current_->p_->next);
     return it;
   }
 
@@ -76,7 +72,7 @@ WIZTK_NO_EXPORT class AbstractView::Iterator {
    * @note It's recommended to use this operator
    */
   Iterator &operator--() {
-    view_ = view_->p_->previous;
+    current_ = current_->p_->previous;
     return *this;
   }
 
@@ -85,49 +81,49 @@ WIZTK_NO_EXPORT class AbstractView::Iterator {
    * @return A new iterator object
    */
   Iterator operator--(int) {
-    Iterator it(view_->p_->previous);
+    Iterator it(current_->p_->previous);
     return it;
   }
 
-  AbstractView *parent() const { return view_->p_->parent; }
+  AbstractView *parent() const { return current_->p_->parent; }
 
-  AbstractView *previous() const { return view_->p_->previous; }
+  AbstractView *previous() const { return current_->p_->previous; }
 
-  AbstractView *next() const { return view_->p_->next; }
+  AbstractView *next() const { return current_->p_->next; }
 
-  AbstractView *first_child() const { return view_->p_->first_child; }
+  AbstractView *first_child() const { return current_->p_->first_child; }
 
-  AbstractView *last_child() const { return view_->p_->last_child; }
+  AbstractView *last_child() const { return current_->p_->last_child; }
 
-  AbstractView *view() const { return view_; }
+  AbstractView *view() const { return current_; }
 
-  operator bool() const { return nullptr != view_; }
+  explicit operator bool() const { return nullptr != current_; }
 
  private:
 
-  AbstractView *view_;
+  AbstractView *current_;
 
 };
 
+/**
+ * @ingroup gui_intern
+ * @brief A const iterator class to traverse in the view hierarchy
+ */
 class AbstractView::ConstIterator {
 
  public:
 
-  ConstIterator(const AbstractView *view = nullptr)
-      : view_(view) {}
+  explicit ConstIterator(const AbstractView *view = nullptr)
+      : current_(view) {}
 
-  ConstIterator(const ConstIterator &orig)
-      : view_(orig.view_) {}
-
-  ~ConstIterator() {}
-
-  ConstIterator &operator=(const ConstIterator &other) {
-    view_ = other.view_;
-    return *this;
-  }
+  ConstIterator(const ConstIterator &) = default;
+  ConstIterator(ConstIterator &&) = default;
+  ~ConstIterator() = default;
+  ConstIterator &operator=(const ConstIterator &) = default;
+  ConstIterator &operator=(ConstIterator &&) = default;
 
   ConstIterator &operator=(AbstractView *view) {
-    view_ = view;
+    current_ = view;
     return *this;
   }
 
@@ -138,7 +134,7 @@ class AbstractView::ConstIterator {
    * @note It's recommended to use this operator
    */
   ConstIterator &operator++() {
-    view_ = view_->p_->next;
+    current_ = current_->p_->next;
     return *this;
   }
 
@@ -147,7 +143,7 @@ class AbstractView::ConstIterator {
    * @return A new iterator object
    */
   ConstIterator operator++(int) {
-    ConstIterator it(view_->p_->next);
+    ConstIterator it(current_->p_->next);
     return it;
   }
 
@@ -158,7 +154,7 @@ class AbstractView::ConstIterator {
    * @note It's recommended to use this operator
    */
   ConstIterator &operator--() {
-    view_ = view_->p_->previous;
+    current_ = current_->p_->previous;
     return *this;
   }
 
@@ -167,27 +163,27 @@ class AbstractView::ConstIterator {
    * @return A new iterator object
    */
   ConstIterator operator--(int) {
-    ConstIterator it(view_->p_->previous);
+    ConstIterator it(current_->p_->previous);
     return it;
   }
 
-  const AbstractView *parent() const { return view_->p_->parent; }
+  const AbstractView *parent() const { return current_->p_->parent; }
 
-  const AbstractView *previous() const { return view_->p_->previous; }
+  const AbstractView *previous() const { return current_->p_->previous; }
 
-  const AbstractView *next() const { return view_->p_->next; }
+  const AbstractView *next() const { return current_->p_->next; }
 
-  const AbstractView *first_child() const { return view_->p_->first_child; }
+  const AbstractView *first_child() const { return current_->p_->first_child; }
 
-  const AbstractView *last_child() const { return view_->p_->last_child; }
+  const AbstractView *last_child() const { return current_->p_->last_child; }
 
-  const AbstractView *view() const { return view_; }
+  const AbstractView *view() const { return current_; }
 
-  operator bool() const { return nullptr != view_; }
+  explicit operator bool() const { return nullptr != current_; }
 
  private:
 
-  const AbstractView *view_;
+  const AbstractView *current_;
 
 };
 
