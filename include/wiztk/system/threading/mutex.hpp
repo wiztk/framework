@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_SYSTEM_THREADING_THREAD_ID_HPP_
-#define WIZTK_SYSTEM_THREADING_THREAD_ID_HPP_
+#ifndef WIZTK_SYSTEM_THREADING_MUTEX_HPP_
+#define WIZTK_SYSTEM_THREADING_MUTEX_HPP_
 
 #include <pthread.h>
 
@@ -23,28 +23,48 @@ namespace wiztk {
 namespace system {
 namespace threading {
 
-/**
- * @ingroup system_threading
- * @brief Thread ID.
- */
-class ThreadID {
-
-  friend class Thread;
+class Mutex {
 
  public:
 
-  ThreadID() = default;
+  class Attribute;
 
-  ~ThreadID() = default;
+ public:
+
+  Mutex() {
+    pthread_mutex_init(&pthread_mutex_, nullptr);
+  }
+
+  ~Mutex() {
+    pthread_mutex_destroy(&pthread_mutex_);
+  }
 
  private:
 
-  pthread_t pthread_id_ = 0;
+  pthread_mutex_t pthread_mutex_;
 
 };
 
-} // namespace threading
-} // namespace system
-} // namespace wiztk
+class Mutex::Attribute {
 
-#endif // WIZTK_SYSTEM_THREADING_THREAD_ID_HPP_
+ public:
+
+  Attribute() {
+    pthread_mutexattr_init(&pthread_mutexattr_);
+  }
+
+  ~Attribute() {
+    pthread_mutexattr_destroy(&pthread_mutexattr_);
+  }
+
+ private:
+
+  pthread_mutexattr_t pthread_mutexattr_;
+
+};
+
+}
+}
+}
+
+#endif // WIZTK_SYSTEM_THREADING_MUTEX_HPP_

@@ -102,10 +102,6 @@ class WIZTK_EXPORT IPAddress {
 
   std::unique_ptr<Private> p_;
 
- private:
-
-  void Clear();
-
 };
 
 /**

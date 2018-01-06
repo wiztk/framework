@@ -109,59 +109,16 @@ IPAddress::IPAddress(const AddressInfo &address_info)
 
 IPAddress::IPAddress(const IPAddress &other)
     : IPAddress() {
-  if (nullptr != other.p_->socket_address) {
-    switch (other.p_->socket_address->sa_family) {
-      case AF_INET: {
-        auto *addr = new struct sockaddr_in;
-        memcpy(addr,
-               reinterpret_cast<struct sockaddr_in *>(other.p_->socket_address),
-               sizeof(struct sockaddr_in));
-        p_->socket_address = reinterpret_cast<struct sockaddr *>(addr);
-        break;
-      }
-      case AF_INET6: {
-        auto *addr = new struct sockaddr_in6;
-        memcpy(addr,
-               reinterpret_cast<struct sockaddr_in6 *>(other.p_->socket_address),
-               sizeof(struct sockaddr_in6));
-        p_->socket_address = reinterpret_cast<struct sockaddr *>(addr);
-        break;
-      }
-      default:break;
-    }
-  }
+  p_->Copy(*other.p_);
 }
 
 IPAddress &IPAddress::operator=(const IPAddress &other) {
-  Clear();
-
-  if (nullptr != other.p_->socket_address) {
-    switch (other.p_->socket_address->sa_family) {
-      case AF_INET: {
-        auto *addr = new struct sockaddr_in;
-        memcpy(addr,
-               reinterpret_cast<struct sockaddr_in *>(other.p_->socket_address),
-               sizeof(struct sockaddr_in));
-        p_->socket_address = reinterpret_cast<struct sockaddr *>(addr);
-        break;
-      }
-      case AF_INET6: {
-        auto *addr = new struct sockaddr_in6;
-        memcpy(addr,
-               reinterpret_cast<struct sockaddr_in6 *>(other.p_->socket_address),
-               sizeof(struct sockaddr_in6));
-        p_->socket_address = reinterpret_cast<struct sockaddr *>(addr);
-        break;
-      }
-      default:break;
-    }
-  }
-
+  *p_ = *other.p_;
   return *this;
 }
 
 IPAddress::~IPAddress() {
-  Clear();
+  // Clear in Private destructor.
 }
 
 AddressFamily IPAddress::GetAddressFamily() const {
@@ -245,32 +202,6 @@ IPAddress::NameInfo IPAddress::ToHostAndService() {
   }
 
   return pair;
-}
-
-void IPAddress::Clear() {
-  if (nullptr == p_->socket_address) return;;
-
-  switch (p_->socket_address->sa_family) {
-    case AF_INET: {
-      // IPv4
-      auto *ipv4_address = reinterpret_cast<struct sockaddr_in *>(p_->socket_address);
-      delete ipv4_address;
-      break;
-    }
-    case AF_INET6: {
-      // IPv6
-      auto *ipv6_address = reinterpret_cast<struct sockaddr_in6 *>(p_->socket_address);
-      delete ipv6_address;
-      break;
-    }
-    default: {
-      // TODO: check the address type
-      delete p_->socket_address;
-      break;
-    }
-  }
-
-  p_->socket_address = nullptr;
 }
 
 // -------------

@@ -42,12 +42,16 @@ namespace internal {
  * @ingroup base_intern
  * @brief Endpoint used in CountedDeque.
  */
-class CountedDequeEndpoint : public BinodeBase {
+class WIZTK_NO_EXPORT CountedDequeEndpoint : public BinodeBase {
 
   friend class base::CountedDequeBase;
 
   template<typename T> friend
   class base::CountedDeque;
+
+ public:
+
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(CountedDequeEndpoint);
 
  protected:
 
@@ -63,7 +67,7 @@ class CountedDequeEndpoint : public BinodeBase {
  * @ingroup base_intern
  * @brief Bidrectional node represents traits in CountedDequeNode.
  */
-class CountedDequeNodeTraits : public BinodeBase {
+class WIZTK_NO_EXPORT CountedDequeNodeTraits : public BinodeBase {
 
   friend class base::CountedDequeNodeBase;
   template<typename T> friend
@@ -99,7 +103,7 @@ class CountedDequeNodeTraits : public BinodeBase {
  * @ingroup base
  * @brief The basic class for bidirectional node with pointer to a countable deque.
  */
-class CountedDequeNodeBase {
+class WIZTK_EXPORT CountedDequeNodeBase {
 
   friend class internal::CountedDequeNodeTraits;
   friend class CountedDequeBase;
@@ -152,7 +156,7 @@ class CountedDequeNodeBase {
  * @tparam T Must be a subclass of CountedBinodeBase.
  */
 template<typename T>
-class CountedDequeNode : public CountedDequeNodeBase {
+class WIZTK_EXPORT CountedDequeNode : public CountedDequeNodeBase {
 
  public:
 
@@ -188,7 +192,7 @@ class CountedDequeNode : public CountedDequeNodeBase {
  * @ingroup base
  * @brief Counted deque base
  */
-class CountedDequeBase {
+class WIZTK_EXPORT CountedDequeBase {
 
   friend class internal::CountedDequeNodeTraits;
   friend class CountedDequeNodeBase;
@@ -234,7 +238,7 @@ class CountedDequeBase {
  * @tparam T Must be a subclass of CountedDequeNodeBase.
  */
 template<typename T>
-class CountedDeque : public CountedDequeBase {
+class WIZTK_EXPORT CountedDeque : public CountedDequeBase {
 
  public:
 

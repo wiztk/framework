@@ -17,12 +17,14 @@
 #ifndef WIZTK_BASE_DELEGATE_HPP_
 #define WIZTK_BASE_DELEGATE_HPP_
 
+#include "wiztk/base/macros.hpp"
+
 #include <cstring>
 
 #ifdef __DEBUG__
 #include <cassert>
 #include <functional>
-#endif
+#endif  // __DEBUG__
 
 namespace wiztk {
 namespace base {
@@ -56,9 +58,9 @@ class DelegateRef;
  * @brief The type of this delegate
  */
 enum DelegateType {
-  kDelegateTypeUndefined, /**< The delegate is not bound to any method/function pointer */
-  kDelegateTypeMember,  /**< The delegate is bound to a method (member function) */
-  kDelegateTypeStatic /**< The delegate is bound to a static function */
+  kDelegateTypeUndefined,               /**< The delegate is not bound to any method/function pointer */
+  kDelegateTypeMember,                  /**< The delegate is bound to a method (member function) */
+  kDelegateTypeStatic                   /**< The delegate is bound to a static function */
 };
 
 /**
@@ -67,12 +69,12 @@ enum DelegateType {
  * @tparam ReturnType The return type
  * @tparam ParamTypes Arbitrary number of parameters
  *
- * A delegate is a type that represents references to methods (also called member functions)
- * or static functions with a particular parameter list and return type. Delegate is the key
- * feature and wildely used in WizTK.
+ * A delegate is a type that represents references to methods (also called
+ * member functions) or static functions with a particular parameter list and
+ * return type. Delegate is the key feature and wildely used in WizTK.
  *
- * When you instantiate a delegate, you can associate its instance with any method/function
- * with a compatible signature and return type.
+ * When you instantiate a delegate, you can associate its instance with any
+ * method/function with a compatible signature and return type.
  *
  * The following example shows a delegate to a method:
  *
@@ -87,8 +89,8 @@ enum DelegateType {
  * auto foo = Delegate<int(int, int)>::FromMethod(&a, &A::Foo);
  * @endcode
  *
- * The following example shows a delegate to a static function, in this situation, it works
- * the same as a function pointer:
+ * The following example shows a delegate to a static function, in this
+ * situation, it works the same as a function pointer:
  *
  * @code
  * class B {
@@ -106,7 +108,7 @@ enum DelegateType {
  * @see <a href="md_doc_delegates.html">Fast C++ Delegats</a>
  */
 template<typename ReturnType, typename ... ParamTypes>
-class Delegate<ReturnType(ParamTypes...)> {
+class WIZTK_EXPORT Delegate<ReturnType(ParamTypes...)> {
 
   template<typename ReturnTypeAlias, typename ... ParamTypesAlias>
   friend inline bool operator==(const Delegate<ReturnTypeAlias(ParamTypesAlias...)> &src,
@@ -215,8 +217,8 @@ class Delegate<ReturnType(ParamTypes...)> {
    * });
    * @endcode
    *
-   * The my_delegate object will be invalid as the lambda here is temporary and will be
-   * destructed out of the scope.
+   * The my_delegate object will be invalid as the lambda here is temporary and
+   * will be destructed out of the scope.
    */
   template<typename T>
   static inline Delegate FromFunction(const T &function) {
@@ -388,8 +390,8 @@ class Delegate<ReturnType(ParamTypes...)> {
    *
    * Reset pointers in this delegate to nullptr (0)
    *
-   * @note After reset, invoke this delegate by operator() or Invoke() will cause segment fault.
-   * The bool operator will return false.
+   * @note After reset, invoke this delegate by operator() or Invoke() will
+   * cause segment fault.  The bool operator will return false.
    */
   void Reset() {
     memset(&data_, 0, sizeof(Data));
@@ -531,7 +533,7 @@ inline bool operator>(const Delegate<ReturnType(ParamTypes...)> &src,
  * @brief A reference to a corresponding delegate
  */
 template<typename ReturnType, typename ... ParamTypes>
-class DelegateRef<ReturnType(ParamTypes...)> {
+class WIZTK_EXPORT DelegateRef<ReturnType(ParamTypes...)> {
 
  public:
 

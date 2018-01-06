@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 The WizTK Authors.
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,13 +28,46 @@ using base::CountedDequeNode;
  * @ingroup net_intern
  * @brief Private data in IPAddress.
  */
-struct IPAddress::Private : public CountedDequeNode<IPAddress::Private> {
+struct WIZTK_NO_EXPORT IPAddress::Private : public CountedDequeNode<IPAddress::Private> {
 
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
+  /**
+   * @brief Default constructor is disabled
+   */
   Private() = delete;
 
+  /**
+   * @brief Constructor with a given IPAddress object as proprietor.
+   * @param address
+   */
   explicit Private(IPAddress *address)
       : proprietor(address) {}
+
+  /**
+   * @brief Copy constructor.
+   * @param other
+   */
+  Private(const Private &other);
+
+  /**
+   * @brief Destructor.
+   *
+   * This will release the memory allocated for socket_address.
+   */
+  ~Private() final;
+
+  /**
+   * @brief Copy assignment.
+   * @param other
+   * @return
+   */
+  Private &operator=(const Private &other);
+
+  /**
+   * @brief Release the memory allocated for socket_address.
+   */
+  void Reset();
+
+  void Copy(const Private &other);
 
   IPAddress *proprietor = nullptr;
 

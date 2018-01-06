@@ -107,32 +107,76 @@ class WIZTK_EXPORT BinodeBase {
  * @ingroup base
  * @brief A template class represents a bidirectional node.
  * @tparam T Usually a type of subclass
+ *
+ * Example usage:
+ * @code
+ * class MyNode : public base::Binode<MyNode> {};
+ * @endcode
  */
 template<typename T>
 class WIZTK_EXPORT Binode : public BinodeBase {
 
  public:
 
+  /**
+   * @brief Declare non-copyable.
+   */
   WIZTK_DECLARE_NONCOPYABLE(Binode);
 
+  /**
+   * @brief Default constructor.
+   */
   Binode() = default;
 
+  /**
+   * @brief Default move constructor.
+   */
   Binode(Binode &&) noexcept = default;
 
+  /**
+   * @brief Destructor.
+   */
   ~Binode() override = default;
 
+  /**
+   * @brief Default move operator.
+   * @return Reference to this object.
+   */
   Binode &operator=(Binode &&) noexcept = default;
 
+  /**
+   * @brief Push a node with the same type at the back.
+   * @param node
+   */
   inline void push_back(T *node) { PushBack(this, node); }
 
+  /**
+   * @brief Push a node with the same type at the front.
+   * @param node
+   */
   inline void push_front(T *node) { PushFront(this, node); }
 
+  /**
+   * @brief Unlink this node.
+   */
   inline void unlink() { Unlink(this); }
 
+  /**
+   * @brief Returns if this node is linked with another.
+   * @return
+   */
   inline bool is_linked() const { return IsLinked(this); }
 
+  /**
+   * @brief Get the previous node.
+   * @return
+   */
   inline T *previous() const { return static_cast<T *>(previous_); }
 
+  /**
+   * @brief Get the next node.
+   * @return
+   */
   inline T *next() const { return static_cast<T *>(next_); }
 
 };

@@ -35,10 +35,14 @@ namespace internal {
  * @ingroup base_intern
  * @brief Endpoint used in Deque.
  */
-class DequeEndpoint : public BinodeBase {
+class WIZTK_NO_EXPORT DequeEndpoint : public BinodeBase {
 
   template<typename T> friend
   class base::Deque;
+
+ public:
+
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(DequeEndpoint);
 
  protected:
 
@@ -56,7 +60,7 @@ class DequeEndpoint : public BinodeBase {
  * @ingroup base
  * @brief Bidirectional node used in Deque.
  */
-class DequeNodeBase : public BinodeBase {};
+class WIZTK_EXPORT DequeNodeBase : public BinodeBase {};
 
 /**
  * @ingroup base
@@ -90,7 +94,7 @@ class DequeNodeBase : public BinodeBase {};
  * @endcode
  */
 template<typename T>
-class DequeNode : public DequeNodeBase {
+class WIZTK_EXPORT DequeNode : public DequeNodeBase {
 
  public:
 
@@ -419,6 +423,7 @@ class Deque {
    * @brief A function object to process node when removing it in clear();
    */
   DeleterType deleter_;
+
 };
 
 template<typename T>

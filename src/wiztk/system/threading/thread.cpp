@@ -38,14 +38,14 @@ struct Thread::Private {
 
 void *Thread::Private::StartRoutine(Thread *thread) {
   thread->Run();
-  return nullptr;
+  pthread_exit((void *) thread);
 }
 
 // -------
 
 void Thread::Start() {
   typedef void *(*fn)(void *);
-  int ret = pthread_create(&id_.pthread_id_,
+  int ret = pthread_create(&id_.pthread_,
                            nullptr,
                            reinterpret_cast<fn>(Thread::Private::StartRoutine),
                            this);
@@ -53,8 +53,16 @@ void Thread::Start() {
 }
 
 void Thread::Join() {
-  int ret = pthread_join(id_.pthread_id_, nullptr);
+  int ret = pthread_join(id_.pthread_, nullptr);
   if (ret != 0) throw std::runtime_error("Error! Fail to join a thread!");
+}
+
+bool operator==(const Thread::ID &id1, const Thread::ID &id2) {
+  return 0 != pthread_equal(id1.pthread_, id2.pthread_);
+}
+
+bool operator==(const Thread &thread1, const Thread &thread2) {
+  return thread1.id() == thread2.id();
 }
 
 }  // namespace threading

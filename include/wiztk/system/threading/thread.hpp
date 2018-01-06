@@ -21,8 +21,7 @@
 #ifndef WIZTK_SYSTEM_THREADING_THREAD_HPP_
 #define WIZTK_SYSTEM_THREADING_THREAD_HPP_
 
-#include "wiztk/system/threading/thread-id.hpp"
-#include "wiztk/system/threading/thread-attribute.hpp"
+#include <pthread.h>
 
 namespace wiztk {
 namespace system {
@@ -36,6 +35,19 @@ class Thread {
 
  public:
 
+  /**
+   * @brief Thread ID.
+   */
+  class ID {
+    friend class Thread;
+    friend bool operator==(const ID &id1, const ID &id2);
+    pthread_t pthread_ = 0;
+  };
+
+  class Attribute;
+
+ public:
+
   Thread() = default;
 
   virtual ~Thread() = default;
@@ -44,7 +56,7 @@ class Thread {
 
   void Join();
 
-  const ThreadID &id() const { return id_; }
+  const ID &id() const { return id_; }
 
  protected:
 
@@ -54,9 +66,83 @@ class Thread {
 
   struct Private;
 
-  ThreadID id_;
+  ID id_;
 
 };
+
+class Thread::Attribute {
+  friend class Thread;
+
+ public:
+
+  enum DetachStateType {
+    kDetachStateCreateDetached = PTHREAD_CREATE_DETACHED,
+    kDetachStateCreateJoinable = PTHREAD_CREATE_JOINABLE
+  };
+
+  enum ScopeType {
+    kScopeSystem = PTHREAD_SCOPE_SYSTEM,
+    kScopeProcess = PTHREAD_SCOPE_PROCESS
+  };
+
+  enum SchedulerType {
+    kSchedulerInherit = PTHREAD_INHERIT_SCHED,
+    kSchedulerExplicit = PTHREAD_EXPLICIT_SCHED
+  };
+
+  Attribute() {
+    pthread_attr_init(&pthread_attribute_);
+  }
+
+  ~Attribute() {
+    pthread_attr_destroy(&pthread_attribute_);
+  }
+
+  void SetDetachState(DetachStateType state_type) {
+    pthread_attr_setdetachstate(&pthread_attribute_, state_type);
+  }
+
+  DetachStateType GetDetachState() const {
+    int val = 0;
+    pthread_attr_getdetachstate(&pthread_attribute_, &val);
+    return static_cast<DetachStateType>(val);
+  }
+
+  void SetScope(ScopeType scope_type) {
+    pthread_attr_setscope(&pthread_attribute_, scope_type);
+  }
+
+  ScopeType GetScope() const {
+    int val = 0;
+    pthread_attr_getscope(&pthread_attribute_, &val);
+    return static_cast<ScopeType>(val);
+  }
+
+  void SetStackSize(size_t stack_size) {
+    pthread_attr_setstacksize(&pthread_attribute_, stack_size);
+  }
+
+  size_t GetStackSize() const {
+    size_t stack_size = 0;
+    pthread_attr_getstacksize(&pthread_attribute_, &stack_size);
+    return stack_size;
+  }
+
+ private:
+
+  pthread_attr_t pthread_attribute_;
+
+};
+
+/**
+ * @brief Compare thread IDs.
+ * @param id1
+ * @param id2
+ * @return
+ */
+bool operator==(const Thread::ID &id1, const Thread::ID &id2);
+
+bool operator==(const Thread &thread1, const Thread &thread2);
 
 } // namespace threading
 } // namespace system
