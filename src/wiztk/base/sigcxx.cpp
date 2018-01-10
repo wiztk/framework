@@ -31,6 +31,34 @@ namespace base {
 
 namespace internal {
 
+BindingNode::~BindingNode() {
+  if (nullptr != token) {
+    _ASSERT(token->binding == this);
+    token->binding = nullptr;
+    delete token;
+  }
+}
+
+TokenNode::~TokenNode() {
+
+  _ASSERT(nullptr == slot_mark_head.previous());
+  Slot::Mark *mark = nullptr;
+  while (nullptr != slot_mark_head.next()) {
+    mark = static_cast<Slot::Mark *>(slot_mark_head.next());
+//    mark->slot()->token_node_ = next_->next_ == nullptr ? static_cast<TokenNode *>(next_) : nullptr;
+    mark->slot()->skip_ = true;
+    mark->unlink();
+  }
+
+  if (nullptr != binding) {
+    _ASSERT(binding->token == this);
+    binding->token = nullptr;
+    delete binding;
+  }
+}
+
+// -----
+
 Binding::~Binding() {
   if (previous) previous->next = next;
   if (next) next->previous = previous;
@@ -41,9 +69,7 @@ Binding::~Binding() {
   }
 
   if (token) {
-#ifdef __DEBUG__
-    assert(token->binding == this);
-#endif
+    _ASSERT(token->binding == this);
     token->binding = nullptr;
     delete token;
   }
@@ -65,15 +91,20 @@ Token::~Token() {
   if (next) next->previous = previous;
 
   if (binding) {
-#ifdef __DEBUG__
-    assert(binding->token == this);
-#endif
+    _ASSERT(binding->token == this);
     binding->token = nullptr;
     delete binding;
   }
 }
 
 }  // namespace details
+
+Trackable::Trackable() {
+  head.push_back(&tail);
+}
+
+Trackable::Trackable(const Trackable &)
+    : Trackable() {}
 
 Trackable::~Trackable() {
   UnbindAllSignals();
@@ -117,17 +148,13 @@ int Trackable::CountSignalBindings() const {
 }
 
 void Trackable::PushBackBinding(internal::Binding *node) {
-#ifdef __DEBUG__
-  assert(nullptr == node->trackable);
-#endif
+  _ASSERT(nullptr == node->trackable);
 
   if (last_binding_) {
     last_binding_->next = node;
     node->previous = last_binding_;
   } else {
-#ifdef __DEBUG__
-    assert(nullptr == first_binding_);
-#endif
+    _ASSERT(nullptr == first_binding_);
     node->previous = nullptr;
     first_binding_ = node;
   }
@@ -137,17 +164,13 @@ void Trackable::PushBackBinding(internal::Binding *node) {
 }
 
 void Trackable::PushFrontBinding(internal::Binding *node) {
-#ifdef __DEBUG__
-  assert(nullptr == node->trackable);
-#endif
+  _ASSERT(nullptr == node->trackable);
 
   if (first_binding_) {
     first_binding_->previous = node;
     node->next = first_binding_;
   } else {
-#ifdef __DEBUG__
-    assert(nullptr == last_binding_);
-#endif
+    _ASSERT(nullptr == last_binding_);
     node->next = nullptr;
     last_binding_ = node;
   }
@@ -157,14 +180,10 @@ void Trackable::PushFrontBinding(internal::Binding *node) {
 }
 
 void Trackable::InsertBinding(int index, internal::Binding *node) {
-#ifdef __DEBUG__
-  assert(nullptr == node->trackable);
-#endif
+  _ASSERT(nullptr == node->trackable);
 
   if (nullptr == first_binding_) {
-#ifdef __DEBUG__
-    assert(nullptr == last_binding_);
-#endif
+    _ASSERT(nullptr == last_binding_);
     node->next = nullptr;
     last_binding_ = node;
     first_binding_ = node;
@@ -173,9 +192,7 @@ void Trackable::InsertBinding(int index, internal::Binding *node) {
     if (index >= 0) {
 
       internal::Binding *p = first_binding_;
-#ifdef __DEBUG__
-      assert(p != nullptr);
-#endif
+      _ASSERT(p != nullptr);
 
       while (p && (index > 0)) {
         p = p->next;
@@ -204,9 +221,7 @@ void Trackable::InsertBinding(int index, internal::Binding *node) {
     } else {
 
       internal::Binding *p = last_binding_;
-#ifdef __DEBUG__
-      assert(p);
-#endif
+      _ASSERT(p);
 
       while (p && (index < -1)) {
         p = p->previous;

@@ -21,9 +21,6 @@
 #include "wiztk/base/binode.hpp"
 
 #include <cstddef>
-#ifdef __DEBUG__
-#include <cassert>
-#endif  // __DEBUG__
 
 #ifndef __SLOT__
 /**
@@ -48,12 +45,20 @@ typedef Slot *SLOT;
 /// @cond IGNORE
 namespace internal {
 
+// Foward declarations:
 struct Token;
+struct TokenNode;
 
 template<typename ... ParamTypes>
 class SignalToken;
 
-class SlotNode : public Binode<SlotNode> {
+/**
+ * @ingroup base_intern
+ * @brief A bidirectional node used to track the iterator when calling slot.
+ */
+class WIZTK_NO_EXPORT SlotNode : public Binode<SlotNode> {
+
+  friend class Slot;
 
  public:
 
@@ -67,10 +72,60 @@ class SlotNode : public Binode<SlotNode> {
 
 };
 
+class WIZTK_NO_EXPORT InterRelatedNodeBase : public BinodeBase {
+
+  friend class Trackable;
+  template<typename ... ParamTypes> friend
+  class Signal;
+
+ public:
+
+  inline void push_back(InterRelatedNodeBase *other) {
+    BinodeBase::PushBack(this, other);
+  }
+
+  inline void push_front(InterRelatedNodeBase *other) {
+    BinodeBase::PushFront(this, other);
+  }
+
+};
+
+class WIZTK_NO_EXPORT InterRelatedNodeEndpoint : public InterRelatedNodeBase {
+
+  friend class Trackable;
+  template<typename ... ParamTypes> friend
+  class Signal;
+
+};
+
+struct WIZTK_NO_EXPORT BindingNode : public InterRelatedNodeBase {
+
+  BindingNode() = default;
+  ~BindingNode() final;
+
+  Trackable *trackable = nullptr;
+  TokenNode *token = nullptr;
+
+};
+
+struct WIZTK_NO_EXPORT TokenNode : public InterRelatedNodeBase {
+
+  friend class Slot;
+
+  TokenNode() = default;
+  ~TokenNode() final;
+
+  Trackable *trackable = nullptr;
+  BindingNode *binding = nullptr;
+
+  SlotNode slot_mark_head;
+
+};
+
 /**
  * @brief A simple structure works as a list node in Trackable object
  */
-struct Binding {
+struct WIZTK_NO_EXPORT Binding {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Binding);
 
@@ -88,7 +143,7 @@ struct Binding {
 /**
  * @brief A simple structure works as a list node in Signal object
  */
-struct Token {
+struct WIZTK_NO_EXPORT Token {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Token);
 
@@ -106,7 +161,7 @@ struct Token {
 };
 
 template<typename ... ParamTypes>
-class CallableToken : public Token {
+class WIZTK_NO_EXPORT CallableToken : public Token {
 
  public:
 
@@ -123,14 +178,16 @@ class CallableToken : public Token {
 };
 
 template<typename ... ParamTypes>
-class DelegateToken : public CallableToken<ParamTypes...> {
+class WIZTK_NO_EXPORT DelegateToken : public CallableToken<ParamTypes...> {
 
  public:
+
+  typedef Delegate<void(ParamTypes...)> DelegateType;
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(DelegateToken);
   DelegateToken() = delete;
 
-  explicit DelegateToken(const Delegate<void(ParamTypes...)> &d)
+  explicit DelegateToken(const DelegateType &d)
       : CallableToken<ParamTypes...>(), delegate_(d) {}
 
   ~DelegateToken() final = default;
@@ -139,13 +196,13 @@ class DelegateToken : public CallableToken<ParamTypes...> {
     delegate_(Args...);
   }
 
-  inline const Delegate<void(ParamTypes...)> &delegate() const {
+  inline const DelegateType &delegate() const {
     return delegate_;
   }
 
  private:
 
-  Delegate<void(ParamTypes...)> delegate_;
+  DelegateType delegate_;
 
 };
 
@@ -154,10 +211,12 @@ class SignalToken : public CallableToken<ParamTypes...> {
 
  public:
 
+  typedef Signal<ParamTypes...> SignalType;
+
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(SignalToken);
   SignalToken() = delete;
 
-  explicit SignalToken(Signal<ParamTypes...> &signal)
+  explicit SignalToken(SignalType &signal)
       : CallableToken<ParamTypes...>(), signal_(&signal) {}
 
   ~SignalToken() final = default;
@@ -166,13 +225,13 @@ class SignalToken : public CallableToken<ParamTypes...> {
     signal_->Emit(Args...);
   }
 
-  const Signal<ParamTypes...> *signal() const {
+  const SignalType *signal() const {
     return signal_;
   }
 
  private:
 
-  Signal<ParamTypes...> *signal_;
+  SignalType *signal_;
 
 };
 
@@ -196,12 +255,16 @@ class SignalToken : public CallableToken<ParamTypes...> {
 class Slot {
 
   friend struct internal::Token;
+  friend struct internal::TokenNode;
   friend class Trackable;
 
   template<typename ... ParamTypes> friend
   class Signal;
 
  public:
+
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Slot);
+  Slot() = delete;
 
   class Mark : public internal::SlotNode {
 
@@ -222,8 +285,7 @@ class Slot {
 
   };
 
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Slot);
-  Slot() = delete;
+ public:
 
   /**
    * @brief Get the Signal object which is just calling this slot
@@ -259,6 +321,7 @@ class Slot {
   }
 
   internal::Token *token_;
+  internal::TokenNode *token_node_ = nullptr;
 
   bool skip_;
 
@@ -283,14 +346,14 @@ class Trackable {
   /**
    * @brief Default constructor
    */
-  Trackable() = default;
+  Trackable();
 
   /**
    * @brief Copy constructor
    *
    * Do nothing in copy constructor.
    */
-  Trackable(const Trackable &) {}
+  Trackable(const Trackable &);
 
   /**
    * @brief Destructor
@@ -348,10 +411,7 @@ class Trackable {
   void InsertBinding(int index, internal::Binding *binding);
 
   static inline void link(internal::Token *token, internal::Binding *binding) {
-#ifdef __DEBUG__
-    assert((nullptr == token->binding) && (nullptr == binding->token));
-#endif
-
+    _ASSERT((nullptr == token->binding) && (nullptr == binding->token));
     token->binding = binding;
     binding->token = token;
   }
@@ -374,6 +434,9 @@ class Trackable {
 
   internal::Binding *first_binding_ = nullptr;
   internal::Binding *last_binding_ = nullptr;
+
+  internal::InterRelatedNodeEndpoint head;
+  internal::InterRelatedNodeEndpoint tail;
 
 };
 
@@ -421,7 +484,7 @@ class Signal : public Trackable {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Signal);
 
-  Signal() = default;
+  Signal();
 
   ~Signal() final {
     DisconnectAll();
@@ -528,17 +591,25 @@ class Signal : public Trackable {
   internal::Token *first_token_ = nullptr;
   internal::Token *last_token_ = nullptr;
 
+  internal::InterRelatedNodeEndpoint head;
+  internal::InterRelatedNodeEndpoint tail;
+
 };
 
 // Signal implementation:
 
 template<typename ... ParamTypes>
+Signal<ParamTypes...>::Signal() {
+  head.push_back(&tail);
+}
+
+template<typename ... ParamTypes>
 template<typename T>
 void Signal<ParamTypes...>::Connect(T *obj, void (T::*method)(ParamTypes..., SLOT), int index) {
-  internal::Binding *downstream = new internal::Binding;
+  auto *downstream = new internal::Binding;
   Delegate<void(ParamTypes..., SLOT)> d =
       Delegate<void(ParamTypes..., SLOT)>::template FromMethod<T>(obj, method);
-  internal::DelegateToken<ParamTypes..., SLOT> *token = new internal::DelegateToken<
+  auto *token = new internal::DelegateToken<
       ParamTypes..., SLOT>(d);
 
   link(token, downstream);
@@ -548,9 +619,9 @@ void Signal<ParamTypes...>::Connect(T *obj, void (T::*method)(ParamTypes..., SLO
 
 template<typename ... ParamTypes>
 void Signal<ParamTypes...>::Connect(Signal<ParamTypes...> &other, int index) {
-  internal::SignalToken<ParamTypes...> *token = new internal::SignalToken<ParamTypes...>(
+  auto *token = new internal::SignalToken<ParamTypes...>(
       other);
-  internal::Binding *binding = new internal::Binding;
+  auto *binding = new internal::Binding;
 
   link(token, binding);
   InsertToken(index, token);
@@ -868,17 +939,13 @@ void Signal<ParamTypes...>::AuditDestroyingToken(internal::Token *token) {
 
 template<typename ... ParamTypes>
 void Signal<ParamTypes...>::PushBackToken(internal::Token *token) {
-#ifdef __DEBUG__
-  assert(nullptr == token->trackable);
-#endif
+  _ASSERT(nullptr == token->trackable);
 
   if (last_token_) {
     last_token_->next = token;
     token->previous = last_token_;
   } else {
-#ifdef __DEBUG__
-    assert(nullptr == first_token_);
-#endif
+    _ASSERT(nullptr == first_token_);
     token->previous = nullptr;
     first_token_ = token;
   }
@@ -889,17 +956,13 @@ void Signal<ParamTypes...>::PushBackToken(internal::Token *token) {
 
 template<typename ... ParamTypes>
 void Signal<ParamTypes...>::PushFrontToken(internal::Token *token) {
-#ifdef __DEBUG__
-  assert(nullptr == token->trackable);
-#endif
+  _ASSERT(nullptr == token->trackable);
 
   if (first_token_) {
     first_token_->previous = token;
     token->next = first_token_;
   } else {
-#ifdef __DEBUG__
-    assert(nullptr == last_token_);
-#endif
+    _ASSERT(nullptr == last_token_);
     token->next = nullptr;
     last_token_ = token;
   }
@@ -911,14 +974,10 @@ void Signal<ParamTypes...>::PushFrontToken(internal::Token *token) {
 
 template<typename ... ParamTypes>
 void Signal<ParamTypes...>::InsertToken(int index, internal::Token *token) {
-#ifdef __DEBUG__
-  assert(nullptr == token->trackable);
-#endif
+  _ASSERT(nullptr == token->trackable);
 
   if (nullptr == first_token_) {
-#ifdef __DEBUG__
-    assert(nullptr == last_token_);
-#endif
+    _ASSERT(nullptr == last_token_);
     token->next = nullptr;
     last_token_ = token;
     first_token_ = token;
@@ -927,9 +986,7 @@ void Signal<ParamTypes...>::InsertToken(int index, internal::Token *token) {
     if (index >= 0) {
 
       internal::Token *p = first_token_;
-#ifdef __DEBUG__
-      assert(p != nullptr);
-#endif
+      _ASSERT(p != nullptr);
 
       while (p && (index > 0)) {
         p = p->next;
@@ -958,9 +1015,7 @@ void Signal<ParamTypes...>::InsertToken(int index, internal::Token *token) {
     } else {
 
       internal::Token *p = last_token_;
-#ifdef __DEBUG__
-      assert(p != nullptr);
-#endif
+      _ASSERT(p != nullptr);
 
       while (p && (index < -1)) {
         p = p->previous;
