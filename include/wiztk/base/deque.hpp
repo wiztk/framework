@@ -141,7 +141,7 @@ class Deque {
   /**
    * @brief A typedef of a function object to remove node in clear().
    */
-  typedef std::function<void(BinodeBase *)> DeleterType;
+  typedef std::function<void(BinodeBase * )> DeleterType;
 
   /**
    * @brief A nested iterator for deque
@@ -196,9 +196,9 @@ class Deque {
 
     bool operator!=(const T *element) const { return current_ != element; }
 
-    T *operator->() const noexcept { return get(); }
+    T *operator->() const { return get(); }
 
-    T *get() const noexcept {
+    T *get() const {
       return nullptr == current_->previous_ ?
              nullptr : (nullptr == current_->next_ ?
                         nullptr : (static_cast<T *>(current_)));
@@ -256,9 +256,9 @@ class Deque {
 
     bool operator!=(const T *element) const { return current_ != element; }
 
-    const T *operator->() const noexcept { return get(); }
+    const T *operator->() const { return get(); }
 
-    const T *get() const noexcept {
+    const T *get() const {
       return nullptr == current_->previous_ ?
              nullptr : (nullptr == current_->next_ ?
                         nullptr : (static_cast<const T *>(current_)));
