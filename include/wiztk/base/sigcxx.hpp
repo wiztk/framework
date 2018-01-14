@@ -45,9 +45,6 @@ class Slot;
 template<typename ... ParamTypes>
 class Signal;
 
-typedef Slot *SLOT;
-
-/// @cond IGNORE
 namespace internal {
 
 // Foward declarations:
@@ -58,26 +55,21 @@ class SignalToken;
 
 /**
  * @ingroup base_intern
- * @brief A bidirectional node used to track the iterator when calling slot.
+ * @brief A bidirectional node used to save the status of a Slot object.
  */
 class WIZTK_NO_EXPORT SlotNode : public Binode<SlotNode> {
-
   friend class Slot;
-
  public:
-
   WIZTK_DECLARE_NONCOPYABLE(SlotNode);
-
   SlotNode() = default;
   ~SlotNode() override = default;
   SlotNode(SlotNode &&) = default;
-  SlotNode &operator=(SlotNode &&) noexcept = default;
-
+  SlotNode &operator=(SlotNode &&) = default;
 };
 
 /**
  * @ingroup base_intern
- * @brief The base class to be used in this file only.
+ * @brief Base class of a bidirectional node used in Trackable or Signal only.
  */
 class WIZTK_NO_EXPORT InterRelatedNodeBase : public Binode<InterRelatedNodeBase> {
   friend class Trackable;
@@ -87,7 +79,7 @@ class WIZTK_NO_EXPORT InterRelatedNodeBase : public Binode<InterRelatedNodeBase>
 
 /**
  * @ingroup base_intern
- * @brief The end point used in Trackable and Signal to create a double-ended list.
+ * @brief The end point used in Trackable or Signal for building a double-ended list.
  */
 class WIZTK_NO_EXPORT InterRelatedNodeEndpoint : public InterRelatedNodeBase {
   friend class Trackable;
@@ -97,7 +89,7 @@ class WIZTK_NO_EXPORT InterRelatedNodeEndpoint : public InterRelatedNodeBase {
 
 /**
  * @ingroup base_intern
- * @brief Binding in Trackable.
+ * @brief A bi-node stored in Trackable with connection to a TokenNode.
  */
 struct WIZTK_NO_EXPORT BindingNode : public InterRelatedNodeBase {
   BindingNode() = default;
@@ -108,7 +100,7 @@ struct WIZTK_NO_EXPORT BindingNode : public InterRelatedNodeBase {
 
 /**
  * @ingroup base_intern
- * @brief Token in Signal.
+ * @brief A bi-node stored in Signal with connection to a BindingNode.
  */
 struct WIZTK_NO_EXPORT TokenNode : public InterRelatedNodeBase {
   friend class Slot;
@@ -119,6 +111,11 @@ struct WIZTK_NO_EXPORT TokenNode : public InterRelatedNodeBase {
   SlotNode slot_mark_head;
 };
 
+/**
+ * @ingroup base_intern
+ * @brief A TokenNode with a virtual method to be invoked.
+ * @tparam ParamTypes
+ */
 template<typename ... ParamTypes>
 class WIZTK_NO_EXPORT CallableToken : public TokenNode {
 
@@ -136,6 +133,11 @@ class WIZTK_NO_EXPORT CallableToken : public TokenNode {
 
 };
 
+/**
+ * @ingroup base_intern
+ * @brief A TokenNode with a delegate.
+ * @tparam ParamTypes
+ */
 template<typename ... ParamTypes>
 class WIZTK_NO_EXPORT DelegateToken : public CallableToken<ParamTypes...> {
 
@@ -165,6 +167,11 @@ class WIZTK_NO_EXPORT DelegateToken : public CallableToken<ParamTypes...> {
 
 };
 
+/**
+ * @ingroup base_intern
+ * @brief A TokenNode points to a Signal.
+ * @tparam ParamTypes
+ */
 template<typename ... ParamTypes>
 class WIZTK_NO_EXPORT SignalToken : public CallableToken<ParamTypes...> {
 
@@ -195,7 +202,8 @@ class WIZTK_NO_EXPORT SignalToken : public CallableToken<ParamTypes...> {
 };
 
 /**
- * @brief A simple double-ended queue to store bindings and tokens.
+ * @ingroup base_intern
+ * @brief A simple double-ended queue to store bindings or tokens.
  * @tparam T Must be BindingNode or TokenNode
  */
 template<typename T>
@@ -203,6 +211,14 @@ class WIZTK_NO_EXPORT InterRelatedDeque {
 
  public:
 
+  /**
+   * @brief Declare this class is non-copyable and non-movable.
+   */
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(InterRelatedDeque);
+
+  /**
+   * @brief Iterator.
+   */
   class Iterator {
 
    public:
@@ -245,6 +261,9 @@ class WIZTK_NO_EXPORT InterRelatedDeque {
 
   };
 
+  /**
+   * @brief Const iterator.
+   */
   class ConstIterator {
 
    public:
@@ -287,24 +306,131 @@ class WIZTK_NO_EXPORT InterRelatedDeque {
 
   };
 
-  InterRelatedDeque() {
-    head_.push_back(&tail_);
-  }
+  /**
+ * @brief Reverse iterator.
+ */
+  class ReverseIterator {
 
+   public:
+
+    ReverseIterator() = delete;
+
+    explicit ReverseIterator(internal::InterRelatedNodeBase *node)
+        : current_(node) {}
+
+    ~ReverseIterator() = default;
+
+    ReverseIterator &operator++() {
+      current_ = current_->previous();
+      return *this;
+    }
+
+    ReverseIterator &operator--() {
+      current_ = current_->next();
+      return *this;
+    }
+
+    bool operator==(const ReverseIterator &other) const { return current_ == other.current_; }
+    bool operator!=(const ReverseIterator &other) const { return current_ != other.current_; }
+
+    T *get() const {
+      return static_cast<T *>(current_);
+    }
+
+    T *operator->() const { return get(); }
+
+    explicit operator bool() const {
+      return nullptr == current_ ?
+             false : (nullptr == current_->previous() ?
+                      false : (nullptr != current_->next()));
+    }
+
+   private:
+
+    internal::InterRelatedNodeBase *current_ = nullptr;
+
+  };
+
+  /**
+ * @brief Const reverse iterator.
+ */
+  class ConstReverseIterator {
+
+   public:
+
+    ConstReverseIterator() = delete;
+
+    explicit ConstReverseIterator(const internal::InterRelatedNodeBase *node)
+        : current_(node) {}
+
+    ~ConstReverseIterator() = default;
+
+    ConstReverseIterator &operator++() {
+      current_ = current_->previous();
+      return *this;
+    }
+
+    ConstReverseIterator &operator--() {
+      current_ = current_->next();
+      return *this;
+    }
+
+    bool operator==(const ConstReverseIterator &other) const { return current_ == other.current_; }
+    bool operator!=(const ConstReverseIterator &other) const { return current_ != other.current_; }
+
+    const T *get() const {
+      return static_cast<const internal::BindingNode *>(current_);
+    }
+
+    const T *operator->() const { return get(); }
+
+    explicit operator bool() const {
+      return nullptr == current_ ?
+             false : (nullptr == current_->previous() ?
+                      false : (nullptr != current_->next()));
+    }
+
+   private:
+
+    const internal::InterRelatedNodeBase *current_ = nullptr;
+
+  };
+
+  /**
+   * @brief Default constructor.
+   */
+  InterRelatedDeque() { head_.push_back(&tail_); }
+
+  /**
+   * @brief Destructor.
+   */
   ~InterRelatedDeque() = default;
 
+  /**
+   * @brief Add element at the end.
+   * @param node
+   */
   void push_back(T *node) {
     // link binding and token before calling this method:
     _ASSERT(nullptr != node->trackable);
     tail_.push_front(node);
   }
 
+  /**
+   * @brief Insert element at the beginning.
+   * @param node
+   */
   void push_front(T *node) {
     // link binding and token before calling this method:
     _ASSERT(nullptr != node->trackable);
     head_.push_back(node);
   }
 
+  /**
+   * @brief Insert element at the given position.
+   * @param node
+   * @param index
+   */
   void insert(T *node, int index = 0) {
     // link binding and token before calling this method:
     _ASSERT(nullptr != node->trackable);
@@ -316,59 +442,92 @@ class WIZTK_NO_EXPORT InterRelatedDeque {
       }
       it->push_front(node);
     } else {
-      Iterator it = rbegin();
+      ReverseIterator it = rbegin();
       while ((it != rend()) && (index < -1)) {
-        --it;
+        ++it;
         index++;
       }
       it->push_back(node);
     }
   }
 
+  /**
+   * @brief Return iterator to beginning.
+   * @return
+   */
   Iterator begin() const { return Iterator(head_.next()); }
 
+  /**
+   * @brief Return const iterator to beginning.
+   * @return
+   */
   ConstIterator cbegin() const { return ConstIterator(head_.next()); }
 
+  /**
+   * @brief Return iterator to end.
+   * @return
+   */
   Iterator end() const {
     const internal::InterRelatedNodeBase *p = &tail_;
     return Iterator(const_cast<internal::InterRelatedNodeBase *>(p));
   }
 
+  /**
+   * @brief Return const iterator to end.
+   * @return
+   */
   ConstIterator cend() const { return ConstIterator(&tail_); }
 
-  Iterator rbegin() const { return Iterator(tail_.previous()); }
+  /**
+   * @brief Return reverse iterator to reverse beginning
+   * @return
+   */
+  ReverseIterator rbegin() const { return ReverseIterator(tail_.previous()); }
 
-  ConstIterator crbegin() const { return ConstIterator(tail_.previous()); }
+  /**
+   * @brief Return const reverse iterator to reverse beginning.
+   * @return
+   */
+  ConstReverseIterator crbegin() const { return ConstReverseIterator(tail_.previous()); }
 
-  Iterator rend() const {
+  /**
+   * @brief Return reverse iterator to reverse end.
+   * @return
+   */
+  ReverseIterator rend() const {
     const internal::InterRelatedNodeBase *p = &head_;
-    return Iterator(const_cast<internal::InterRelatedNodeBase *>(p));
+    return ReverseIterator(const_cast<internal::InterRelatedNodeBase *>(p));
   }
 
-  ConstIterator crend() const { return ConstIterator(&head_); }
+  /**
+   * @brief Return const reverse iterator to reverse end.
+   * @return
+   */
+  ConstReverseIterator crend() const { return ConstReverseIterator(&head_); }
 
  private:
 
-  internal::InterRelatedNodeEndpoint head_;
-  internal::InterRelatedNodeEndpoint tail_;
+  typedef InterRelatedNodeEndpoint EndpointType;
+
+  EndpointType head_;
+  EndpointType tail_;
 
 };
 
-}// namespace internal
-/// @endcond
+} // namespace internal
 
 /**
  * @ingroup base
  * @brief Iterator and signature to a slot method
  *
- * A Slot object is created and destroyed when a signal is being emitting.
+ * A Slot object is created and destroyed when a signal is being emitted.
  *
  * It has two main purposes:
  *   - Works as an iterator
  *   - The last parameter in a slot method
  *
  * A Signal holds a list of token to support multicast, when it's being
- * emitting, it create a simple Slot object and use it as an iterater and call
+ * emitted, it create a simple Slot object and use it as an iterater and call
  * each delegate (@ref Delegate) to the slot method or another signal.
  */
 class WIZTK_EXPORT Slot {
@@ -433,7 +592,10 @@ class WIZTK_EXPORT Slot {
 
  private:
 
-  explicit Slot(internal::InterRelatedDeque<internal::TokenNode> *deque)
+  typedef internal::InterRelatedDeque<internal::TokenNode> DequeType;
+  typedef internal::InterRelatedDeque<internal::TokenNode>::Iterator IteratorType;
+
+  explicit Slot(DequeType *deque)
       : deque_(deque), it_(deque->begin()), mark_(this) {}
 
   ~Slot() = default;
@@ -456,12 +618,18 @@ class WIZTK_EXPORT Slot {
     return *this;
   }
 
-  internal::InterRelatedDeque<internal::TokenNode> *deque_ = nullptr;
-  internal::InterRelatedDeque<internal::TokenNode>::Iterator it_;
+  DequeType *deque_ = nullptr;
+  IteratorType it_;
   size_t ref_count_ = 0;
   Mark mark_;
 
 };
+
+/**
+ * @ingroup base
+ * @brief A typedef of a pointer to a Slot.
+ */
+typedef Slot *SLOT;
 
 /**
  * @ingroup base
@@ -750,10 +918,10 @@ void Signal<ParamTypes...>::DisconnectAll(T *obj, void (T::*method)(ParamTypes..
   internal::DelegateToken<ParamTypes..., SLOT> *delegate_token = nullptr;
   internal::TokenNode *tmp = nullptr;
 
-  internal::InterRelatedDeque<internal::TokenNode>::Iterator it = tokens_.rbegin();
+  internal::InterRelatedDeque<internal::TokenNode>::ReverseIterator it = tokens_.rbegin();
   while (it != tokens_.rend()) {
     tmp = it.get();
-    --it;
+    ++it;
 
     if (tmp->binding->trackable == obj) {
       delegate_token = dynamic_cast<internal::DelegateToken<ParamTypes..., SLOT> * > (tmp);
@@ -769,10 +937,10 @@ void Signal<ParamTypes...>::DisconnectAll(Signal<ParamTypes...> &other) {
   internal::SignalToken<ParamTypes...> *signal_token = nullptr;
   internal::TokenNode *tmp = nullptr;
 
-  internal::InterRelatedDeque<internal::TokenNode>::Iterator it = tokens_.rbegin();
+  internal::InterRelatedDeque<internal::TokenNode>::ReverseIterator it = tokens_.rbegin();
   while (it != tokens_.rend()) {
     tmp = it.get();
-    --it;
+    ++it;
 
     if (tmp->binding->trackable == (&other)) {
       signal_token = dynamic_cast<internal::SignalToken<ParamTypes...> * > (tmp);
@@ -812,15 +980,15 @@ int Signal<ParamTypes...>::Disconnect(T *obj, void (T::*method)(ParamTypes..., S
       if (counts == 0) break;
     }
   } else {
-    internal::InterRelatedDeque<internal::TokenNode>::Iterator it = tokens_.rbegin();
+    internal::InterRelatedDeque<internal::TokenNode>::ReverseIterator it = tokens_.rbegin();
     while ((it != tokens_.rend()) && (start_pos < -1)) {
-      --it;
+      ++it;
       start_pos++;
     }
 
     while (it != tokens_.rend()) {
       tmp = it.get();
-      --it;
+      ++it;
 
       if (tmp->binding->trackable == obj) {
         delegate_token = dynamic_cast<internal::DelegateToken<ParamTypes..., SLOT> * > (tmp);
@@ -866,15 +1034,15 @@ int Signal<ParamTypes...>::Disconnect(Signal<ParamTypes...> &other, int start_po
     }
 
   } else {
-    internal::InterRelatedDeque<internal::TokenNode>::Iterator it = tokens_.rbegin();
+    internal::InterRelatedDeque<internal::TokenNode>::ReverseIterator it = tokens_.rbegin();
     while ((it != tokens_.rend()) && (start_pos < -1)) {
-      --it;
+      ++it;
       start_pos++;
     }
 
     while (it != tokens_.rend()) {
       tmp = it.get();
-      --it;
+      ++it;
 
       if (tmp->binding->trackable == (&other)) {
         signal_token = dynamic_cast<internal::SignalToken<ParamTypes...> * > (tmp);
@@ -916,15 +1084,15 @@ int Signal<ParamTypes...>::Disconnect(int start_pos, int counts) {
     }
 
   } else {
-    internal::InterRelatedDeque<internal::TokenNode>::Iterator it = tokens_.rbegin();
+    internal::InterRelatedDeque<internal::TokenNode>::ReverseIterator it = tokens_.rbegin();
     while ((it != tokens_.rend()) && (start_pos < -1)) {
-      --it;
+      ++it;
       start_pos++;
     }
 
     while (it != tokens_.rend()) {
       tmp = it.get();
-      --it;
+      ++it;
 
       ret_count++;
       counts--;
@@ -1034,22 +1202,10 @@ void Signal<ParamTypes...>::Emit(ParamTypes ... Args) {
   Slot slot(&tokens_);
 
   while (slot) {
-    slot->slot_mark_head.push_back(&slot.mark_);
+    slot.get()->slot_mark_head.push_back(&slot.mark_);
     static_cast<internal::CallableToken<ParamTypes..., SLOT> * > (slot.get())->Invoke(Args..., &slot);
     ++slot;
   }
-//  Slot slot(tokens_.begin().get());
-//
-//  while (nullptr != slot.token_node_) {
-//    slot.token_node_->slot_mark_head.push_back(&slot.mark_);
-//    static_cast<internal::CallableToken<ParamTypes..., SLOT> * > (slot.token_node_)->Invoke(Args..., &slot);
-//
-//    if (slot.skip_) {
-//      slot.skip_ = false;
-//    } else {
-//      ++slot;
-//    }
-//  }
 }
 
 template<typename ... ParamTypes>
