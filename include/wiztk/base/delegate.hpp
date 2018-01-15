@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 The WizTK Authors.
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,6 @@
 #include "wiztk/base/macros.hpp"
 
 #include <cstring>
-
-#ifdef __DEBUG__
-#include <cassert>
-#include <functional>
-#endif  // __DEBUG__
 
 namespace wiztk {
 namespace base {
@@ -344,15 +339,11 @@ class WIZTK_EXPORT Delegate<ReturnType(ParamTypes...)> {
    */
   ReturnType operator()(ParamTypes... Args) const {
     if (data_.object) {
-#ifdef __DEBUG__
-      assert(nullptr != data_.method_stub);
-#endif
+      _ASSERT(nullptr != data_.method_stub);
       return (*data_.method_stub)(data_.object, data_.pointer.method, Args...);
     }
 
-#ifdef __DEBUG__
-    assert(nullptr == data_.method_stub);
-#endif
+    _ASSERT(nullptr == data_.method_stub);
     return reinterpret_cast<TFunction >(data_.pointer.function)(Args...);
   }
 
@@ -365,15 +356,11 @@ class WIZTK_EXPORT Delegate<ReturnType(ParamTypes...)> {
    */
   ReturnType Invoke(ParamTypes... Args) const {
     if (data_.object) {
-#ifdef __DEBUG__
-      assert(nullptr != data_.method_stub);
-#endif
+      _ASSERT(nullptr != data_.method_stub);
       return (*data_.method_stub)(data_.object, data_.pointer.method, Args...);
     }
 
-#ifdef __DEBUG__
-    assert(nullptr == data_.method_stub);
-#endif
+    _ASSERT(nullptr == data_.method_stub);
     return reinterpret_cast<TFunction >(data_.pointer.function)(Args...);
   }
 
@@ -470,15 +457,11 @@ class WIZTK_EXPORT Delegate<ReturnType(ParamTypes...)> {
    */
   DelegateType type() const {
     if (nullptr == data_.object) {
-#ifdef __DEBUG__
-      assert(nullptr == data_.method_stub);
-#endif
+      _ASSERT(nullptr == data_.method_stub);
       return nullptr == data_.pointer.function ? kDelegateTypeUndefined : kDelegateTypeStatic;
     }
 
-#ifdef __DEBUG__
-    assert(nullptr != data_.method_stub);
-#endif
+    _ASSERT(nullptr != data_.method_stub);
     return kDelegateTypeMember;
   }
 

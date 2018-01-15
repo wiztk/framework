@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 The WizTK Authors.
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -202,12 +202,6 @@ class WIZTK_EXPORT AbstractEventHandler : public base::Trackable {
   virtual void OnEnterOutput(const ViewSurface *surface, const Output *output) = 0;
 
   virtual void OnLeaveOutput(const ViewSurface *surface, const Output *output) = 0;
-
-  /**
-   * @brief Disable this virtual method
-   * @param token
-   */
-  void AuditDestroyingToken(base::internal::Token */*token*/) final;
 
  private:
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,10 +36,6 @@ const String &AbstractEventHandler::GetName() const {
 
 void AbstractEventHandler::SetName(const String &name) {
   __PROPERTY__(name) = name;
-}
-
-void AbstractEventHandler::AuditDestroyingToken(base::internal::Token */*token*/) {
-
 }
 
 // --------------------

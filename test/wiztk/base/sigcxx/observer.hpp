@@ -1,9 +1,7 @@
-//
-// Created by zhanggyb on 17-9-7.
-//
+#ifndef WIZTK_TEST_BASE_SIGCXX_OBSERVER_HPP_
+#define WIZTK_TEST_BASE_SIGCXX_OBSERVER_HPP_
 
-#ifndef wiztk_TEST_CORE_SIGCXX_OBSERVER_HPP_
-#define wiztk_TEST_CORE_SIGCXX_OBSERVER_HPP_
+#include <vector>
 
 #include "wiztk/base/sigcxx.hpp"
 
@@ -15,9 +13,9 @@ class Observer : public wiztk::base::Trackable {
 
   ~Observer() final;
 
-  void OnSignal1(int, __SLOT__);
+  void OnCount1(int, __SLOT__);
 
-  void OnSignal2(int, int, __SLOT__);
+  void OnCount2(int, int, __SLOT__);
 
   void OnUnbindSlot(int, __SLOT__);
 
@@ -31,14 +29,14 @@ class Observer : public wiztk::base::Trackable {
 
   int count1() const { return count1_; }
 
-  int count2() const { return count2_; }
+  const std::vector<int> &count2() const { return count2_; }
 
  private:
 
   int count1_ = 0;
 
-  int count2_ = 0;
+  std::vector<int> count2_ = {0, 0};
 
 };
 
-#endif //wiztk_OBSERVER_HPP
+#endif // WIZTK_TEST_BASE_SIGCXX_OBSERVER_HPP_

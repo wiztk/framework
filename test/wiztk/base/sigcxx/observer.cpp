@@ -1,7 +1,3 @@
-//
-// Created by zhanggyb on 17-9-7.
-//
-
 #include "observer.hpp"
 
 #include "iostream"
@@ -14,13 +10,13 @@ Observer::~Observer() {
   std::cout << __func__ << std::endl;
 }
 
-void Observer::OnSignal1(int count, wiztk::base::SLOT slot) {
+void Observer::OnCount1(int count, wiztk::base::SLOT slot) {
   count1_ = count;
 }
 
-void Observer::OnSignal2(int count1, int count2, wiztk::base::SLOT slot) {
-  count1_ = count1;
-  count2_ = count2;
+void Observer::OnCount2(int count1, int count2, wiztk::base::SLOT slot) {
+  count2_[0] = count1;
+  count2_[1] = count2;
 }
 
 void Observer::OnUnbindSlot(int, wiztk::base::SLOT slot) {
