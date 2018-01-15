@@ -1,9 +1,5 @@
-//
-// Created by zhanggyb on 17-9-7.
-//
-
-#ifndef wiztk_TEST_base_SIGCXX_SUBJECT_HPP_
-#define wiztk_TEST_base_SIGCXX_SUBJECT_HPP_
+#ifndef WIZTK_TEST_BASE_SIGCXX_SUBJECT_HPP_
+#define WIZTK_TEST_BASE_SIGCXX_SUBJECT_HPP_
 
 #include "wiztk/base/sigcxx.hpp"
 
@@ -11,29 +7,29 @@ class Subject : public wiztk::base::Trackable {
 
  public:
 
-  template<typename ... ParamTypes>
-  using SignalRefT = typename wiztk::base::SignalRef<ParamTypes...>;
+  template<typename ... Args>
+  using SignalRef = typename wiztk::base::SignalRef<Args...>;
 
-  template<typename ... ParamTypes>
-  using SignalT = typename wiztk::base::Signal<ParamTypes...>;
+  template<typename ... Args>
+  using Signal = typename wiztk::base::Signal<Args...>;
 
   Subject() = default;
 
   ~Subject() final = default;
 
-  SignalRefT<int> signal1() { return signal1_; }
+  SignalRef<int> count1() { return count1_; }
 
-  SignalRefT<int, int> signal2() { return signal2_; };
+  SignalRef<int, int> count2() { return count2_; };
 
-  void Test(int count) { signal1_.Emit(count); }
+  void DoCount1(int count) { count1_.Emit(count); }
 
-  void Test(int count1, int count2) { signal2_.Emit(count1, count2); }
+  void DoCount2(int count1, int count2) { count2_.Emit(count1, count2); }
 
  private:
 
-  SignalT<int> signal1_;
-  SignalT<int, int> signal2_;
+  Signal<int> count1_;
+  Signal<int, int> count2_;
 
 };
 
-#endif // wiztk_TEST_base_SIGCXX_SUBJECT_HPP_
+#endif // WIZTK_TEST_BASE_SIGCXX_SUBJECT_HPP_

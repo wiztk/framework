@@ -1,9 +1,5 @@
-//
-// Created by zhanggyb on 16-9-19.
-//
-
-#ifndef SKLAND_TEST_CORE_SIGCXX_TRACKABLE_HPP_
-#define SKLAND_TEST_CORE_SIGCXX_TRACKABLE_HPP_
+#ifndef WIZTK_TEST_BASE_SIGCXX_TRACKABLE_HPP_
+#define WIZTK_TEST_BASE_SIGCXX_TRACKABLE_HPP_
 
 #include <gtest/gtest.h>
 
@@ -11,16 +7,16 @@ class TrackableTest : public testing::Test {
 
  public:
 
-  TrackableTest() {}
+  TrackableTest() = default;
 
-  virtual ~TrackableTest() {}
+  ~TrackableTest() override = default;
 
  protected:
 
-  virtual void SetUp() {}
+  void SetUp() final {}
 
-  virtual void TearDown() {}
+  void TearDown() final {}
 
 };
 
-#endif // SKLAND_TEST_CORE_SIGCXX_TRACKABLE_HPP_
+#endif // WIZTK_TEST_BASE_SIGCXX_TRACKABLE_HPP_

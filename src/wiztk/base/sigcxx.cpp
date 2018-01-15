@@ -34,7 +34,7 @@ SignalTokenNode::~SignalTokenNode() {
   Slot::Mark *mark = nullptr;
   while (nullptr != slot_mark_head.next()) {
     mark = static_cast<Slot::Mark *>(slot_mark_head.next());
-    ++mark->slot()->it_;
+    ++mark->slot()->iterator_;
     ++mark->slot()->ref_count_;
     mark->unlink();
   }
@@ -58,8 +58,8 @@ Trackable::~Trackable() {
 void Trackable::UnbindSignal(SLOT slot) {
   using internal::SignalTokenNode;
 
-  if (slot->it_.get()->binding->trackable == this) {
-    SignalTokenNode *tmp = slot->it_.get();
+  if (slot->iterator_.get()->binding->trackable == this) {
+    SignalTokenNode *tmp = slot->iterator_.get();
     delete tmp;
   }
 }
