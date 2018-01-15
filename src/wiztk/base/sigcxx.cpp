@@ -21,7 +21,7 @@ namespace base {
 
 namespace internal {
 
-BindingNode::~BindingNode() {
+TrackableBindingNode::~TrackableBindingNode() {
   if (nullptr != token) {
     _ASSERT(token->binding == this);
     token->binding = nullptr;
@@ -29,7 +29,7 @@ BindingNode::~BindingNode() {
   }
 }
 
-TokenNode::~TokenNode() {
+SignalTokenNode::~SignalTokenNode() {
   _ASSERT(nullptr == slot_mark_head.previous());
   Slot::Mark *mark = nullptr;
   while (nullptr != slot_mark_head.next()) {
@@ -56,18 +56,18 @@ Trackable::~Trackable() {
 }
 
 void Trackable::UnbindSignal(SLOT slot) {
-  using internal::TokenNode;
+  using internal::SignalTokenNode;
 
-  if (slot->get()->binding->trackable == this) {
-    TokenNode *tmp = slot->get();
+  if (slot->it_.get()->binding->trackable == this) {
+    SignalTokenNode *tmp = slot->it_.get();
     delete tmp;
   }
 }
 
 void Trackable::UnbindAllSignals() {
-  internal::BindingNode *tmp = nullptr;
+  internal::TrackableBindingNode *tmp = nullptr;
 
-  internal::InterRelatedDeque<internal::BindingNode>::ReverseIterator it = bindings_.rbegin();
+  internal::InterRelatedDeque<internal::TrackableBindingNode>::ReverseIterator it = bindings_.rbegin();
   while (it) {
     tmp = it.get();
     delete tmp;
