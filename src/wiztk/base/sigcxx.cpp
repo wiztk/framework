@@ -21,7 +21,7 @@ namespace base {
 
 namespace internal {
 
-TrackableBindingNode::~TrackableBindingNode() {
+BindingNode::~BindingNode() {
   if (nullptr != token) {
     _ASSERT(token->binding == this);
     token->binding = nullptr;
@@ -29,11 +29,11 @@ TrackableBindingNode::~TrackableBindingNode() {
   }
 }
 
-SignalTokenNode::~SignalTokenNode() {
+TokenNode::~TokenNode() {
   _ASSERT(nullptr == slot_mark_head.previous());
   Slot::Mark *mark = nullptr;
   while (nullptr != slot_mark_head.next()) {
-    mark = static_cast<Slot::Mark *>(slot_mark_head.next());
+    mark = static_cast<Slot::Mark *>(slot_mark_head.next());  // always a Slot::Mark pointer
     ++mark->slot()->iterator_;
     ++mark->slot()->ref_count_;
     mark->unlink();
@@ -56,18 +56,18 @@ Trackable::~Trackable() {
 }
 
 void Trackable::UnbindSignal(SLOT slot) {
-  using internal::SignalTokenNode;
+  using internal::TokenNode;
 
-  if (slot->iterator_.get()->binding->trackable == this) {
-    SignalTokenNode *tmp = slot->iterator_.get();
+  if (slot->iterator_->binding->trackable == this) {
+    TokenNode *tmp = slot->iterator_.get();
     delete tmp;
   }
 }
 
 void Trackable::UnbindAllSignals() {
-  internal::TrackableBindingNode *tmp = nullptr;
+  internal::BindingNode *tmp = nullptr;
 
-  internal::InterRelatedDeque<internal::TrackableBindingNode>::ReverseIterator it = bindings_.rbegin();
+  auto it = bindings_.rbegin();
   while (it) {
     tmp = it.get();
     delete tmp;
