@@ -21,7 +21,10 @@
 #ifndef WIZTK_SYSTEM_THREADING_THREAD_HPP_
 #define WIZTK_SYSTEM_THREADING_THREAD_HPP_
 
+#include "wiztk/base/abstract-runnable.hpp"
+
 #include <pthread.h>
+#include <functional>
 
 namespace wiztk {
 namespace system {
@@ -35,22 +38,40 @@ class Thread {
 
  public:
 
+  using AbstractRunnable = base::AbstractRunnable;
+
   /**
    * @brief Thread ID.
    */
   class ID {
     friend class Thread;
     friend bool operator==(const ID &id1, const ID &id2);
-    pthread_t pthread_ = 0;
+
+    pthread_t native_ = 0;
   };
 
   class Attribute;
+  class Key;
+
+  typedef std::function<void(AbstractRunnable *)> DeleterType;
+
+  /**
+   * @brief A default function object which will delete runnable in destructor.
+   */
+  static const DeleterType kDefaultDeleter;
 
  public:
 
+  /**
+   * @brief Default constructor.
+   */
   Thread() = default;
 
-  virtual ~Thread() = default;
+  explicit Thread(AbstractRunnable *runnable,
+                  const DeleterType &deleter = kDefaultDeleter)
+      : runnable_(runnable), deleter_(deleter) {}
+
+  virtual ~Thread();
 
   void Start();
 
@@ -68,8 +89,15 @@ class Thread {
 
   ID id_;
 
+  AbstractRunnable *runnable_ = nullptr;
+
+  DeleterType deleter_;
+
 };
 
+/**
+ * @brief Thread attribute.
+ */
 class Thread::Attribute {
   friend class Thread;
 
@@ -90,47 +118,46 @@ class Thread::Attribute {
     kSchedulerExplicit = PTHREAD_EXPLICIT_SCHED
   };
 
-  Attribute() {
-    pthread_attr_init(&pthread_attribute_);
-  }
+  Attribute();
 
-  ~Attribute() {
-    pthread_attr_destroy(&pthread_attribute_);
-  }
+  ~Attribute();
 
-  void SetDetachState(DetachStateType state_type) {
-    pthread_attr_setdetachstate(&pthread_attribute_, state_type);
-  }
+  void SetDetachState(DetachStateType state_type);
 
-  DetachStateType GetDetachState() const {
-    int val = 0;
-    pthread_attr_getdetachstate(&pthread_attribute_, &val);
-    return static_cast<DetachStateType>(val);
-  }
+  DetachStateType GetDetachState() const;
 
-  void SetScope(ScopeType scope_type) {
-    pthread_attr_setscope(&pthread_attribute_, scope_type);
-  }
+  void SetScope(ScopeType scope_type);
 
-  ScopeType GetScope() const {
-    int val = 0;
-    pthread_attr_getscope(&pthread_attribute_, &val);
-    return static_cast<ScopeType>(val);
-  }
+  ScopeType GetScope() const;
 
-  void SetStackSize(size_t stack_size) {
-    pthread_attr_setstacksize(&pthread_attribute_, stack_size);
-  }
+  void SetStackSize(size_t stack_size);
 
-  size_t GetStackSize() const {
-    size_t stack_size = 0;
-    pthread_attr_getstacksize(&pthread_attribute_, &stack_size);
-    return stack_size;
-  }
+  size_t GetStackSize() const;
 
  private:
 
-  pthread_attr_t pthread_attribute_;
+  pthread_attr_t native_;
+
+};
+
+/**
+ * @brief A key for per-thread local storage.
+ */
+class Thread::Key {
+
+ public:
+
+  Key();
+
+  virtual ~Key();
+
+  void SetSpecific(const void *value);
+
+  void *GetSpecific() const;
+
+ private:
+
+  pthread_key_t native_ = 0;
 
 };
 
@@ -141,8 +168,6 @@ class Thread::Attribute {
  * @return
  */
 bool operator==(const Thread::ID &id1, const Thread::ID &id2);
-
-bool operator==(const Thread &thread1, const Thread &thread2);
 
 } // namespace threading
 } // namespace system

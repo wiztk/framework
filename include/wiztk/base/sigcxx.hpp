@@ -221,29 +221,33 @@ class WIZTK_NO_EXPORT InterRelatedDeque {
 
    public:
 
-    Iterator() = delete;
-
-    explicit Iterator(internal::InterRelatedNodeBase *node)
+    explicit Iterator(internal::InterRelatedNodeBase *node = nullptr)
         : current_(node) {}
 
+    Iterator(const Iterator &) = default;
+    Iterator(Iterator &&) noexcept = default;
     ~Iterator() = default;
+    Iterator &operator=(const Iterator &) = default;
+    Iterator &operator=(Iterator &&) = default;
 
     Iterator &operator++() {
       current_ = current_->next();
       return *this;
     }
 
+    Iterator operator++(int) { return Iterator(current_->next()); }
+
     Iterator &operator--() {
       current_ = current_->previous();
       return *this;
     }
 
+    Iterator operator--(int) { return Iterator(current_->previous()); }
+
     bool operator==(const Iterator &other) const { return current_ == other.current_; }
     bool operator!=(const Iterator &other) const { return current_ != other.current_; }
 
-    T *get() const {
-      return static_cast<T *>(current_);
-    }
+    T *get() const { return static_cast<T *>(current_); }
 
     T *operator->() const { return get(); }
 
@@ -266,9 +270,7 @@ class WIZTK_NO_EXPORT InterRelatedDeque {
 
    public:
 
-    ConstIterator() = delete;
-
-    explicit ConstIterator(const internal::InterRelatedNodeBase *node)
+    explicit ConstIterator(const internal::InterRelatedNodeBase *node = nullptr)
         : current_(node) {}
 
     ~ConstIterator() = default;
@@ -278,17 +280,19 @@ class WIZTK_NO_EXPORT InterRelatedDeque {
       return *this;
     }
 
+    ConstIterator operator++(int) { return ConstIterator(current_->next()); }
+
     ConstIterator &operator--() {
       current_ = current_->previous();
       return *this;
     }
 
+    ConstIterator operator--(int) { return ConstIterator(current_->previous()); }
+
     bool operator==(const ConstIterator &other) const { return current_ == other.current_; }
     bool operator!=(const ConstIterator &other) const { return current_ != other.current_; }
 
-    const T *get() const {
-      return static_cast<const internal::BindingNode *>(current_);
-    }
+    const T *get() const { return static_cast<const T *>(current_); }
 
     const T *operator->() const { return get(); }
 
@@ -305,35 +309,39 @@ class WIZTK_NO_EXPORT InterRelatedDeque {
   };
 
   /**
- * @brief Reverse iterator.
- */
+   * @brief Reverse iterator.
+   */
   class ReverseIterator {
 
    public:
 
-    ReverseIterator() = delete;
-
-    explicit ReverseIterator(internal::InterRelatedNodeBase *node)
+    explicit ReverseIterator(internal::InterRelatedNodeBase *node = nullptr)
         : current_(node) {}
 
+    ReverseIterator(const ReverseIterator &) = default;
+    ReverseIterator(ReverseIterator &&) noexcept = default;
     ~ReverseIterator() = default;
+    ReverseIterator &operator=(const ReverseIterator &) = default;
+    ReverseIterator &operator=(ReverseIterator &&) noexcept  = default;
 
     ReverseIterator &operator++() {
       current_ = current_->previous();
       return *this;
     }
 
+    ReverseIterator operator++(int) { return ReverseIterator(current_->previous()); }
+
     ReverseIterator &operator--() {
       current_ = current_->next();
       return *this;
     }
 
+    ReverseIterator operator--(int) { return ReverseIterator(current_->next()); }
+
     bool operator==(const ReverseIterator &other) const { return current_ == other.current_; }
     bool operator!=(const ReverseIterator &other) const { return current_ != other.current_; }
 
-    T *get() const {
-      return static_cast<T *>(current_);
-    }
+    T *get() const { return static_cast<T *>(current_); }
 
     T *operator->() const { return get(); }
 
@@ -350,15 +358,13 @@ class WIZTK_NO_EXPORT InterRelatedDeque {
   };
 
   /**
- * @brief Const reverse iterator.
- */
+   * @brief Const reverse iterator.
+   */
   class ConstReverseIterator {
 
    public:
 
-    ConstReverseIterator() = delete;
-
-    explicit ConstReverseIterator(const internal::InterRelatedNodeBase *node)
+    explicit ConstReverseIterator(const internal::InterRelatedNodeBase *node = nullptr)
         : current_(node) {}
 
     ~ConstReverseIterator() = default;
@@ -368,17 +374,19 @@ class WIZTK_NO_EXPORT InterRelatedDeque {
       return *this;
     }
 
+    ConstReverseIterator operator++(int) { return ConstReverseIterator(current_->previous()); }
+
     ConstReverseIterator &operator--() {
       current_ = current_->next();
       return *this;
     }
 
+    ConstReverseIterator operator--(int) { return ConstReverseIterator(current_->next()); }
+
     bool operator==(const ConstReverseIterator &other) const { return current_ == other.current_; }
     bool operator!=(const ConstReverseIterator &other) const { return current_ != other.current_; }
 
-    const T *get() const {
-      return static_cast<const internal::BindingNode *>(current_);
-    }
+    const T *get() const { return static_cast<const T *>(current_); }
 
     const T *operator->() const { return get(); }
 
@@ -393,6 +401,8 @@ class WIZTK_NO_EXPORT InterRelatedDeque {
     const internal::InterRelatedNodeBase *current_ = nullptr;
 
   };
+
+ public:
 
   /**
    * @brief Default constructor.

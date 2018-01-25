@@ -260,7 +260,7 @@ SkCanvas *Canvas::GetSkCanvas() const {
 
 Canvas::LockGuard::~LockGuard() {
   if (node_.is_linked()) {
-    base::Deque<LockGuardNode>::Iterator it = canvas_->p_->lock_guard_deque.rbegin();
+    base::Deque<LockGuardNode>::ReverseIterator it = canvas_->p_->lock_guard_deque.rbegin();
     while (it.get() != &node_) {
       it.remove();
       it = canvas_->p_->lock_guard_deque.rbegin();
@@ -317,7 +317,7 @@ void Canvas::LockGuard::Lock(float dx, float dy) {
 void Canvas::LockGuard::Unlock() {
   if (!node_.is_linked()) return;
 
-  base::Deque<LockGuardNode>::Iterator it = canvas_->p_->lock_guard_deque.rbegin();
+  base::Deque<LockGuardNode>::ReverseIterator it = canvas_->p_->lock_guard_deque.rbegin();
   while (it.get() != &node_) {
     it.remove();
     it = canvas_->p_->lock_guard_deque.rbegin();

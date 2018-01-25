@@ -55,11 +55,11 @@ TEST_F(TestDeque, push_front_1) {
 
   ASSERT_TRUE(deque.count() == 3);
 
-  Deque<MyElement>::ConstIterator it = deque.crbegin();
-  ASSERT_TRUE(it == item1);
+  Deque<MyElement>::ConstReverseIterator it1 = deque.crbegin();
+  ASSERT_TRUE(it1 == item1);
 
-  it = deque.cend();
-  ASSERT_TRUE(it != item1);
+  Deque<MyElement>::ConstIterator it2 = deque.cend();
+  ASSERT_TRUE(it2 != item1);
 
   ASSERT_TRUE(item1->next() == nullptr);
   ASSERT_TRUE(item1->previous() == item2);
@@ -196,24 +196,24 @@ TEST_F(TestDeque, iterator_1) {
   deque.insert(item2);
   deque.insert(item1);
 
-  MyDeque::Iterator it = deque.begin();
+  MyDeque::Iterator it1 = deque.begin();
 
-  ASSERT_TRUE(it.get() == item1);
-  ++it;
-  ASSERT_TRUE(it.get() == item2);
-  ++it;
-  ASSERT_TRUE(it.get() == item3);
-  ++it;
-  ASSERT_TRUE(it == deque.end());
+  ASSERT_TRUE(it1.get() == item1);
+  ++it1;
+  ASSERT_TRUE(it1.get() == item2);
+  ++it1;
+  ASSERT_TRUE(it1.get() == item3);
+  ++it1;
+  ASSERT_TRUE(it1 == deque.end());
 
-  it = deque.rbegin();
-  ASSERT_TRUE(it.get() == item3);
-  --it;
-  ASSERT_TRUE(it.get() == item2);
-  --it;
-  ASSERT_TRUE(it.get() == item1);
-  --it;
-  ASSERT_TRUE(it == deque.rend());
+  MyDeque::ReverseIterator it2 = deque.rbegin();
+  ASSERT_TRUE(it2.get() == item3);
+  ++it2;
+  ASSERT_TRUE(it2.get() == item2);
+  ++it2;
+  ASSERT_TRUE(it2.get() == item1);
+  ++it2;
+  ASSERT_TRUE(it2 == deque.rend());
 
   delete item1;
   delete item2;
@@ -233,7 +233,7 @@ TEST_F(TestDeque, end_1) {
   deque.insert(item1);
 
   MyDeque::Iterator it = deque.end();
-  ASSERT_TRUE(it.get() == nullptr);
+//  ASSERT_TRUE(it.get() == nullptr);
 
   delete item1;
   delete item2;
@@ -252,8 +252,8 @@ TEST_F(TestDeque, rend_1) {
   deque.insert(item2);
   deque.insert(item1);
 
-  MyDeque::Iterator it = deque.rend();
-  ASSERT_TRUE(it.get() == nullptr);
+//  MyDeque::ReverseIterator it = deque.rend();
+//  ASSERT_TRUE(it.get() == nullptr);
 
   delete item1;
   delete item2;
@@ -295,10 +295,10 @@ TEST_F(TestDeque, boolean_2) {
   deque.insert(item2);
   deque.insert(item1);
 
-  MyDeque::Iterator it = deque.rend();
+  MyDeque::ReverseIterator it = deque.rend();
   ASSERT_TRUE(!it);
 
-  ++it;
+//  --it;
 //  ASSERT_TRUE(it);
 
   delete item1;

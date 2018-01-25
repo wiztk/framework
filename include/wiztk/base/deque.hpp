@@ -141,7 +141,7 @@ class Deque {
   /**
    * @brief A typedef of a function object to remove node in clear().
    */
-  typedef std::function<void(BinodeBase * )> DeleterType;
+  typedef std::function<void(BinodeBase *)> DeleterType;
 
   /**
    * @brief A nested iterator for deque
@@ -198,11 +198,7 @@ class Deque {
 
     T *operator->() const { return get(); }
 
-    T *get() const {
-      return nullptr == current_->previous_ ?
-             nullptr : (nullptr == current_->next_ ?
-                        nullptr : (static_cast<T *>(current_)));
-    }
+    T *get() const { return static_cast<T *>(current_); }
 
     explicit operator bool() const {
       return nullptr == current_ ?
@@ -229,10 +225,10 @@ class Deque {
         : current_(element) {}
 
     ConstIterator(const ConstIterator &) = default;
-
+    ConstIterator(ConstIterator &&) noexcept = default;
     ~ConstIterator() = default;
-
     ConstIterator &operator=(const ConstIterator &) = default;
+    ConstIterator &operator=(ConstIterator &&) = default;
 
     ConstIterator &operator++() {
       current_ = current_->next_;
@@ -258,11 +254,132 @@ class Deque {
 
     const T *operator->() const { return get(); }
 
-    const T *get() const {
-      return nullptr == current_->previous_ ?
-             nullptr : (nullptr == current_->next_ ?
-                        nullptr : (static_cast<const T *>(current_)));
+    const T *get() const { return static_cast<const T *>(current_); }
+
+    explicit operator bool() const {
+      return nullptr == current_ ?
+             false : (nullptr == current_->previous_ ?
+                      false : (nullptr != current_->next_));
     }
+
+   private:
+
+    const BinodeBase *current_ = nullptr;
+
+  };
+
+  /**
+   * @brief Reverse iterator.
+   */
+  class ReverseIterator {
+
+   public:
+
+    explicit ReverseIterator(BinodeBase *obj = nullptr)
+        : current_(obj) {}
+
+    ReverseIterator(const ReverseIterator &) = default;
+    ReverseIterator(ReverseIterator &&) noexcept = default;
+    ~ReverseIterator() = default;
+    ReverseIterator &operator=(const ReverseIterator &) = default;
+    ReverseIterator &operator=(ReverseIterator &&) noexcept = default;
+
+    ReverseIterator &operator++() {
+      current_ = current_->previous_;
+      return *this;
+    }
+
+    ReverseIterator operator++(int) { return ReverseIterator(current_->previous_); }
+
+    ReverseIterator &operator--() {
+      current_ = current_->next_;
+      return *this;
+    }
+
+    ReverseIterator operator--(int) { return ReverseIterator(current_->next_); }
+
+    void push_front(T *element) { BinodeBase::PushFront(current_, element); }
+
+    void push_back(T *element) { BinodeBase::PushBack(current_, element); }
+
+    /**
+     * @brief Unlink the bi-node object and invalidate this iterator
+     *
+     * @note Once this method is called, this iterator is invalidated and
+     * should not be used, but it can be assigned to another one.
+     */
+    void remove() {
+      BinodeBase::Unlink(current_);
+      current_ = nullptr;
+    }
+
+    bool operator==(const ReverseIterator &other) const { return current_ == other.current_; }
+
+    bool operator==(const T *element) const { return current_ == element; }
+
+    bool operator!=(const ReverseIterator &other) const { return current_ != other.current_; }
+
+    bool operator!=(const T *element) const { return current_ != element; }
+
+    T *operator->() const { return get(); }
+
+    T *get() const { return static_cast<T *>(current_); }
+
+    explicit operator bool() const {
+      return nullptr == current_ ?
+             false : (nullptr == current_->previous_ ?
+                      false : (nullptr != current_->next_));
+    }
+
+   private:
+
+    BinodeBase *current_ = nullptr;
+
+  };
+
+  /**
+   * @brief A nested const iterator class
+   */
+  class ConstReverseIterator {
+
+   public:
+
+    ConstReverseIterator() = delete;
+
+    explicit ConstReverseIterator(const BinodeBase *element = nullptr)
+        : current_(element) {}
+
+    ConstReverseIterator(const ConstReverseIterator &) = default;
+    ConstReverseIterator(ConstReverseIterator &&) noexcept = default;
+    ~ConstReverseIterator() = default;
+    ConstReverseIterator &operator=(const ConstReverseIterator &) = default;
+    ConstReverseIterator &operator=(ConstReverseIterator &&) noexcept  = default;
+
+    ConstReverseIterator &operator++() {
+      current_ = current_->previous_;
+      return *this;
+    }
+
+    ConstReverseIterator operator++(int) { return ConstReverseIterator(current_->previous_); }
+
+    ConstReverseIterator &operator--() {
+      current_ = current_->next_;
+      return *this;
+    }
+
+    ConstReverseIterator operator--(int) { return ConstReverseIterator(current_->next_); }
+
+    bool operator==(const ConstReverseIterator &other) const { return current_ == other.current_; }
+
+    bool operator==(const T *element) const { return current_ == element; }
+
+    bool operator!=(const ConstReverseIterator &other) const { return current_ != other.current_; }
+
+    bool operator!=(const T *element) const { return current_ != element; }
+
+    const T *operator->() const { return get(); }
+
+    const T *get() const { return static_cast<const T *>(current_); }
 
     explicit operator bool() const {
       return nullptr == current_ ?
@@ -366,18 +483,6 @@ class Deque {
   ConstIterator cbegin() const { return ConstIterator(head_.next_); }
 
   /**
-   * @brief Returns an iterator points to the reverse first node.
-   * @return
-   */
-  Iterator rbegin() const { return Iterator(tail_.previous_); }
-
-  /**
-   * @brief Returns a const iterator points to the reverse first node.
-   * @return
-   */
-  ConstIterator crbegin() const { return ConstIterator(tail_.previous_); }
-
-  /**
    * @brief Returns an iterator points to the end.
    * @return
    */
@@ -393,19 +498,31 @@ class Deque {
   ConstIterator cend() const { return ConstIterator(&tail_); }
 
   /**
+   * @brief Returns an iterator points to the reverse first node.
+   * @return
+   */
+  ReverseIterator rbegin() const { return ReverseIterator(tail_.previous_); }
+
+  /**
+   * @brief Returns a const iterator points to the reverse first node.
+   * @return
+   */
+  ConstReverseIterator crbegin() const { return ConstReverseIterator(tail_.previous_); }
+
+  /**
    * @brief Returns an iterator points to the reverse end.
    * @return
    */
-  Iterator rend() const {
+  ReverseIterator rend() const {
     const BinodeBase *p = &head_;
-    return Iterator(const_cast<BinodeBase *>(p));
+    return ReverseIterator(const_cast<BinodeBase *>(p));
   }
 
   /**
    * @brief Returns a const iterator points to the reverse end.
    * @return
    */
-  ConstIterator crend() const { return ConstIterator(&head_); }
+  ConstReverseIterator crend() const { return ConstReverseIterator(&head_); }
 
  protected:
 

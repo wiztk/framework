@@ -1,20 +1,20 @@
 /**
  * @defgroup base Base
- * @brief The base and common code used in all other modules
+ * @brief The base and common code used in all other modules.
  *
- * ...
+ * The code in this module should be system independent.
  */
 
 /**
  * @ingroup base
  * @defgroup base_intern Internal
- * @brief Private code used in Base module only
+ * @brief Private code used in Base module only.
  */
 
 /**
  * @ingroup base
  * @defgroup base_memory Memory
- * @brief Memory management
+ * @brief Memory management.
  */
 
 /**

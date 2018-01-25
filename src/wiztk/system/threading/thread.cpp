@@ -22,7 +22,6 @@ namespace system {
 namespace threading {
 
 /**
- * @ingroup system_threading_intern
  * @brief Private structure in Thread.
  */
 struct Thread::Private {
@@ -32,37 +31,134 @@ struct Thread::Private {
    * @param thread
    * @return
    */
-  static void *StartRoutine(Thread *thread);
+  static void *StartThread(Thread *thread);
+
+  /**
+   * @brief A static helper method to start a runnable routine.
+   * @param runnable
+   * @return
+   */
+  static void *StartRunnable(AbstractRunnable *runnable);
 
 };
 
-void *Thread::Private::StartRoutine(Thread *thread) {
+void *Thread::Private::StartThread(Thread *thread) {
   thread->Run();
   pthread_exit((void *) thread);
 }
 
+void *Thread::Private::StartRunnable(AbstractRunnable *runnable) {
+  runnable->Run();
+  pthread_exit((void *) runnable);
+}
+
 // -------
+
+const Thread::DeleterType Thread::kDefaultDeleter = [](AbstractRunnable *obj) { delete obj; };
+
+Thread::~Thread() {
+  if (deleter_) deleter_(runnable_);
+}
 
 void Thread::Start() {
   typedef void *(*fn)(void *);
-  int ret = pthread_create(&id_.pthread_,
-                           nullptr,
-                           reinterpret_cast<fn>(Thread::Private::StartRoutine),
-                           this);
+  int ret = 0;
+
+  if (runnable_) {
+    ret = pthread_create(&id_.native_,
+                         nullptr,
+                         reinterpret_cast<fn>(Thread::Private::StartRunnable),
+                         runnable_);
+  } else {
+    ret = pthread_create(&id_.native_,
+                         nullptr,
+                         reinterpret_cast<fn>(Thread::Private::StartThread),
+                         this);
+  }
+
   if (ret != 0) throw std::runtime_error("Error! Fail to start a thread!");
 }
 
 void Thread::Join() {
-  int ret = pthread_join(id_.pthread_, nullptr);
+  int ret = pthread_join(id_.native_, nullptr);
   if (ret != 0) throw std::runtime_error("Error! Fail to join a thread!");
 }
 
 bool operator==(const Thread::ID &id1, const Thread::ID &id2) {
-  return 0 != pthread_equal(id1.pthread_, id2.pthread_);
+  return 0 != pthread_equal(id1.native_, id2.native_);
 }
 
-bool operator==(const Thread &thread1, const Thread &thread2) {
-  return thread1.id() == thread2.id();
+// -----
+
+Thread::Attribute::Attribute() {
+  if (0 != pthread_attr_init(&native_))
+    throw std::runtime_error("Error! Cannot initialize thread attribute!");
+}
+
+Thread::Attribute::~Attribute() {
+  pthread_attr_destroy(&native_);
+}
+
+void Thread::Attribute::SetDetachState(DetachStateType state_type) {
+  if (0 != pthread_attr_setdetachstate(&native_, state_type))
+    throw std::runtime_error("Error! Cannot set detach state!");
+}
+
+Thread::Attribute::DetachStateType Thread::Attribute::GetDetachState() const {
+  int val = 0;
+
+  if (0 != pthread_attr_getdetachstate(&native_, &val))
+    throw std::runtime_error("Error! Cannot get detach state!");
+
+  return static_cast<DetachStateType>(val);
+}
+
+void Thread::Attribute::SetScope(ScopeType scope_type) {
+  if (0 != pthread_attr_setscope(&native_, scope_type))
+    throw std::runtime_error("Error! Cannot set scope!");
+}
+
+Thread::Attribute::ScopeType Thread::Attribute::GetScope() const {
+  int val = 0;
+
+  if (0 != pthread_attr_getscope(&native_, &val))
+    throw std::runtime_error("Error! Cannot get scope!");
+
+  return static_cast<ScopeType>(val);
+}
+
+void Thread::Attribute::SetStackSize(size_t stack_size) {
+  if (0 != pthread_attr_setstacksize(&native_, stack_size))
+    throw std::runtime_error("Error! Cannot set stack size!");
+}
+
+size_t Thread::Attribute::GetStackSize() const {
+  size_t stack_size = 0;
+
+  if (0 != pthread_attr_getstacksize(&native_, &stack_size))
+    throw std::runtime_error("Error! Cannot get stack size!");
+
+  return stack_size;
+}
+
+// -----
+
+Thread::Key::Key() {
+  if (0 != pthread_key_create(&native_, nullptr))
+    throw std::runtime_error("Error! Cannot create pthread key!");
+}
+
+Thread::Key::~Key() {
+  pthread_key_delete(native_);
+}
+
+void Thread::Key::SetSpecific(const void *value) {
+  if (0 != pthread_setspecific(native_, value))
+    throw std::runtime_error("Error! Cannot set specific!");
+}
+
+void *Thread::Key::GetSpecific() const {
+  return pthread_getspecific(native_);
 }
 
 }  // namespace threading
