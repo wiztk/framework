@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-#include <stdexcept>
 #include "wiztk/system/threading/thread.hpp"
+
+#include <stdexcept>
 
 namespace wiztk {
 namespace system {
@@ -55,6 +56,15 @@ void *Thread::Private::StartRunnable(AbstractRunnable *runnable) {
 // -------
 
 const Thread::DeleterType Thread::kDefaultDeleter = [](AbstractRunnable *obj) { delete obj; };
+
+Thread::Thread()
+    : id_(this) {}
+
+Thread::Thread(AbstractRunnable *runnable, const DeleterType &deleter)
+    : Thread() {
+  runnable_ = runnable;
+  deleter_ = deleter;
+}
 
 Thread::~Thread() {
   if (deleter_) deleter_(runnable_);
@@ -139,26 +149,6 @@ size_t Thread::Attribute::GetStackSize() const {
     throw std::runtime_error("Error! Cannot get stack size!");
 
   return stack_size;
-}
-
-// -----
-
-Thread::Key::Key() {
-  if (0 != pthread_key_create(&native_, nullptr))
-    throw std::runtime_error("Error! Cannot create pthread key!");
-}
-
-Thread::Key::~Key() {
-  pthread_key_delete(native_);
-}
-
-void Thread::Key::SetSpecific(const void *value) {
-  if (0 != pthread_setspecific(native_, value))
-    throw std::runtime_error("Error! Cannot set specific!");
-}
-
-void *Thread::Key::GetSpecific() const {
-  return pthread_getspecific(native_);
 }
 
 }  // namespace threading

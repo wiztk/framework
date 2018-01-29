@@ -38,20 +38,38 @@ class Thread {
 
  public:
 
+  /**
+   * @brief Alias to base::AbstractRunnable.
+   */
   using AbstractRunnable = base::AbstractRunnable;
 
   /**
    * @brief Thread ID.
    */
   class ID {
+
     friend class Thread;
     friend bool operator==(const ID &id1, const ID &id2);
 
+   public:
+
+    ID() = delete;
+    ID(const ID &) = delete;
+    ID &operator=(const ID &) = delete;
+
+    ~ID() = default;
+
+   private:
+
+    explicit ID(Thread *thread)
+        : thread_(thread) {}
+
     pthread_t native_ = 0;
+    Thread *thread_ = nullptr;
+
   };
 
   class Attribute;
-  class Key;
 
   typedef std::function<void(AbstractRunnable *)> DeleterType;
 
@@ -65,11 +83,10 @@ class Thread {
   /**
    * @brief Default constructor.
    */
-  Thread() = default;
+  Thread();
 
   explicit Thread(AbstractRunnable *runnable,
-                  const DeleterType &deleter = kDefaultDeleter)
-      : runnable_(runnable), deleter_(deleter) {}
+                  const DeleterType &deleter = kDefaultDeleter);
 
   virtual ~Thread();
 
@@ -137,27 +154,6 @@ class Thread::Attribute {
  private:
 
   pthread_attr_t native_;
-
-};
-
-/**
- * @brief A key for per-thread local storage.
- */
-class Thread::Key {
-
- public:
-
-  Key();
-
-  virtual ~Key();
-
-  void SetSpecific(const void *value);
-
-  void *GetSpecific() const;
-
- private:
-
-  pthread_key_t native_ = 0;
 
 };
 
