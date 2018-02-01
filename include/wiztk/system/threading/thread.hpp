@@ -21,80 +21,105 @@
 #ifndef WIZTK_SYSTEM_THREADING_THREAD_HPP_
 #define WIZTK_SYSTEM_THREADING_THREAD_HPP_
 
-#include "wiztk/base/abstract-runnable.hpp"
+#include "wiztk/base/macros.hpp"
+
+#include "wiztk/system/threading/thread-local.hpp"
 
 #include <pthread.h>
+
+#include <memory>
 #include <functional>
 
 namespace wiztk {
 namespace system {
+
+// Forward declaration
+class EventLoop;
+
 namespace threading {
 
 /**
  * @ingroup system_threading
  * @brief A class to create and control a thread.
  */
-class Thread {
+class WIZTK_EXPORT Thread {
 
  public:
 
-  /**
-   * @brief Alias to base::AbstractRunnable.
+  /**d
+   * @brief A nested class represents a thread ID.
    */
-  using AbstractRunnable = base::AbstractRunnable;
+  class ID;
+  class Delegate;
+  class Attribute;
 
-  /**
-   * @brief Thread ID.
-   */
-  class ID {
+  struct Option {
 
-    friend class Thread;
-    friend bool operator==(const ID &id1, const ID &id2);
+    Option() = default;
+    ~Option() = default;
 
-   public:
-
-    ID() = delete;
-    ID(const ID &) = delete;
-    ID &operator=(const ID &) = delete;
-
-    ~ID() = default;
-
-   private:
-
-    explicit ID(Thread *thread)
-        : thread_(thread) {}
-
-    pthread_t native_ = 0;
-    Thread *thread_ = nullptr;
+    bool use_event_loop = true;
 
   };
 
-  class Attribute;
-
-  typedef std::function<void(AbstractRunnable *)> DeleterType;
+  typedef std::function<void(Delegate *)> DelegateDeleterType;
 
   /**
-   * @brief A default function object which will delete runnable in destructor.
+   * @brief A default function object which will delete delegate in destructor.
    */
-  static const DeleterType kDefaultDeleter;
+  static const DelegateDeleterType kDefaultDelegateDeleter;
 
  public:
+
+  WIZTK_DECLARE_NONCOPYABLE(Thread);
 
   /**
    * @brief Default constructor.
    */
   Thread();
 
-  explicit Thread(AbstractRunnable *runnable,
-                  const DeleterType &deleter = kDefaultDeleter);
+  explicit Thread(Delegate *delegate,
+                  const DelegateDeleterType &deleter = kDefaultDelegateDeleter);
+
+  explicit Thread(const Option &option);
+
+  Thread(Thread &&other) noexcept;
 
   virtual ~Thread();
 
+  Thread &operator=(Thread &&other) noexcept;
+
+  /**
+   * @brief Start this thread.
+   */
   void Start();
 
+  /**
+   * @brief Join with a terminated thread.
+   */
   void Join();
 
-  const ID &id() const { return id_; }
+  void Detach();
+
+  /**
+   * @brief Get the thread ID.
+   * @return
+   */
+  const ID &GetID() const;
+
+  /**
+   * @brief Get the main thread.
+   * @return
+   */
+  static inline Thread *main() { return &kMain; }
+
+  /**
+   * @brief Get the current thread object.
+   * @return
+   *
+   * @note In the main thread, this will always return the main thread object.
+   */
+  static inline Thread *current() { return kPerThreadStorage.Get(); }
 
  protected:
 
@@ -102,13 +127,60 @@ class Thread {
 
  private:
 
+  /**
+   * @brief A special constructor for the static kMain.
+   * @param initialize
+   */
+  explicit Thread(bool initialize);
+
   struct Private;
 
-  ID id_;
+  std::unique_ptr<Private> p_;
 
-  AbstractRunnable *runnable_ = nullptr;
+  static Thread kMain;
 
-  DeleterType deleter_;
+  static ThreadLocal<Thread> kPerThreadStorage;
+
+};
+
+class Thread::Delegate {
+  friend class Thread;
+
+ public:
+
+  Delegate() = default;
+  Delegate(const Delegate &) = default;
+  Delegate &operator=(const Delegate &) = default;
+  Delegate(Delegate &&) = default;
+  Delegate &operator=(Delegate &&) = default;
+  virtual ~Delegate() = default;
+
+ protected:
+
+  virtual void Run() {/* Override in subclass */}
+
+};
+
+class Thread::ID {
+
+  friend class Thread;
+  friend bool operator==(const Thread::ID &id1, const Thread::ID &id2);
+  friend bool operator!=(const Thread::ID &id1, const Thread::ID &id2);
+
+ public:
+
+  WIZTK_DECLARE_NONCOPYABLE(ID);
+
+  ID() = default;
+  ID(ID &&) = default;
+  ~ID() = default;
+  ID &operator=(ID &&) = default;
+
+  static ID GetCurrent();
+
+ private:
+
+  pthread_t native_ = 0;
 
 };
 
@@ -119,6 +191,8 @@ class Thread::Attribute {
   friend class Thread;
 
  public:
+
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Attribute);
 
   enum DetachStateType {
     kDetachStateCreateDetached = PTHREAD_CREATE_DETACHED,
@@ -164,6 +238,8 @@ class Thread::Attribute {
  * @return
  */
 bool operator==(const Thread::ID &id1, const Thread::ID &id2);
+
+bool operator!=(const Thread::ID &id1, const Thread::ID &id2);
 
 } // namespace threading
 } // namespace system

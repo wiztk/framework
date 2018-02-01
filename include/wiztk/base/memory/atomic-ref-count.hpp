@@ -33,31 +33,99 @@ class WIZTK_EXPORT AtomicRefCount {
 
  public:
 
+  /**
+   * @brief Declare this class is non-copyable and non-movable.
+   */
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(AtomicRefCount);
 
-  constexpr AtomicRefCount() noexcept
+  /**
+   * @brief Default constructor.
+   */
+  constexpr AtomicRefCount()
       : ref_count_(0) {}
 
-  explicit constexpr AtomicRefCount(size_t value) noexcept
+  /**
+   * @brief Constructor with an initial count.
+   * @param value
+   */
+  explicit constexpr AtomicRefCount(size_t value)
       : ref_count_(value) {}
 
+  /**
+   * @brief Default destructor.
+   */
   ~AtomicRefCount() = default;
 
+  /**
+   * @brief Increase a reference count and return the new value.
+   */
+  size_t Reference() {
+    return Reference(1);
+  }
+
+  /**
+   * @brief Increase the reference count by given value, which must exceed 0.
+   * @param value
+   */
+  size_t Reference(size_t value) {
+    return ref_count_.fetch_add(value, std::memory_order_relaxed);
+  }
+
+  /**
+   * @brief Decrease the reference count and return the new value.
+   * @return
+   */
+  size_t Unreference() {
+    return ref_count_.fetch_sub(1, std::memory_order_acq_rel);
+  }
+
+  /**
+   * @brief Increase the reference count.
+   * @return
+   */
   AtomicRefCount &operator++() {
-    ref_count_.fetch_add(1, std::memory_order_relaxed);
+    Reference();
     return *this;
   }
 
+  /**
+   * @brief Decrease the reference count.
+   * @return
+   */
   AtomicRefCount &operator--() {
-    ref_count_.fetch_sub(1, std::memory_order_acq_rel);
+    Unreference();
     return *this;
   }
 
-  size_t ref_count() const { return ref_count_.load(std::memory_order_relaxed); }
+  /**
+   * @brief Return whether the reference count is one.
+   * @return
+   */
+  bool IsOne() const {
+    return 1 == ref_count_.load(std::memory_order_acquire);
+  }
+
+  /**
+   * @brief Return wheter the reference count is zero.
+   * @return
+   */
+  bool IsZero() const {
+    return 0 == ref_count_.load(std::memory_order_acquire);
+  }
+
+  /**
+   * @brief Get the reference count.
+   * @return
+   */
+  size_t ref_count() const {
+    return ref_count_.load(std::memory_order_acquire);
+  }
 
  private:
 
-  std::atomic_ulong ref_count_;
+  typedef std::atomic_ulong atomic_size_t;
+
+  atomic_size_t ref_count_;
 
 };
 

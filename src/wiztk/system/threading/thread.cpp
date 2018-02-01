@@ -16,86 +16,133 @@
 
 #include "wiztk/system/threading/thread.hpp"
 
+// #include "wiztk/system/event-loop.hpp"
+
 #include <stdexcept>
 
 namespace wiztk {
 namespace system {
 namespace threading {
 
+Thread::ID Thread::ID::GetCurrent() {
+  ID id;
+  id.native_ = pthread_self();
+  return id;
+}
+
+// ----
+
 /**
  * @brief Private structure in Thread.
  */
 struct Thread::Private {
+
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
+
+  Private() = default;
+
+  ~Private() {
+//    delete event_loop;
+  }
+
+  ID id;
+
+//  EventLoop *event_loop = nullptr;
+
+  Delegate *delegate = nullptr;
+
+  DelegateDeleterType delegate_deleter;
 
   /**
    * @brief A static helper method to start a thread routine.
    * @param thread
    * @return
    */
-  static void *StartThread(Thread *thread);
-
-  /**
-   * @brief A static helper method to start a runnable routine.
-   * @param runnable
-   * @return
-   */
-  static void *StartRunnable(AbstractRunnable *runnable);
+  static void *StartRoutine(Thread *thread);
 
 };
 
-void *Thread::Private::StartThread(Thread *thread) {
-  thread->Run();
-  pthread_exit((void *) thread);
-}
+ThreadLocal<Thread> Thread::kPerThreadStorage;
 
-void *Thread::Private::StartRunnable(AbstractRunnable *runnable) {
-  runnable->Run();
-  pthread_exit((void *) runnable);
+void *Thread::Private::StartRoutine(Thread *thread) {
+  kPerThreadStorage.Set(thread);
+
+  if (thread->p_->delegate) thread->p_->delegate->Run();
+  else thread->Run();
+
+  kPerThreadStorage.Set(nullptr);
+  pthread_exit((void *) thread);
 }
 
 // -------
 
-const Thread::DeleterType Thread::kDefaultDeleter = [](AbstractRunnable *obj) { delete obj; };
+const Thread::DelegateDeleterType Thread::kDefaultDelegateDeleter = [](Delegate *obj) {
+  delete obj;
+};
 
-Thread::Thread()
-    : id_(this) {}
+Thread Thread::kMain(true);
 
-Thread::Thread(AbstractRunnable *runnable, const DeleterType &deleter)
+Thread::Thread() {
+  p_ = std::make_unique<Private>();
+}
+
+Thread::Thread(Delegate *delegate, const DelegateDeleterType &deleter)
     : Thread() {
-  runnable_ = runnable;
-  deleter_ = deleter;
+  p_->delegate = delegate;
+  p_->delegate_deleter = deleter;
+}
+
+Thread::Thread(const Option &option)
+    : Thread() {
+  // TODO: process option
+}
+
+Thread::Thread(bool /*initialize*/)
+    : Thread() {
+  p_->id.native_ = pthread_self();
+  kPerThreadStorage.Set(this);
 }
 
 Thread::~Thread() {
-  if (deleter_) deleter_(runnable_);
+  if (p_->delegate_deleter) p_->delegate_deleter(p_->delegate);
 }
 
 void Thread::Start() {
   typedef void *(*fn)(void *);
   int ret = 0;
 
-  if (runnable_) {
-    ret = pthread_create(&id_.native_,
-                         nullptr,
-                         reinterpret_cast<fn>(Thread::Private::StartRunnable),
-                         runnable_);
-  } else {
-    ret = pthread_create(&id_.native_,
-                         nullptr,
-                         reinterpret_cast<fn>(Thread::Private::StartThread),
-                         this);
-  }
+  ret = pthread_create(&p_->id.native_,
+                       nullptr,
+                       reinterpret_cast<fn>(Thread::Private::StartRoutine),
+                       this);
 
   if (ret != 0) throw std::runtime_error("Error! Fail to start a thread!");
 }
 
 void Thread::Join() {
-  int ret = pthread_join(id_.native_, nullptr);
-  if (ret != 0) throw std::runtime_error("Error! Fail to join a thread!");
+  if (0 != pthread_join(p_->id.native_, nullptr))
+    throw std::runtime_error("Error! Fail to join a thread!");
+
+  p_->id.native_ = pthread_self();
+  if (kMain.GetID() == p_->id)
+    p_->id.native_ = 0;
+}
+
+void Thread::Detach() {
+  if (0 != pthread_detach(p_->id.native_))
+    throw std::runtime_error("Error! Fail to detach a thread!");
+}
+
+const Thread::ID &Thread::GetID() const {
+  return p_->id;
 }
 
 bool operator==(const Thread::ID &id1, const Thread::ID &id2) {
   return 0 != pthread_equal(id1.native_, id2.native_);
+}
+
+bool operator!=(const Thread::ID &id1, const Thread::ID &id2) {
+  return 0 == pthread_equal(id1.native_, id2.native_);
 }
 
 // -----

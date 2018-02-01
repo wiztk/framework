@@ -39,6 +39,12 @@ class MyThread : public threading::Thread {
 
 int MyThread::kCount = 0;
 
+TEST_F(TestThreadLocal, initial_1) {
+  ThreadLocal<int> mylocal;
+
+  ASSERT_TRUE(mylocal.Get() == nullptr);
+}
+
 TEST_F(TestThreadLocal, construct_1) {
   ThreadLocal<int> mylocal;
 
