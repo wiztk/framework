@@ -17,7 +17,7 @@
 #include <wiztk/graphic/gradient-shader.hpp>
 #include <wiztk/graphic/matrix.hpp>
 
-#include "internal/shader_private.hpp"
+#include "shader_private.hpp"
 
 #include "SkGradientShader.h"
 

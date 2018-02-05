@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#include "internal/bitmap_private.hpp"
-#include "internal/image-info_private.hpp"
+#include "bitmap_private.hpp"
+#include "image-info_private.hpp"
 
 #include "OpenImageIO/imageio.h"
 #include "OpenImageIO/imagebufalgo.h"

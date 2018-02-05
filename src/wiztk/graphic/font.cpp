@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-#include "internal/font_private.hpp"
+#include "font_private.hpp"
 
-#include "internal/typeface_private.hpp"
-#include "internal/font-style_private.hpp"
+#include "typeface_private.hpp"
+#include "font-style_private.hpp"
 
 namespace wiztk {
 namespace graphic {

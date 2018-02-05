@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "internal/image-info_private.hpp"
+#include "image-info_private.hpp"
 
 namespace wiztk {
 namespace graphic {

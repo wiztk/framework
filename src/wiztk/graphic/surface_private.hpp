@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHIC_INTERNAL_SURFACE_PRIVATE_HPP_
-#define WIZTK_GRAPHIC_INTERNAL_SURFACE_PRIVATE_HPP_
+#ifndef WIZTK_GRAPHIC_SURFACE_PRIVATE_HPP_
+#define WIZTK_GRAPHIC_SURFACE_PRIVATE_HPP_
 
 #include "wiztk/graphic/surface.hpp"
 

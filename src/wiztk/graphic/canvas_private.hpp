@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,37 +14,44 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHIC_INTERNAL_FONT_STYLE_PRIVATE_HPP_
-#define WIZTK_GRAPHIC_INTERNAL_FONT_STYLE_PRIVATE_HPP_
+#ifndef WIZTK_GRAPHIC_CANVAS_PRIVATE_HPP_
+#define WIZTK_GRAPHIC_CANVAS_PRIVATE_HPP_
 
-#include "wiztk/graphic/font-style.hpp"
+#include "wiztk/graphic/canvas.hpp"
 
-#include "SkFontStyle.h"
+#include "bitmap_private.hpp"
+
+#include "wiztk/base/deque.hpp"
+
+#include "SkCanvas.h"
 
 namespace wiztk {
 namespace graphic {
 
-struct FontStyle::Private {
+/**
+ * @brief The private structure used in Canvas
+ */
+struct Canvas::Private {
 
   Private() = default;
 
-  Private(const Private &other) = default;
-
-  Private(int weight, int width, SkFontStyle::Slant slant)
-      : sk_font_style(weight, width, slant) {}
+  explicit Private(const SkBitmap &bitmap)
+      : sk_canvas(bitmap) {
+  }
 
   ~Private() = default;
 
-  Private &operator=(const Private &other) {
-    sk_font_style = other.sk_font_style;
-    return *this;
-  }
+  SkCanvas sk_canvas;
 
-  SkFontStyle sk_font_style;
+  base::Point2F origin;
+
+  size_t lock_count = 0;
+
+  base::Deque<LockGuardNode> lock_guard_deque;
 
 };
 
-}
-}
+} // namespace graphic
+} // namespace wiztk
 
-#endif // WIZTK_GRAPHIC_INTERNAL_FONT_STYLE_PRIVATE_HPP_
+#endif // WIZTK_GRAPHIC_INTERNAL_CANVAS_PRIVATE_HPP_

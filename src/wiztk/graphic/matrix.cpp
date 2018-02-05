@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "internal/matrix_private.hpp"
+#include "matrix_private.hpp"
 
 namespace wiztk {
 namespace graphic {

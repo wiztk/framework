@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-#include "internal/canvas_private.hpp"
+#include "canvas_private.hpp"
 
 #include <wiztk/graphic/paint.hpp>
 #include <wiztk/graphic/path.hpp>
 
-#include "internal/matrix_private.hpp"
-#include "internal/surface_private.hpp"
-#include "internal/image-info_private.hpp"
+#include "matrix_private.hpp"
+#include "surface_private.hpp"
+#include "image-info_private.hpp"
 
 #include <unicode/utf.h>
 #include <unicode/unistr.h>

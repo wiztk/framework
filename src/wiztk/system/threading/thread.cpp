@@ -18,6 +18,8 @@
 
 // #include "wiztk/system/event-loop.hpp"
 
+#include "thread_private.hpp"
+
 #include <stdexcept>
 
 namespace wiztk {
@@ -30,57 +32,60 @@ Thread::ID Thread::ID::GetCurrent() {
   return id;
 }
 
-// ----
+// -----
 
 /**
- * @brief Private structure in Thread.
+ * @brief Thread attribute.
  */
-struct Thread::Private {
+class Thread::Attribute {
+  friend class Thread;
 
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
+ public:
 
-  Private() = default;
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Attribute);
 
-  ~Private() {
-//    delete event_loop;
-  }
+  enum DetachStateType {
+    kDetachStateCreateDetached = PTHREAD_CREATE_DETACHED,
+    kDetachStateCreateJoinable = PTHREAD_CREATE_JOINABLE
+  };
 
-  ID id;
+  enum ScopeType {
+    kScopeSystem = PTHREAD_SCOPE_SYSTEM,
+    kScopeProcess = PTHREAD_SCOPE_PROCESS
+  };
 
-//  EventLoop *event_loop = nullptr;
+  enum SchedulerType {
+    kSchedulerInherit = PTHREAD_INHERIT_SCHED,
+    kSchedulerExplicit = PTHREAD_EXPLICIT_SCHED
+  };
 
-  Delegate *delegate = nullptr;
+  Attribute();
 
-  DelegateDeleterType delegate_deleter;
+  ~Attribute();
 
-  /**
-   * @brief A static helper method to start a thread routine.
-   * @param thread
-   * @return
-   */
-  static void *StartRoutine(Thread *thread);
+  void SetDetachState(DetachStateType state_type);
+
+  DetachStateType GetDetachState() const;
+
+  void SetScope(ScopeType scope_type);
+
+  ScopeType GetScope() const;
+
+  void SetStackSize(size_t stack_size);
+
+  size_t GetStackSize() const;
+
+ private:
+
+  pthread_attr_t native_;
 
 };
-
-ThreadLocal<Thread> Thread::kPerThreadStorage;
-
-void *Thread::Private::StartRoutine(Thread *thread) {
-  kPerThreadStorage.Set(thread);
-
-  if (thread->p_->delegate) thread->p_->delegate->Run();
-  else thread->Run();
-
-  kPerThreadStorage.Set(nullptr);
-  pthread_exit((void *) thread);
-}
 
 // -------
 
 const Thread::DelegateDeleterType Thread::kDefaultDelegateDeleter = [](Delegate *obj) {
   delete obj;
 };
-
-Thread Thread::kMain(true);
 
 Thread::Thread() {
   p_ = std::make_unique<Private>();
@@ -97,14 +102,17 @@ Thread::Thread(const Option &option)
   // TODO: process option
 }
 
-Thread::Thread(bool /*initialize*/)
-    : Thread() {
-  p_->id.native_ = pthread_self();
-  kPerThreadStorage.Set(this);
+Thread::Thread(Thread &&other) noexcept {
+  p_ = std::move(other.p_);
 }
 
 Thread::~Thread() {
   if (p_->delegate_deleter) p_->delegate_deleter(p_->delegate);
+}
+
+Thread &Thread::operator=(Thread &&other) noexcept {
+  p_ = std::move(other.p_);
+  return *this;
 }
 
 void Thread::Start() {
@@ -124,8 +132,6 @@ void Thread::Join() {
     throw std::runtime_error("Error! Fail to join a thread!");
 
   p_->id.native_ = pthread_self();
-  if (kMain.GetID() == p_->id)
-    p_->id.native_ = 0;
 }
 
 void Thread::Detach() {
@@ -135,6 +141,10 @@ void Thread::Detach() {
 
 const Thread::ID &Thread::GetID() const {
   return p_->id;
+}
+
+Thread *Thread::GetCurrent() {
+  return Private::kPerThreadStorage.Get();
 }
 
 bool operator==(const Thread::ID &id1, const Thread::ID &id2) {

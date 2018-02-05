@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "internal/font-style_private.hpp"
+#include "font-style_private.hpp"
 
 namespace wiztk {
 namespace graphic {

@@ -16,8 +16,8 @@
 
 #include "wiztk/graphic/paint.hpp"
 
-#include "internal/font_private.hpp"
-#include "internal/shader_private.hpp"
+#include "font_private.hpp"
+#include "shader_private.hpp"
 
 #include "SkPaint.h"
 #include "SkTypeface.h"

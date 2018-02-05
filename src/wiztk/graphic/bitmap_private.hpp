@@ -14,46 +14,33 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHIC_INTERNAL_FONT_PRIVATE_HPP_
-#define WIZTK_GRAPHIC_INTERNAL_FONT_PRIVATE_HPP_
+#ifndef WIZTK_GRAPHIC_BITMAP_PRIVATE_HPP_
+#define WIZTK_GRAPHIC_BITMAP_PRIVATE_HPP_
 
-#include <wiztk/graphic/font.hpp>
+#include "wiztk/graphic/bitmap.hpp"
 
-#include "SkFont.h"
+#include "wiztk/base/property.hpp"
+
+#include "SkBitmap.h"
 
 namespace wiztk {
 namespace graphic {
 
 /**
- * @ingroup graphic_intern
- * @brief Structure to encapsulate a sk_sp<SkFont> object
+ * @brief The private structure used in Bitmap
  */
-struct Font::Private {
+struct Bitmap::Private : public base::Property<Bitmap> {
 
-  Private() = default;
+  explicit Private(Bitmap *owner)
+      : base::Property<Bitmap>(owner) {}
 
-  explicit Private(const sk_sp<SkFont> &font)
-      : sk_font(font) {}
+  ~Private() final = default;
 
-  Private(const Private &other)
-      : sk_font(other.sk_font) {}
-
-  Private &operator=(const Private &other) {
-    sk_font = other.sk_font;
-    return *this;
-  }
-
-  Private &operator=(const sk_sp<SkFont> &font) {
-    sk_font = font;
-    return *this;
-  }
-
-  sk_sp<SkFont> sk_font;
-  sk_sp<SkTypeface> sk_typeface;
+  SkBitmap sk_bitmap;
 
 };
 
 } // namespace graphic
 } // namespace wiztk
 
-#endif // WIZTK_GRAPHIC_INTERNAL_FONT_META_HPP_
+#endif // WIZTK_GRAPHIC_INTERNAL_BITMAP_PRIVATE_HPP_

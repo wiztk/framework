@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "internal/shader_private.hpp"
+#include "shader_private.hpp"
 
 #include "wiztk/base/macros.hpp"
 

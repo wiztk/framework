@@ -14,45 +14,44 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHIC_INTERNAL_SHADER_PRIVATE_HPP_
-#define WIZTK_GRAPHIC_INTERNAL_SHADER_PRIVATE_HPP_
+#ifndef WIZTK_GRAPHIC_TYPEFACE_PRIVATE_HPP_
+#define WIZTK_GRAPHIC_TYPEFACE_PRIVATE_HPP_
 
-#include <wiztk/graphic/shader.hpp>
+#include <wiztk/graphic/typeface.hpp>
 
-#include "SkShader.h"
+#include "SkTypeface.h"
 
 namespace wiztk {
 namespace graphic {
 
 /**
- * @ingroup graphic_intern
- * @brief Structure to encapsulate a sk_sp<SkShader> object
+ * @brief Structure to encapsulate a sk_sp<SkTypeface> object
  */
-struct Shader::Private {
+struct Typeface::Private {
 
   Private() {}
 
-  Private(const sk_sp<SkShader> &shader)
-      : sk_shader(shader) {}
+  Private(const sk_sp<SkTypeface> &typeface)
+      : sk_typeface(typeface) {}
 
   Private(const Private &other)
-      : sk_shader(other.sk_shader) {}
+      : sk_typeface(other.sk_typeface) {}
 
   Private &operator=(const Private &other) {
-    sk_shader = other.sk_shader;
+    sk_typeface = other.sk_typeface;
     return *this;
   }
 
-  Private &operator=(const sk_sp<SkShader> &shader) {
-    sk_shader = shader;
+  Private &operator=(const sk_sp<SkTypeface> &typeface) {
+    sk_typeface = typeface;
     return *this;
   }
 
-  sk_sp<SkShader> sk_shader;
+  sk_sp<SkTypeface> sk_typeface;
 
 };
 
 } // namespace graphic
 } // namespace wiztk
 
-#endif  // WIZTK_GRAPHIC_INTERNAL_SHADER_PRIVATE_HPP_
+#endif // WIZTK_GRAPHIC_INTERNAL_TYPEFACE_PRIVATE_HPP_

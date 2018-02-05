@@ -44,7 +44,11 @@ namespace threading {
  */
 class WIZTK_EXPORT Thread {
 
+  friend class MainThread;
+
  public:
+
+  WIZTK_DECLARE_NONCOPYABLE(Thread);
 
   /**d
    * @brief A nested class represents a thread ID.
@@ -53,6 +57,9 @@ class WIZTK_EXPORT Thread {
   class Delegate;
   class Attribute;
 
+  /**
+   * @brief A structure to be used when constructing a Thread object only.
+   */
   struct Option {
 
     Option() = default;
@@ -70,8 +77,6 @@ class WIZTK_EXPORT Thread {
   static const DelegateDeleterType kDefaultDelegateDeleter;
 
  public:
-
-  WIZTK_DECLARE_NONCOPYABLE(Thread);
 
   /**
    * @brief Default constructor.
@@ -108,18 +113,12 @@ class WIZTK_EXPORT Thread {
   const ID &GetID() const;
 
   /**
-   * @brief Get the main thread.
-   * @return
-   */
-  static inline Thread *main() { return &kMain; }
-
-  /**
    * @brief Get the current thread object.
    * @return
    *
    * @note In the main thread, this will always return the main thread object.
    */
-  static inline Thread *current() { return kPerThreadStorage.Get(); }
+  static Thread *GetCurrent();
 
  protected:
 
@@ -127,22 +126,15 @@ class WIZTK_EXPORT Thread {
 
  private:
 
-  /**
-   * @brief A special constructor for the static kMain.
-   * @param initialize
-   */
-  explicit Thread(bool initialize);
-
   struct Private;
 
   std::unique_ptr<Private> p_;
 
-  static Thread kMain;
-
-  static ThreadLocal<Thread> kPerThreadStorage;
-
 };
 
+/**
+ * @brief Thread delegate.
+ */
 class Thread::Delegate {
   friend class Thread;
 
@@ -161,6 +153,9 @@ class Thread::Delegate {
 
 };
 
+/**
+ * @brief Thread ID
+ */
 class Thread::ID {
 
   friend class Thread;
@@ -171,63 +166,23 @@ class Thread::ID {
 
   WIZTK_DECLARE_NONCOPYABLE(ID);
 
-  ID() = default;
+  ID() {
+    native_ = pthread_self();
+  }
+
   ID(ID &&) = default;
   ~ID() = default;
   ID &operator=(ID &&) = default;
 
+  /**
+   * @brief Get the current thread ID.
+   * @return
+   */
   static ID GetCurrent();
 
  private:
 
   pthread_t native_ = 0;
-
-};
-
-/**
- * @brief Thread attribute.
- */
-class Thread::Attribute {
-  friend class Thread;
-
- public:
-
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Attribute);
-
-  enum DetachStateType {
-    kDetachStateCreateDetached = PTHREAD_CREATE_DETACHED,
-    kDetachStateCreateJoinable = PTHREAD_CREATE_JOINABLE
-  };
-
-  enum ScopeType {
-    kScopeSystem = PTHREAD_SCOPE_SYSTEM,
-    kScopeProcess = PTHREAD_SCOPE_PROCESS
-  };
-
-  enum SchedulerType {
-    kSchedulerInherit = PTHREAD_INHERIT_SCHED,
-    kSchedulerExplicit = PTHREAD_EXPLICIT_SCHED
-  };
-
-  Attribute();
-
-  ~Attribute();
-
-  void SetDetachState(DetachStateType state_type);
-
-  DetachStateType GetDetachState() const;
-
-  void SetScope(ScopeType scope_type);
-
-  ScopeType GetScope() const;
-
-  void SetStackSize(size_t stack_size);
-
-  size_t GetStackSize() const;
-
- private:
-
-  pthread_attr_t native_;
 
 };
 

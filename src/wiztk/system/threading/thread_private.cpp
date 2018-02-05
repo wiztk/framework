@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,26 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHIC_INTERNAL_IMAGE_INFO_PRIVATE_HPP_
-#define WIZTK_GRAPHIC_INTERNAL_IMAGE_INFO_PRIVATE_HPP_
-
-#include "wiztk/graphic/image-info.hpp"
-
-#include "SkImageInfo.h"
+#include "thread_private.hpp"
 
 namespace wiztk {
-namespace graphic {
+namespace system {
+namespace threading {
 
-} // namespace graphic
-} // namespace wiztk
+ThreadLocal<Thread> Thread::Private::kPerThreadStorage;
 
-#endif // WIZTK_GRAPHIC_INTERNAL_IMAGE_INFO_PRIVATE_HPP_
+Thread::ID Thread::Private::kMainThreadID;
+
+void *Thread::Private::StartRoutine(Thread *thread) {
+  kPerThreadStorage.Set(thread);
+
+  if (thread->p_->delegate) thread->p_->delegate->Run();
+  else thread->Run();
+
+  kPerThreadStorage.Set(nullptr);
+  pthread_exit((void *) thread);
+}
+
+}
+}
+}

@@ -14,45 +14,45 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHIC_INTERNAL_CANVAS_PRIVATE_HPP_
-#define WIZTK_GRAPHIC_INTERNAL_CANVAS_PRIVATE_HPP_
+#ifndef WIZTK_GRAPHIC_FONT_PRIVATE_HPP_
+#define WIZTK_GRAPHIC_FONT_PRIVATE_HPP_
 
-#include "wiztk/graphic/canvas.hpp"
+#include <wiztk/graphic/font.hpp>
 
-#include "bitmap_private.hpp"
-
-#include "wiztk/base/deque.hpp"
-
-#include "SkCanvas.h"
+#include "SkFont.h"
 
 namespace wiztk {
 namespace graphic {
 
 /**
- * @ingroup graphic_intern
- * @brief The private structure used in Canvas
+ * @brief Structure to encapsulate a sk_sp<SkFont> object
  */
-struct Canvas::Private {
+struct Font::Private {
 
   Private() = default;
 
-  explicit Private(const SkBitmap &bitmap)
-      : sk_canvas(bitmap) {
+  explicit Private(const sk_sp<SkFont> &font)
+      : sk_font(font) {}
+
+  Private(const Private &other)
+      : sk_font(other.sk_font) {}
+
+  Private &operator=(const Private &other) {
+    sk_font = other.sk_font;
+    return *this;
   }
 
-  ~Private() = default;
+  Private &operator=(const sk_sp<SkFont> &font) {
+    sk_font = font;
+    return *this;
+  }
 
-  SkCanvas sk_canvas;
-
-  base::Point2F origin;
-
-  size_t lock_count = 0;
-
-  base::Deque<LockGuardNode> lock_guard_deque;
+  sk_sp<SkFont> sk_font;
+  sk_sp<SkTypeface> sk_typeface;
 
 };
 
 } // namespace graphic
 } // namespace wiztk
 
-#endif // WIZTK_GRAPHIC_INTERNAL_CANVAS_PRIVATE_HPP_
+#endif // WIZTK_GRAPHIC_INTERNAL_FONT_META_HPP_

@@ -14,34 +14,17 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHIC_INTERNAL_BITMAP_PRIVATE_HPP_
-#define WIZTK_GRAPHIC_INTERNAL_BITMAP_PRIVATE_HPP_
+#ifndef WIZTK_GRAPHIC_IMAGE_INFO_PRIVATE_HPP_
+#define WIZTK_GRAPHIC_IMAGE_INFO_PRIVATE_HPP_
 
-#include "wiztk/graphic/bitmap.hpp"
+#include "wiztk/graphic/image-info.hpp"
 
-#include "wiztk/base/property.hpp"
-
-#include "SkBitmap.h"
+#include "SkImageInfo.h"
 
 namespace wiztk {
 namespace graphic {
 
-/**
- * @ingroup graphic_intern
- * @brief The private structure used in Bitmap
- */
-struct Bitmap::Private : public base::Property<Bitmap> {
-
-  explicit Private(Bitmap *owner)
-      : base::Property<Bitmap>(owner) {}
-
-  ~Private() final = default;
-
-  SkBitmap sk_bitmap;
-
-};
-
 } // namespace graphic
 } // namespace wiztk
 
-#endif // WIZTK_GRAPHIC_INTERNAL_BITMAP_PRIVATE_HPP_
+#endif // WIZTK_GRAPHIC_INTERNAL_IMAGE_INFO_PRIVATE_HPP_
