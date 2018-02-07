@@ -18,6 +18,8 @@
 #define WIZTK_SYSTEM_THREADING_THREAD_PRIVATE_HPP_
 
 #include "wiztk/system/threading/thread.hpp"
+#include "wiztk/system/threading/thread-local.hpp"
+#include "wiztk/system/message-loop.hpp"
 
 namespace wiztk {
 namespace system {
@@ -33,12 +35,12 @@ struct Thread::Private {
   Private() = default;
 
   ~Private() {
-//    delete event_loop;
+    delete message_loop;
   }
 
   ID id;
 
-//  EventLoop *event_loop = nullptr;
+  MessageLoop *message_loop = nullptr;
 
   Delegate *delegate = nullptr;
 

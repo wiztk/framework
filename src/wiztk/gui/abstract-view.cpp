@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-#include "internal/abstract-view_private.hpp"
+#include "abstract-view_private.hpp"
+#include "abstract-view_iterators.hpp"
 
 #include "wiztk/numerical/bit.hpp"
 #include "wiztk/numerical/clamp.hpp"
@@ -23,8 +24,6 @@
 #include "wiztk/gui/abstract-layout.hpp"
 #include "wiztk/gui/mouse-event.hpp"
 #include "wiztk/gui/application.hpp"
-
-#include "internal/abstract-view_iterators.hpp"
 
 namespace wiztk {
 namespace gui {

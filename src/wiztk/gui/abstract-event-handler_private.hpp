@@ -25,7 +25,6 @@ namespace wiztk {
 namespace gui {
 
 /**
- * @ingroup gui_intern
  * @brief The structure for the private data in AbstractEventHandler
  */
 struct AbstractEventHandler::Private : public base::Property<AbstractEventHandler> {

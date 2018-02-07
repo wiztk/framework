@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "internal/abstract-rendering-api_private.hpp"
+#include "abstract-rendering-api_private.hpp"
 
 namespace wiztk {
 namespace gui {

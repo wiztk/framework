@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-#include "wiztk/gui/application.hpp"
+#include "display_private.hpp"
 
 #include "wiztk/base/property.hpp"
 
+#include "wiztk/gui/application.hpp"
 #include "wiztk/gui/theme.hpp"
 #include "wiztk/gui/abstract-view.hpp"
 #include "wiztk/gui/view-surface.hpp"
-
-#include "internal/display_private.hpp"
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -55,7 +54,6 @@ class Application::EpollTask : public AbstractEpollTask {
 };
 
 /**
- * @ingroup gui_intern
  * @brief The private structure used in Application
  */
 struct Application::Private {
@@ -79,7 +77,7 @@ struct Application::Private {
 
   EpollTask epoll_task;
 
-  std::thread::id thread_id;
+  Thread::ID thread_id;
 
   base::Deque<TaskNode> task_deque;
 
@@ -198,7 +196,6 @@ Application::Application(int argc, char *argv[]) {
 
   p_->argc = argc;
   p_->argv = argv;
-  p_->thread_id = std::this_thread::get_id();
 
   kInstance = this;
 
@@ -340,11 +337,11 @@ char **Application::GetArgV() const {
   return p_->argv;
 }
 
-Display* Application::GetDisplay() const {
+Display *Application::GetDisplay() const {
   return __PROPERTY__(display);
 }
 
-const std::thread::id &Application::GetThreadID() {
+const Application::Thread::ID &Application::GetThreadID() {
   return p_->thread_id;
 }
 

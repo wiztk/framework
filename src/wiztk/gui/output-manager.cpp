@@ -16,7 +16,7 @@
 
 #include "wiztk/gui/output-manager.hpp"
 
-#include "internal/output_private.hpp"
+#include "output_private.hpp"
 
 namespace wiztk {
 namespace gui {

@@ -14,26 +14,17 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_BASE_ABSTRACT_RUNNABLE_HPP_
-#define WIZTK_BASE_ABSTRACT_RUNNABLE_HPP_
+#ifndef WIZTK_SYSTEM_MESSAGE_BUMP_HPP_
+#define WIZTK_SYSTEM_MESSAGE_BUMP_HPP_
 
 namespace wiztk {
-namespace base {
+namespace system {
 
-/**
- * @ingroup base
- * @brief Virtual base class of runnable objects.
- */
-class AbstractRunnable {
+class MessagePump {
  public:
-
-  AbstractRunnable() = default;
-  virtual ~AbstractRunnable() = default;
-
-  virtual void Run() = 0;
 };
 
-} // namespace base
-} // namespace wiztk
+}
+}
 
-#endif // WIZTK_BASE_ABSTRACT_RUNNABLE_HPP_
+#endif // WIZTK_SYSTEM_MESSAGE_BUMP_HPP_

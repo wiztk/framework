@@ -27,7 +27,6 @@ namespace wiztk {
 namespace gui {
 
 /**
- * @ingroup gui_intern
  * @brief A structure for private data in AbstractView
  */
 WIZTK_NO_EXPORT struct AbstractView::Private {

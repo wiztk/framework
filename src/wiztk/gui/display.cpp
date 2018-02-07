@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-#include "internal/display_private.hpp"
+#include "display_private.hpp"
 
 #include "wiztk/base/property.hpp"
-#include <wiztk/gui/view-surface.hpp>
+#include "wiztk/gui/view-surface.hpp"
 
 #include <iostream>
 

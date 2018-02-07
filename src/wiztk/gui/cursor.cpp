@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-#include "wiztk/gui/cursor.hpp"
+#include "display_proxy.hpp"
 
-#include "internal/display_proxy.hpp"
 #include "wiztk/gui/application.hpp"
 
 namespace wiztk {

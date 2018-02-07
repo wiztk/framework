@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,33 +14,43 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_INTERNAL_ABSTRACT_RENDERING_API_PRIVATE_HPP_
-#define WIZTK_GUI_INTERNAL_ABSTRACT_RENDERING_API_PRIVATE_HPP_
+#ifndef WIZTK_GUI_MAIN_LOOP_HPP_
+#define WIZTK_GUI_MAIN_LOOP_HPP_
 
-#include "wiztk/gui/abstract-rendering-api.hpp"
+#include "wiztk/system/message-loop.hpp"
 
-#include "view-surface_private.hpp"
+#include <memory>
 
 namespace wiztk {
 namespace gui {
 
 /**
- * @ingroup gui_intern
- * @brief Structure for private data in AbstractGPUInterface
+ * @ingroup gui
+ * @brief The main event loop used in Application.
  */
-struct AbstractRenderingAPI::Private {
+class MainLoop : public system::MessageLoop {
 
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
+  friend class Application;
 
-  Private() = default;
+ public:
 
-  ~Private() = default;
+  MainLoop();
 
-  ViewSurface *surface = nullptr;
+  ~MainLoop() final;
+
+ protected:
+
+  void Run() final;
+
+ private:
+
+  struct Private;
+
+  std::unique_ptr<Private> p_;
 
 };
 
 } // namespace gui
 } // namespace wiztk
 
-#endif // WIZTK_GUI_INTERNAL_ABSTRACT_GR_API_PRIVATE_HPP_
+#endif // WIZTK_GUI_MAIN_LOOP_HPP_

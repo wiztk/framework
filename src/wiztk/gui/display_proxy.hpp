@@ -25,7 +25,6 @@ namespace wiztk {
 namespace gui {
 
 /**
- * @ingroup gui_intern
  * @brief A nested class to get native platform objects from the private
  * properties of Display.
  */

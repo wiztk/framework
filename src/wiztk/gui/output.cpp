@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-#include "internal/output_private.hpp"
+#include "output_private.hpp"
+#include "display_proxy.hpp"
 
 #include "wiztk/gui/display.hpp"
 #include "wiztk/gui/application.hpp"
-
-#include "internal/display_proxy.hpp"
 
 namespace wiztk {
 namespace gui {

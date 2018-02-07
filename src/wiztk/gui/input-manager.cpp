@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-#include "wiztk/gui/input-manager.hpp"
+#include "input_private.hpp"
 
-#include "internal/input_private.hpp"
+#include "wiztk/gui/input-manager.hpp"
 
 namespace wiztk {
 namespace gui {

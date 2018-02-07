@@ -17,13 +17,14 @@
 #ifndef WIZTK_GUI_APPLICATION_HPP_
 #define WIZTK_GUI_APPLICATION_HPP_
 
-#include <cstdint>
-#include <thread>
-
 #include "wiztk/base/deque.hpp"
 
-#include "task-node.hpp"
-#include "display.hpp"
+#include "wiztk/system/threading/thread.hpp"
+
+#include "wiztk/gui/task-node.hpp"
+#include "wiztk/gui/display.hpp"
+
+#include <cstdint>
 
 namespace wiztk {
 namespace gui {
@@ -37,6 +38,8 @@ class AbstractEpollTask;
 class WIZTK_EXPORT Application {
 
  public:
+
+  using Thread = system::threading::Thread;
 
   // Declaration:
 
@@ -111,7 +114,7 @@ class WIZTK_EXPORT Application {
    * @brief Get the main thread id
    * @return A const reference to the main thread id
    */
-  const std::thread::id &GetThreadID();
+  const Thread::ID &GetThreadID();
 
   /**
    * @brief Get the defferred task deque

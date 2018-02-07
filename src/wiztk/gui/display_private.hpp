@@ -35,7 +35,6 @@ namespace wiztk {
 namespace gui {
 
 /**
- * @ingroup gui_intern
  * @brief The private data structure used in Display
  */
 struct Display::Private {

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#include "internal/abstract-shell-view_private.hpp"
-#include "internal/abstract-view_private.hpp"
+#include "abstract-shell-view_private.hpp"
+#include "abstract-view_private.hpp"
 
 #include "wiztk/numerical/bit.hpp"
 

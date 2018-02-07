@@ -22,7 +22,7 @@
 #include <wiztk/graphic/canvas.hpp>
 #include <wiztk/graphic/paint.hpp>
 
-#include "internal/abstract-view_iterators.hpp"
+#include "abstract-view_iterators.hpp"
 
 //#ifdef DEBUG
 #include <cstdlib>

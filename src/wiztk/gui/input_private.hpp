@@ -33,7 +33,6 @@ namespace wiztk {
 namespace gui {
 
 /**
- * @ingroup gui_intern
  * @brief Private data used in Input.
  */
 struct WIZTK_NO_EXPORT Input::Private : public base::CountedDequeNodeBase {

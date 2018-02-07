@@ -14,26 +14,40 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_BASE_ABSTRACT_RUNNABLE_HPP_
-#define WIZTK_BASE_ABSTRACT_RUNNABLE_HPP_
+#ifndef WIZTK_SYSTEM_MESSAGE_LOOP_HPP_
+#define WIZTK_SYSTEM_MESSAGE_LOOP_HPP_
 
 namespace wiztk {
-namespace base {
+namespace system {
 
 /**
- * @ingroup base
- * @brief Virtual base class of runnable objects.
+ * @ingroup system
+ * @brief Message loop that waits for and dispatches messages (or events).
+ *
+ * Each thread (created by threading::Thread) contains 0 or at most 1 message loop.
  */
-class AbstractRunnable {
+class MessageLoop {
+
  public:
 
-  AbstractRunnable() = default;
-  virtual ~AbstractRunnable() = default;
+  /**
+   * @brief Get the current message loop in this thread.
+   * @return
+   */
+  static MessageLoop *current() { return nullptr; }
 
-  virtual void Run() = 0;
+  MessageLoop() = default;
+
+  virtual ~MessageLoop() = default;
+
+  /**
+   * @brief Run loop.
+   */
+  virtual void Run() {}
+
 };
 
-} // namespace base
+} // namespace system
 } // namespace wiztk
 
-#endif // WIZTK_BASE_ABSTRACT_RUNNABLE_HPP_
+#endif // WIZTK_SYSTEM_MESSAGE_LOOP_HPP_

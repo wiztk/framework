@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-#include "wiztk/system/threading/thread.hpp"
-
 // #include "wiztk/system/event-loop.hpp"
 
 #include "thread_private.hpp"

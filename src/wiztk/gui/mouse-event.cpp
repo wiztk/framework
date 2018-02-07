@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "internal/mouse-event_private.hpp"
+#include "mouse-event_private.hpp"
 
 #include <wiztk/gui/view-surface.hpp>
 

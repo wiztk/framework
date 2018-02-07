@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-#include <wiztk/gui/linear-layout.hpp>
+#include "abstract-view_iterators.hpp"
 
-#include "internal/abstract-view_iterators.hpp"
+#include <wiztk/gui/linear-layout.hpp>
 
 namespace wiztk {
 namespace gui {

@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
+#include "abstract-view_iterators.hpp"
+
 #include <wiztk/gui/anchor.hpp>
 #include <wiztk/gui/anchor-group.hpp>
-#include <wiztk/base/macros.hpp>
-
-#include "internal/abstract-view_iterators.hpp"
 
 namespace wiztk {
 namespace gui {

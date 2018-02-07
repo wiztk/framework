@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-#include "internal/view-surface_private.hpp"
-#include "internal/view-surface_shell_private.hpp"
-#include "internal/view-surface_shell_toplevel_private.hpp"
-#include "internal/view-surface_shell_popup_private.hpp"
+#include "view-surface_private.hpp"
+#include "view-surface_shell_private.hpp"
+#include "view-surface_shell_toplevel_private.hpp"
+#include "view-surface_shell_popup_private.hpp"
+#include "input_private.hpp"
+#include "output_private.hpp"
+#include "display_proxy.hpp"
+#include "buffer_private.hpp"
 
 #include "wiztk/gui/buffer.hpp"
 #include "wiztk/gui/input-event.hpp"
 #include "wiztk/gui/region.hpp"
 #include "wiztk/gui/application.hpp"
-
-#include "internal/input_private.hpp"
-#include "internal/output_private.hpp"
-#include "internal/display_proxy.hpp"
-#include "internal/buffer_private.hpp"
 
 namespace wiztk {
 namespace gui {

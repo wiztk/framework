@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
+#include "display_proxy.hpp"
+#include "view-surface_private.hpp"
+#include "abstract-rendering-api_proxy.hpp"
+
 #include "wiztk/gui/vulkan-api.hpp"
-
 #include "wiztk/gui/application.hpp"
-
-#include "internal/display_proxy.hpp"
-#include "internal/view-surface_private.hpp"
-#include "internal/abstract-rendering-api_proxy.hpp"
 
 namespace wiztk {
 namespace gui {

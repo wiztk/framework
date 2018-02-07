@@ -26,7 +26,6 @@ namespace wiztk {
 namespace gui {
 
 /**
- * @ingroup gui_intern
  * @brief A structure for private data in AbstractShellView
  */
 struct AbstractShellView::Private : public base::Property<AbstractShellView> {

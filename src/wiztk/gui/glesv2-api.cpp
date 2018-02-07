@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
+#include "abstract-rendering-api_proxy.hpp"
+#include "display_proxy.hpp"
+
 #include "wiztk/gui/glesv2-api.hpp"
-
 #include "wiztk/gui/application.hpp"
-
-#include "internal/abstract-rendering-api_proxy.hpp"
-#include "internal/display_proxy.hpp"
 
 #include <EGL/egl.h>
 #include <EGL/eglext.h>

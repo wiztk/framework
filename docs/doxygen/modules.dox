@@ -18,6 +18,12 @@
  */
 
 /**
+ * @ingroup base_memory
+ * @defgroup base_memory_intern Internal
+ * @brief Private code used in memory module only.
+ */
+
+/**
  * @defgroup numerical Numerical
  * @brief The numerical algorithm module
  *

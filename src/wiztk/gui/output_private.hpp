@@ -25,7 +25,6 @@ namespace wiztk {
 namespace gui {
 
 /**
- * @ingroup gui_intern
  * @brief Private data in Output.
  */
 struct Output::Private : public base::CountedDequeNodeBase {

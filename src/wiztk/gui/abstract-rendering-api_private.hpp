@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 - 2018 The WizTK Authors.
+ * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,32 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_BASE_ABSTRACT_RUNNABLE_HPP_
-#define WIZTK_BASE_ABSTRACT_RUNNABLE_HPP_
+#ifndef WIZTK_GUI_INTERNAL_ABSTRACT_RENDERING_API_PRIVATE_HPP_
+#define WIZTK_GUI_INTERNAL_ABSTRACT_RENDERING_API_PRIVATE_HPP_
+
+#include "wiztk/gui/abstract-rendering-api.hpp"
+
+#include "view-surface_private.hpp"
 
 namespace wiztk {
-namespace base {
+namespace gui {
 
 /**
- * @ingroup base
- * @brief Virtual base class of runnable objects.
+ * @brief Structure for private data in AbstractGPUInterface
  */
-class AbstractRunnable {
- public:
+struct AbstractRenderingAPI::Private {
 
-  AbstractRunnable() = default;
-  virtual ~AbstractRunnable() = default;
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
 
-  virtual void Run() = 0;
+  Private() = default;
+
+  ~Private() = default;
+
+  ViewSurface *surface = nullptr;
+
 };
 
-} // namespace base
+} // namespace gui
 } // namespace wiztk
 
-#endif // WIZTK_BASE_ABSTRACT_RUNNABLE_HPP_
+#endif // WIZTK_GUI_INTERNAL_ABSTRACT_GR_API_PRIVATE_HPP_

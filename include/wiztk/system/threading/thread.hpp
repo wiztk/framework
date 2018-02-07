@@ -22,8 +22,7 @@
 #define WIZTK_SYSTEM_THREADING_THREAD_HPP_
 
 #include "wiztk/base/macros.hpp"
-
-#include "wiztk/system/threading/thread-local.hpp"
+#include "wiztk/base/abstract-runnable.hpp"
 
 #include <pthread.h>
 
@@ -34,7 +33,7 @@ namespace wiztk {
 namespace system {
 
 // Forward declaration
-class EventLoop;
+class MessageLoop;
 
 namespace threading {
 
@@ -65,7 +64,7 @@ class WIZTK_EXPORT Thread {
     Option() = default;
     ~Option() = default;
 
-    bool use_event_loop = true;
+    bool use_message_loop = true;
 
   };
 
@@ -135,21 +134,19 @@ class WIZTK_EXPORT Thread {
 /**
  * @brief Thread delegate.
  */
-class Thread::Delegate {
+class Thread::Delegate : public base::AbstractRunnable {
   friend class Thread;
 
  public:
 
   Delegate() = default;
-  Delegate(const Delegate &) = default;
-  Delegate &operator=(const Delegate &) = default;
-  Delegate(Delegate &&) = default;
-  Delegate &operator=(Delegate &&) = default;
-  virtual ~Delegate() = default;
+  ~Delegate() override = default;
 
  protected:
 
-  virtual void Run() {/* Override in subclass */}
+  void Run() override {
+    // TODO: Override in subclass
+  }
 
 };
 

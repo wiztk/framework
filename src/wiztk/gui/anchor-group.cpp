@@ -17,8 +17,6 @@
 #include <wiztk/gui/anchor-group.hpp>
 #include <wiztk/gui/anchor.hpp>
 
-#include "wiztk/base/macros.hpp"
-
 namespace wiztk {
 namespace gui {
 

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-#include <wiztk/gui/relative-layout.hpp>
+#include "abstract-view_iterators.hpp"
 
-#include "internal/abstract-view_iterators.hpp"
+#include <wiztk/gui/relative-layout.hpp>
 
 namespace wiztk {
 namespace gui {

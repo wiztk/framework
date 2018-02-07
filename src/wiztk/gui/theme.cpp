@@ -25,8 +25,8 @@
 #include "SkCanvas.h"
 #include "SkPixmap.h"
 
-#include "internal/theme-light.hpp"
-#include "internal/theme-dark.hpp"
+#include "theme-light.hpp"
+#include "theme-dark.hpp"
 
 namespace wiztk {
 namespace gui {

@@ -14,26 +14,25 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_BASE_ABSTRACT_RUNNABLE_HPP_
-#define WIZTK_BASE_ABSTRACT_RUNNABLE_HPP_
+#ifndef WIZTK_TEST_BASE_MEMORY_SINGLETON_HPP_
+#define WIZTK_TEST_BASE_MEMORY_SINGLETON_HPP_
 
-namespace wiztk {
-namespace base {
+#include <gtest/gtest.h>
 
-/**
- * @ingroup base
- * @brief Virtual base class of runnable objects.
- */
-class AbstractRunnable {
+class TestSingleton : public testing::Test {
+
  public:
 
-  AbstractRunnable() = default;
-  virtual ~AbstractRunnable() = default;
+  TestSingleton() = default;
 
-  virtual void Run() = 0;
+  ~TestSingleton() override = default;
+
+ protected:
+
+  void SetUp() final {}
+
+  void TearDown() final {}
+
 };
 
-} // namespace base
-} // namespace wiztk
-
-#endif // WIZTK_BASE_ABSTRACT_RUNNABLE_HPP_
+#endif // WIZTK_TEST_BASE_MEMORY_SINGLETON_HPP_

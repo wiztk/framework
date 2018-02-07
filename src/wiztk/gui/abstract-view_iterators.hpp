@@ -24,7 +24,6 @@ namespace wiztk {
 namespace gui {
 
 /**
- * @ingroup gui_intern
  * @brief An iterator class to traverse in the view hierarchy
  */
 WIZTK_NO_EXPORT class AbstractView::Iterator {
@@ -106,7 +105,6 @@ WIZTK_NO_EXPORT class AbstractView::Iterator {
 };
 
 /**
- * @ingroup gui_intern
  * @brief A const iterator class to traverse in the view hierarchy
  */
 class AbstractView::ConstIterator {

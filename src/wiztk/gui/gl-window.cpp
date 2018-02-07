@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+#include "display_proxy.hpp"
+#include "abstract-view_iterators.hpp"
+
 #include "wiztk/gui/gl-window.hpp"
 
 #include "wiztk/gui/application.hpp"
@@ -31,9 +34,6 @@
 #include "wiztk/gui/buffer.hpp"
 #include "wiztk/gui/region.hpp"
 #include "wiztk/gui/context.hpp"
-
-#include "internal/display_proxy.hpp"
-#include "internal/abstract-view_iterators.hpp"
 
 #include "wiztk/graphic/canvas.hpp"
 #include "wiztk/graphic/paint.hpp"

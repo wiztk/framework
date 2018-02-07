@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-#include "internal/input_private.hpp"
-
-#include "internal/display_proxy.hpp"
+#include "input_private.hpp"
+#include "display_proxy.hpp"
 
 #include "wiztk/gui/application.hpp"
 

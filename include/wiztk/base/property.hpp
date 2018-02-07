@@ -85,14 +85,32 @@ class Property {
 
  public:
 
+  /**
+   * @brief Declare this class is non-copyable and non-movable.
+   */
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Property);
+
+  /**
+   * @brief Disable the default constructor.
+   */
   Property() = delete;
 
+  /**
+   * @brief Constructor with the given proprietor.
+   * @param owner
+   */
   inline explicit Property(T *owner)
       : proprietor_(owner) {}
 
+  /**
+   * @brief Default destructor.
+   */
   virtual ~Property() = default;
 
+  /**
+   * @brief Get the proprietor.
+   * @return
+   */
   T *proprietor() const { return proprietor_; }
 
  private:

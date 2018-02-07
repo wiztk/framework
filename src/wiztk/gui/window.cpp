@@ -53,7 +53,6 @@ using graphic::GradientShader;
 using graphic::ClipOperation;
 
 /**
- * @ingroup gui_intern
  * @brief The private structure for Window
  */
 struct Window::Private : public base::Property<Window> {

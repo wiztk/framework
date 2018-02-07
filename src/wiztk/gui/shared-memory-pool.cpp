@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-#include <wiztk/gui/shared-memory-pool.hpp>
+#include "display_proxy.hpp"
 
+#include <wiztk/gui/shared-memory-pool.hpp>
 #include "wiztk/gui/application.hpp"
 
 #include <sys/mman.h>
-
 #include <stdlib.h>
 #include <malloc.h>
 #include <unistd.h>
@@ -31,8 +31,6 @@
 #include <fcntl.h>
 #include <new>
 #endif
-
-#include "internal/display_proxy.hpp"
 
 namespace wiztk {
 namespace gui {
