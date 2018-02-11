@@ -40,15 +40,9 @@ struct MainLoop::Private : public base::Property<MainLoop> {
 
   bool running = false;
 
-  static void HandleSignalInterrupt(int);
-
   static const int kMaxEpollEvents = 16;
 
 };
-
-void MainLoop::Private::HandleSignalInterrupt(int) {
-
-}
 
 // ----
 
@@ -56,18 +50,10 @@ MainLoop::MainLoop() {
   p_ = std::make_unique<Private>(this);
 }
 
-MainLoop::~MainLoop() {
+MainLoop::~MainLoop() = default;
 
-}
+void MainLoop::RunLoop() {
 
-void MainLoop::Run() {
-  struct sigaction sigint = {};
-  sigint.sa_handler = Private::HandleSignalInterrupt;
-  sigemptyset(&sigint.sa_mask);
-  sigint.sa_flags = SA_RESETHAND;
-  sigaction(SIGINT, &sigint, nullptr);
-
-  // TODO: process events.
 }
 
 } // namespace gui

@@ -14,41 +14,36 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_MAIN_LOOP_HPP_
-#define WIZTK_GUI_MAIN_LOOP_HPP_
+#include "test-event-loop.hpp"
 
 #include "wiztk/system/event/event-loop.hpp"
 
-#include <memory>
+#include <iostream>
 
-namespace wiztk {
-namespace gui {
+using namespace wiztk;
+using namespace wiztk::system;
 
-/**
- * @ingroup gui
- * @brief The main event loop used in Application.
- */
-class MainLoop : public system::event::EventLoop {
-
-  friend class Application;
+class MyLoopThread : public threading::Thread {
 
  public:
 
-  MainLoop();
+  MyLoopThread() = default;
+  ~MyLoopThread() final = default;
 
-  ~MainLoop() final;
+ protected:
 
-  void RunLoop();
-
- private:
-
-  struct Private;
-
-  std::unique_ptr<Private> p_;
+  void Run() final {
+    event::EventLoop::Prepare();
+    std::cout << __func__ << std::endl;
+    event::EventLoop::RunLoop();
+  }
 
 };
 
-} // namespace gui
-} // namespace wiztk
+TEST_F(TestEventLoop, prepare_1) {
+  MyLoopThread my_thread;
+  my_thread.Start();
+  my_thread.Join();
 
-#endif // WIZTK_GUI_MAIN_LOOP_HPP_
+  ASSERT_TRUE(true);
+}

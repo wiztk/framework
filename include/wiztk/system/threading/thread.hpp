@@ -32,9 +32,6 @@
 namespace wiztk {
 namespace system {
 
-// Forward declaration
-class MessageLoop;
-
 namespace threading {
 
 /**
@@ -43,6 +40,7 @@ namespace threading {
  */
 class WIZTK_EXPORT Thread {
 
+  friend class MessageLoop;
   friend class MainThread;
 
  public:
@@ -54,17 +52,23 @@ class WIZTK_EXPORT Thread {
    */
   class ID;
   class Delegate;
-  class Attribute;
 
   /**
    * @brief A structure to be used when constructing a Thread object only.
    */
-  struct Option {
+  struct WIZTK_EXPORT Options {
 
-    Option() = default;
-    ~Option() = default;
+    Options() = default;
+    ~Options() = default;
 
-    bool use_message_loop = true;
+    /**
+     * @brief The stack size for the thread to use.
+     *
+     * Use 0 for the default maximum.
+     */
+    size_t stack_size = 0;
+
+    bool joinable = true;
 
   };
 
@@ -74,6 +78,11 @@ class WIZTK_EXPORT Thread {
    * @brief A default function object which will delete delegate in destructor.
    */
   static const DelegateDeleterType kDefaultDelegateDeleter;
+
+  /**
+   * @brief Alternate function object which will not clean up Delegate.
+   */
+  static const DelegateDeleterType kLeakyDelegateDeleter;
 
  public:
 
@@ -85,7 +94,7 @@ class WIZTK_EXPORT Thread {
   explicit Thread(Delegate *delegate,
                   const DelegateDeleterType &deleter = kDefaultDelegateDeleter);
 
-  explicit Thread(const Option &option);
+  explicit Thread(const Options &option);
 
   Thread(Thread &&other) noexcept;
 
@@ -94,9 +103,13 @@ class WIZTK_EXPORT Thread {
   Thread &operator=(Thread &&other) noexcept;
 
   /**
-   * @brief Start this thread.
+   * @brief Start this thread with the default options.
    */
   void Start();
+
+  void Start(const Options &options);
+
+  void Stop();
 
   /**
    * @brief Join with a terminated thread.
@@ -104,6 +117,14 @@ class WIZTK_EXPORT Thread {
   void Join();
 
   void Detach();
+
+  void Yield();
+
+  /**
+   * @brief Returns if the threading is started and still running.
+   * @return
+   */
+  bool IsRunning() const;
 
   /**
    * @brief Get the thread ID.
@@ -125,6 +146,8 @@ class WIZTK_EXPORT Thread {
 
  private:
 
+  class Attribute;
+  struct Specific;
   struct Private;
 
   std::unique_ptr<Private> p_;

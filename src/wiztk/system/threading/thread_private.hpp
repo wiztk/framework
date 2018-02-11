@@ -19,7 +19,8 @@
 
 #include "wiztk/system/threading/thread.hpp"
 #include "wiztk/system/threading/thread-local.hpp"
-#include "wiztk/system/message-loop.hpp"
+#include "wiztk/system/event/event-loop.hpp"
+#include "wiztk/system/threading/thread-state.hpp"
 
 namespace wiztk {
 namespace system {
@@ -34,17 +35,15 @@ struct Thread::Private {
 
   Private() = default;
 
-  ~Private() {
-    delete message_loop;
-  }
+  ~Private() = default;
 
   ID id;
-
-  MessageLoop *message_loop = nullptr;
 
   Delegate *delegate = nullptr;
 
   DelegateDeleterType delegate_deleter;
+
+  ThreadState state = kNew;
 
   /**
    * @brief A static helper method to start a thread routine.
@@ -53,9 +52,31 @@ struct Thread::Private {
    */
   static void *StartRoutine(Thread *thread);
 
-  static ThreadLocal<Thread> kPerThreadStorage;
-
   static ID kMainThreadID;
+
+};
+
+/**
+ * @brief Thread-specific data.
+ */
+struct Thread::Specific {
+
+  static Specific *GetCurrent();
+
+  static Specific *Create();
+
+  Specific() = default;
+
+  ~Specific() = default;
+
+  /**
+   * @brief The Thread object.
+   *
+   * nullptr indicates the thread is detached.
+   */
+  Thread *thread = nullptr;
+
+  static ThreadLocal<Specific> kPerThreadStorage;
 
 };
 

@@ -42,7 +42,8 @@ if (BUILD_DOCUMENTATION)
     #            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     #            COMMENT "Copy \"${CMAKE_CURRENT_SOURCE_DIR}/doc\" to \"${CMAKE_CURRENT_BINARY_DIR}/html\""
     #            VERBATIM)
-    install(DIRECTORY ${PROJECT_BINARY_DIR}/html DESTINATION share/doc)
+
+    # install(DIRECTORY ${PROJECT_BINARY_DIR}/html DESTINATION share/doc)
 
     # Use latex:
     find_package(LATEX)

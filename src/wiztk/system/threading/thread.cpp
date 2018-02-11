@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-// #include "wiztk/system/event-loop.hpp"
-
 #include "thread_private.hpp"
+
+#include "../event/event-loop_private.hpp"
 
 #include <stdexcept>
 
@@ -33,7 +33,7 @@ Thread::ID Thread::ID::GetCurrent() {
 // -----
 
 /**
- * @brief Thread attribute.
+ * @brief A helper class to set/get low-level thread attributes.
  */
 class Thread::Attribute {
   friend class Thread;
@@ -85,6 +85,10 @@ const Thread::DelegateDeleterType Thread::kDefaultDelegateDeleter = [](Delegate 
   delete obj;
 };
 
+const Thread::DelegateDeleterType Thread::kLeakyDelegateDeleter = [](Delegate *obj) {
+  // Warning: do nothing!
+};
+
 Thread::Thread() {
   p_ = std::make_unique<Private>();
 }
@@ -95,7 +99,7 @@ Thread::Thread(Delegate *delegate, const DelegateDeleterType &deleter)
   p_->delegate_deleter = deleter;
 }
 
-Thread::Thread(const Option &option)
+Thread::Thread(const Options &option)
     : Thread() {
   // TODO: process option
 }
@@ -105,6 +109,8 @@ Thread::Thread(Thread &&other) noexcept {
 }
 
 Thread::~Thread() {
+  Stop();
+
   if (p_->delegate_deleter) p_->delegate_deleter(p_->delegate);
 }
 
@@ -125,6 +131,15 @@ void Thread::Start() {
   if (ret != 0) throw std::runtime_error("Error! Fail to start a thread!");
 }
 
+void Thread::Start(const Options &options) {
+
+}
+
+void Thread::Stop() {
+  if (p_->state == kRunning)
+    pthread_cancel(p_->id.native_);
+}
+
 void Thread::Join() {
   if (0 != pthread_join(p_->id.native_, nullptr))
     throw std::runtime_error("Error! Fail to join a thread!");
@@ -142,7 +157,7 @@ const Thread::ID &Thread::GetID() const {
 }
 
 Thread *Thread::GetCurrent() {
-  return Private::kPerThreadStorage.Get();
+  return Specific::kPerThreadStorage.Get()->thread;
 }
 
 bool operator==(const Thread::ID &id1, const Thread::ID &id2) {

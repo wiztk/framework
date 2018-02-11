@@ -27,15 +27,18 @@ MainThread::MainThread()
   if (p_->id != Private::kMainThreadID)
     throw std::runtime_error("Error! Not in main thread!");
 
-  if (nullptr != Private::kPerThreadStorage.Get())
+  if (nullptr != Specific::kPerThreadStorage.Get())
     throw std::runtime_error("Error! This object is only allowed to be created once!");
 
-  Private::kPerThreadStorage.Set(this);
+  auto *s = Specific::Create();
+  s->thread = this;
+
+  Specific::kPerThreadStorage.Set(s);
   // TODO: Set event loop.
 }
 
 MainThread::~MainThread() {
-  Private::kPerThreadStorage.Set(nullptr);
+  Specific::kPerThreadStorage.Set(nullptr);
 }
 
 void MainThread::Run() {

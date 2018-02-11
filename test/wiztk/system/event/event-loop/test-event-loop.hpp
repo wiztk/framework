@@ -14,41 +14,25 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_MAIN_LOOP_HPP_
-#define WIZTK_GUI_MAIN_LOOP_HPP_
+#ifndef WIZTK_TEST_SYSTEM_MESSAGE_LOOP_HPP_
+#define WIZTK_TEST_SYSTEM_MESSAGE_LOOP_HPP_
 
-#include "wiztk/system/event/event-loop.hpp"
+#include <gtest/gtest.h>
 
-#include <memory>
-
-namespace wiztk {
-namespace gui {
-
-/**
- * @ingroup gui
- * @brief The main event loop used in Application.
- */
-class MainLoop : public system::event::EventLoop {
-
-  friend class Application;
+class TestEventLoop : public testing::Test {
 
  public:
 
-  MainLoop();
+  TestEventLoop() = default;
 
-  ~MainLoop() final;
+  ~TestEventLoop() override = default;
 
-  void RunLoop();
+ protected:
 
- private:
+  void SetUp() final {}
 
-  struct Private;
-
-  std::unique_ptr<Private> p_;
+  void TearDown() final {}
 
 };
 
-} // namespace gui
-} // namespace wiztk
-
-#endif // WIZTK_GUI_MAIN_LOOP_HPP_
+#endif // WIZTK_TEST_SYSTEM_MESSAGE_LOOP_HPP_

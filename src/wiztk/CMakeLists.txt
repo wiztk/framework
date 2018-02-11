@@ -38,15 +38,15 @@ file(GLOB_RECURSE internal_headers "./*.hpp")
 file(GLOB_RECURSE sources "./*.cpp")
 list(APPEND all_source_files ${public_headers} ${internal_headers} ${sources})
 
-set(global_header "${PROJECT_SOURCE_DIR}/include/wiztk/config.hpp")
+set(config_header "${PROJECT_BINARY_DIR}/include/wiztk/config.hpp")
 
 set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 
 if (BUILD_SHARED_LIBRARY)
-    add_library(wiztk SHARED ${global_header} ${all_source_files})
+    add_library(wiztk SHARED ${config_header} ${all_source_files})
     set_target_properties(wiztk PROPERTIES VERSION 1 SOVERSION 1)
 else ()
-    add_library(wiztk ${global_header} ${all_source_files})
+    add_library(wiztk ${config_header} ${all_source_files})
 endif ()
 
 target_include_directories(

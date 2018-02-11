@@ -269,7 +269,7 @@ endif ()
 # ----------------------------------------------------------------------------
 configure_file(
         "${PROJECT_SOURCE_DIR}/include/wiztk/config.hpp.in"
-        "${PROJECT_SOURCE_DIR}/include/wiztk/config.hpp" @ONLY
+        "${PROJECT_BINARY_DIR}/include/wiztk/config.hpp" @ONLY
 )
 
 # ----------------------------------------------------------------------------
@@ -279,9 +279,12 @@ configure_file(
 install(
         DIRECTORY "${PROJECT_SOURCE_DIR}/include/wiztk"
         DESTINATION include
+        FILES_MATCHING PATTERN "*.hpp"
 )
-# TODO: exclude "config.hpp.in"
-
+install(
+        FILES "${PROJECT_BINARY_DIR}/include/wiztk/config.hpp"
+        DESTINATION include/wiztk
+)
 
 # ----------------------------------------------------------------------------
 # Summary:

@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_SYSTEM_MESSAGE_BUMP_HPP_
-#define WIZTK_SYSTEM_MESSAGE_BUMP_HPP_
+#include "event-loop_private.hpp"
 
 namespace wiztk {
 namespace system {
+namespace event {
 
-class MessagePump {
- public:
-};
+threading::ThreadLocal<EventLoop> EventLoop::Private::kPerThreadStorage;
 
 }
 }
-
-#endif // WIZTK_SYSTEM_MESSAGE_BUMP_HPP_
+}

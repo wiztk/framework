@@ -14,41 +14,31 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_MAIN_LOOP_HPP_
-#define WIZTK_GUI_MAIN_LOOP_HPP_
+#ifndef WIZTK_SYSTEM_EVENT_EVENT_LOOP_PRIVATE_HPP_
+#define WIZTK_SYSTEM_EVENT_EVENT_LOOP_PRIVATE_HPP_
 
 #include "wiztk/system/event/event-loop.hpp"
 
-#include <memory>
+#include "wiztk/system/threading/thread-local.hpp"
 
 namespace wiztk {
-namespace gui {
+namespace system {
+namespace event {
 
 /**
- * @ingroup gui
- * @brief The main event loop used in Application.
+ * @brief Private structure in EventLoop.
  */
-class MainLoop : public system::event::EventLoop {
+struct EventLoop::Private {
 
-  friend class Application;
-
- public:
-
-  MainLoop();
-
-  ~MainLoop() final;
-
-  void RunLoop();
-
- private:
-
-  struct Private;
-
-  std::unique_ptr<Private> p_;
+  /**
+   * @brief A static object stores EventLoop in each thread.
+   */
+  static threading::ThreadLocal<EventLoop> kPerThreadStorage;
 
 };
 
-} // namespace gui
-} // namespace wiztk
+}
+}
+}
 
-#endif // WIZTK_GUI_MAIN_LOOP_HPP_
+#endif // WIZTK_SYSTEM_EVENT_EVENT_LOOP_PRIVATE_HPP_

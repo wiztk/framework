@@ -14,40 +14,28 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_SYSTEM_MESSAGE_LOOP_HPP_
-#define WIZTK_SYSTEM_MESSAGE_LOOP_HPP_
+#ifndef WIZTK_SYSTEM_THREADING_THREAD_STATE_HPP_
+#define WIZTK_SYSTEM_THREADING_THREAD_STATE_HPP_
 
 namespace wiztk {
 namespace system {
+namespace threading {
 
 /**
- * @ingroup system
- * @brief Message loop that waits for and dispatches messages (or events).
- *
- * Each thread (created by threading::Thread) contains 0 or at most 1 message loop.
+ * @brief Enumeration indicates the state of a Thread.
  */
-class MessageLoop {
+enum ThreadState {
 
- public:
+  kNew, /**< A thread that has not started */
 
-  /**
-   * @brief Get the current message loop in this thread.
-   * @return
-   */
-  static MessageLoop *current() { return nullptr; }
+  kRunning, /**< The thread has been started */
 
-  MessageLoop() = default;
-
-  virtual ~MessageLoop() = default;
-
-  /**
-   * @brief Run loop.
-   */
-  virtual void Run() {}
+  kTerminated,  /**< A thread that has exited */
 
 };
 
-} // namespace system
-} // namespace wiztk
+}
+}
+}
 
-#endif // WIZTK_SYSTEM_MESSAGE_LOOP_HPP_
+#endif // WIZTK_SYSTEM_THREADING_THREAD_STATE_HPP_
