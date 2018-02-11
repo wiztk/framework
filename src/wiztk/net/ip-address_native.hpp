@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 - 2018 The WizTK Authors.
+ * Copyright 2017 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,30 @@
  * limitations under the License.
  */
 
-#include "event-loop_private.hpp"
+#ifndef WIZTK_NET_INTERNAL_IP_ADDRESS_NATIVE_HPP_
+#define WIZTK_NET_INTERNAL_IP_ADDRESS_NATIVE_HPP_
+
+#include "ip-address_private.hpp"
 
 namespace wiztk {
-namespace system {
-namespace event {
+namespace net {
 
-threading::ThreadLocal<EventLoop> EventLoop::Private::kPerThreadStorage;
+/**
+ * @brief Proxy class to get native structure in IPAddress.
+ */
+class WIZTK_NO_EXPORT IPAddress::Native {
+
+ public:
+
+  static socklen_t GetSocketLength(const IPAddress &address);
+
+  static const struct sockaddr *GetSocketAddress(const IPAddress &address) {
+    return address.p_->socket_address;
+  }
+
+};
 
 }
 }
-}
+
+#endif // WIZTK_NET_INTERNAL_IP_ADDRESS_NATIVE_HPP_

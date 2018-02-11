@@ -17,7 +17,7 @@
 #ifndef WIZTK_GUI_MAIN_LOOP_HPP_
 #define WIZTK_GUI_MAIN_LOOP_HPP_
 
-#include "wiztk/system/event/event-loop.hpp"
+#include "wiztk/system/async/event-loop.hpp"
 
 #include <memory>
 
@@ -28,7 +28,7 @@ namespace gui {
  * @ingroup gui
  * @brief The main event loop used in Application.
  */
-class MainLoop : public system::event::EventLoop {
+class MainLoop : public system::async::EventLoop {
 
   friend class Application;
 

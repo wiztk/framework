@@ -16,7 +16,7 @@
 
 #include "test-event-loop.hpp"
 
-#include "wiztk/system/event/event-loop.hpp"
+#include "wiztk/system/async/event-loop.hpp"
 
 #include <iostream>
 
@@ -33,9 +33,9 @@ class MyLoopThread : public threading::Thread {
  protected:
 
   void Run() final {
-    event::EventLoop::Prepare();
+    async::EventLoop::Prepare();
     std::cout << __func__ << std::endl;
-    event::EventLoop::RunLoop();
+    async::EventLoop::RunLoop();
   }
 
 };

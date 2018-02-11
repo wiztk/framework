@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#include "internal/ip-address_native.hpp"
-#include "internal/address-info_private.hpp"
+#include "ip-address_native.hpp"
+#include "address-info_private.hpp"
 
 #include <arpa/inet.h>
 

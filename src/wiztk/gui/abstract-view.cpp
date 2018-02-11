@@ -597,7 +597,7 @@ bool AbstractView::RequestSaveGeometry(const RectF &geometry) {
 void AbstractView::TrackMouseMotion(MouseEvent *event) {
 //  if (p_->mouse_motion_task.IsLinked()) return;
 
-//  AbstractView *window = event->surface()->event_handler();
+//  AbstractView *window = async->surface()->event_handler();
 //
 //  ViewTask *task = &window->p_->mouse_motion_task;
 //  while (task->next()) {

@@ -25,7 +25,6 @@ namespace net {
 using base::CountedDequeNode;
 
 /**
- * @ingroup net_intern
  * @brief Private data in IPAddress.
  */
 struct WIZTK_NO_EXPORT IPAddress::Private : public CountedDequeNode<IPAddress::Private> {

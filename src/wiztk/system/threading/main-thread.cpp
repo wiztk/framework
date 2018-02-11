@@ -34,7 +34,7 @@ MainThread::MainThread()
   s->thread = this;
 
   Specific::kPerThreadStorage.Set(s);
-  // TODO: Set event loop.
+  // TODO: Set async loop.
 }
 
 MainThread::~MainThread() {

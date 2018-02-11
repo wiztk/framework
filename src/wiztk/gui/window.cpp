@@ -618,7 +618,7 @@ void Window::OnMouseMove(MouseEvent *event) {
 
   if (nullptr != view) DispatchMouseEnterEvent(view, event);
 
-  // Now dispatch mouse move event:
+  // Now dispatch mouse move async:
 //      task = static_cast<ViewTask *>(handler->p_->mouse_motion_task.next());
 //      p_->mouse_event->response_ = InputEvent::kUnknown;
 //      while (task) {

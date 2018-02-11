@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 The WizTK Authors.
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,31 +14,31 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_NET_INTERNAL_IP_ADDRESS_NATIVE_HPP_
-#define WIZTK_NET_INTERNAL_IP_ADDRESS_NATIVE_HPP_
+#ifndef WIZTK_SYSTEM_ASYNC_EVENT_LOOP_PRIVATE_HPP_
+#define WIZTK_SYSTEM_ASYNC_EVENT_LOOP_PRIVATE_HPP_
 
-#include "ip-address_private.hpp"
+#include "wiztk/system/async/event-loop.hpp"
+
+#include "wiztk/system/threading/thread-local.hpp"
 
 namespace wiztk {
-namespace net {
+namespace system {
+namespace async {
 
 /**
- * @ingroup net_intern
- * @brief Proxy class to get native structure in IPAddress.
+ * @brief Private structure in EventLoop.
  */
-class WIZTK_NO_EXPORT IPAddress::Native {
+struct EventLoop::Private {
 
- public:
-
-  static socklen_t GetSocketLength(const IPAddress &address);
-
-  static const struct sockaddr *GetSocketAddress(const IPAddress &address) {
-    return address.p_->socket_address;
-  }
+  /**
+   * @brief A static object stores EventLoop in each thread.
+   */
+  static threading::ThreadLocal<EventLoop> kPerThreadStorage;
 
 };
 
 }
 }
+}
 
-#endif // WIZTK_NET_INTERNAL_IP_ADDRESS_NATIVE_HPP_
+#endif // WIZTK_SYSTEM_EVENT_EVENT_LOOP_PRIVATE_HPP_

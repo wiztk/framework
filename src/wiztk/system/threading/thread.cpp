@@ -16,7 +16,7 @@
 
 #include "thread_private.hpp"
 
-#include "../event/event-loop_private.hpp"
+#include "../async/event-loop_private.hpp"
 
 #include <stdexcept>
 

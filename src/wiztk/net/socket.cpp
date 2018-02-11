@@ -18,7 +18,7 @@
 #include "wiztk/net/socket-exception.hpp"
 #include "wiztk/net/io-buffer.hpp"
 
-#include "internal/ip-address_native.hpp"
+#include "ip-address_native.hpp"
 
 #include <unistd.h>
 

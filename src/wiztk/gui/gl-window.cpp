@@ -349,7 +349,7 @@ void GLWindow::OnMouseMove(MouseEvent *event) {
     }
   }
 
-//  if (nullptr != view) DispatchMouseEnterEvent(view, event);
+//  if (nullptr != view) DispatchMouseEnterEvent(view, async);
 }
 
 void GLWindow::OnMouseDown(MouseEvent *event) {

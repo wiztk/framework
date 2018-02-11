@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_SYSTEM_EVENT_EVENT_LOOP_HPP_
-#define WIZTK_SYSTEM_EVENT_EVENT_LOOP_HPP_
+#ifndef WIZTK_SYSTEM_ASYNC_EVENT_LOOP_HPP_
+#define WIZTK_SYSTEM_ASYNC_EVENT_LOOP_HPP_
 
 #include "wiztk/system/threading/thread.hpp"
 
 namespace wiztk {
 namespace system {
-namespace event {
+namespace async {
 
 // Forward declaration:
 class EventLoop;
 
 /**
- * @ingroup system
+ * @ingroup system_async
  * @brief An abstract factory class to create EventLoop instance.
  */
 class AbstractEventLoopFactory {
@@ -43,7 +43,7 @@ class AbstractEventLoopFactory {
 };
 
 /**
- * @ingroup system
+ * @ingroup system_async
  * @brief Factory class creates default EventLoop.
  */
 class DefaultEventLoopFactory : public AbstractEventLoopFactory {
@@ -59,10 +59,10 @@ class DefaultEventLoopFactory : public AbstractEventLoopFactory {
 };
 
 /**
- * @ingroup system
- * @brief Message loop that waits for and dispatches messages (or events) in a thread.
+ * @ingroup system_async
+ * @brief Event loop that waits for and dispatches events in a thread.
  *
- * Each thread (created by threading::Thread) contains 0 or at most 1 message loop.
+ * Each thread (created by threading::Thread) contains 0 or at most 1 event loop.
  *
  * Here's an example to implement a loop thread:
  *
@@ -118,13 +118,16 @@ class EventLoop {
 
   virtual ~EventLoop() = default;
 
+  /**
+   * @brief Push back a quit event and clean up.
+   */
   virtual void Quit();
 
  protected:
 
   EventLoop() = default;
 
-  virtual void Loop();
+  virtual void Dispatch();
 
  private:
 
@@ -132,7 +135,7 @@ class EventLoop {
 
 };
 
-} // namespace event
+} // namespace async
 } // namespace system
 } // namespace wiztk
 

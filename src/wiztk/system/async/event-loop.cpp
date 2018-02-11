@@ -16,14 +16,12 @@
 
 #include "event-loop_private.hpp"
 
-#include "../threading/thread_private.hpp"
-
 #include <unistd.h>
 #include <iostream>
 
 namespace wiztk {
 namespace system {
-namespace event {
+namespace async {
 
 EventLoop *DefaultEventLoopFactory::Create() {
   return new EventLoop();
@@ -48,18 +46,18 @@ void EventLoop::RunLoop() {
   if (nullptr == message_loop)
     throw std::runtime_error("Error! No MessageLoop was created (Prepare()) for this thread!");
 
-  message_loop->Loop();
+  message_loop->Dispatch();
 }
 
 void EventLoop::Quit() {
   // TODO: stop the loop
 }
 
-void EventLoop::Loop() {
+void EventLoop::Dispatch() {
   // Get message queue
   // dispatch messages
-  for (;;) {
-    std::cout << __func__ << std::endl;
+  for (int i = 0; i < 10; i++) {
+    std::cout << __func__ << " " << i + 1 << std::endl;
     sleep(1);  // For test.
   }
 }

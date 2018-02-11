@@ -64,7 +64,7 @@ void Slider::OnMouseEnter(MouseEvent *event) {
 void Slider::OnMouseLeave() {
   hover_ = false;
   Update();
-//  event->Accept();
+//  async->Accept();
 }
 
 void Slider::OnMouseMove(MouseEvent *event) {

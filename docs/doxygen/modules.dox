@@ -38,12 +38,6 @@
  */
 
 /**
- * @ingroup graphic
- * @defgroup graphic_intern Internal
- * @brief Private code used in Graphic module only
- */
-
-/**
  * @defgroup system System
  * @brief System related code.
  */
@@ -57,17 +51,17 @@
  */
 
 /**
- * @ingroup system_threading
- * @defgroup system_threading_intern Internal
- * @brief Internal code used in system::threading only.
+ * @ingroup system
+ * @defgroup system_time Time
+ * @brief High resolution of time.
  *
  * ...
  */
 
 /**
  * @ingroup system
- * @defgroup system_time Time
- * @brief High resolution of time.
+ * @defgroup system_async Async
+ * @brief Asynchronous event processing.
  *
  * ...
  */
@@ -80,22 +74,10 @@
  */
 
 /**
- * @ingroup gui
- * @defgroup gui_intern Internal
- * @brief Private code used in GUI module only.
- */
-
-/**
  * @defgroup net Network
  * @brief Network
  *
  * ...
- */
-
-/**
- * @ingroup net
- * @defgroup net_intern Internal
- * @brief Private code used in Network module only
  */
 
 /**

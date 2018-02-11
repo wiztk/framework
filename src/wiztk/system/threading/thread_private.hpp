@@ -19,8 +19,9 @@
 
 #include "wiztk/system/threading/thread.hpp"
 #include "wiztk/system/threading/thread-local.hpp"
-#include "wiztk/system/event/event-loop.hpp"
 #include "wiztk/system/threading/thread-state.hpp"
+
+#include "wiztk/system/async/event-loop.hpp"
 
 namespace wiztk {
 namespace system {
