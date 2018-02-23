@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_CONFIG_HPP_
-#define WIZTK_CONFIG_HPP_
+#include "event-loop_private.hpp"
 
-#define WIZTK_INSTALL_PREFIX "@CMAKE_INSTALL_PREFIX@"
-#define WIZTK_PROJECT_SOURCE_DIR "@PROJECT_SOURCE_DIR@"
+namespace wiztk {
+namespace async {
 
-#define WIZTK_HAVE_SYSTEMD @HAVE_SYSTEMD@
+system::threading::ThreadLocal<EventLoop> EventLoop::Private::kPerThreadStorage;
 
-#endif  // WIZTK_CONFIG_HPP_
+}
+}

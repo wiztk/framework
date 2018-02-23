@@ -23,7 +23,11 @@ namespace base {
 
 namespace internal {
 
-void CountedDequeNodeTraits::OnUnlinked() {
+CountedDequeNodeTraits::~CountedDequeNodeTraits() {
+  ResetDeque();
+}
+
+void CountedDequeNodeTraits::ResetDeque() {
   if (nullptr != node_->deque_) {
     _ASSERT(node_->deque_->count_ > 0);
     --node_->deque_->count_;
@@ -31,7 +35,7 @@ void CountedDequeNodeTraits::OnUnlinked() {
   }
 }
 
-}
+} // namespace internal
 
 // -----
 
@@ -39,6 +43,8 @@ void CountedDequeNodeBase::PushFront(CountedDequeNodeBase *node, CountedDequeNod
   if (other == node) return;
   if (node->traits_.previous_ == &other->traits_) return;
 
+  internal::CountedDequeNodeTraits::Unlink(&other->traits_);
+  other->traits_.ResetDeque();
   internal::CountedDequeNodeTraits::PushFront(&node->traits_, &other->traits_);
   _ASSERT(other->deque_ == nullptr);
 
@@ -50,6 +56,8 @@ void CountedDequeNodeBase::PushBack(CountedDequeNodeBase *node, CountedDequeNode
   if (other == node) return;;
   if (node->traits_.next_ == &other->traits_) return;
 
+  internal::CountedDequeNodeTraits::Unlink(&other->traits_);
+  other->traits_.ResetDeque();
   internal::CountedDequeNodeTraits::PushBack(&node->traits_, &other->traits_);
   _ASSERT(other->deque_ == nullptr);
 
@@ -59,6 +67,7 @@ void CountedDequeNodeBase::PushBack(CountedDequeNodeBase *node, CountedDequeNode
 
 void CountedDequeNodeBase::Unlink(CountedDequeNodeBase *node) {
   internal::CountedDequeNodeTraits::Unlink(&node->traits_);
+  node->traits_.ResetDeque();
   _ASSERT(node->deque_ == nullptr);
 }
 

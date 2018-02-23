@@ -60,8 +60,23 @@
 
 /**
  * @ingroup system
- * @defgroup system_async Async
+ * @defgroup system_logging Logging
+ * @brief Logging facility.
+ *
+ * ...
+ */
+
+/**
+ * @defgroup async Async
  * @brief Asynchronous event processing.
+ *
+ * ...
+ */
+
+/**
+ * @ingroup async
+ * @defgroup async_intern Internal
+ * @brief Private code used in async module only.
  *
  * ...
  */

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 The WizTK Authors.
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,9 +38,6 @@ class WIZTK_EXPORT BinodeBase {
 
   template<typename T> friend
   class Deque;
-
-  friend class CountedDequeNodeBase;
-  friend class CountedDequeBase;
 
   template<typename T> friend
   class CountedDeque;
@@ -90,8 +87,6 @@ class WIZTK_EXPORT BinodeBase {
   static bool IsLinked(const BinodeBase *node) {
     return (nullptr != node->previous_) || (nullptr != node->next_);
   }
-
-  virtual void OnUnlinked() {/* override this in subclass */}
 
   /**
     * @brief Default constructor

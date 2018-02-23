@@ -46,13 +46,17 @@ struct MainLoop::Private : public base::Property<MainLoop> {
 
 // ----
 
+async::EventLoop::FactoryType MainLoop::kFactory = []() -> async::EventLoop * {
+  return new MainLoop();
+};
+
 MainLoop::MainLoop() {
   p_ = std::make_unique<Private>(this);
 }
 
 MainLoop::~MainLoop() = default;
 
-void MainLoop::RunLoop() {
+void MainLoop::Dispatch() {
 
 }
 

@@ -14,45 +14,33 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_MAIN_LOOP_HPP_
-#define WIZTK_GUI_MAIN_LOOP_HPP_
+#ifndef WIZTK_ASYNC_TYPE_HPP_
+#define WIZTK_ASYNC_TYPE_HPP_
 
-#include "wiztk/async/event-loop.hpp"
-
-#include <memory>
+#include <sys/epoll.h>
 
 namespace wiztk {
-namespace gui {
+namespace async {
 
-/**
- * @ingroup gui
- * @brief The main event loop used in Application.
- */
-class MainLoop : public async::EventLoop {
+enum EventType {
 
-  friend class Application;
+  kRead = EPOLLIN,  /**< Data other than high-priority data can be read */
 
- public:
+  kPriority = EPOLLPRI, /**< High-priority data can be read */
 
-  static FactoryType kFactory;
+  kWrite = EPOLLOUT,  /**< Normal data can be written */
 
-  ~MainLoop() final;
+  kShutdown = EPOLLRDHUP, /**< Shutdown on peer socket */
 
- protected:
+  kEdgeTriggered = EPOLLET, /**< Employ edge-triggered event notification */
 
-  MainLoop();
+  kError = EPOLLERR,  /**< An error has occurred */
 
-  void Dispatch() final;
-
- private:
-
-  struct Private;
-
-  std::unique_ptr<Private> p_;
+  kHangup = EPOLLHUP  /**< A hangup has occurred */
 
 };
 
-} // namespace gui
+} // namespace async
 } // namespace wiztk
 
-#endif // WIZTK_GUI_MAIN_LOOP_HPP_
+#endif // WIZTK_ASYNC_TYPE_HPP_

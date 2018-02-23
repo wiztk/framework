@@ -16,8 +16,6 @@
 
 #include "thread_private.hpp"
 
-#include "../async/event-loop_private.hpp"
-
 #include <stdexcept>
 
 namespace wiztk {

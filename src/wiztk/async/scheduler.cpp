@@ -14,45 +14,30 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_MAIN_LOOP_HPP_
-#define WIZTK_GUI_MAIN_LOOP_HPP_
+#include "wiztk/async/scheduler.hpp"
 
 #include "wiztk/async/event-loop.hpp"
 
-#include <memory>
-
 namespace wiztk {
-namespace gui {
+namespace async {
 
-/**
- * @ingroup gui
- * @brief The main event loop used in Application.
- */
-class MainLoop : public async::EventLoop {
+Scheduler::Scheduler() {
+  event_loop_ = EventLoop::GetCurrent();
+  if (nullptr == event_loop_)
+    throw std::runtime_error("Error! Cannot get the event loop in this thread!");
+}
 
-  friend class Application;
+Scheduler::Scheduler(EventLoop *event_loop)
+    : event_loop_(event_loop) {
+  if (nullptr == event_loop_)
+    throw std::runtime_error("Error! Cannot get the event loop in this thread!");
+}
 
- public:
+Scheduler::~Scheduler() = default;
 
-  static FactoryType kFactory;
+void Scheduler::PostMessage(Message *message) {
+  event_loop_->message_queue_.PushBack(message);
+}
 
-  ~MainLoop() final;
-
- protected:
-
-  MainLoop();
-
-  void Dispatch() final;
-
- private:
-
-  struct Private;
-
-  std::unique_ptr<Private> p_;
-
-};
-
-} // namespace gui
+} // namespace async
 } // namespace wiztk
-
-#endif // WIZTK_GUI_MAIN_LOOP_HPP_

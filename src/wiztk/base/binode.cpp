@@ -20,7 +20,8 @@ namespace wiztk {
 namespace base {
 
 BinodeBase::~BinodeBase() {
-  Unlink(this);
+  if (nullptr != previous_) previous_->next_ = next_;
+  if (nullptr != next_) next_->previous_ = previous_;
 }
 
 void BinodeBase::PushFront(BinodeBase *node, BinodeBase *other) {
@@ -48,22 +49,11 @@ void BinodeBase::PushBack(BinodeBase *node, BinodeBase *other) {
 }
 
 void BinodeBase::Unlink(BinodeBase *node) {
-  bool notify = false;
-
-  if (nullptr != node->previous_) {
-    notify = true;
-    node->previous_->next_ = node->next_;
-  }
-
-  if (nullptr != node->next_) {
-    notify = true;
-    node->next_->previous_ = node->previous_;
-  }
+  if (nullptr != node->previous_) node->previous_->next_ = node->next_;
+  if (nullptr != node->next_) node->next_->previous_ = node->previous_;
 
   node->previous_ = nullptr;
   node->next_ = nullptr;
-
-  if (notify) node->OnUnlinked();
 }
 
 } // namespace base

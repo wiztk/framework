@@ -60,6 +60,20 @@
  */
 
 /**
+ * @namespace wiztk::system::logging
+ * @brief Logging facility.
+ *
+ * ...
+ */
+
+/**
+ * @namespace wiztk::async
+ * @brief Asynchronous event processing.
+ *
+ * ...
+ */
+
+/**
  * @namespace wiztk::gui
  * @brief The main GUI code.
  *

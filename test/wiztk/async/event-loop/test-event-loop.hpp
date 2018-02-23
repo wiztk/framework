@@ -14,12 +14,25 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_CONFIG_HPP_
-#define WIZTK_CONFIG_HPP_
+#ifndef WIZTK_TEST_ASYNC_EVENT_LOOP_HPP_
+#define WIZTK_TEST_ASYNC_EVENT_LOOP_HPP_
 
-#define WIZTK_INSTALL_PREFIX "@CMAKE_INSTALL_PREFIX@"
-#define WIZTK_PROJECT_SOURCE_DIR "@PROJECT_SOURCE_DIR@"
+#include <gtest/gtest.h>
 
-#define WIZTK_HAVE_SYSTEMD @HAVE_SYSTEMD@
+class TestEventLoop : public testing::Test {
 
-#endif  // WIZTK_CONFIG_HPP_
+ public:
+
+  TestEventLoop() = default;
+
+  ~TestEventLoop() override = default;
+
+ protected:
+
+  void SetUp() final {}
+
+  void TearDown() final {}
+
+};
+
+#endif // WIZTK_TEST_ASYNC_EVENT_LOOP_HPP_

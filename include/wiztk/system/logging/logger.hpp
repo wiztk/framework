@@ -14,25 +14,39 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_TEST_SYSTEM_MESSAGE_LOOP_HPP_
-#define WIZTK_TEST_SYSTEM_MESSAGE_LOOP_HPP_
+#ifndef WIZTK_SYSTEM_LOGGING_LOGGER_HPP_
+#define WIZTK_SYSTEM_LOGGING_LOGGER_HPP_
 
-#include <gtest/gtest.h>
+namespace wiztk {
+namespace system {
+namespace logging {
 
-class TestEventLoop : public testing::Test {
+/**
+ * @ingroup system_logging
+ * @brief Logger object.
+ */
+class Logger {
 
  public:
 
-  TestEventLoop() = default;
+  Logger() = default;
 
-  ~TestEventLoop() override = default;
+  ~Logger() = default;
 
- protected:
+  /**
+   * @brief Send a message to the system log daemon.
+   * @param level
+   * @param format
+   * @param ...
+   */
+  static void LogToSystem(int level, const char *format, ...);
 
-  void SetUp() final {}
-
-  void TearDown() final {}
+ private:
 
 };
 
-#endif // WIZTK_TEST_SYSTEM_MESSAGE_LOOP_HPP_
+}
+}
+}
+
+#endif // WIZTK_SYSTEM_LOGGING_LOGGER_HPP_

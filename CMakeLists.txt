@@ -197,11 +197,20 @@ set(LIBS ${LIBS} ${WEBPMUX_LIBRARY})
 find_library(WEBPDEMUX_LIBRARY "webpdemux")
 set(LIBS ${LIBS} ${WEBPDEMUX_LIBRARY})
 
+# Optional packages:
+
+find_package(Systemd)
+if (SYSTEMD_FOUND)
+    set(HAVE_SYSTEMD 1)
+    include_directories(${SYSTEMD_INCLUDE_DIR})
+    set(LIBS ${LIBS} ${SYSTEMD_LIBRARY})
+endif ()
+
 # ----------------------------------------------------------------------------
 # Global definitions
 # ----------------------------------------------------------------------------
 
-include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories(${PROJECT_SOURCE_DIR}/include ${PROJECT_BINARY_DIR}/include)
 
 if (BUILD_SHARED_LIBRARY)
     add_definitions(-DSKLAND_SHARED_EXPORT)

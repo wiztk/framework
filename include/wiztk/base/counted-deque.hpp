@@ -85,13 +85,11 @@ class WIZTK_NO_EXPORT CountedDequeNodeTraits : public BinodeBase {
   explicit CountedDequeNodeTraits(CountedDequeNodeBase *node)
       : node_(node) {}
 
-  ~CountedDequeNodeTraits() final = default;
-
- protected:
-
-  void OnUnlinked() final;
+  ~CountedDequeNodeTraits() final;
 
  private:
+
+  void ResetDeque();
 
   CountedDequeNodeBase *node_ = nullptr;
 

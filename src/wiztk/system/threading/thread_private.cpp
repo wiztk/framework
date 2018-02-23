@@ -16,8 +16,6 @@
 
 #include "thread_private.hpp"
 
-#include "../async/event-loop_private.hpp"
-
 namespace wiztk {
 namespace system {
 namespace threading {
@@ -37,12 +35,6 @@ void *Thread::Private::StartRoutine(Thread *thread) {
   auto *obj = Specific::kPerThreadStorage.Get();
   Specific::kPerThreadStorage.Set(nullptr);
   delete obj;
-
-  async::EventLoop *message_loop = async::EventLoop::Private::kPerThreadStorage.Get();
-  if (nullptr != message_loop) {
-    async::EventLoop::Private::kPerThreadStorage.Set(nullptr);
-    delete message_loop;
-  }
 
   thread->p_->state = kTerminated;
   pthread_exit((void *) thread);

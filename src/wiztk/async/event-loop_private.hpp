@@ -14,14 +14,29 @@
  * limitations under the License.
  */
 
-#include "event-loop_private.hpp"
+#ifndef WIZTK_ASYNC_EVENT_LOOP_PRIVATE_HPP_
+#define WIZTK_ASYNC_EVENT_LOOP_PRIVATE_HPP_
+
+#include "wiztk/async/event-loop.hpp"
+
+#include "wiztk/system/threading/thread-local.hpp"
 
 namespace wiztk {
-namespace system {
 namespace async {
 
-threading::ThreadLocal<EventLoop> EventLoop::Private::kPerThreadStorage;
+/**
+ * @brief Private structure in EventLoop.
+ */
+struct EventLoop::Private {
+
+  /**
+   * @brief A static object stores EventLoop in each thread.
+   */
+  static system::threading::ThreadLocal<EventLoop> kPerThreadStorage;
+
+};
 
 }
 }
-}
+
+#endif // WIZTK_ASYNC_EVENT_LOOP_PRIVATE_HPP_

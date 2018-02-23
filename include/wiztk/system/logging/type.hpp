@@ -14,26 +14,36 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_SYSTEM_ASYNC_EVENT_LOOP_PRIVATE_HPP_
-#define WIZTK_SYSTEM_ASYNC_EVENT_LOOP_PRIVATE_HPP_
+#ifndef WIZTK_SYSTEM_LOGGING_TYPE_HPP_
+#define WIZTK_SYSTEM_LOGGING_TYPE_HPP_
 
-#include "wiztk/system/async/event-loop.hpp"
-
-#include "wiztk/system/threading/thread-local.hpp"
+#include <syslog.h>
 
 namespace wiztk {
 namespace system {
-namespace async {
+namespace logging {
 
 /**
- * @brief Private structure in EventLoop.
+ * @ingroup system_logging
+ * @brief Log level.
  */
-struct EventLoop::Private {
+enum Level {
 
-  /**
-   * @brief A static object stores EventLoop in each thread.
-   */
-  static threading::ThreadLocal<EventLoop> kPerThreadStorage;
+  kDebug = LOG_DEBUG,
+
+  kInfo = LOG_INFO,
+
+  kNotice = LOG_NOTICE,
+
+  kWarning = LOG_WARNING,
+
+  kError = LOG_ERR,
+
+  kCritical = LOG_CRIT,
+
+  kAlert = LOG_ALERT,
+
+  kEmergency = LOG_EMERG
 
 };
 
@@ -41,4 +51,4 @@ struct EventLoop::Private {
 }
 }
 
-#endif // WIZTK_SYSTEM_EVENT_EVENT_LOOP_PRIVATE_HPP_
+#endif // WIZTK_SYSTEM_LOGGING_TYPE_HPP_

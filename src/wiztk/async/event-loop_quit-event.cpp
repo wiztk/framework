@@ -14,12 +14,32 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_CONFIG_HPP_
-#define WIZTK_CONFIG_HPP_
+#include "event-loop_quit-event.hpp"
 
-#define WIZTK_INSTALL_PREFIX "@CMAKE_INSTALL_PREFIX@"
-#define WIZTK_PROJECT_SOURCE_DIR "@PROJECT_SOURCE_DIR@"
+#include <sys/eventfd.h>
+#include <unistd.h>
 
-#define WIZTK_HAVE_SYSTEMD @HAVE_SYSTEMD@
+namespace wiztk {
+namespace async {
 
-#endif  // WIZTK_CONFIG_HPP_
+EventLoop::QuitEvent::QuitEvent(EventLoop *event_loop)
+    : event_loop_(event_loop) {
+  event_fd_ = eventfd(0, EFD_CLOEXEC);
+}
+
+EventLoop::QuitEvent::~QuitEvent() {
+  close(event_fd_);
+}
+
+void EventLoop::QuitEvent::Run(uint32_t) {
+  uint64_t buf;
+  eventfd_read(event_fd_, &buf);
+
+  event_loop_->UnwatchFileDescriptor(event_fd_);
+  event_loop_->running_ = false;
+
+  delete this;
+}
+
+}
+}

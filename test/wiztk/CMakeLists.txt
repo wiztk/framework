@@ -17,6 +17,7 @@
 # core module
 add_subdirectory(base)
 add_subdirectory(system)
+add_subdirectory(async)
 add_subdirectory(graphic)
 add_subdirectory(net)
 add_subdirectory(gui)

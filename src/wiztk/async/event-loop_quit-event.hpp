@@ -14,12 +14,37 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_CONFIG_HPP_
-#define WIZTK_CONFIG_HPP_
+#ifndef WIZTK_ASYNC_INTERNAL_QUIT_EVENT_HPP_
+#define WIZTK_ASYNC_INTERNAL_QUIT_EVENT_HPP_
 
-#define WIZTK_INSTALL_PREFIX "@CMAKE_INSTALL_PREFIX@"
-#define WIZTK_PROJECT_SOURCE_DIR "@PROJECT_SOURCE_DIR@"
+#include "wiztk/async/event-loop.hpp"
 
-#define WIZTK_HAVE_SYSTEMD @HAVE_SYSTEMD@
+namespace wiztk {
+namespace async {
 
-#endif  // WIZTK_CONFIG_HPP_
+class EventLoop::QuitEvent : public AbstractEvent {
+
+ public:
+
+  QuitEvent() = delete;
+
+  explicit QuitEvent(EventLoop *event_loop);
+
+  ~QuitEvent() final;
+
+  void Run(uint32_t events) final;
+
+  int event_fd() const { return event_fd_; }
+
+ private:
+
+  EventLoop *event_loop_ = nullptr;
+
+  int event_fd_ = -1;
+
+};
+
+}
+}
+
+#endif // WIZTK_ASYNC_INTERNAL_QUIT_EVENT_HPP_

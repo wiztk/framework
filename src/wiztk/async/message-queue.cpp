@@ -14,36 +14,38 @@
  * limitations under the License.
  */
 
-#include "test-event-loop.hpp"
+#include "wiztk/async/message-queue.hpp"
 
-#include "wiztk/system/async/event-loop.hpp"
+namespace wiztk {
+namespace async {
 
-#include <iostream>
+MessageQueue::MessageQueue()
+    : traits_(this) {
+}
 
-using namespace wiztk;
-using namespace wiztk::system;
+void MessageQueue::PushFront(Message *message) {
+  traits_.push_front(&message->traits_);
+}
 
-class MyLoopThread : public threading::Thread {
+void MessageQueue::PushBack(Message *message) {
+  traits_.push_back(&message->traits_);
+}
 
- public:
+Message *MessageQueue::PopFront() {
+  if (traits_.is_empty()) return nullptr;
 
-  MyLoopThread() = default;
-  ~MyLoopThread() final = default;
+  auto it = traits_.begin();
+  it->unlink();
+  return it->message();
+}
 
- protected:
+Message *MessageQueue::PopBack() {
+  if (traits_.is_empty()) return nullptr;
 
-  void Run() final {
-    async::EventLoop::Prepare();
-    std::cout << __func__ << std::endl;
-    async::EventLoop::RunLoop();
-  }
+  auto it = traits_.rbegin();
+  it->unlink();
+  return it->message();
+}
 
-};
-
-TEST_F(TestEventLoop, prepare_1) {
-  MyLoopThread my_thread;
-  my_thread.Start();
-  my_thread.Join();
-
-  ASSERT_TRUE(true);
+}
 }
