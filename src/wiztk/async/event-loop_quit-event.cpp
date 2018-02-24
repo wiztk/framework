@@ -22,18 +22,28 @@
 namespace wiztk {
 namespace async {
 
+void EventLoop::QuitEvent::Trigger(EventLoop *event_loop) {
+  auto *event = new QuitEvent(event_loop);  // Will be deleted when it's run.
+
+  event_loop->WatchFileDescriptor(event->event_fd_, event);
+  eventfd_write(event->event_fd_, 0);
+}
+
 EventLoop::QuitEvent::QuitEvent(EventLoop *event_loop)
     : event_loop_(event_loop) {
-  event_fd_ = eventfd(0, EFD_CLOEXEC);
+  // make sure to use non-block mode:
+  event_fd_ = eventfd(0, EFD_CLOEXEC | EFD_NONBLOCK);
 }
 
 EventLoop::QuitEvent::~QuitEvent() {
   close(event_fd_);
 }
 
-void EventLoop::QuitEvent::Run(uint32_t) {
-  uint64_t buf;
-  eventfd_read(event_fd_, &buf);
+void EventLoop::QuitEvent::Run(uint32_t events) {
+  if (events & EPOLLOUT) {
+    uint64_t buf;
+    eventfd_read(event_fd_, &buf);
+  }
 
   event_loop_->UnwatchFileDescriptor(event_fd_);
   event_loop_->running_ = false;
@@ -41,5 +51,5 @@ void EventLoop::QuitEvent::Run(uint32_t) {
   delete this;
 }
 
-}
-}
+} // namespace async
+} // namespace wiztk

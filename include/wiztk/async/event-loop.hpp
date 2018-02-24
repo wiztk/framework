@@ -47,6 +47,8 @@ class WIZTK_EXPORT AbstractEvent {
 
   virtual ~AbstractEvent() = default;
 
+ protected:
+
   virtual void Run(uint32_t events) = 0;
 
  private:
@@ -149,7 +151,7 @@ class WIZTK_EXPORT EventLoop {
 
   EventLoop();
 
-  virtual void Dispatch() {}
+  virtual void Dispatch();
 
  private:
 

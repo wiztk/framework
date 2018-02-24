@@ -67,9 +67,9 @@ void EventLoop::Run() {
   while (true) {
     if (count > 0) {
       for (int i = 0; i < count; ++i) {
-        auto *handler = static_cast<AbstractEvent *> (events[i].data.ptr);
-        if (nullptr != handler)
-          handler->Run(events->events);
+        auto *event = static_cast<AbstractEvent *> (events[i].data.ptr);
+        if (nullptr != event)
+          event->Run(events->events);
       }
     }
 
@@ -82,10 +82,7 @@ void EventLoop::Run() {
 }
 
 void EventLoop::Quit() {
-  auto *quit = new QuitEvent(this);
-
-  WatchFileDescriptor(quit->event_fd(), quit);
-  eventfd_write(quit->event_fd(), 0);
+  QuitEvent::Trigger(this);
 }
 
 bool EventLoop::WatchFileDescriptor(int fd, AbstractEvent *event) {
@@ -104,5 +101,12 @@ Scheduler EventLoop::GetScheduler() {
   return Scheduler(this);
 }
 
+void EventLoop::Dispatch() {
+  Message *msg = message_queue_.PopFront();
+  while (nullptr != msg) {
+    msg->Execute();
+  }
 }
-}
+
+} // namespace async
+} // namespace wiztk

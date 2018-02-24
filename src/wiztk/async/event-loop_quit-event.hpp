@@ -22,19 +22,25 @@
 namespace wiztk {
 namespace async {
 
+/**
+ * @brief An epoll event to inform an EventLoop to quit.
+ */
 class EventLoop::QuitEvent : public AbstractEvent {
 
  public:
 
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(QuitEvent);
   QuitEvent() = delete;
+
+  static void Trigger(EventLoop *event_loop);
 
   explicit QuitEvent(EventLoop *event_loop);
 
   ~QuitEvent() final;
 
-  void Run(uint32_t events) final;
+ protected:
 
-  int event_fd() const { return event_fd_; }
+  void Run(uint32_t events) final;
 
  private:
 
