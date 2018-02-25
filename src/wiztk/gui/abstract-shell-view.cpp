@@ -19,6 +19,9 @@
 
 #include "wiztk/numerical/bit.hpp"
 
+#include "wiztk/async/event-loop.hpp"
+#include "wiztk/async/scheduler.hpp"
+
 #include "wiztk/gui/application.hpp"
 #include "wiztk/gui/mouse-event.hpp"
 #include "wiztk/gui/key-event.hpp"
@@ -254,12 +257,17 @@ void AbstractShellView::OnKeyUp(KeyEvent *event) {
 }
 
 void AbstractShellView::OnRequestSaveGeometry(AbstractView *view) {
-  if (p_->geometry_task.is_linked()) {
-    p_->geometry_task.push_back(AbstractView::GeometryTask::Get(view));
+  async::Scheduler scheduler = async::EventLoop::GetCurrent()->GetScheduler();
+
+  if (p_->geometry_task.IsQueued()) {
+    scheduler.PostMessageAfter(&p_->geometry_task,
+                               AbstractView::GeometryMessage::Get(view));
+//    p_->geometry_task.push_back(AbstractView::GeometryTask::Get(view));
     return;
   }
 
-  Application::GetInstance()->GetTaskDeque().push_back(AbstractView::GeometryTask::Get(view));
+//  Application::GetInstance()->GetTaskDeque().push_back(AbstractView::GeometryTask::Get(view));
+  scheduler.PostMessage(AbstractView::GeometryMessage::Get(view));
 }
 
 void AbstractShellView::OnRequestUpdateFrom(AbstractView *view) {
@@ -300,12 +308,13 @@ bool AbstractShellView::RequestSaveSize(const Size &size) {
   p_->size = size;
 
   if (p_->last_size == p_->size) {
-    p_->geometry_task.unlink();
+    p_->geometry_task.Unlink();
     return false;
   }
 
-  if (!p_->geometry_task.is_linked()) {
-    Application::GetInstance()->GetTaskDeque().push_back(&p_->geometry_task);
+  if (!p_->geometry_task.IsQueued()) {
+    async::EventLoop::GetCurrent()->GetScheduler().PostMessage(&p_->geometry_task);
+//    Application::GetInstance()->GetTaskDeque().push_back(&p_->geometry_task);
   }
 
   return true;
@@ -506,7 +515,7 @@ void AbstractShellView::DropShadow(const Context &context) {
 
 // ---------
 
-void AbstractShellView::GeometryTask::Run() const {
+void AbstractShellView::GeometryMessage::Execute() {
   shell_view_->OnSaveSize(shell_view_->p_->last_size, shell_view_->p_->size);
   shell_view_->p_->last_size = shell_view_->p_->size;
   ViewSurface::Shell::Get(shell_view_->p_->shell_surface)->ResizeWindow(shell_view_->p_->size.width,

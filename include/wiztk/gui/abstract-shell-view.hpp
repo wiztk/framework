@@ -22,7 +22,7 @@
 #include "wiztk/base/rect.hpp"
 #include "wiztk/base/margin.hpp"
 
-#include "wiztk/gui/task-node.hpp"
+#include "wiztk/async/message.hpp"
 
 #include <cstdint>
 #include <string>
@@ -62,17 +62,17 @@ WIZTK_EXPORT class AbstractShellView : public AbstractEventHandler {
   /**
    * @brief A nested class to update the size
    */
-  class GeometryTask : public TaskNode {
+  class GeometryMessage : public async::Message {
 
    public:
 
-    WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(GeometryTask);
-    GeometryTask() = delete;
+    WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(GeometryMessage);
+    GeometryMessage() = delete;
 
-    explicit GeometryTask(AbstractShellView *shell_view)
-        : TaskNode(), shell_view_(shell_view) {}
+    explicit GeometryMessage(AbstractShellView *shell_view)
+        : shell_view_(shell_view) {}
 
-    ~GeometryTask() final = default;
+    ~GeometryMessage() final = default;
 
     /**
      * @brief Do the task to resize the shell view
@@ -80,7 +80,7 @@ WIZTK_EXPORT class AbstractShellView : public AbstractEventHandler {
      * This method will call AbstractShellView::OnSaveSize(), record the last size and
      * use the xdg shell api to set the window geometry.
      */
-    void Run() const final;
+    void Execute() final;
 
    private:
 

@@ -17,6 +17,9 @@
 #include "abstract-view_private.hpp"
 #include "abstract-view_iterators.hpp"
 
+#include "async/scheduler.hpp"
+#include "wiztk/async/event-loop.hpp"
+
 #include "wiztk/numerical/bit.hpp"
 #include "wiztk/numerical/clamp.hpp"
 
@@ -528,9 +531,11 @@ void AbstractView::OnLeaveOutput(const ViewSurface *surface, const Output *outpu
 }
 
 void AbstractView::OnRequestSaveGeometry(AbstractView *view) {
-  if (p_->geometry_task.is_linked()) {
+  if (p_->geometry_message.IsQueued()) {
     if (view != this) {
-      p_->geometry_task.push_back(&view->p_->geometry_task);
+//      p_->geometry_task.push_back(&view->p_->geometry_task);
+      async::Scheduler scheduler = async::EventLoop::GetCurrent()->GetScheduler();
+      scheduler.PostMessageAfter(&p_->geometry_message, &view->p_->geometry_message);
     }
     return;
   }
@@ -570,25 +575,25 @@ bool AbstractView::RequestSaveGeometry(const RectF &geometry) {
   p_->geometry = geometry;
 
   if (p_->last_geometry == p_->geometry) {
-    p_->geometry_task.unlink();
+    p_->geometry_message.Unlink();
     return false;
   }
 
   bool ret = true;
 
-  if (p_->geometry_task.is_linked()) return ret;
+  if (p_->geometry_message.IsQueued()) return ret;
 
   if (nullptr != p_->parent) {
     _ASSERT(nullptr == p_->shell_view);
     p_->parent->OnRequestSaveGeometry(this);
-    ret = p_->geometry_task.is_linked();
+    ret = p_->geometry_message.IsQueued();
   } else if (nullptr != p_->shell_view) {
     _ASSERT(nullptr == p_->parent);
     p_->shell_view->OnRequestSaveGeometry(this);
-    ret = p_->geometry_task.is_linked();
+    ret = p_->geometry_message.IsQueued();
   } else {
-    base::Deque<TaskNode> &deque = Application::GetInstance()->GetTaskDeque();
-    deque.push_back(&p_->geometry_task);
+    async::Scheduler scheduler = async::EventLoop::GetCurrent()->GetScheduler();
+    scheduler.PostMessage(&p_->geometry_message);
   }
 
   return ret;
@@ -1172,14 +1177,14 @@ void AbstractView::MoveBackward(AbstractView *view) {
 
 // -------------------
 
-void AbstractView::GeometryTask::Run() const {
+void AbstractView::GeometryMessage::Execute() {
   view_->OnSaveGeometry(view_->p_->last_geometry,
                         view_->p_->geometry);
   view_->p_->last_geometry = view_->p_->geometry;
 }
 
-AbstractView::GeometryTask *AbstractView::GeometryTask::Get(const AbstractView *view) {
-  return &view->p_->geometry_task;
+AbstractView::GeometryMessage *AbstractView::GeometryMessage::Get(const AbstractView *view) {
+  return &view->p_->geometry_message;
 }
 
 // -------------------

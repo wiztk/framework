@@ -100,7 +100,7 @@ struct AbstractShellView::Private : public base::Property<AbstractShellView> {
    */
   AbstractShellView *parent;
 
-  GeometryTask geometry_task;
+  GeometryMessage geometry_task;
 
   /**
    * @brief If need to call wayland API to damage area on the surface

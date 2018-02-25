@@ -25,7 +25,7 @@ namespace async {
 void EventLoop::QuitEvent::Trigger(EventLoop *event_loop) {
   auto *event = new QuitEvent(event_loop);  // Will be deleted when it's run.
 
-  event_loop->WatchFileDescriptor(event->event_fd_, event);
+  event_loop->WatchFileDescriptor(event->event_fd_, event, EPOLLIN | EPOLLOUT | EPOLLERR | EPOLLHUP);
   eventfd_write(event->event_fd_, 0);
 }
 

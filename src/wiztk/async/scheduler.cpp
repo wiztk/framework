@@ -39,5 +39,11 @@ void Scheduler::PostMessage(Message *message) {
   event_loop_->message_queue_.PushBack(message);
 }
 
+void Scheduler::PostMessageAfter(Message *a, Message *b) {
+  if (!a->IsQueued()) return;
+
+  a->traits_.push_back(&b->traits_);
+}
+
 } // namespace async
 } // namespace wiztk

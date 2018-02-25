@@ -19,45 +19,153 @@
 #include "wiztk/gui/main-loop.hpp"
 #include "wiztk/gui/view-surface.hpp"
 
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/epoll.h>
+#include "display_proxy.hpp"
 
 #include <csignal>
+
+#include <unistd.h>
+#include <sys/signalfd.h>
+
+#define handle_error(msg) \
+           do { perror(msg); exit(EXIT_FAILURE); } while (0)
 
 namespace wiztk {
 namespace gui {
 
-struct MainLoop::Private : public base::Property<MainLoop> {
+MainLoop::SignalEvent::SignalEvent(MainLoop *main_loop)
+    : main_loop_(main_loop) {
+  sigset_t mask = {0};
+  sigfillset(&mask);
 
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
-  Private() = delete;
+  /* Block signals so that they aren't handled according to their default dispositions */
+  if (sigprocmask(SIG_BLOCK, &mask, NULL) == -1)
+    handle_error("sigprocmask");
 
-  explicit Private(MainLoop *proprietor)
-      : base::Property<MainLoop>(proprietor) {}
+  signal_fd_ = signalfd(-1, &mask, SFD_CLOEXEC | SFD_NONBLOCK);
+  _ASSERT(-1 != signal_fd_);
+}
 
-  ~Private() final = default;
+MainLoop::SignalEvent::~SignalEvent() {
+  close(signal_fd_);
+}
 
-  bool running = false;
+void MainLoop::SignalEvent::Run(uint32_t events) {
+  _DEBUG("%s\n", __func__);
 
-  static const int kMaxEpollEvents = 16;
+  struct signalfd_siginfo fdsi = {0};
+  ssize_t s;
 
-};
+  s = read(signal_fd_, &fdsi, sizeof(struct signalfd_siginfo));
+  if (s != sizeof(struct signalfd_siginfo))
+    handle_error("read");
+
+  if (fdsi.ssi_signo == SIGINT) {
+    printf("Got SIGINT\n");
+  } else if (fdsi.ssi_signo == SIGQUIT) {
+    printf("Got SIGQUIT\n");
+    exit(EXIT_SUCCESS);
+  } else {
+    printf("Read unexpected signal\n");
+  }
+}
 
 // ----
 
-async::EventLoop::FactoryType MainLoop::kFactory = []() -> async::EventLoop * {
-  return new MainLoop();
-};
+MainLoop::WaylandEvent::WaylandEvent(MainLoop *main_loop)
+    : main_loop_(main_loop) {
 
-MainLoop::MainLoop() {
-  p_ = std::make_unique<Private>(this);
 }
+
+MainLoop::WaylandEvent::~WaylandEvent() = default;
+
+void MainLoop::WaylandEvent::Run(uint32_t events) {
+  if (events & EPOLLERR || events & EPOLLHUP) {
+    main_loop_->Quit();
+    return;
+  }
+  if (events & EPOLLIN) {
+    if (wl_display_dispatch(main_loop_->wl_display_) == -1) {
+      main_loop_->Quit();
+      return;
+    }
+  }
+  if (events & EPOLLOUT) {
+    int ret = wl_display_flush(main_loop_->wl_display_);
+    if (ret == 0) {
+      main_loop_->ModifyWatchedFileDescriptor(wl_display_get_fd(main_loop_->wl_display_),
+                                              this, EPOLLIN | EPOLLERR | EPOLLHUP);
+    } else if (ret == -1 && errno != EAGAIN) {
+      main_loop_->Quit();
+      return;
+    }
+  }
+}
+
+// ----
+
+MainLoop *MainLoop::Initialize(const Display *display) {
+  MainLoop *main_loop = nullptr;
+  try {
+    main_loop = static_cast<MainLoop *>(Create([]() -> async::EventLoop * {
+      return new MainLoop();
+    }));
+  } catch (const std::runtime_error &err) {
+    throw err;
+  }
+
+  main_loop->WatchFileDescriptor(main_loop->signal_event_.signal_fd_,
+                                 &main_loop->signal_event_,
+                                 EPOLLIN | EPOLLOUT | EPOLLERR | EPOLLHUP);
+
+  main_loop->wl_display_ = Display::Proxy::wl_display(display);
+  _ASSERT(main_loop->wl_display_);
+
+  main_loop->WatchFileDescriptor(wl_display_get_fd(main_loop->wl_display_),
+                                 &main_loop->wayland_event_,
+                                 EPOLLIN | EPOLLOUT | EPOLLERR | EPOLLHUP);
+
+  return main_loop;
+}
+
+MainLoop::MainLoop()
+    : signal_event_(this), wayland_event_(this) {}
 
 MainLoop::~MainLoop() = default;
 
 void MainLoop::Dispatch() {
+  async::EventLoop::Dispatch();
 
+  TaskNode *task = nullptr;
+  base::Deque<ViewSurface::RenderTask>::Iterator render_task_iterator;
+  base::Deque<ViewSurface::CommitTask>::Iterator commit_task_iterator;
+
+  /*
+   * Draw contents on every surface requested
+   */
+  render_task_iterator = ViewSurface::kRenderTaskDeque.begin();
+  while (render_task_iterator != ViewSurface::kRenderTaskDeque.end()) {
+    task = render_task_iterator.get();
+    render_task_iterator.remove();
+    task->Run();
+    render_task_iterator = ViewSurface::kRenderTaskDeque.begin();
+  }
+
+  /*
+   * Commit every surface requested
+   */
+  commit_task_iterator = ViewSurface::kCommitTaskDeque.begin();
+  while (commit_task_iterator != ViewSurface::kCommitTaskDeque.end()) {
+    task = commit_task_iterator.get();
+    commit_task_iterator.remove();
+    task->Run();
+    commit_task_iterator = ViewSurface::kCommitTaskDeque.begin();
+  }
+
+  wl_display_dispatch_pending(wl_display_);
+  int ret = wl_display_flush(wl_display_);
+  if (ret < 0 && errno == EAGAIN) {
+    Quit();
+  }
 }
 
 } // namespace gui

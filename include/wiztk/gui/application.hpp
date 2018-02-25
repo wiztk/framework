@@ -29,8 +29,6 @@
 namespace wiztk {
 namespace gui {
 
-class AbstractEpollTask;
-
 /**
  * @ingroup gui
  * @brief Single object manages an application's main event loop and global resources
@@ -78,21 +76,6 @@ class WIZTK_EXPORT Application {
   void Exit();
 
   /**
-   * @brief Watch a given file descriptor in the main epoll event loop
-   * @param fd
-   * @param events Epoll events flags
-   * @param epoll_task An AbstractEpollTask object, the virtual Run() method will be called
-   *                   when there's event arrived on the fd
-   */
-  void WatchFileDescriptor(int fd, uint32_t events, AbstractEpollTask *epoll_task);
-
-  /**
-   * @brief Unwatch the given file descriptor
-   * @param fd
-   */
-  void UnwatchFileDescriptor(int fd);
-
-  /**
    * @brief Get the argc parameter
    * @return
    */
@@ -116,15 +99,8 @@ class WIZTK_EXPORT Application {
    */
   const Thread::ID &GetThreadID();
 
-  /**
-   * @brief Get the defferred task deque
-   * @return
-   */
-  base::Deque<TaskNode> &GetTaskDeque();
-
  private:
 
-  class EpollTask;
   struct Private;
 
   std::unique_ptr<Private> p_;

@@ -82,6 +82,7 @@ class ViewSurface : public graphic::AbstractSurface, public base::Trackable {
   friend class Display;
   friend class Callback;
   friend class AbstractRenderingAPI;
+  friend class MainLoop;
 
  public:
 

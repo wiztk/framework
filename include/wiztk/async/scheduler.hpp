@@ -52,6 +52,8 @@ class Scheduler {
 
   void PostMessage(Message *message);
 
+  void PostMessageAfter(Message *a, Message *b);
+
  private:
 
   EventLoop *event_loop_ = nullptr;

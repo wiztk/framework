@@ -85,12 +85,22 @@ void EventLoop::Quit() {
   QuitEvent::Trigger(this);
 }
 
-bool EventLoop::WatchFileDescriptor(int fd, AbstractEvent *event) {
+bool EventLoop::WatchFileDescriptor(int fd, AbstractEvent *event, uint32_t events) {
+  _ASSERT(nullptr != event);
   struct epoll_event ev = {0};
-  ev.events = event->events_;
+  ev.events = events;
   ev.data.ptr = event;
 
   return (0 == epoll_ctl(epoll_fd_, EPOLL_CTL_ADD, fd, &ev));
+}
+
+bool EventLoop::ModifyWatchedFileDescriptor(int fd, AbstractEvent *event, uint32_t events) {
+  _ASSERT(event);
+  struct epoll_event ev = {0};
+  ev.events = events;
+  ev.data.ptr = event;
+
+  return (0 == epoll_ctl(epoll_fd_, EPOLL_CTL_MOD, fd, &ev));
 }
 
 bool EventLoop::UnwatchFileDescriptor(int fd) {
@@ -105,6 +115,7 @@ void EventLoop::Dispatch() {
   Message *msg = message_queue_.PopFront();
   while (nullptr != msg) {
     msg->Execute();
+    msg = message_queue_.PopFront();
   }
 }
 

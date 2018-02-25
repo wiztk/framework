@@ -40,10 +40,10 @@ typedef void (GenericMultiInherit::*GenericMethodPointer)();
 // Forward declarations
 
 // This is the key to use the template format of Delegate<return_type (args...)>
-template<typename _Signature>
+template<typename SIGNATURE>
 class Delegate;
 
-template<typename _Signature>
+template<typename SIGNATURE>
 class DelegateRef;
 
 /// @endcond
