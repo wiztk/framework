@@ -23,11 +23,14 @@
 #include "wiztk/base/size.hpp"
 #include "wiztk/base/rect.hpp"
 #include "wiztk/base/padding.hpp"
+#include <wiztk/base/deque.hpp>
+
+#include "wiztk/async/message.hpp"
 
 #include "wiztk/gui/anchor-group.hpp"
-#include "wiztk/gui/task-node.hpp"
 
 #include <memory>
+#include <functional>
 
 namespace wiztk {
 namespace gui {
@@ -84,7 +87,7 @@ WIZTK_EXPORT class AbstractView : public AbstractEventHandler {
   using RectF   = base::RectF;          /**< @brief Alias of base::RectF */
   using Padding = base::Padding;        /**< @brief Alias of base::Padding */
 
-  class GeometryTask;
+  class GeometryMessage;
   class RenderNode;
 
   // Internal nested classes:
@@ -447,7 +450,7 @@ WIZTK_EXPORT class AbstractView : public AbstractEventHandler {
    * AbstractView should always be created by new operator and use the Destroy()
    * to destroy itself.
    */
-  virtual ~AbstractView();
+  ~AbstractView() override;
 
   /**
    * @brief Callback to draw this view on a canvas
@@ -646,21 +649,21 @@ WIZTK_EXPORT class AbstractView : public AbstractEventHandler {
 /**
  * @brief Nested class represents a geometry task in main loop.
  */
-class AbstractView::GeometryTask : public TaskNode {
+class AbstractView::GeometryMessage : public async::Message {
 
  public:
 
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(GeometryTask);
-  GeometryTask() = delete;
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(GeometryMessage);
+  GeometryMessage() = delete;
 
-  explicit GeometryTask(AbstractView *view)
-      : TaskNode(), view_(view) {}
+  explicit GeometryMessage(AbstractView *view)
+      : view_(view) {}
 
-  ~GeometryTask() final = default;
+  ~GeometryMessage() final = default;
 
-  void Run() const final;
+  void Execute() final;
 
-  static GeometryTask *Get(const AbstractView *view);
+  static GeometryMessage *Get(const AbstractView *view);
 
  private:
 

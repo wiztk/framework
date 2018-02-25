@@ -434,11 +434,11 @@ void ViewSurface::Sub::InsertBelow(ViewSurface *sibling) {
 
 // ------
 
-void ViewSurface::RenderTask::Run() const {
+void ViewSurface::RenderTask::Run() {
   surface_->p_->event_handler->OnRenderSurface(surface_);
 }
 
-void ViewSurface::CommitTask::Run() const {
+void ViewSurface::CommitTask::Run() {
   wl_surface_commit(surface_->p_->wl_surface);
 }
 

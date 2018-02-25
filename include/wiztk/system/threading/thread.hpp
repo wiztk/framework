@@ -157,7 +157,7 @@ class WIZTK_EXPORT Thread {
 /**
  * @brief Thread delegate.
  */
-class Thread::Delegate : public base::AbstractRunnable {
+class Thread::Delegate : public base::AbstractRunnable<> {
   friend class Thread;
 
  public:

@@ -14,33 +14,34 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_BASE_ABSTRACT_RUNNABLE_HPP_
-#define WIZTK_BASE_ABSTRACT_RUNNABLE_HPP_
+#ifndef WIZTK_GUI_MAIN_LOOP_PRIVATE_HPP_
+#define WIZTK_GUI_MAIN_LOOP_PRIVATE_HPP_
 
-#include "wiztk/base/macros.hpp"
+#include "wiztk/gui/main-loop.hpp"
+
+#include "main-loop_signal-event.hpp"
+#include "main-loop_display-event.hpp"
+
+#include <wayland-client.h>
 
 namespace wiztk {
-namespace base {
+namespace gui {
 
-/**
- * @ingroup base
- * @brief Virtual base class of runnable objects.
- * @tparam ParamTypes
- */
-template<typename ... ParamTypes>
-class AbstractRunnable {
+struct MainLoop::_Private {
 
- public:
+  explicit _Private(MainLoop *main_loop);
 
-  AbstractRunnable() = default;
+  ~_Private() = default;
 
-  virtual ~AbstractRunnable() = default;
+  struct wl_display *wl_display_ = nullptr;
 
-  virtual void Run(ParamTypes... Args) = 0;
+  SignalEvent signal_event_;
+
+  DisplayEvent wayland_event_;
 
 };
 
-} // namespace base
-} // namespace wiztk
+}
+}
 
-#endif // WIZTK_BASE_ABSTRACT_RUNNABLE_HPP_
+#endif // WIZTK_GUI_MAIN_LOOP_PRIVATE_HPP_

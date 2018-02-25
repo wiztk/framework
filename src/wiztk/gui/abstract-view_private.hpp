@@ -48,7 +48,7 @@ WIZTK_NO_EXPORT struct AbstractView::Private {
         maximal_size(65536, 65536),
         x_layout_policy(kLayoutPreferred),
         y_layout_policy(kLayoutPreferred),
-        geometry_task(view),
+        geometry_message(view),
         redraw_node(view),
         left_anchor_group(view, kAlignLeft),
         top_anchor_group(view, kAlignTop),
@@ -92,7 +92,7 @@ WIZTK_NO_EXPORT struct AbstractView::Private {
    */
   RectF bounds;
 
-  GeometryTask geometry_task;
+  GeometryMessage geometry_message;
 
   RenderNode redraw_node;
 

@@ -14,33 +14,37 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_BASE_ABSTRACT_RUNNABLE_HPP_
-#define WIZTK_BASE_ABSTRACT_RUNNABLE_HPP_
+#ifndef WIZTK_GUI_MAIN_LOOP_SIGNAL_EVENT_HPP_
+#define WIZTK_GUI_MAIN_LOOP_SIGNAL_EVENT_HPP_
 
-#include "wiztk/base/macros.hpp"
+#include "wiztk/gui/main-loop.hpp"
 
 namespace wiztk {
-namespace base {
+namespace gui {
 
-/**
- * @ingroup base
- * @brief Virtual base class of runnable objects.
- * @tparam ParamTypes
- */
-template<typename ... ParamTypes>
-class AbstractRunnable {
+class MainLoop::SignalEvent : public async::AbstractEvent {
+
+  friend class MainLoop;
 
  public:
 
-  AbstractRunnable() = default;
+  explicit SignalEvent(MainLoop *main_loop);
 
-  virtual ~AbstractRunnable() = default;
+  ~SignalEvent() final;
 
-  virtual void Run(ParamTypes... Args) = 0;
+ protected:
+
+  void Run(uint32_t events) final;
+
+ private:
+
+  int signal_fd_ = -1;
+
+  MainLoop *main_loop_ = nullptr;
 
 };
 
-} // namespace base
-} // namespace wiztk
+}
+}
 
-#endif // WIZTK_BASE_ABSTRACT_RUNNABLE_HPP_
+#endif // WIZTK_GUI_MAIN_LOOP_SIGNAL_EVENT_HPP_

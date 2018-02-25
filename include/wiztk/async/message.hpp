@@ -58,6 +58,7 @@ class WIZTK_NO_EXPORT MessageTraits : public base::Binode<MessageTraits> {
 class Message {
 
   friend class MessageQueue;
+  friend class Scheduler;
 
  public:
 
@@ -69,6 +70,14 @@ class Message {
   virtual ~Message() = default;
 
   virtual void Execute() {};
+
+  bool IsQueued() const {
+    return traits_.is_linked();
+  }
+
+  void Unlink() {
+    traits_.unlink();
+  }
 
  private:
 

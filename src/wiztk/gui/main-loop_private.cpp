@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,35 +14,13 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_TASK_NODE_HPP_
-#define WIZTK_GUI_TASK_NODE_HPP_
-
-#include "wiztk/base/deque.hpp"
+#include "main-loop_private.hpp"
 
 namespace wiztk {
 namespace gui {
 
-/**
- * @ingroup gui
- * @brief Task node which is runnable.
- */
-class WIZTK_EXPORT TaskNode : public base::DequeNode<TaskNode> {
+MainLoop::_Private::_Private(MainLoop *main_loop)
+    : signal_event_(main_loop), wayland_event_(main_loop) {}
 
- public:
-
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(TaskNode);
-
-  TaskNode() = default;
-
-  ~TaskNode() override = default;
-
-  virtual void Run() const {
-    // override this
-  }
-
-};
-
-} // namespace gui
-} // namespace wiztk
-
-#endif // WIZTK_GUI_TASK_NODE_HPP_
+}
+}

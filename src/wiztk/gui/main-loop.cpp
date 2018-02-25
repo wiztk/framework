@@ -19,45 +19,80 @@
 #include "wiztk/gui/main-loop.hpp"
 #include "wiztk/gui/view-surface.hpp"
 
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/epoll.h>
+#include "main-loop_private.hpp"
 
-#include <csignal>
+#include "display_proxy.hpp"
 
 namespace wiztk {
 namespace gui {
 
-struct MainLoop::Private : public base::Property<MainLoop> {
+MainLoop *MainLoop::Initialize(const Display *display) {
+  MainLoop *main_loop = nullptr;
+  try {
+    main_loop = static_cast<MainLoop *>(Create([]() -> async::EventLoop * {
+      return new MainLoop();
+    }));
+  } catch (const std::runtime_error &err) {
+    throw err;
+  }
 
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
-  Private() = delete;
+  main_loop->WatchFileDescriptor(main_loop->__PROPERTY__(signal_event_).signal_fd_,
+                                 &main_loop->__PROPERTY__(signal_event_),
+                                 EPOLLIN | EPOLLOUT | EPOLLERR | EPOLLHUP);
 
-  explicit Private(MainLoop *proprietor)
-      : base::Property<MainLoop>(proprietor) {}
+  main_loop->__PROPERTY__(wl_display_) = Display::Proxy::wl_display(display);
+  _ASSERT(main_loop->__PROPERTY__(wl_display_));
 
-  ~Private() final = default;
+  main_loop->WatchFileDescriptor(wl_display_get_fd(main_loop->__PROPERTY__(wl_display_)),
+                                 &main_loop->__PROPERTY__(wayland_event_),
+                                 EPOLLIN | EPOLLOUT | EPOLLERR | EPOLLHUP);
 
-  bool running = false;
-
-  static const int kMaxEpollEvents = 16;
-
-};
-
-// ----
-
-async::EventLoop::FactoryType MainLoop::kFactory = []() -> async::EventLoop * {
-  return new MainLoop();
-};
+  return main_loop;
+}
 
 MainLoop::MainLoop() {
-  p_ = std::make_unique<Private>(this);
+  p_ = std::make_unique<_Private>(this);
 }
 
 MainLoop::~MainLoop() = default;
 
-void MainLoop::Dispatch() {
+void MainLoop::DispatchMessage() {
+  using namespace base;
+  using namespace async;
 
+  EventLoop::DispatchMessage();
+
+  QueuedTask *task = nullptr;
+  Deque<ViewSurface::RenderTask>::Iterator render_it;
+  Deque<ViewSurface::CommitTask>::Iterator commit_it;
+
+  /*
+   * Draw contents on every surface requested
+   */
+  render_it = ViewSurface::kRenderTaskDeque.begin();
+  while (render_it != ViewSurface::kRenderTaskDeque.end()) {
+    task = render_it.get();
+    render_it.remove();
+    task->Run();
+    render_it = ViewSurface::kRenderTaskDeque.begin();
+  }
+
+  /*
+   * Commit every surface requested
+   */
+  commit_it = ViewSurface::kCommitTaskDeque.begin();
+  while (commit_it != ViewSurface::kCommitTaskDeque.end()) {
+    task = commit_it.get();
+    commit_it.remove();
+    task->Run();
+    commit_it = ViewSurface::kCommitTaskDeque.begin();
+  }
+
+  wl_display_dispatch_pending(__PROPERTY__(wl_display_));
+  int ret = wl_display_flush(__PROPERTY__(wl_display_));
+  if (ret < 0 && errno == EAGAIN) {
+    Quit();
+  }
 }
 
 } // namespace gui

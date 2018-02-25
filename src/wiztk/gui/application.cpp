@@ -19,13 +19,11 @@
 #include "wiztk/base/property.hpp"
 
 #include "wiztk/gui/application.hpp"
+#include "wiztk/gui/main-loop.hpp"
 #include "wiztk/gui/theme.hpp"
-#include "wiztk/gui/abstract-view.hpp"
-#include "wiztk/gui/view-surface.hpp"
 
 #include <unistd.h>
 #include <fcntl.h>
-#include <sys/epoll.h>
 
 #include <csignal>
 #include <iostream>
@@ -36,23 +34,6 @@ using std::endl;
 namespace wiztk {
 namespace gui {
 
-class Application::EpollTask : public AbstractEpollTask {
-
- public:
-
-  explicit EpollTask(Application *app)
-      : AbstractEpollTask(), app_(app) {}
-
-  ~EpollTask() final = default;
-
-  void Run(uint32_t events) override;
-
- private:
-
-  Application *app_;
-
-};
-
 /**
  * @brief The private structure used in Application
  */
@@ -60,26 +41,19 @@ struct Application::Private {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
 
-  explicit Private(Application *app)
-      : epoll_task(app) {}
+  Private() = default;
 
   ~Private() = default;
 
   Display *display = nullptr;
 
-  bool running = false;
-
-  int epoll_fd = -1;
-
   int argc = 0;
 
   char **argv = nullptr;
 
-  EpollTask epoll_task;
-
   Thread::ID thread_id;
 
-  base::Deque<TaskNode> task_deque;
+  MainLoop *main_loop = nullptr;
 
   /**
 * @brief Create an epoll file descriptor
@@ -159,41 +133,13 @@ Application *Application::GetInstance() {
   return kInstance;
 }
 
-void Application::EpollTask::Run(uint32_t events) {
-  kInstance->__PROPERTY__(display)->__PROPERTY__(epoll_events) = events;
-  if (events & EPOLLERR || events & EPOLLHUP) {
-    Application::kInstance->Exit();
-    return;
-  }
-  if (events & EPOLLIN) {
-    if (wl_display_dispatch(kInstance->p_->display->p_->wl_display) == -1) {
-      Application::kInstance->Exit();
-      return;
-    }
-  }
-  if (events & EPOLLOUT) {
-    struct epoll_event ep;
-    int ret = wl_display_flush(kInstance->__PROPERTY__(display)->__PROPERTY__(wl_display));
-    if (ret == 0) {
-      ep.events = EPOLLIN | EPOLLERR | EPOLLHUP;
-      ep.data.ptr = &app_->p_->epoll_task;
-      epoll_ctl(app_->p_->epoll_fd, EPOLL_CTL_MOD,
-                kInstance->__PROPERTY__(display)->__PROPERTY__(fd), &ep);
-    } else if (ret == -1 && errno != EAGAIN) {
-      Application::kInstance->Exit();
-      return;
-    }
-  }
-}
-
 Application *Application::kInstance = nullptr;
 
 Application::Application(int argc, char *argv[]) {
   if (kInstance != nullptr)
     throw std::runtime_error("Error! There should be only one application instance!");
 
-  p_ = std::make_unique<Private>(this);
-
+  p_ = std::make_unique<Private>();
   p_->argc = argc;
   p_->argv = argv;
 
@@ -216,19 +162,15 @@ Application::Application(int argc, char *argv[]) {
   // Load theme
   Theme::Initialize();
 
-  p_->epoll_fd = Private::CreateEpollFd();
-  WatchFileDescriptor(__PROPERTY__(display)->__PROPERTY__(fd),
-                      EPOLLIN | EPOLLERR | EPOLLHUP,
-                      &p_->epoll_task);
+  __PROPERTY__(main_loop) = MainLoop::Initialize(__PROPERTY__(display));
 }
 
 Application::~Application() {
-  close(p_->epoll_fd);
   __PROPERTY__(display)->Disconnect();
-
-  Theme::Release();
   delete __PROPERTY__(display);
   __PROPERTY__(display) = nullptr;
+
+  Theme::Release();
 
   kInstance = nullptr;
 }
@@ -240,93 +182,15 @@ int Application::Run() {
   sigint.sa_flags = SA_RESETHAND;
   sigaction(SIGINT, &sigint, NULL);
 
-  struct epoll_event ep[Private::kMaxEpollEvents];
-  int count = 0;
-  int ret = 0;
-  TaskNode *task = nullptr;
-  base::Deque<TaskNode>::Iterator task_deque_iterator;
-  base::Deque<ViewSurface::RenderTask>::Iterator render_task_iterator;
-  base::Deque<ViewSurface::CommitTask>::Iterator commit_task_iterator;
-
-  p_->running = true;
-  while (true) {
-
-    /*
-     * Run idle tasks (process geometries)
-     */
-    task_deque_iterator = p_->task_deque.begin();
-    while (task_deque_iterator != p_->task_deque.end()) {
-      task = task_deque_iterator.get();
-      task_deque_iterator.remove();
-      task->Run();
-      task_deque_iterator = p_->task_deque.begin();
-    }
-
-    /*
-     * Draw contents on every surface requested
-     */
-    render_task_iterator = ViewSurface::kRenderTaskDeque.begin();
-    while (render_task_iterator != ViewSurface::kRenderTaskDeque.end()) {
-      task = render_task_iterator.get();
-      render_task_iterator.remove();
-      task->Run();
-      render_task_iterator = ViewSurface::kRenderTaskDeque.begin();
-    }
-
-    /*
-     * Commit every surface requested
-     */
-    commit_task_iterator = ViewSurface::kCommitTaskDeque.begin();
-    while (commit_task_iterator != ViewSurface::kCommitTaskDeque.end()) {
-      task = commit_task_iterator.get();
-      commit_task_iterator.remove();
-      task->Run();
-      commit_task_iterator = ViewSurface::kCommitTaskDeque.begin();
-    }
-
-    wl_display_dispatch_pending(__PROPERTY__(display)->__PROPERTY__(wl_display));
-
-    if (!p_->running) break;
-
-    ret = wl_display_flush(__PROPERTY__(display)->__PROPERTY__(wl_display));
-    if (ret < 0 && errno == EAGAIN) {
-      _DEBUG("%s\n", "Error when flush display");
-      ep[0].events = EPOLLIN | EPOLLOUT | EPOLLERR | EPOLLHUP;
-      ep[0].data.ptr = &p_->epoll_task;
-      epoll_ctl(p_->epoll_fd,
-                EPOLL_CTL_MOD,
-                __PROPERTY__(display)->__PROPERTY__(fd),
-                &ep[0]);
-    } else if (ret < 0) {
-      break;
-    }
-
-    AbstractEpollTask *epoll_task = nullptr;
-    count = epoll_wait(p_->epoll_fd, ep, Private::kMaxEpollEvents, -1);
-    for (int i = 0; i < count; i++) {
-      epoll_task = static_cast<AbstractEpollTask *>(ep[i].data.ptr);
-      if (epoll_task) epoll_task->Run(ep[i].events);
-    }
-  }
+//  __PROPERTY__(main_loop)->Prepare();
+  __PROPERTY__(main_loop)->Run();
 
   return 0;
 }
 
 void Application::Exit() {
-  p_->running = false;
-
+  __PROPERTY__(main_loop)->Quit();
   // TODO: check if need to clean other resources
-}
-
-void Application::WatchFileDescriptor(int fd, uint32_t events, AbstractEpollTask *epoll_task) {
-  struct epoll_event ep;
-  ep.events = events;
-  ep.data.ptr = epoll_task;
-  epoll_ctl(p_->epoll_fd, EPOLL_CTL_ADD, fd, &ep);
-}
-
-void Application::UnwatchFileDescriptor(int fd) {
-  epoll_ctl(p_->epoll_fd, EPOLL_CTL_DEL, fd, NULL);
 }
 
 int Application::GetArgC() {
@@ -343,10 +207,6 @@ Display *Application::GetDisplay() const {
 
 const Application::Thread::ID &Application::GetThreadID() {
   return p_->thread_id;
-}
-
-base::Deque<TaskNode> &Application::GetTaskDeque() {
-  return p_->task_deque;
 }
 
 } // namespace gui

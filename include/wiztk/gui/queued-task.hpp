@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 - 2018 The WizTK Authors.
+ * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,33 +14,35 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_BASE_ABSTRACT_RUNNABLE_HPP_
-#define WIZTK_BASE_ABSTRACT_RUNNABLE_HPP_
+#ifndef WIZTK_GUI_QUEUED_TASK_HPP_
+#define WIZTK_GUI_QUEUED_TASK_HPP_
 
-#include "wiztk/base/macros.hpp"
+#include "wiztk/base/deque.hpp"
 
 namespace wiztk {
-namespace base {
+namespace gui {
 
 /**
- * @ingroup base
- * @brief Virtual base class of runnable objects.
- * @tparam ParamTypes
+ * @ingroup gui
+ * @brief Task node which is runnable.
  */
-template<typename ... ParamTypes>
-class AbstractRunnable {
+class WIZTK_EXPORT QueuedTask : public base::DequeNode<QueuedTask> {
 
  public:
 
-  AbstractRunnable() = default;
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(QueuedTask);
 
-  virtual ~AbstractRunnable() = default;
+  QueuedTask() = default;
 
-  virtual void Run(ParamTypes... Args) = 0;
+  ~QueuedTask() override = default;
+
+  virtual void Run() {
+    // override this
+  }
 
 };
 
-} // namespace base
+} // namespace gui
 } // namespace wiztk
 
-#endif // WIZTK_BASE_ABSTRACT_RUNNABLE_HPP_
+#endif // WIZTK_GUI_TASK_NODE_HPP_

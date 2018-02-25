@@ -17,7 +17,7 @@
 #ifndef WIZTK_ASYNC_EVENT_LOOP_HPP_
 #define WIZTK_ASYNC_EVENT_LOOP_HPP_
 
-#include "wiztk/base/macros.hpp"
+#include "wiztk/base/abstract-runnable.hpp"
 
 #include "wiztk/async/type.hpp"
 #include "wiztk/async/message-queue.hpp"
@@ -30,31 +30,12 @@ namespace async {
 
 /**
  * @ingroup async
- * @brief An abstract epoll event.
+ * @brief An abstract runnable epoll event.
  */
-class WIZTK_EXPORT AbstractEvent {
-
-  friend class EventLoop;
-
+class WIZTK_EXPORT AbstractEvent : public base::AbstractRunnable<uint32_t> {
  public:
-
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(AbstractEvent);
-
   AbstractEvent() = default;
-
-  explicit AbstractEvent(uint32_t events)
-      : events_(events) {}
-
-  virtual ~AbstractEvent() = default;
-
- protected:
-
-  virtual void Run(uint32_t events) = 0;
-
- private:
-
-  uint32_t events_ = kRead | kWrite | kError;
-
+  ~AbstractEvent() override = default;
 };
 
 /**
@@ -94,10 +75,21 @@ class WIZTK_EXPORT EventLoop {
 
  public:
 
+  /**
+   * @brief Declare this class is non-copyable and non-movable.
+   */
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(EventLoop);
 
+  /**
+   * @brief A function object for customization of creating new EventLoop object.
+   */
   typedef std::function<EventLoop *()> FactoryType;
 
+ public:
+
+  /**
+   * @brief The default factory.
+   */
   static FactoryType kDefaultFactory;
 
   /**
@@ -133,7 +125,9 @@ class WIZTK_EXPORT EventLoop {
    * @brief Watch a given file descriptor in the main event loop
    * @param fd An integer file descriptor.
    */
-  bool WatchFileDescriptor(int fd, AbstractEvent *event);
+  bool WatchFileDescriptor(int fd, AbstractEvent *event, uint32_t events = EPOLLIN | EPOLLOUT | EPOLLERR);
+
+  bool ModifyWatchedFileDescriptor(int fd, AbstractEvent *event, uint32_t events);
 
   /**
    * @brief Unwatch the given file descriptor.
@@ -151,7 +145,7 @@ class WIZTK_EXPORT EventLoop {
 
   EventLoop();
 
-  virtual void Dispatch();
+  virtual void DispatchMessage();
 
  private:
 

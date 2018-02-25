@@ -60,23 +60,22 @@ void EventLoop::Run() {
 
   running_ = true;
 
-  Dispatch();
+  DispatchMessage();
   if (!running_) return;
 
   int count = epoll_wait(epoll_fd_, events, max_events_, timeout_);
   while (true) {
     if (count > 0) {
       for (int i = 0; i < count; ++i) {
-        auto *event = static_cast<AbstractEvent *> (events[i].data.ptr);
+        auto *event = static_cast<AbstractEvent *>(events[i].data.ptr);
         if (nullptr != event)
           event->Run(events->events);
       }
     }
 
-    // TODO: process event queue.
-    Dispatch();
-
+    DispatchMessage();
     if (!running_) break;
+
     count = epoll_wait(epoll_fd_, events, max_events_, timeout_);
   }
 }
@@ -85,12 +84,16 @@ void EventLoop::Quit() {
   QuitEvent::Trigger(this);
 }
 
-bool EventLoop::WatchFileDescriptor(int fd, AbstractEvent *event) {
-  struct epoll_event ev = {0};
-  ev.events = event->events_;
-  ev.data.ptr = event;
-
+bool EventLoop::WatchFileDescriptor(int fd, AbstractEvent *event, uint32_t events) {
+  _ASSERT(nullptr != event);
+  struct epoll_event ev = {events, event};
   return (0 == epoll_ctl(epoll_fd_, EPOLL_CTL_ADD, fd, &ev));
+}
+
+bool EventLoop::ModifyWatchedFileDescriptor(int fd, AbstractEvent *event, uint32_t events) {
+  _ASSERT(event);
+  struct epoll_event ev = {events, event};
+  return (0 == epoll_ctl(epoll_fd_, EPOLL_CTL_MOD, fd, &ev));
 }
 
 bool EventLoop::UnwatchFileDescriptor(int fd) {
@@ -101,10 +104,11 @@ Scheduler EventLoop::GetScheduler() {
   return Scheduler(this);
 }
 
-void EventLoop::Dispatch() {
+void EventLoop::DispatchMessage() {
   Message *msg = message_queue_.PopFront();
   while (nullptr != msg) {
     msg->Execute();
+    msg = message_queue_.PopFront();
   }
 }
 

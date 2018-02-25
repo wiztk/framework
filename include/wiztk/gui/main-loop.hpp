@@ -21,20 +21,29 @@
 
 #include <memory>
 
+#include <wayland-client.h>
+
 namespace wiztk {
 namespace gui {
 
+// Forward declaration:
+class Display;
+
 /**
  * @ingroup gui
- * @brief The main event loop used in Application.
+ * @brief The event loop used in the main thread.
  */
-class MainLoop : public async::EventLoop {
+class MainLoop final : public async::EventLoop {
 
   friend class Application;
 
  public:
 
-  static FactoryType kFactory;
+  /**
+   * @brief Initialize a singleton main loop.
+   * @return
+   */
+  static MainLoop *Initialize(const Display *display);
 
   ~MainLoop() final;
 
@@ -42,13 +51,16 @@ class MainLoop : public async::EventLoop {
 
   MainLoop();
 
-  void Dispatch() final;
+  void DispatchMessage() final;
 
  private:
 
-  struct Private;
+  class SignalEvent;
+  class DisplayEvent;
 
-  std::unique_ptr<Private> p_;
+  struct _Private;
+
+  std::unique_ptr<_Private> p_;
 
 };
 

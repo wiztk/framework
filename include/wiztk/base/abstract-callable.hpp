@@ -14,33 +14,37 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_BASE_ABSTRACT_RUNNABLE_HPP_
-#define WIZTK_BASE_ABSTRACT_RUNNABLE_HPP_
+#ifndef WIZTK_BASE_ABSTRACT_CALLABLE_HPP_
+#define WIZTK_BASE_ABSTRACT_CALLABLE_HPP_
 
 #include "wiztk/base/macros.hpp"
 
 namespace wiztk {
 namespace base {
 
+template<typename SIGNATURE>
+class AbstractCallable;
+
 /**
  * @ingroup base
- * @brief Virtual base class of runnable objects.
+ * @brief Abstract callable.
+ * @tparam ReturnType
  * @tparam ParamTypes
  */
-template<typename ... ParamTypes>
-class AbstractRunnable {
+template<typename ReturnType, typename ... ParamTypes>
+class AbstractCallable<ReturnType(ParamTypes...)> {
 
  public:
 
-  AbstractRunnable() = default;
+  AbstractCallable() = default;
 
-  virtual ~AbstractRunnable() = default;
+  virtual ~AbstractCallable() = default;
 
-  virtual void Run(ParamTypes... Args) = 0;
+  virtual ReturnType Call(ParamTypes... Args) = 0;
 
 };
 
 } // namespace base
 } // namespace wiztk
 
-#endif // WIZTK_BASE_ABSTRACT_RUNNABLE_HPP_
+#endif // WIZTK_BASE_ABSTRACT_CALLABLE_HPP_
