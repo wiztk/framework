@@ -19,7 +19,7 @@
 
 #include "wiztk/gui/display.hpp"
 
-#include "wiztk/gui/task-node.hpp"
+#include "wiztk/gui/queued-task.hpp"
 #include "wiztk/gui/abstract-epoll-task.hpp"
 #include "wiztk/gui/input-manager.hpp"
 #include "wiztk/gui/output-manager.hpp"

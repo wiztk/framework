@@ -21,7 +21,7 @@
 
 #include "wiztk/system/threading/thread.hpp"
 
-#include "wiztk/gui/task-node.hpp"
+#include "wiztk/gui/queued-task.hpp"
 #include "wiztk/gui/display.hpp"
 
 #include <cstdint>

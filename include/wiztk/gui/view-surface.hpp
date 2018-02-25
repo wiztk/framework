@@ -25,7 +25,7 @@
 #include "wiztk/graphic/abstract-surface.hpp"
 
 #include "abstract-view.hpp"
-#include "task-node.hpp"
+#include "queued-task.hpp"
 
 #include <wayland-egl.h>
 #include <memory>
@@ -220,7 +220,7 @@ class ViewSurface : public graphic::AbstractSurface, public base::Trackable {
 
  private:
 
-  class RenderTask : public TaskNode {
+  class RenderTask : public QueuedTask {
 
    public:
 
@@ -232,7 +232,7 @@ class ViewSurface : public graphic::AbstractSurface, public base::Trackable {
 
     ~RenderTask() final = default;
 
-    void Run() const final;
+    void Run() final;
 
    private:
 
@@ -240,7 +240,7 @@ class ViewSurface : public graphic::AbstractSurface, public base::Trackable {
 
   };
 
-  class CommitTask : public TaskNode {
+  class CommitTask : public QueuedTask {
 
    public:
 
@@ -252,7 +252,7 @@ class ViewSurface : public graphic::AbstractSurface, public base::Trackable {
 
     ~CommitTask() final = default;
 
-    void Run() const final;
+    void Run() final;
 
    private:
 
@@ -327,7 +327,7 @@ class ViewSurface::Shell {
   struct Private;
 
   static ViewSurface *Create(AbstractEventHandler *event_handler,
-                         const Margin &margin = Margin());
+                             const Margin &margin = Margin());
 
   explicit Shell(ViewSurface *surface);
 
@@ -374,7 +374,7 @@ class ViewSurface::Shell::Toplevel {
    * @brief Create a toplevel shell surface
    */
   static ViewSurface *Create(AbstractEventHandler *event_handler,
-                         const Margin &margin = Margin());
+                             const Margin &margin = Margin());
 
   static Toplevel *Get(const ViewSurface *surface);
 
@@ -424,8 +424,8 @@ class ViewSurface::Shell::Popup {
    * @brief Create a popup shell surface
    */
   static ViewSurface *Create(ViewSurface *parent,
-                         AbstractEventHandler *event_handler,
-                         const Margin &margin = Margin());
+                             AbstractEventHandler *event_handler,
+                             const Margin &margin = Margin());
 
   void SetSize(int32_t width, int32_t height);
 
@@ -463,8 +463,8 @@ class ViewSurface::Sub {
    * @brief Create a sub surface
    */
   static ViewSurface *Create(ViewSurface *parent,
-                         AbstractEventHandler *event_handler,
-                         const Margin &margin = Margin());
+                             AbstractEventHandler *event_handler,
+                             const Margin &margin = Margin());
 
   static Sub *Get(const ViewSurface *surface);
 

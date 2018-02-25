@@ -57,32 +57,35 @@ MainLoop::MainLoop() {
 MainLoop::~MainLoop() = default;
 
 void MainLoop::DispatchMessage() {
-  async::EventLoop::DispatchMessage();
+  using namespace base;
+  using namespace async;
 
-  TaskNode *task = nullptr;
-  base::Deque<ViewSurface::RenderTask>::Iterator render_task_iterator;
-  base::Deque<ViewSurface::CommitTask>::Iterator commit_task_iterator;
+  EventLoop::DispatchMessage();
+
+  QueuedTask *task = nullptr;
+  Deque<ViewSurface::RenderTask>::Iterator render_it;
+  Deque<ViewSurface::CommitTask>::Iterator commit_it;
 
   /*
    * Draw contents on every surface requested
    */
-  render_task_iterator = ViewSurface::kRenderTaskDeque.begin();
-  while (render_task_iterator != ViewSurface::kRenderTaskDeque.end()) {
-    task = render_task_iterator.get();
-    render_task_iterator.remove();
+  render_it = ViewSurface::kRenderTaskDeque.begin();
+  while (render_it != ViewSurface::kRenderTaskDeque.end()) {
+    task = render_it.get();
+    render_it.remove();
     task->Run();
-    render_task_iterator = ViewSurface::kRenderTaskDeque.begin();
+    render_it = ViewSurface::kRenderTaskDeque.begin();
   }
 
   /*
    * Commit every surface requested
    */
-  commit_task_iterator = ViewSurface::kCommitTaskDeque.begin();
-  while (commit_task_iterator != ViewSurface::kCommitTaskDeque.end()) {
-    task = commit_task_iterator.get();
-    commit_task_iterator.remove();
+  commit_it = ViewSurface::kCommitTaskDeque.begin();
+  while (commit_it != ViewSurface::kCommitTaskDeque.end()) {
+    task = commit_it.get();
+    commit_it.remove();
     task->Run();
-    commit_task_iterator = ViewSurface::kCommitTaskDeque.begin();
+    commit_it = ViewSurface::kCommitTaskDeque.begin();
   }
 
   wl_display_dispatch_pending(__PROPERTY__(wl_display_));

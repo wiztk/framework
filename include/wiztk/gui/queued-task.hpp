@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_TASK_NODE_HPP_
-#define WIZTK_GUI_TASK_NODE_HPP_
+#ifndef WIZTK_GUI_QUEUED_TASK_HPP_
+#define WIZTK_GUI_QUEUED_TASK_HPP_
 
 #include "wiztk/base/deque.hpp"
 
@@ -26,17 +26,17 @@ namespace gui {
  * @ingroup gui
  * @brief Task node which is runnable.
  */
-class WIZTK_EXPORT TaskNode : public base::DequeNode<TaskNode> {
+class WIZTK_EXPORT QueuedTask : public base::DequeNode<QueuedTask> {
 
  public:
 
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(TaskNode);
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(QueuedTask);
 
-  TaskNode() = default;
+  QueuedTask() = default;
 
-  ~TaskNode() override = default;
+  ~QueuedTask() override = default;
 
-  virtual void Run() const {
+  virtual void Run() {
     // override this
   }
 
