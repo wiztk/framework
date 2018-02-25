@@ -60,7 +60,7 @@ void EventLoop::Run() {
 
   running_ = true;
 
-  Dispatch();
+  DispatchMessage();
   if (!running_) return;
 
   int count = epoll_wait(epoll_fd_, events, max_events_, timeout_);
@@ -74,7 +74,7 @@ void EventLoop::Run() {
     }
 
     // TODO: process event queue.
-    Dispatch();
+    DispatchMessage();
 
     if (!running_) break;
     count = epoll_wait(epoll_fd_, events, max_events_, timeout_);
@@ -111,7 +111,7 @@ Scheduler EventLoop::GetScheduler() {
   return Scheduler(this);
 }
 
-void EventLoop::Dispatch() {
+void EventLoop::DispatchMessage() {
   Message *msg = message_queue_.PopFront();
   while (nullptr != msg) {
     msg->Execute();

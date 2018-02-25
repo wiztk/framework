@@ -14,57 +14,35 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_MAIN_LOOP_HPP_
-#define WIZTK_GUI_MAIN_LOOP_HPP_
+#ifndef WIZTK_GUI_MAIN_LOOP_DISPLAY_EVENT_HPP_
+#define WIZTK_GUI_MAIN_LOOP_DISPLAY_EVENT_HPP_
 
-#include "wiztk/async/event-loop.hpp"
-
-#include <memory>
-
-#include <wayland-client.h>
+#include "wiztk/gui/main-loop.hpp"
 
 namespace wiztk {
 namespace gui {
 
-// Forward declaration:
-class Display;
+class MainLoop::DisplayEvent : public async::AbstractEvent {
 
-/**
- * @ingroup gui
- * @brief The event loop used in the main thread.
- */
-class MainLoop final : public async::EventLoop {
-
-  friend class Application;
+  friend class MainLoop;
 
  public:
 
-  /**
-   * @brief Initialize a singleton main loop.
-   * @return
-   */
-  static MainLoop *Initialize(const Display *display);
+  explicit DisplayEvent(MainLoop *main_loop);
 
-  ~MainLoop() final;
+  ~DisplayEvent() final;
 
  protected:
 
-  MainLoop();
-
-  void DispatchMessage() final;
+  void Run(uint32_t events) final;
 
  private:
 
-  class SignalEvent;
-  class DisplayEvent;
-
-  struct _Private;
-
-  std::unique_ptr<_Private> p_;
+  MainLoop *main_loop_ = nullptr;
 
 };
 
 } // namespace gui
 } // namespace wiztk
 
-#endif // WIZTK_GUI_MAIN_LOOP_HPP_
+#endif // WIZTK_GUI_MAIN_LOOP_DISPLAY_EVENT_HPP_

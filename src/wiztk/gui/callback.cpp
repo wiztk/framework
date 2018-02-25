@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
+#include "wiztk/base/property.hpp"
+#include "wiztk/gui/callback.hpp"
+
 #include "display_proxy.hpp"
 #include "view-surface_private.hpp"
-
-#include "wiztk/gui/callback.hpp"
 
 namespace wiztk {
 namespace gui {

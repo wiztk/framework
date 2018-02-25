@@ -19,8 +19,6 @@
 
 #include "display_private.hpp"
 
-#include "wiztk/base/property.hpp"
-
 namespace wiztk {
 namespace gui {
 
@@ -38,7 +36,7 @@ struct WIZTK_NO_EXPORT Display::Proxy {
    * @return
    */
   static struct wl_display *wl_display(const Display *display) {
-    return display->__PROPERTY__(wl_display);
+    return display->p_->wl_display;
   }
 
   /**
@@ -46,7 +44,7 @@ struct WIZTK_NO_EXPORT Display::Proxy {
    * @return
    */
   static struct wl_registry *wl_registry(const Display *display) {
-    return display->__PROPERTY__(wl_registry);
+    return display->p_->wl_registry;
   }
 
   /**
@@ -54,7 +52,7 @@ struct WIZTK_NO_EXPORT Display::Proxy {
    * @return
    */
   static struct wl_compositor *wl_compositor(const Display *display) {
-    return display->__PROPERTY__(wl_compositor);
+    return display->p_->wl_compositor;
   }
 
   /**
@@ -62,7 +60,7 @@ struct WIZTK_NO_EXPORT Display::Proxy {
    * @return
    */
   static struct wl_subcompositor *wl_subcompositor(const Display *display) {
-    return display->__PROPERTY__(wl_subcompositor);
+    return display->p_->wl_subcompositor;
   }
 
   /**
@@ -70,7 +68,7 @@ struct WIZTK_NO_EXPORT Display::Proxy {
    * @return
    */
   static struct wl_shm *wl_shm(const Display *display) {
-    return display->__PROPERTY__(wl_shm);
+    return display->p_->wl_shm;
   }
 
   /**
@@ -78,7 +76,7 @@ struct WIZTK_NO_EXPORT Display::Proxy {
    * @return
    */
   static struct zxdg_shell_v6 *xdg_shell(const Display *display) {
-    return display->__PROPERTY__(xdg_shell);
+    return display->p_->xdg_shell;
   }
 
   /**
@@ -86,7 +84,7 @@ struct WIZTK_NO_EXPORT Display::Proxy {
    * @return
    */
   static struct wl_shell *wl_shell(const Display *display) {
-    return display->__PROPERTY__(wl_shell);
+    return display->p_->wl_shell;
   }
 
   /**
@@ -94,7 +92,7 @@ struct WIZTK_NO_EXPORT Display::Proxy {
    * @return
    */
   static struct wl_data_device_manager *wl_data_device_manager(const Display *display) {
-    return display->__PROPERTY__(wl_data_device_manager);
+    return display->p_->wl_data_device_manager;
   }
 
   /**
@@ -102,7 +100,7 @@ struct WIZTK_NO_EXPORT Display::Proxy {
    * @return
    */
   static EGLDisplay egl_display(const Display *display) {
-    return display->__PROPERTY__(egl_display);
+    return display->p_->egl_display;
   }
 
   /**
@@ -110,7 +108,7 @@ struct WIZTK_NO_EXPORT Display::Proxy {
    * @return
    */
   static EGLConfig egl_config(const Display *display) {
-    return display->__PROPERTY__(egl_config);
+    return display->p_->egl_config;
   }
 
   /**
@@ -118,7 +116,7 @@ struct WIZTK_NO_EXPORT Display::Proxy {
    * @return
    */
   static EGLContext egl_context(const Display *display) {
-    return display->__PROPERTY__(egl_context);
+    return display->p_->egl_context;
   }
 
   /**
@@ -126,7 +124,7 @@ struct WIZTK_NO_EXPORT Display::Proxy {
    * @return
    */
   static const vk::Instance vk_instance(const Display *display) {
-    return display->__PROPERTY__(vk_instance);
+    return display->p_->vk_instance;
   }
 
   /**
@@ -134,7 +132,7 @@ struct WIZTK_NO_EXPORT Display::Proxy {
    * @return The xkb_context object for keymap
    */
   static struct xkb_context *xkb_context(const Display *display) {
-    return display->__PROPERTY__(xkb_context);
+    return display->p_->xkb_context;
   }
 
   static PFNEGLSWAPBUFFERSWITHDAMAGEEXTPROC kSwapBuffersWithDamageAPI;

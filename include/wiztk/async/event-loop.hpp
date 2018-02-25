@@ -145,7 +145,7 @@ class WIZTK_EXPORT EventLoop {
 
   EventLoop();
 
-  virtual void Dispatch();
+  virtual void DispatchMessage();
 
  private:
 

@@ -19,89 +19,12 @@
 #include "wiztk/gui/main-loop.hpp"
 #include "wiztk/gui/view-surface.hpp"
 
+#include "main-loop_private.hpp"
+
 #include "display_proxy.hpp"
-
-#include <csignal>
-
-#include <unistd.h>
-#include <sys/signalfd.h>
-
-#define handle_error(msg) \
-           do { perror(msg); exit(EXIT_FAILURE); } while (0)
 
 namespace wiztk {
 namespace gui {
-
-MainLoop::SignalEvent::SignalEvent(MainLoop *main_loop)
-    : main_loop_(main_loop) {
-  sigset_t mask = {0};
-  sigfillset(&mask);
-
-  /* Block signals so that they aren't handled according to their default dispositions */
-  if (sigprocmask(SIG_BLOCK, &mask, NULL) == -1)
-    handle_error("sigprocmask");
-
-  signal_fd_ = signalfd(-1, &mask, SFD_CLOEXEC | SFD_NONBLOCK);
-  _ASSERT(-1 != signal_fd_);
-}
-
-MainLoop::SignalEvent::~SignalEvent() {
-  close(signal_fd_);
-}
-
-void MainLoop::SignalEvent::Run(uint32_t events) {
-  _DEBUG("%s\n", __func__);
-
-  struct signalfd_siginfo fdsi = {0};
-  ssize_t s;
-
-  s = read(signal_fd_, &fdsi, sizeof(struct signalfd_siginfo));
-  if (s != sizeof(struct signalfd_siginfo))
-    handle_error("read");
-
-  if (fdsi.ssi_signo == SIGINT) {
-    printf("Got SIGINT\n");
-  } else if (fdsi.ssi_signo == SIGQUIT) {
-    printf("Got SIGQUIT\n");
-    exit(EXIT_SUCCESS);
-  } else {
-    printf("Read unexpected signal\n");
-  }
-}
-
-// ----
-
-MainLoop::WaylandEvent::WaylandEvent(MainLoop *main_loop)
-    : main_loop_(main_loop) {
-
-}
-
-MainLoop::WaylandEvent::~WaylandEvent() = default;
-
-void MainLoop::WaylandEvent::Run(uint32_t events) {
-  if (events & EPOLLERR || events & EPOLLHUP) {
-    main_loop_->Quit();
-    return;
-  }
-  if (events & EPOLLIN) {
-    if (wl_display_dispatch(main_loop_->wl_display_) == -1) {
-      main_loop_->Quit();
-      return;
-    }
-  }
-  if (events & EPOLLOUT) {
-    int ret = wl_display_flush(main_loop_->wl_display_);
-    if (ret == 0) {
-      main_loop_->ModifyWatchedFileDescriptor(wl_display_get_fd(main_loop_->wl_display_),
-                                              this, EPOLLIN | EPOLLERR | EPOLLHUP);
-    } else if (ret == -1 && errno != EAGAIN) {
-      main_loop_->Quit();
-      return;
-    }
-  }
-}
-
-// ----
 
 MainLoop *MainLoop::Initialize(const Display *display) {
   MainLoop *main_loop = nullptr;
@@ -113,27 +36,28 @@ MainLoop *MainLoop::Initialize(const Display *display) {
     throw err;
   }
 
-  main_loop->WatchFileDescriptor(main_loop->signal_event_.signal_fd_,
-                                 &main_loop->signal_event_,
+  main_loop->WatchFileDescriptor(main_loop->__PROPERTY__(signal_event_).signal_fd_,
+                                 &main_loop->__PROPERTY__(signal_event_),
                                  EPOLLIN | EPOLLOUT | EPOLLERR | EPOLLHUP);
 
-  main_loop->wl_display_ = Display::Proxy::wl_display(display);
-  _ASSERT(main_loop->wl_display_);
+  main_loop->__PROPERTY__(wl_display_) = Display::Proxy::wl_display(display);
+  _ASSERT(main_loop->__PROPERTY__(wl_display_));
 
-  main_loop->WatchFileDescriptor(wl_display_get_fd(main_loop->wl_display_),
-                                 &main_loop->wayland_event_,
+  main_loop->WatchFileDescriptor(wl_display_get_fd(main_loop->__PROPERTY__(wl_display_)),
+                                 &main_loop->__PROPERTY__(wayland_event_),
                                  EPOLLIN | EPOLLOUT | EPOLLERR | EPOLLHUP);
 
   return main_loop;
 }
 
-MainLoop::MainLoop()
-    : signal_event_(this), wayland_event_(this) {}
+MainLoop::MainLoop() {
+  p_ = std::make_unique<_Private>(this);
+}
 
 MainLoop::~MainLoop() = default;
 
-void MainLoop::Dispatch() {
-  async::EventLoop::Dispatch();
+void MainLoop::DispatchMessage() {
+  async::EventLoop::DispatchMessage();
 
   TaskNode *task = nullptr;
   base::Deque<ViewSurface::RenderTask>::Iterator render_task_iterator;
@@ -161,8 +85,8 @@ void MainLoop::Dispatch() {
     commit_task_iterator = ViewSurface::kCommitTaskDeque.begin();
   }
 
-  wl_display_dispatch_pending(wl_display_);
-  int ret = wl_display_flush(wl_display_);
+  wl_display_dispatch_pending(__PROPERTY__(wl_display_));
+  int ret = wl_display_flush(__PROPERTY__(wl_display_));
   if (ret < 0 && errno == EAGAIN) {
     Quit();
   }
