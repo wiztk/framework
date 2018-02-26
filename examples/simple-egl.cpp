@@ -18,9 +18,11 @@
 #include <wiztk/gui/application.hpp>
 #include <wiztk/gui/gl-window.hpp>
 
+#include <cassert>
+#include <cmath>
+
 #include <GLES2/gl2.h>
 #include <sys/time.h>
-#include <assert.h>
 
 using namespace wiztk;
 using namespace wiztk::gui;

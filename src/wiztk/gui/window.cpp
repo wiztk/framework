@@ -19,6 +19,7 @@
 #include "wiztk/base/property.hpp"
 
 #include "wiztk/gui/application.hpp"
+#include "wiztk/gui/display.hpp"
 #include "wiztk/gui/mouse-event.hpp"
 #include "wiztk/gui/key-event.hpp"
 #include "wiztk/gui/title-bar.hpp"

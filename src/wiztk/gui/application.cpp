@@ -22,8 +22,7 @@
 #include "wiztk/gui/main-loop.hpp"
 #include "wiztk/gui/theme.hpp"
 
-#include <unistd.h>
-#include <fcntl.h>
+#include <getopt.h>
 
 #include <csignal>
 #include <iostream>
@@ -33,6 +32,10 @@ using std::endl;
 
 namespace wiztk {
 namespace gui {
+
+static inline const char *get_basename(const char *filepath) {
+  return strrchr(filepath, '/') ? strrchr(filepath, '/') + 1 : filepath;
+}
 
 /**
  * @brief The private structure used in Application
@@ -51,75 +54,103 @@ struct Application::Private {
 
   char **argv = nullptr;
 
-  Thread::ID thread_id;
-
   MainLoop *main_loop = nullptr;
 
-  /**
-* @brief Create an epoll file descriptor
-* @return a nonnegative file descriptor or -1
-*/
-  static int CreateEpollFd();
+  void ParseArguments();
 
-  /**
-   * @brief Set close-on-exec or close the epoll file descriptor
-   * @param fd The epoll file descriptor created in CreateEpollFd()
-   * @return a nonnegative file descriptor or -1
-   */
-  static int SetCloexecOrClose(int fd);
-
-  /**
-   * @brief Set close-on-exec flag of the given file descripor
-   * @param fd The epoll file descriptor passed from CreateEpollFd()
-   * @return
-   *     0 - success
-   *    -1 - fail
-   */
-  static int SetCloexec(int fd);
+  void PrintHelp();
 
   static void HandleSignalInt(int);
 
-  static const int kMaxEpollEvents = 16;
-
 };
 
-int Application::Private::CreateEpollFd() {
-  int fd = 0;
+void Application::Private::ParseArguments() {
+  static struct option long_options[] = {
+      {"help", no_argument, nullptr, 0},      // Show help information.
+      {"listen", required_argument, nullptr, 0},      // Followed with number of TCP/IP port to listen.
+      {"verbose", no_argument, nullptr, 0},      //Enable verbose mode.
+      {nullptr, 0, nullptr, 0}
+  };
+  static const char *short_options = "hl:v012";
 
-#ifdef EPOLL_CLOEXEC
-  fd = epoll_create1(EPOLL_CLOEXEC);
-  if (fd >= 0)
-    return fd;
-  if (errno != EINVAL)
-    return -1;
-#endif
+  int c;
+  int digit_optind = 0;
 
-  fd = epoll_create(1);
-  return SetCloexecOrClose(fd);
-}
+  while (true) {
+    int this_option_optind = optind ? optind : 1;
+    int option_index = 0;
 
-int Application::Private::SetCloexecOrClose(int fd) {
-  if (SetCloexec(fd) != 0) {
-    close(fd);
-    return -1;
+    c = getopt_long(argc, argv, short_options, long_options, &option_index);
+    if (c == -1)
+      break;
+
+    switch (c) {
+      case 0: {
+        const char *name = long_options[option_index].name;
+        if (strcmp(name, "help") == 0) {
+          PrintHelp();
+        } else if (strcmp(name, "listen") == 0) {
+          if (optarg) {
+            printf("listen with port num: %s\n", optarg);
+          }
+        } else if (strcmp(name, "verbose") == 0) {
+          printf("verbose mode\n");
+        }
+
+        break;
+      }
+
+      case '0':
+      case '1':
+      case '2': {
+        if (digit_optind != 0 && digit_optind != this_option_optind)
+          printf("digits occur in two different argv elements.\n");
+        digit_optind = this_option_optind;
+        printf("option %c\n", c);
+        break;
+      }
+
+      case 'h': {
+        PrintHelp();
+        break;
+      }
+
+      case 'l': {
+        printf("listen with port num: %s\n", optarg);
+        break;
+      }
+
+      case 'v': {
+        printf("verbose mode\n");
+        break;
+      }
+
+      case '?':break;
+
+      default: {
+        printf("?? getopt returned character code 0%o ??\n", c);
+        break;
+      }
+    }
   }
-  return fd;
+
+  if (optind < argc) {
+    printf("non-option ARGV-elements: ");
+    while (optind < argc) {
+      printf("%s ", argv[optind++]);
+    }
+    printf("\n");
+  }
 }
 
-int Application::Private::SetCloexec(int fd) {
-  long flags;
-
-  if (fd == -1)
-    return -1;
-
-  flags = fcntl(fd, F_GETFD);
-  if (flags == -1)
-    return -1;
-
-  if (fcntl(fd, F_SETFD, flags | FD_CLOEXEC) == -1)
-    return -1;
-
-  return 0;
+void Application::Private::PrintHelp() {
+  fprintf(stdout, "Usage: %s [options] [args...]\n"
+      "\n"
+      "Options:\n"
+      "\t-h,--help\n\t\tShow this message.\n"
+      "\t-l,--listen: <num>\n\t\tListen to the given port.\n"
+      "\t-v,--verbose\n\t\tVerbose mode."
+      "\n\n", get_basename(argv[0]));
 }
 
 void Application::Private::HandleSignalInt(int) {
@@ -139,11 +170,13 @@ Application::Application(int argc, char *argv[]) {
   if (kInstance != nullptr)
     throw std::runtime_error("Error! There should be only one application instance!");
 
+  kInstance = this;
+
   p_ = std::make_unique<Private>();
   p_->argc = argc;
   p_->argv = argv;
 
-  kInstance = this;
+  p_->ParseArguments();
 
   // Set log handler to a lambda function
   wl_log_set_handler_client([](const char *format, va_list args) {
@@ -153,7 +186,7 @@ Application::Application(int argc, char *argv[]) {
   __PROPERTY__(display) = new Display;
 
   try {
-    __PROPERTY__(display)->Connect(NULL);
+    __PROPERTY__(display)->Connect(nullptr);
   } catch (const std::runtime_error &e) {
     cerr << e.what() << endl;
     exit(EXIT_FAILURE);
@@ -182,7 +215,6 @@ int Application::Run() {
   sigint.sa_flags = SA_RESETHAND;
   sigaction(SIGINT, &sigint, NULL);
 
-//  __PROPERTY__(main_loop)->Prepare();
   __PROPERTY__(main_loop)->Run();
 
   return 0;
@@ -193,20 +225,16 @@ void Application::Exit() {
   // TODO: check if need to clean other resources
 }
 
-int Application::GetArgC() {
+int Application::GetArgc() const {
   return p_->argc;
 }
 
-char **Application::GetArgV() const {
+char **Application::GetArgv() const {
   return p_->argv;
 }
 
 Display *Application::GetDisplay() const {
   return __PROPERTY__(display);
-}
-
-const Application::Thread::ID &Application::GetThreadID() {
-  return p_->thread_id;
 }
 
 } // namespace gui

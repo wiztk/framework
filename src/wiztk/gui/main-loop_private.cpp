@@ -20,7 +20,7 @@ namespace wiztk {
 namespace gui {
 
 MainLoop::_Private::_Private(MainLoop *main_loop)
-    : signal_event_(main_loop), wayland_event_(main_loop) {}
+    : signal_event(main_loop), wayland_event(main_loop) {}
 
 }
 }

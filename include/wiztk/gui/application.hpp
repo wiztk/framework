@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,15 @@
 #ifndef WIZTK_GUI_APPLICATION_HPP_
 #define WIZTK_GUI_APPLICATION_HPP_
 
-#include "wiztk/base/deque.hpp"
+#include "wiztk/base/macros.hpp"
 
-#include "wiztk/system/threading/thread.hpp"
-
-#include "wiztk/gui/queued-task.hpp"
-#include "wiztk/gui/display.hpp"
-
-#include <cstdint>
+#include <memory>
 
 namespace wiztk {
 namespace gui {
+
+// Forward declaration:
+class Display;
 
 /**
  * @ingroup gui
@@ -37,15 +35,22 @@ class WIZTK_EXPORT Application {
 
  public:
 
-  using Thread = system::threading::Thread;
-
-  // Declaration:
-
+  /**
+   * @brief Declare this class is non-copyable and non-movable.
+   */
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Application);
+
+  /**
+   * @brief Disable the default constructor.
+   */
   Application() = delete;
 
  public:
 
+  /**
+   * @brief Get the instance of the singleton Application object.
+   * @return Pointer to the Application object.
+   */
   static Application *GetInstance();
 
   /**
@@ -79,25 +84,19 @@ class WIZTK_EXPORT Application {
    * @brief Get the argc parameter
    * @return
    */
-  int GetArgC();
+  int GetArgc() const;
 
   /**
    * @brief Get the argv parameter
    * @return
    */
-  char **GetArgV() const;
+  char **GetArgv() const;
 
   /**
    * @brief Get the the wayland client display.
    * @return
    */
   Display *GetDisplay() const;
-
-  /**
-   * @brief Get the main thread id
-   * @return A const reference to the main thread id
-   */
-  const Thread::ID &GetThreadID();
 
  private:
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #include "display_private.hpp"
 
 #include "wiztk/base/property.hpp"
+
 #include "wiztk/gui/view-surface.hpp"
 
 #include <iostream>
@@ -29,9 +30,7 @@ Display::Display() {
   p_->cursors.resize(kCursorBlank, nullptr);
 }
 
-Display::~Display() {
-
-}
+Display::~Display() = default;
 
 void Display::Connect(const char *name) {
   if (p_->wl_display) return;
@@ -45,7 +44,7 @@ void Display::Connect(const char *name) {
   p_->fd = wl_display_get_fd(p_->wl_display);
 
   p_->xkb_context = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
-  if (p_->xkb_context == NULL) {
+  if (p_->xkb_context == nullptr) {
     throw std::runtime_error("FATAL! Cannot create xkb_context!");
   }
 

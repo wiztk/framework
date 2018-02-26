@@ -9,6 +9,8 @@
 #include "wiztk/gui/gl-view.hpp"
 #include "wiztk/gui/glesv2-api.hpp"
 
+#include <cmath>
+
 #include <GLES2/gl2.h>
 #include <sys/time.h>
 

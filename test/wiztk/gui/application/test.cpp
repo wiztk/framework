@@ -26,8 +26,8 @@ TEST_F(Test, application) {
 
   Application app(argc, argv);
 
-  bool result1 = (app.GetArgC() == argc);
-  bool result2 = (strcmp(app.GetArgV()[0], argv1) == 0);
+  bool result1 = (app.GetArgc() == argc);
+  bool result2 = (strcmp(app.GetArgv()[0], argv1) == 0);
 
   app.Exit();
 

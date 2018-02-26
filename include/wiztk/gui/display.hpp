@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,7 @@
 
 #include "wiztk/base/types.hpp"
 #include "wiztk/base/sigcxx.hpp"
-#include "wiztk/base/counted-deque.hpp"
 
-#include "cursor.hpp"
-
-#include <xkbcommon/xkbcommon.h>
-
-#include <list>
-#include <vector>
 #include <set>
 #include <memory>
 
@@ -39,6 +32,7 @@ class Output;
 class Input;
 class InputManager;
 class OutputManager;
+class Cursor;
 
 /**
  * @ingroup gui

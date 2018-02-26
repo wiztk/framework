@@ -36,15 +36,15 @@ void MainLoop::DisplayEvent::Run(uint32_t events) {
     return;
   }
   if (events & EPOLLIN) {
-    if (wl_display_dispatch(main_loop_->p_->wl_display_) == -1) {
+    if (wl_display_dispatch(main_loop_->p_->wl_display) == -1) {
       main_loop_->Quit();
       return;
     }
   }
   if (events & EPOLLOUT) {
-    int ret = wl_display_flush(main_loop_->p_->wl_display_);
+    int ret = wl_display_flush(main_loop_->p_->wl_display);
     if (ret == 0) {
-      int display_fd = wl_display_get_fd(main_loop_->p_->wl_display_);
+      int display_fd = wl_display_get_fd(main_loop_->p_->wl_display);
       main_loop_->ModifyWatchedFileDescriptor(display_fd,
                                               this,
                                               EPOLLIN | EPOLLERR | EPOLLHUP);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 The WizTK Authors.
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_INTERNAL_DISPLAY_PRIVATE_HPP_
-#define WIZTK_GUI_INTERNAL_DISPLAY_PRIVATE_HPP_
+#ifndef WIZTK_GUI_DISPLAY_PRIVATE_HPP_
+#define WIZTK_GUI_DISPLAY_PRIVATE_HPP_
 
 #include "wiztk/gui/display.hpp"
 
@@ -23,13 +23,18 @@
 #include "wiztk/gui/abstract-epoll-task.hpp"
 #include "wiztk/gui/input-manager.hpp"
 #include "wiztk/gui/output-manager.hpp"
+#include "wiztk/gui/cursor.hpp"
 
-#include "xdg-shell-unstable-v6-client-protocol.h"
+#include <list>
+
+#include <vulkan/vulkan.hpp>
+
+#include <xdg-shell-unstable-v6-client-protocol.h>
+
+#include <xkbcommon/xkbcommon.h>
 
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
-
-#include <vulkan/vulkan.hpp>
 
 namespace wiztk {
 namespace gui {
@@ -149,4 +154,4 @@ struct Display::Private {
 } // namespace gui
 } // namespace wiztk
 
-#endif // WIZTK_GUI_INTERNAL_DISPLAY_PRIVATE_HPP_
+#endif // WIZTK_GUI_DISPLAY_PRIVATE_HPP_

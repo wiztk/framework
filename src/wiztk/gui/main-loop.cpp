@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
+#include "main-loop_private.hpp"
+#include "display_proxy.hpp"
+
 #include "wiztk/base/property.hpp"
 
-#include "wiztk/gui/main-loop.hpp"
 #include "wiztk/gui/view-surface.hpp"
-
-#include "main-loop_private.hpp"
-
-#include "display_proxy.hpp"
 
 namespace wiztk {
 namespace gui {
@@ -36,15 +34,15 @@ MainLoop *MainLoop::Initialize(const Display *display) {
     throw err;
   }
 
-  main_loop->WatchFileDescriptor(main_loop->__PROPERTY__(signal_event_).signal_fd_,
-                                 &main_loop->__PROPERTY__(signal_event_),
+  main_loop->__PROPERTY__(wl_display) = Display::Proxy::wl_display(display);
+  _ASSERT(main_loop->__PROPERTY__(wl_display));
+
+  main_loop->WatchFileDescriptor(main_loop->__PROPERTY__(signal_event).signal_fd_,
+                                 &main_loop->__PROPERTY__(signal_event),
                                  EPOLLIN | EPOLLOUT | EPOLLERR | EPOLLHUP);
 
-  main_loop->__PROPERTY__(wl_display_) = Display::Proxy::wl_display(display);
-  _ASSERT(main_loop->__PROPERTY__(wl_display_));
-
-  main_loop->WatchFileDescriptor(wl_display_get_fd(main_loop->__PROPERTY__(wl_display_)),
-                                 &main_loop->__PROPERTY__(wayland_event_),
+  main_loop->WatchFileDescriptor(wl_display_get_fd(main_loop->__PROPERTY__(wl_display)),
+                                 &main_loop->__PROPERTY__(wayland_event),
                                  EPOLLIN | EPOLLOUT | EPOLLERR | EPOLLHUP);
 
   return main_loop;
@@ -57,8 +55,8 @@ MainLoop::MainLoop() {
 MainLoop::~MainLoop() = default;
 
 void MainLoop::DispatchMessage() {
-  using namespace base;
-  using namespace async;
+  using base::Deque;
+  using async::EventLoop;
 
   EventLoop::DispatchMessage();
 
@@ -88,8 +86,8 @@ void MainLoop::DispatchMessage() {
     commit_it = ViewSurface::kCommitTaskDeque.begin();
   }
 
-  wl_display_dispatch_pending(__PROPERTY__(wl_display_));
-  int ret = wl_display_flush(__PROPERTY__(wl_display_));
+  wl_display_dispatch_pending(__PROPERTY__(wl_display));
+  int ret = wl_display_flush(__PROPERTY__(wl_display));
   if (ret < 0 && errno == EAGAIN) {
     Quit();
   }
