@@ -19,12 +19,12 @@
 #include "wiztk/gui/context.hpp"
 #include "wiztk/gui/mouse-event.hpp"
 
-#include "wiztk/numerical/bit.hpp"
+#include "wiztk/base/bit.hpp"
 
 namespace wiztk {
 namespace gui {
 
-using numerical::Bit;
+using base::Bit;
 
 void AbstractShellView::Private::OnXdgSurfaceConfigure(uint32_t serial) {
   ViewSurface::Shell *shell = ViewSurface::Shell::Get(shell_surface);
@@ -74,14 +74,14 @@ void AbstractShellView::Private::OnXdgToplevelClose() {
 
 void AbstractShellView::Private::DispatchMouseEnterEvent(AbstractView *parent,
                                                          MouseEvent *event,
-                                                         MouseEventNode *tail) {
+                                                         MouseTask *tail) {
   AbstractView *sub = parent->DispatchMouseEnterEvent(event);
   while (nullptr != sub) {
     _ASSERT(sub != parent);
     sub->OnMouseEnter(event);
     if (event->IsAccepted()) {
-      tail->push_back(MouseEventNode::Get(sub));
-      tail = static_cast<MouseEventNode *>(tail->next());
+      tail->push_back(MouseTask::Get(sub));
+      tail = static_cast<MouseTask *>(tail->next());
       parent = sub;
       sub = parent->DispatchMouseEnterEvent(event);
     } else if (event->IsIgnored()) {

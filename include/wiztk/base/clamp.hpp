@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_NUMERICAL_CLAMP_HPP_
-#define WIZTK_NUMERICAL_CLAMP_HPP_
+#ifndef WIZTK_BASE_CLAMP_HPP_
+#define WIZTK_BASE_CLAMP_HPP_
 
 #include <algorithm>
 
 namespace wiztk {
-namespace numerical {
+namespace base {
 
 /**
- * @ingroup numerical
+ * @ingroup base
  * @brief Clamp given value between min and max
  */
 template<typename T>
@@ -31,7 +31,7 @@ inline T Clamp(T x, T min_value, T max_value) {
   return std::min(std::max(x, min_value), max_value);
 }
 
-} // namespace numerical
+} // namespace base
 } // namespace wiztk
 
-#endif // WIZTK_NUMERICAL_CLAMP_HPP_
+#endif // WIZTK_BASE_CLAMP_HPP_

@@ -16,14 +16,14 @@
 
 #include "wiztk/system/time/clock.hpp"
 
-#include "wiztk/numerical/clamp.hpp"
+#include "wiztk/base/clamp.hpp"
 
 namespace wiztk {
 namespace system {
 namespace time {
 
 Clock::Clock(int year, int month, int day, int hour, int minute, int second, int ms, int us, int ns) {
-  using numerical::Clamp;
+  using base::Clamp;
 
   struct tm t = {second, minute, hour, day, month - 1, year - 1900, 0, 0, 0};
   timespec_.tv_sec = mktime(&t);

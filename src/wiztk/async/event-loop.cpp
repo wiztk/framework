@@ -107,7 +107,7 @@ Scheduler EventLoop::GetScheduler() {
 void EventLoop::DispatchMessage() {
   Message *msg = message_queue_.PopFront();
   while (nullptr != msg) {
-    msg->Execute();
+    msg->Exec();
     msg = message_queue_.PopFront();
   }
 }

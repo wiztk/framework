@@ -16,8 +16,8 @@
 
 #include "wiztk/gui/abstract-button.hpp"
 
-#include "wiztk/numerical/clamp.hpp"
-#include "wiztk/numerical/bit.hpp"
+#include "wiztk/base/clamp.hpp"
+#include "wiztk/base/bit.hpp"
 
 #include "wiztk/gui/key-event.hpp"
 #include "wiztk/gui/mouse-event.hpp"
@@ -28,7 +28,7 @@ namespace wiztk {
 namespace gui {
 
 using base::RectF;
-using numerical::Bit;
+using base::Bit;
 
 using graphic::Font;
 using graphic::Typeface;

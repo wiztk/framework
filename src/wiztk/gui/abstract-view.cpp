@@ -20,8 +20,8 @@
 #include "async/scheduler.hpp"
 #include "wiztk/async/event-loop.hpp"
 
-#include "wiztk/numerical/bit.hpp"
-#include "wiztk/numerical/clamp.hpp"
+#include "wiztk/base/bit.hpp"
+#include "wiztk/base/clamp.hpp"
 
 #include "wiztk/gui/abstract-shell-view.hpp"
 #include "wiztk/gui/abstract-layout.hpp"
@@ -34,8 +34,8 @@ namespace gui {
 using base::Point2I;
 using base::SizeI;
 using base::RectF;
-using numerical::Clamp;
-using numerical::Bit;
+using base::Clamp;
+using base::Bit;
 
 AbstractView::DeleterType AbstractView::kDefaultDeleter = [](AbstractView *obj) {
   delete obj;
@@ -1177,7 +1177,7 @@ void AbstractView::MoveBackward(AbstractView *view) {
 
 // -------------------
 
-void AbstractView::GeometryMessage::Execute() {
+void AbstractView::GeometryMessage::Exec() {
   view_->OnSaveGeometry(view_->p_->last_geometry,
                         view_->p_->geometry);
   view_->p_->last_geometry = view_->p_->geometry;

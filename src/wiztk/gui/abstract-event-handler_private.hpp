@@ -42,12 +42,12 @@ struct AbstractEventHandler::Private : public base::Property<AbstractEventHandle
   /**
    * @brief An event task to handle mouse enter/leave/button events
    */
-  MouseEventNode mouse_event_node;
+  MouseTask mouse_event_node;
 
   /**
    * @brief An event task to handle mouse move event
    */
-  MouseMotionEventNode mouse_motion_event_node;
+  MouseMotionTask mouse_motion_event_node;
 
   // TODO: there will be more tasks added later
 

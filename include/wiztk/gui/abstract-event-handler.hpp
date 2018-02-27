@@ -71,12 +71,12 @@ class WIZTK_EXPORT AbstractEventHandler : public base::Trackable {
   /**
    * @brief Nested class represents an mouse event node.
    */
-  class MouseEventNode : public base::Binode<MouseEventNode> {
+  class MouseTask : public base::Binode<MouseTask> {
 
    public:
 
-    WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(MouseEventNode);
-    MouseEventNode() = delete;
+    WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(MouseTask);
+    MouseTask() = delete;
 
     /**
      * @brief Constructor
@@ -84,17 +84,17 @@ class WIZTK_EXPORT AbstractEventHandler : public base::Trackable {
      *
      * @note The parameter cannot be nullptr.
      */
-    explicit MouseEventNode(AbstractEventHandler *event_handler)
-        : base::Binode<MouseEventNode>(), event_handler_(event_handler) {}
+    explicit MouseTask(AbstractEventHandler *event_handler)
+        : event_handler_(event_handler) {}
 
     /**
      * @brief Destructor
      */
-    ~MouseEventNode() override = default;
+    ~MouseTask() override = default;
 
     inline AbstractEventHandler *event_handler() const { return event_handler_; }
 
-    static MouseEventNode *Get(const AbstractEventHandler *event_hander);
+    static MouseTask *Get(const AbstractEventHandler *event_hander);
 
    private:
 
@@ -105,12 +105,12 @@ class WIZTK_EXPORT AbstractEventHandler : public base::Trackable {
   /**
     * @brief Nested class represents an mouse motion event node.
     */
-  class MouseMotionEventNode : public base::Binode<MouseMotionEventNode> {
+  class MouseMotionTask : public base::Binode<MouseMotionTask> {
 
    public:
 
-    WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(MouseMotionEventNode);
-    MouseMotionEventNode() = delete;
+    WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(MouseMotionTask);
+    MouseMotionTask() = delete;
 
     /**
      * @brief Constructor
@@ -118,17 +118,17 @@ class WIZTK_EXPORT AbstractEventHandler : public base::Trackable {
      *
      * @note The parameter cannot be nullptr.
      */
-    explicit MouseMotionEventNode(AbstractEventHandler *event_handler)
-        : base::Binode<MouseMotionEventNode>(), event_handler_(event_handler) {}
+    explicit MouseMotionTask(AbstractEventHandler *event_handler)
+        : event_handler_(event_handler) {}
 
     /**
      * @brief Destructor
      */
-    ~MouseMotionEventNode() override = default;
+    ~MouseMotionTask() override = default;
 
     inline AbstractEventHandler *event_handler() const { return event_handler_; }
 
-    static MouseMotionEventNode *Get(const AbstractEventHandler *event_handler);
+    static MouseMotionTask *Get(const AbstractEventHandler *event_handler);
 
    private:
 
@@ -189,6 +189,10 @@ class WIZTK_EXPORT AbstractEventHandler : public base::Trackable {
    */
   virtual void OnKeyUp(KeyEvent *event) = 0;
 
+  /**
+   * @brief Virtual callback when need to save the geometry.
+   * @param view
+   */
   virtual void OnRequestSaveGeometry(AbstractView *view) = 0;
 
   /**
@@ -197,10 +201,24 @@ class WIZTK_EXPORT AbstractEventHandler : public base::Trackable {
    */
   virtual void OnRequestUpdateFrom(AbstractView *view) = 0;
 
+  /**
+   * @brief Virtual callback when a wayland surface controlled by this event handler need to be rendered.
+   * @param surface
+   */
   virtual void OnRenderSurface(ViewSurface *surface) = 0;
 
+  /**
+   * @brief Virtual callback when this object enters an output.
+   * @param surface
+   * @param output
+   */
   virtual void OnEnterOutput(const ViewSurface *surface, const Output *output) = 0;
 
+  /**
+   * @brief Virtual callback when this object leaves an output.
+   * @param surface
+   * @param output
+   */
   virtual void OnLeaveOutput(const ViewSurface *surface, const Output *output) = 0;
 
  private:

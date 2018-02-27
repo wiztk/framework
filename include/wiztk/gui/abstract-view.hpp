@@ -661,7 +661,7 @@ class AbstractView::GeometryMessage : public async::Message {
 
   ~GeometryMessage() final = default;
 
-  void Execute() final;
+  void Exec() final;
 
   static GeometryMessage *Get(const AbstractView *view);
 

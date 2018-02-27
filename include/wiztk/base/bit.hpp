@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_NUMERICAL_BIT_HPP_
-#define WIZTK_NUMERICAL_BIT_HPP_
+#ifndef WIZTK_BASE_BIT_HPP_
+#define WIZTK_BASE_BIT_HPP_
 
 namespace wiztk {
-namespace numerical {
+namespace base {
 
 /**
- * @ingroup numerical
+ * @ingroup base
  * @brief Helper class for bit operation
  */
 class Bit {
@@ -45,7 +45,7 @@ class Bit {
 
 };
 
-} // namespace numerical
+} // namespace base
 } // namespace wiztk
 
-#endif // WIZTK_NUMERICAL_BIT_HPP_
+#endif // WIZTK_BASE_BIT_HPP_

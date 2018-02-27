@@ -358,7 +358,7 @@ void GLWindow::OnMouseDown(MouseEvent *event) {
 
     int location = p_->GetMouseLocation(event);
 
-    if (location == kClientArea && (nullptr == MouseEventNode::Get(this)->next())) {
+    if (location == kClientArea && (nullptr == MouseTask::Get(this)->next())) {
       MoveWithMouse(event);
       event->Ignore();
       return;

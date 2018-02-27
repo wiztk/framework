@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 The WizTK Authors.
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,9 @@
 #include "abstract-shell-view_private.hpp"
 #include "abstract-view_private.hpp"
 
-#include "wiztk/numerical/bit.hpp"
+#include "wiztk/base/bit.hpp"
 
 #include "wiztk/async/event-loop.hpp"
-#include "wiztk/async/scheduler.hpp"
 
 #include "wiztk/gui/application.hpp"
 #include "wiztk/gui/mouse-event.hpp"
@@ -42,8 +41,8 @@ using Size = base::SizeI;
 
 using base::Margin;
 using base::SLOT;
+using base::Bit;
 using graphic::Canvas;
-using numerical::Bit;
 
 const Margin AbstractShellView::kResizingMargin(5, 5, 5, 5);
 
@@ -56,20 +55,22 @@ AbstractShellView::AbstractShellView(int width,
                                      const char *title,
                                      AbstractShellView *parent) {
   p_ = std::make_unique<Private>(this);
-  p_->size.width = width;
-  p_->size.height = height;
-  p_->last_size = p_->size;
-  p_->parent = parent;
+  __PROPERTY__(size).width = width;
+  __PROPERTY__(size).height = height;
+  __PROPERTY__(last_size) = __PROPERTY__(size);
+  __PROPERTY__(parent) = parent;
 
-  if (nullptr != title) p_->title = title;
+  if (nullptr != title) __PROPERTY__(title) = title;
 
-  if (nullptr == p_->parent) {
-    p_->shell_surface = ViewSurface::Shell::Toplevel::Create(this, Theme::GetShadowMargin());
-    ViewSurface::Shell::Toplevel *top_level_role = ViewSurface::Shell::Toplevel::Get(p_->shell_surface);
-    top_level_role->SetTitle(title);
+  if (nullptr == __PROPERTY__(parent)) {
+    __PROPERTY__(shell_surface) = ViewSurface::Shell::Toplevel::Create(this, Theme::GetShadowMargin());
+    auto *top_level = ViewSurface::Shell::Toplevel::Get(__PROPERTY__(shell_surface));
+    top_level->SetTitle(title);
   } else {
-    p_->shell_surface =
-        ViewSurface::Shell::Popup::Create(p_->parent->p_->shell_surface, this, Theme::GetShadowMargin());
+    __PROPERTY__(shell_surface) =
+        ViewSurface::Shell::Popup::Create(__PROPERTY__(parent)->__PROPERTY__(shell_surface),
+                                          this,
+                                          Theme::GetShadowMargin());
     // TODO: create popup shell surface
   }
 
@@ -81,30 +82,35 @@ AbstractShellView::AbstractShellView(int width,
 
   Region input_region;
   input_region.Add(x, y, width, height);
-  p_->shell_surface->SetInputRegion(input_region);
+  __PROPERTY__(shell_surface)->SetInputRegion(input_region);
 }
 
 AbstractShellView::~AbstractShellView() {
-  delete p_->shell_surface;
+  delete __PROPERTY__(shell_surface);
 }
 
 void AbstractShellView::SetTitle(const char *title) {
-  p_->title = title;
-  if (nullptr == p_->parent) {
-    ViewSurface::Shell::Toplevel::Get(p_->shell_surface)->SetTitle(title);
+  __PROPERTY__(title) = title;
+  if (nullptr == __PROPERTY__(parent)) {
+    ViewSurface::Shell::Toplevel::Get(__PROPERTY__(shell_surface))->SetTitle(title);
   }
 }
 
+const std::string &AbstractShellView::GetTitle() const {
+  return __PROPERTY__(title);
+}
+
 void AbstractShellView::SetAppId(const char *app_id) {
-  p_->app_id = app_id;
-  if (nullptr == p_->parent) {
-    ViewSurface::Shell::Toplevel::Get(p_->shell_surface)->SetAppId(app_id);
+  __PROPERTY__(app_id) = app_id;
+  if (nullptr == __PROPERTY__(parent)) {
+    ViewSurface::Shell::Toplevel::Get(__PROPERTY__(shell_surface))->SetAppId(app_id);
   }
 }
 
 void AbstractShellView::Show() {
   if (!IsShown()) {
-    p_->shell_surface->Commit();
+    __PROPERTY__(shell_surface)->Commit();
+    return;
   }
 }
 
@@ -121,10 +127,10 @@ void AbstractShellView::Close(SLOT) {
 }
 
 void AbstractShellView::Minimize(SLOT) {
-  ViewSurface::Shell::Toplevel *toplevel = ViewSurface::Shell::Toplevel::Get(p_->shell_surface);
+  auto *toplevel = ViewSurface::Shell::Toplevel::Get(__PROPERTY__(shell_surface));
   if (nullptr == toplevel) return;
 
-  Bit::Set<int>(p_->flags, Private::kFlagMaskMinimized);
+  Bit::Set<int>(__PROPERTY__(flags), Private::kFlagMaskMinimized);
   toplevel->SetMinimized();
   _ASSERT(IsMinimized());
 }
@@ -132,7 +138,7 @@ void AbstractShellView::Minimize(SLOT) {
 void AbstractShellView::ToggleMaximize(SLOT) {
   if (IsFullscreen()) return;
 
-  ViewSurface::Shell::Toplevel *toplevel = ViewSurface::Shell::Toplevel::Get(p_->shell_surface);
+  auto *toplevel = ViewSurface::Shell::Toplevel::Get(__PROPERTY__(shell_surface));
   if (nullptr == toplevel) return;
 
   if (IsMaximized()) {
@@ -143,88 +149,84 @@ void AbstractShellView::ToggleMaximize(SLOT) {
 }
 
 void AbstractShellView::ToggleFullscreen(const Output *output, SLOT) {
-  ViewSurface::Shell::Toplevel *toplevel = ViewSurface::Shell::Toplevel::Get(p_->shell_surface);
-  if (nullptr == toplevel) return;
+  auto *top_level = ViewSurface::Shell::Toplevel::Get(__PROPERTY__(shell_surface));
+  if (nullptr == top_level) return;
 
   if (output) {
-    toplevel->SetFullscreen(output);
+    top_level->SetFullscreen(output);
   } else {
-    toplevel->UnsetFullscreen();
+    top_level->UnsetFullscreen();
   }
-}
-
-const std::string &AbstractShellView::GetTitle() const {
-  return p_->title;
 }
 
 bool AbstractShellView::IsFullscreen() const {
-  return 0 != (p_->flags & Private::kFlagMaskFullscreen);
+  return 0 != (__PROPERTY__(flags) & Private::kFlagMaskFullscreen);
 }
 
 bool AbstractShellView::IsMaximized() const {
-  return 0 != (p_->flags & Private::kFlagMaskMaximized);
+  return 0 != (__PROPERTY__(flags) & Private::kFlagMaskMaximized);
 }
 
 bool AbstractShellView::IsMinimized() const {
-  return 0 != (p_->flags & Private::kFlagMaskMinimized);
+  return 0 != (__PROPERTY__(flags) & Private::kFlagMaskMinimized);
 }
 
 bool AbstractShellView::IsFocused() const {
-  return 0 != (p_->flags & Private::kFlagMaskFocused);
+  return 0 != (__PROPERTY__(flags) & Private::kFlagMaskFocused);
 }
 
 bool AbstractShellView::IsResizing() const {
-  return 0 != (p_->flags & Private::kFlagMaskResizing);
+  return 0 != (__PROPERTY__(flags) & Private::kFlagMaskResizing);
 }
 
 bool AbstractShellView::IsShown() const {
-  return 0 != (p_->flags & Private::kFlagMaskShown);
+  return 0 != (__PROPERTY__(flags) & Private::kFlagMaskShown);
 }
 
 int AbstractShellView::GetWidth() const {
-  return p_->size.width;
+  return __PROPERTY__(size).width;
 }
 
 int AbstractShellView::GetHeight() const {
-  return p_->size.height;
+  return __PROPERTY__(size).height;
 }
 
 AbstractShellView *AbstractShellView::GetParent() const {
-  return p_->parent;
+  return __PROPERTY__(parent);
 }
 
 void AbstractShellView::AttachView(AbstractView *view) {
-  if (view->p_->shell_view == this) {
-    _ASSERT(nullptr == view->p_->parent);
+  if (view->__PROPERTY__(shell_view) == this) {
+    _ASSERT(nullptr == view->__PROPERTY__(parent));
     return;
   }
 
-  if (view->p_->parent) {
-    _ASSERT(nullptr == view->p_->shell_view);
-    view->p_->parent->RemoveChild(view);
-    _ASSERT(nullptr == view->p_->parent);
-    _ASSERT(nullptr == view->p_->previous);
-    _ASSERT(nullptr == view->p_->next);
-  } else if (view->p_->shell_view) {
-    _ASSERT(nullptr == view->p_->parent);
-    view->p_->shell_view->DetachView(view);
+  if (nullptr != view->__PROPERTY__(parent)) {
+    _ASSERT(nullptr == view->__PROPERTY__(shell_view));
+    view->__PROPERTY__(parent)->RemoveChild(view);
+    _ASSERT(nullptr == view->__PROPERTY__(parent));
+    _ASSERT(nullptr == view->__PROPERTY__(previous));
+    _ASSERT(nullptr == view->__PROPERTY__(next));
+  } else if (nullptr != view->__PROPERTY__(shell_view)) {
+    _ASSERT(nullptr == view->__PROPERTY__(parent));
+    view->__PROPERTY__(shell_view)->DetachView(view);
   }
 
-  view->p_->shell_view = this;
+  view->__PROPERTY__(shell_view) = this;
 
   OnViewAttached(view);
-  if (view->p_->shell_view == this)
+  if (view->__PROPERTY__(shell_view) == this)
     view->OnAttachedToShellView();
 }
 
 void AbstractShellView::DetachView(AbstractView *view) {
-  if (view->p_->shell_view != this) return;
+  if (view->__PROPERTY__(shell_view) != this) return;
 
-  _ASSERT(nullptr == view->p_->parent);
-  view->p_->shell_view = nullptr;
+  _ASSERT(nullptr == view->__PROPERTY__(parent));
+  view->__PROPERTY__(shell_view) = nullptr;
 
   OnViewDetached(view);
-  if (view->p_->shell_view != this)
+  if (view->__PROPERTY__(shell_view) != this)
     view->OnDetachedFromShellView(this);
 }
 
@@ -259,14 +261,12 @@ void AbstractShellView::OnKeyUp(KeyEvent *event) {
 void AbstractShellView::OnRequestSaveGeometry(AbstractView *view) {
   async::Scheduler scheduler = async::EventLoop::GetCurrent()->GetScheduler();
 
-  if (p_->geometry_task.IsQueued()) {
-    scheduler.PostMessageAfter(&p_->geometry_task,
+  if (__PROPERTY__(geometry_task).IsQueued()) {
+    scheduler.PostMessageAfter(&__PROPERTY__(geometry_task),
                                AbstractView::GeometryMessage::Get(view));
-//    p_->geometry_task.push_back(AbstractView::GeometryTask::Get(view));
     return;
   }
 
-//  Application::GetInstance()->GetTaskDeque().push_back(AbstractView::GeometryTask::Get(view));
   scheduler.PostMessage(AbstractView::GeometryMessage::Get(view));
 }
 
@@ -305,31 +305,30 @@ void AbstractShellView::OnViewDetached(AbstractView *view) {
 }
 
 bool AbstractShellView::RequestSaveSize(const Size &size) {
-  p_->size = size;
+  __PROPERTY__(size) = size;
 
-  if (p_->last_size == p_->size) {
-    p_->geometry_task.Unlink();
+  if (__PROPERTY__(last_size) == __PROPERTY__(size)) {
+    __PROPERTY__(geometry_task).Unlink();
     return false;
   }
 
-  if (!p_->geometry_task.IsQueued()) {
-    async::EventLoop::GetCurrent()->GetScheduler().PostMessage(&p_->geometry_task);
-//    Application::GetInstance()->GetTaskDeque().push_back(&p_->geometry_task);
+  if (!__PROPERTY__(geometry_task).IsQueued()) {
+    async::EventLoop::GetCurrent()->GetScheduler().PostMessage(&__PROPERTY__(geometry_task));
   }
 
   return true;
 }
 
 void AbstractShellView::MoveWithMouse(MouseEvent *event) const {
-  ViewSurface::Shell::Toplevel::Get(p_->shell_surface)->Move(*event, event->GetSerial());
+  ViewSurface::Shell::Toplevel::Get(__PROPERTY__(shell_surface))->Move(*event, event->GetSerial());
 }
 
 void AbstractShellView::ResizeWithMouse(MouseEvent *event, uint32_t edges) const {
-  ViewSurface::Shell::Toplevel::Get(p_->shell_surface)->Resize(*event, event->GetSerial(), edges);
+  ViewSurface::Shell::Toplevel::Get(__PROPERTY__(shell_surface))->Resize(*event, event->GetSerial(), edges);
 }
 
 ViewSurface *AbstractShellView::GetShellSurface() const {
-  return p_->shell_surface;
+  return __PROPERTY__(shell_surface);
 }
 
 void AbstractShellView::DispatchUpdate(AbstractView *view) {
@@ -355,7 +354,7 @@ void AbstractShellView::Draw(AbstractView *view, const Context &context) {
 
 void AbstractShellView::DispatchMouseEnterEvent(AbstractView *view, MouseEvent *event) {
   Point cursor = event->GetWindowXY();
-  MouseEventNode *mouse_task = MouseEventNode::Get(this);
+  MouseTask *mouse_task = MouseTask::Get(this);
 
   if (nullptr == mouse_task->next()) {
     _ASSERT(mouse_task->event_handler() == this);
@@ -363,17 +362,17 @@ void AbstractShellView::DispatchMouseEnterEvent(AbstractView *view, MouseEvent *
     if (view->Contain(cursor.x, cursor.y)) {
       view->OnMouseEnter(event);
       if (event->IsAccepted()) {
-        mouse_task->push_back(MouseEventNode::Get(view));
+        mouse_task->push_back(MouseTask::Get(view));
         mouse_task = mouse_task->next();
-        p_->DispatchMouseEnterEvent(view, event, mouse_task);
+        __PROPERTY__(DispatchMouseEnterEvent)(view, event, mouse_task);
       } else if (event->IsIgnored()) {
-        p_->DispatchMouseEnterEvent(view, event, mouse_task);
+        __PROPERTY__(DispatchMouseEnterEvent)(view, event, mouse_task);
       }
     }
   } else {
     while (mouse_task->next()) mouse_task = mouse_task->next(); // move to tail
     AbstractView *last = nullptr;
-    MouseEventNode *tail = nullptr;
+    MouseTask *tail = nullptr;
     while (mouse_task->previous()) {
       tail = mouse_task;
       last = static_cast<AbstractView *>(tail->event_handler());
@@ -386,14 +385,14 @@ void AbstractShellView::DispatchMouseEnterEvent(AbstractView *view, MouseEvent *
       if (nullptr == mouse_task->previous()) break;
     }
 
-    p_->DispatchMouseEnterEvent(last, event, mouse_task);
+    __PROPERTY__(DispatchMouseEnterEvent)(last, event, mouse_task);
   }
 }
 
 void AbstractShellView::DispatchMouseLeaveEvent() {
-  MouseEventNode *it = MouseEventNode::Get(this)->next();
+  MouseTask *it = MouseTask::Get(this)->next();
 
-  MouseEventNode *tmp = nullptr;
+  MouseTask *tmp = nullptr;
   while (it) {
     tmp = it;
     it = it->next();
@@ -405,7 +404,7 @@ void AbstractShellView::DispatchMouseLeaveEvent() {
 void AbstractShellView::DispatchMouseDownEvent(MouseEvent *event) {
   _ASSERT(event->GetState() == kMouseButtonPressed);
 
-  MouseEventNode *it = MouseEventNode::Get(this)->next();
+  MouseTask *it = MouseTask::Get(this)->next();
   while (it) {
     it->event_handler()->OnMouseDown(event);
     if (event->IsRejected()) break;
@@ -416,7 +415,7 @@ void AbstractShellView::DispatchMouseDownEvent(MouseEvent *event) {
 void AbstractShellView::DispatchMouseUpEvent(MouseEvent *event) {
   _ASSERT(event->GetState() == kMouseButtonReleased);
 
-  MouseEventNode *it = MouseEventNode::Get(this)->next();
+  MouseTask *it = MouseTask::Get(this)->next();
   while (it) {
     it->event_handler()->OnMouseUp(event);
     if (event->IsRejected()) break;
@@ -515,11 +514,11 @@ void AbstractShellView::DropShadow(const Context &context) {
 
 // ---------
 
-void AbstractShellView::GeometryMessage::Execute() {
-  shell_view_->OnSaveSize(shell_view_->p_->last_size, shell_view_->p_->size);
-  shell_view_->p_->last_size = shell_view_->p_->size;
-  ViewSurface::Shell::Get(shell_view_->p_->shell_surface)->ResizeWindow(shell_view_->p_->size.width,
-                                                                        shell_view_->p_->size.height);  // Call xdg surface api
+void AbstractShellView::GeometryMessage::Exec() {
+  shell_view_->OnSaveSize(shell_view_->__PROPERTY__(last_size), shell_view_->__PROPERTY__(size));
+  shell_view_->__PROPERTY__(last_size) = shell_view_->__PROPERTY__(size);
+  ViewSurface::Shell::Get(shell_view_->__PROPERTY__(shell_surface))->ResizeWindow(shell_view_->__PROPERTY__(size).width,
+                                                                                  shell_view_->__PROPERTY__(size).height);  // Call xdg surface api
 }
 
 } // namespace gui

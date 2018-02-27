@@ -177,8 +177,6 @@ void Window::Private::DrawOutline(const Context &context, const Path &path) {
   paint.SetColor(window_schema.inactive.outline.colors[0]);
   paint.SetStyle(Paint::Style::kStyleStroke);
   paint.SetStrokeWidth(.5f);
-
-  // FIXME: this function draws a white circle at bottom corners.
   context.canvas()->DrawPath(path, paint);
 }
 
@@ -270,30 +268,33 @@ Window::Window(int width, int height, const char *title)
   p_ = std::make_unique<Private>(this);
 
   // Create the default title bar:
-  auto *titlebar = new TitleBar;
-  p_->title_bar = titlebar;
+  auto *title_bar = new TitleBar;
+  p_->title_bar = title_bar;
   AttachView(p_->title_bar);
 
-  titlebar->SetTitle(title);
-  titlebar->Resize(GetWidth(), TitleBar::kHeight);
+  title_bar->SetTitle(title);
+  title_bar->Resize(GetWidth(), TitleBar::kHeight);
 
-  AbstractButton *button = titlebar->GetButton(TitleBar::kButtonClose);
+  AbstractButton *button = title_bar->GetButton(TitleBar::kButtonClose);
   button->clicked().Connect(this, static_cast<void (Window::*)(base::SLOT)>(&AbstractShellView::Close));
 
-  button = titlebar->GetButton(TitleBar::kButtonMaximize);
+  button = title_bar->GetButton(TitleBar::kButtonMaximize);
   button->clicked().Connect(this, static_cast<void (Window::*)(base::SLOT)>(&AbstractShellView::ToggleMaximize));
 
-  button = titlebar->GetButton(TitleBar::kButtonMinimize);
+  button = title_bar->GetButton(TitleBar::kButtonMinimize);
   button->clicked().Connect(this, static_cast<void (Window::*)(base::SLOT)>(&AbstractShellView::Minimize));
 
-  button = titlebar->GetButton(TitleBar::kButtonFullscreen);
+  button = title_bar->GetButton(TitleBar::kButtonFullscreen);
   //button->clicked().Connect(this, static_cast<void (Window::*)(SLOT)>(&AbstractShellView::SetFullscreen));
   button->clicked().Connect(this, &Window::OnFullscreenButtonClicked);
 }
 
 Window::~Window() {
-  if (nullptr != p_->content_view) p_->content_view->Destroy();
-  if (nullptr != p_->title_bar) p_->title_bar->Destroy();
+  if (nullptr != __PROPERTY__(content_view))
+    __PROPERTY__(content_view)->Destroy();
+
+  if (nullptr != __PROPERTY__(title_bar))
+    __PROPERTY__(title_bar)->Destroy();
 }
 
 AbstractView *Window::GetTitleBar() const {
@@ -634,7 +635,7 @@ void Window::OnMouseDown(MouseEvent *event) {
 
     int location = GetMouseLocation(event);
 
-    if (location == kTitleBar && (nullptr == MouseEventNode::Get(this)->next())) {
+    if (location == kTitleBar && (nullptr == MouseTask::Get(this)->next())) {
       MoveWithMouse(event);
       event->Ignore();
       return;

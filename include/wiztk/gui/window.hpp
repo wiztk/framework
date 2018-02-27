@@ -17,7 +17,7 @@
 #ifndef WIZTK_GUI_WINDOW_HPP_
 #define WIZTK_GUI_WINDOW_HPP_
 
-#include "abstract-shell-view.hpp"
+#include "wiztk/gui/abstract-shell-view.hpp"
 
 namespace wiztk {
 namespace gui {
@@ -28,7 +28,7 @@ namespace gui {
  *
  * @example hello.cpp
  */
-WIZTK_EXPORT class Window : public AbstractShellView {
+class WIZTK_EXPORT Window : public AbstractShellView {
 
  public:
 
@@ -51,7 +51,7 @@ WIZTK_EXPORT class Window : public AbstractShellView {
    */
   Window(int width, int height, const char *title);
 
-  virtual ~Window();
+  ~Window() override;
 
   /**
    * @brief Get the title bar view
@@ -103,7 +103,7 @@ WIZTK_EXPORT class Window : public AbstractShellView {
 
   void OnKeyDown(KeyEvent *event) override;
 
-  void OnFocus(bool);
+  void OnFocus(bool) override;
 
   void OnViewAttached(AbstractView *view) final;
 

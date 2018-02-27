@@ -27,7 +27,7 @@
 #include "wiztk/graphic/canvas.hpp"
 #include "wiztk/graphic/paint.hpp"
 
-#include "wiztk/numerical/clamp.hpp"
+#include "wiztk/base/clamp.hpp"
 
 namespace wiztk {
 namespace gui {
@@ -35,8 +35,6 @@ namespace gui {
 using base::ColorF;
 using graphic::Canvas;
 using graphic::Paint;
-
-using namespace wiztk::numerical;
 
 struct Spinner::Private : public base::Property<Spinner> {
 
@@ -67,8 +65,8 @@ void Spinner::Private::Draw(const Context &context) {
   canvas->Scale(scale, scale);
 
   const RectF &rect = proprietor()->GetBounds();
-  float radius = Clamp(std::min(rect.width(), rect.height()) / 2.f - 50.f,
-                       50.f, 200.f);
+  float radius = base::Clamp(std::min(rect.width(), rect.height()) / 2.f - 50.f,
+                             50.f, 200.f);
 
   Paint paint;
   paint.SetAntiAlias(true);

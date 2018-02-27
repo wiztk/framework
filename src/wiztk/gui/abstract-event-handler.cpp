@@ -15,20 +15,29 @@
  */
 
 #include "abstract-event-handler_private.hpp"
-#include "abstract-view_private.hpp"
 
 namespace wiztk {
 namespace gui {
 
 using base::String;
 
+AbstractEventHandler::MouseTask *
+AbstractEventHandler::MouseTask::Get(const AbstractEventHandler *event_hander) {
+  return &event_hander->__PROPERTY__(mouse_event_node);
+}
+
+AbstractEventHandler::MouseMotionTask *
+AbstractEventHandler::MouseMotionTask::Get(const AbstractEventHandler *event_handler) {
+  return &event_handler->__PROPERTY__(mouse_motion_event_node);
+}
+
+// --------------------
+
 AbstractEventHandler::AbstractEventHandler() {
   p_ = std::make_unique<Private>(this);
 }
 
-AbstractEventHandler::~AbstractEventHandler() {
-
-}
+AbstractEventHandler::~AbstractEventHandler() = default;
 
 const String &AbstractEventHandler::GetName() const {
   return __PROPERTY__(name);
@@ -36,18 +45,6 @@ const String &AbstractEventHandler::GetName() const {
 
 void AbstractEventHandler::SetName(const String &name) {
   __PROPERTY__(name) = name;
-}
-
-// --------------------
-
-AbstractEventHandler::MouseEventNode *
-AbstractEventHandler::MouseEventNode::Get(const AbstractEventHandler *event_hander) {
-  return &event_hander->__PROPERTY__(mouse_event_node);
-}
-
-AbstractEventHandler::MouseMotionEventNode *
-AbstractEventHandler::MouseMotionEventNode::Get(const AbstractEventHandler *event_handler) {
-  return &event_handler->__PROPERTY__(mouse_motion_event_node);
 }
 
 } // namespace gui

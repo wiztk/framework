@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 The WizTK Authors.
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 #ifndef WIZTK_GUI_ABSTRACT_SHELL_VIEW_HPP_
 #define WIZTK_GUI_ABSTRACT_SHELL_VIEW_HPP_
 
-#include "abstract-event-handler.hpp"
+#include "wiztk/gui/abstract-event-handler.hpp"
 
 #include "wiztk/base/rect.hpp"
 #include "wiztk/base/margin.hpp"
@@ -52,15 +52,12 @@ WIZTK_EXPORT class AbstractShellView : public AbstractEventHandler {
 
  public:
 
-  WIZTK_DECLARE_NONCOPYABLE(AbstractShellView);
-  AbstractShellView() = delete;
-
   using Size   = base::SizeI;           /**< @brief Alias of base::SizeI */
   using Rect   = base::RectI;           /**< @brief Alias of base::RectI */
   using Margin = base::Margin;          /**< @brief Alias of base::Margin */
 
   /**
-   * @brief A nested class to update the size
+   * @brief A nested class runs in event loop to update the geometry of this shell view.
    */
   class GeometryMessage : public async::Message {
 
@@ -80,13 +77,25 @@ WIZTK_EXPORT class AbstractShellView : public AbstractEventHandler {
      * This method will call AbstractShellView::OnSaveSize(), record the last size and
      * use the xdg shell api to set the window geometry.
      */
-    void Execute() final;
+    void Exec() final;
 
    private:
 
     AbstractShellView *shell_view_;
 
   };
+
+  /**
+   * @brief Declare this object is non-copyable.
+   */
+  WIZTK_DECLARE_NONCOPYABLE(AbstractShellView);
+
+  /**
+   * @brief Disable the default constructor.
+   */
+  AbstractShellView() = delete;
+
+ public:
 
   /**
    * @brief Enumeration values to indicate where the mouse
@@ -137,13 +146,15 @@ WIZTK_EXPORT class AbstractShellView : public AbstractEventHandler {
    *
    * This destructor will destroy the content view attached and the shell frame.
    */
-  virtual ~AbstractShellView();
+  ~AbstractShellView() override;
 
   /**
    * @brief Set the title of this shell view
    * @param title A string of the window title
    */
   void SetTitle(const char *title);
+
+  const std::string &GetTitle() const;
 
   /**
    * @brief Set the App ID
@@ -160,8 +171,6 @@ WIZTK_EXPORT class AbstractShellView : public AbstractEventHandler {
   void ToggleMaximize(__SLOT__);
 
   void ToggleFullscreen(const Output *output, __SLOT__);
-
-  const std::string &GetTitle() const;
 
   bool IsFullscreen() const;
 
@@ -220,27 +229,27 @@ WIZTK_EXPORT class AbstractShellView : public AbstractEventHandler {
 
   virtual void OnSaveSize(const Size &old_size, const Size &new_size) = 0;
 
-  virtual void OnMouseEnter(MouseEvent *event) override;
+  void OnMouseEnter(MouseEvent *event) override;
 
-  virtual void OnMouseLeave() override;
+  void OnMouseLeave() override;
 
-  virtual void OnMouseMove(MouseEvent *event) override;
+  void OnMouseMove(MouseEvent *event) override;
 
-  virtual void OnMouseDown(MouseEvent *event) override;
+  void OnMouseDown(MouseEvent *event) override;
 
-  virtual void OnMouseUp(MouseEvent *event) override;
+  void OnMouseUp(MouseEvent *event) override;
 
-  virtual void OnKeyDown(KeyEvent *event) override;
+  void OnKeyDown(KeyEvent *event) override;
 
-  virtual void OnKeyUp(KeyEvent *event) override;
+  void OnKeyUp(KeyEvent *event) override;
 
-  virtual void OnRequestSaveGeometry(AbstractView *view) override;
+  void OnRequestSaveGeometry(AbstractView *view) override;
 
-  virtual void OnRequestUpdateFrom(AbstractView *view) override;
+  void OnRequestUpdateFrom(AbstractView *view) override;
 
-  virtual void OnEnterOutput(const ViewSurface *surface, const Output *output) override;
+  void OnEnterOutput(const ViewSurface *surface, const Output *output) override;
 
-  virtual void OnLeaveOutput(const ViewSurface *surface, const Output *output) override;
+  void OnLeaveOutput(const ViewSurface *surface, const Output *output) override;
 
   virtual void OnMaximized(bool);
 

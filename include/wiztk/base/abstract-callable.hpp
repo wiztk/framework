@@ -32,7 +32,7 @@ class AbstractCallable;
  * @tparam ParamTypes
  */
 template<typename ReturnType, typename ... ParamTypes>
-class AbstractCallable<ReturnType(ParamTypes...)> {
+class WIZTK_EXPORT AbstractCallable<ReturnType(ParamTypes...)> {
 
  public:
 

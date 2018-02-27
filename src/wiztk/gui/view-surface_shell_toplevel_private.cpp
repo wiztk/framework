@@ -18,12 +18,12 @@
 #include "view-surface_private.hpp"
 #include "abstract-shell-view_private.hpp"
 
-#include "wiztk/numerical/bit.hpp"
+#include "wiztk/base/bit.hpp"
 
 namespace wiztk {
 namespace gui {
 
-using numerical::Bit;
+using base::Bit;
 
 const struct zxdg_toplevel_v6_listener ViewSurface::Shell::Toplevel::Private::kListener = {
     OnConfigure,

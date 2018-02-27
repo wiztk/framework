@@ -17,7 +17,7 @@
 #ifndef WIZTK_BASE_COLOR_HPP_
 #define WIZTK_BASE_COLOR_HPP_
 
-#include "wiztk/numerical/clamp.hpp"
+#include "wiztk/base/clamp.hpp"
 
 #include <cstdint>
 #include <cstring>
@@ -98,8 +98,6 @@ struct Color {
   }
 
   Color &operator+=(short shade) {
-    using numerical::Clamp;
-
     r = Clamp(r + shade / T(255.), T(0.), T(1.));
     g = Clamp(g + shade / T(255.), T(0.), T(1.));
     b = Clamp(b + shade / T(255.), T(0.), T(1.));
@@ -108,8 +106,6 @@ struct Color {
   }
 
   Color &operator-=(short shade) {
-    using numerical::Clamp;
-
     r = Clamp(r - shade / T(255.), T(0.), T(1.));
     g = Clamp(g - shade / T(255.), T(0.), T(1.));
     b = Clamp(b - shade / T(255.), T(0.), T(1.));
@@ -163,8 +159,6 @@ struct Color {
 
 template<typename T>
 inline Color<T> operator+(const Color<T> &src, short shade) {
-  using numerical::Clamp;
-
   Color<T> color;
   color.r = Clamp(src.r + shade / T(255.), T(0.), T(1.));
   color.g = Clamp(src.g + shade / T(255.), T(0.), T(1.));
@@ -175,8 +169,6 @@ inline Color<T> operator+(const Color<T> &src, short shade) {
 
 template<typename T>
 inline Color<T> operator+(const Color<T> &color1, const Color<T> &color2) {
-  using numerical::Clamp;
-
   Color<T> color;
   color.r = Clamp(color1.r + color2.r, T(0.), T(1.));
   color.g = Clamp(color1.g + color2.g, T(0.), T(1.));
@@ -187,8 +179,6 @@ inline Color<T> operator+(const Color<T> &color1, const Color<T> &color2) {
 
 template<typename T>
 inline Color<T> operator-(const Color<T> &src, short shade) {
-  using numerical::Clamp;
-
   Color<T> color;
   color.r = Clamp(src.r - shade / T(255.), T(0.), T(1.));
   color.g = Clamp(src.g - shade / T(255.), T(0.), T(1.));
@@ -200,8 +190,6 @@ inline Color<T> operator-(const Color<T> &src, short shade) {
 
 template<typename T>
 inline Color<T> operator-(const Color<T> &color1, const Color<T> &color2) {
-  using numerical::Clamp;
-
   Color<T> color;
   color.r = Clamp(color1.r - color2.r, T(0.), T(1.));
   color.g = Clamp(color1.g - color2.g, T(0.), T(1.));

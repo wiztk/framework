@@ -28,7 +28,7 @@ namespace base {
  * @tparam ParamTypes
  */
 template<typename ... ParamTypes>
-class AbstractRunnable {
+class WIZTK_EXPORT AbstractRunnable {
 
  public:
 

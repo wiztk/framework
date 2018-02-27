@@ -53,7 +53,7 @@ class WIZTK_NO_EXPORT MessageTraits : public base::Binode<MessageTraits> {
 
 /**
  * @ingroup async
- * @brief Abstract event which can be lined up and executed in an event queue.
+ * @brief Abstract event which can be lined up and executed in a message queue.
  */
 class Message {
 
@@ -69,7 +69,7 @@ class Message {
 
   virtual ~Message() = default;
 
-  virtual void Execute() {};
+  virtual void Exec() {};
 
   bool IsQueued() const {
     return traits_.is_linked();
