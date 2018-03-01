@@ -1,4 +1,4 @@
-# Copyright 2017 The WizTK Authors.
+# Copyright 2017 - 2018 The WizTK Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 # core module
 add_subdirectory(base)
 add_subdirectory(system)
+add_subdirectory(device)
 add_subdirectory(async)
 add_subdirectory(graphic)
 add_subdirectory(net)

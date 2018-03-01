@@ -16,4 +16,4 @@ file(GLOB sources "*.cpp")
 file(GLOB headers "*.hpp")
 
 add_executable(graphic-paint ${sources} ${headers})
-target_link_libraries(graphic-paint ${GTEST_LIBRARIES} wiztk)
+target_link_libraries(graphic-paint ${GTEST_LIBRARIES} wiztk-graphic)

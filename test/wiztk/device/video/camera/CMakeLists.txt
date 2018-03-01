@@ -15,5 +15,5 @@
 file(GLOB sources "*.cpp")
 file(GLOB headers "*.hpp")
 
-add_executable(graphic-font-style ${sources} ${headers})
-target_link_libraries(graphic-font-style ${GTEST_LIBRARIES} wiztk-graphic)
+add_executable(device-video-camera ${sources} ${headers})
+target_link_libraries(device-video-camera ${GTEST_LIBRARIES} wiztk-device)

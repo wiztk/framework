@@ -1,4 +1,4 @@
-# Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+# Copyright 2017 - 2018 The WizTK Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,4 +16,4 @@ file(GLOB sources "*.cpp")
 file(GLOB headers "*.hpp")
 
 add_executable(graphic-font ${sources} ${headers})
-target_link_libraries(graphic-font ${GTEST_LIBRARIES} wiztk)
+target_link_libraries(graphic-font ${GTEST_LIBRARIES} wiztk-graphic)

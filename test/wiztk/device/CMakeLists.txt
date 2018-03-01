@@ -12,8 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-file(GLOB sources "*.cpp")
-file(GLOB headers "*.hpp")
-
-add_executable(graphic-font-style ${sources} ${headers})
-target_link_libraries(graphic-font-style ${GTEST_LIBRARIES} wiztk-graphic)
+add_subdirectory(video/camera)

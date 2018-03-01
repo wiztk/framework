@@ -1,4 +1,4 @@
-# Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+# Copyright 2017 - 2018 The WizTK Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,22 +15,22 @@
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 
 add_executable(hello hello.cpp)
-target_link_libraries(hello wiztk)
+target_link_libraries(hello wiztk-gui)
 
 add_executable(simple-shm simple-shm.cpp)
-target_link_libraries(simple-shm wiztk)
+target_link_libraries(simple-shm wiztk-gui)
 
 add_executable(simple-egl simple-egl.cpp)
-target_link_libraries(simple-egl wiztk)
+target_link_libraries(simple-egl wiztk-gui)
 
 add_executable(eventdemo eventdemo.cpp)
-target_link_libraries(eventdemo wiztk)
+target_link_libraries(eventdemo wiztk-gui)
 
 add_executable(frameless frameless.cpp)
-target_link_libraries(frameless wiztk)
+target_link_libraries(frameless wiztk-gui)
 
 add_executable(theme theme.cpp)
-target_link_libraries(theme wiztk)
+target_link_libraries(theme wiztk-gui)
 
 add_executable(player player.cpp)
-target_link_libraries(player wiztk)
+target_link_libraries(player wiztk-gui)

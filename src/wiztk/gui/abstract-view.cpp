@@ -17,7 +17,7 @@
 #include "abstract-view_private.hpp"
 #include "abstract-view_iterators.hpp"
 
-#include "async/scheduler.hpp"
+#include "wiztk/async/scheduler.hpp"
 #include "wiztk/async/event-loop.hpp"
 
 #include "wiztk/base/bit.hpp"
@@ -26,7 +26,6 @@
 #include "wiztk/gui/abstract-shell-view.hpp"
 #include "wiztk/gui/abstract-layout.hpp"
 #include "wiztk/gui/mouse-event.hpp"
-#include "wiztk/gui/application.hpp"
 
 namespace wiztk {
 namespace gui {

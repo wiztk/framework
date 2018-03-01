@@ -1,4 +1,4 @@
-# Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+# Copyright 2017 - 2018 The WizTK Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -33,47 +33,55 @@
 #file(GLOB_RECURSE gui_sources "gui/*.cpp")
 #list(APPEND all_source_files ${gui_headers} ${gui_sources})
 
-file(GLOB_RECURSE public_headers "${PROJECT_SOURCE_DIR}/include/wiztk/*.hpp")
-file(GLOB_RECURSE internal_headers "./*.hpp")
-file(GLOB_RECURSE sources "./*.cpp")
-list(APPEND all_source_files ${public_headers} ${internal_headers} ${sources})
+#file(GLOB_RECURSE public_headers "${PROJECT_SOURCE_DIR}/include/wiztk/*.hpp")
+#file(GLOB_RECURSE internal_headers "./*.hpp")
+#file(GLOB_RECURSE sources "./*.cpp")
+#list(APPEND all_source_files ${public_headers} ${internal_headers} ${sources})
 
 set(config_header "${PROJECT_BINARY_DIR}/include/wiztk/config.hpp")
 
 set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 
-if (BUILD_SHARED_LIBRARY)
-    add_library(wiztk SHARED ${config_header} ${all_source_files})
-    set_target_properties(wiztk PROPERTIES VERSION 1 SOVERSION 1)
-else ()
-    add_library(wiztk ${config_header} ${all_source_files})
-endif ()
+#if (BUILD_SHARED_LIBRARY)
+#    add_library(wiztk SHARED ${config_header} ${all_source_files})
+#    set_target_properties(wiztk PROPERTIES VERSION 1 SOVERSION 1)
+#else ()
+#    add_library(wiztk ${config_header} ${all_source_files})
+#endif ()
+#
+#target_include_directories(
+#        wiztk
+#        PRIVATE "${PROJECT_SOURCE_DIR}/include/wiztk"
+#        #        PRIVATE "${PROJECT_SOURCE_DIR}/third_party/icu"
+#)
+#
+##    target_link_libraries(
+##            wiztk
+##            rt
+##            ${LIBS}
+##            wayland-cursor
+##            skia
+##            xdg-shell-unstable-v6-client
+##            OpenImageIO
+##            OpenImageIO_Util
+##            chromium_base
+##    )
+#target_link_libraries(
+#        wiztk
+#        PUBLIC rt
+#        PUBLIC ${LIBS}
+#        PUBLIC wayland-cursor
+#        PRIVATE skia
+#        PRIVATE xdg-shell-unstable-v6
+#        #        PRIVATE icu_utf # in third_party
+#)
 
-target_include_directories(
-        wiztk
-        PRIVATE "${PROJECT_SOURCE_DIR}/include/wiztk"
-        #        PRIVATE "${PROJECT_SOURCE_DIR}/third_party/icu"
-)
+#install(TARGETS wiztk DESTINATION lib)
 
-#    target_link_libraries(
-#            wiztk
-#            rt
-#            ${LIBS}
-#            wayland-cursor
-#            skia
-#            xdg-shell-unstable-v6-client
-#            OpenImageIO
-#            OpenImageIO_Util
-#            chromium_base
-#    )
-target_link_libraries(
-        wiztk
-        PUBLIC rt
-        PUBLIC ${LIBS}
-        PUBLIC wayland-cursor
-        PRIVATE skia
-        PRIVATE xdg-shell-unstable-v6
-        #        PRIVATE icu_utf # in third_party
-)
-
-install(TARGETS wiztk DESTINATION lib)
+add_subdirectory(base)
+add_subdirectory(async)
+add_subdirectory(system)
+add_subdirectory(device)
+add_subdirectory(graphic)
+add_subdirectory(net)
+add_subdirectory(gui)

@@ -1,4 +1,4 @@
-# Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+# Copyright 2017 - 2018 The WizTK Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -180,6 +180,12 @@ find_package(ICU COMPONENTS uc i18n io REQUIRED)
 if (ICU_FOUND)
     include_directories(${ICU_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${ICU_LIBRARIES})
+endif ()
+
+find_package(V4L REQUIRED)
+if (V4L_FOUND)
+    include_directories(${V4L_INCLUDE_DIR})
+    set(LIBS ${LIBS} ${V4L_LIBRARY})
 endif ()
 
 find_library(DL_LIBRARY "dl")
