@@ -36,7 +36,7 @@ namespace base {
  */
 class WIZTK_EXPORT BinodeBase {
 
-  template<typename T> friend
+  template<typename T, typename D> friend
   class Deque;
 
   template<typename T> friend

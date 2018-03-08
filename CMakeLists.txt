@@ -14,7 +14,7 @@
 
 cmake_minimum_required(VERSION 3.1)
 
-project(WizTK)
+project(WizTK-Framework)
 
 # The project version number.
 set(VERSION_MAJOR 0 CACHE STRING "Project major version number.")
@@ -247,12 +247,12 @@ list(APPEND SKIA_PUBLIC_INCLUDES
 include_directories(${SKIA_PUBLIC_INCLUDES})
 link_directories(${SKIA_LIB_DIR})
 
+# Add this difinition to change the ordering to work in Wayland/X windows.
+add_definitions(-DSK_SAMPLES_FOR_X)
+
 # Wayland protocols
 include_directories(${PREBUILTS_DIR}/wayland-protocols/unstable/xdg-shell)
 link_directories(${PREBUILTS_DIR}/wayland-protocols/unstable/xdg-shell)
-
-# Add this difinition to change the ordering to work in Wayland/X windows.
-add_definitions(-DSK_SAMPLES_FOR_X)
 
 # ----------------------------------------------------------------------------
 # Sub directories

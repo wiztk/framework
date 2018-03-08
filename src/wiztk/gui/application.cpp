@@ -167,7 +167,7 @@ Application *Application::GetInstance() {
 Application *Application::kInstance = nullptr;
 
 Application::Application(int argc, char *argv[]) {
-  if (kInstance != nullptr)
+  if (nullptr != kInstance)
     throw std::runtime_error("Error! There should be only one application instance!");
 
   kInstance = this;

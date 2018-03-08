@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_CALLBACK_HPP
-#define WIZTK_CALLBACK_HPP
+#ifndef WIZTK_GUI_CALLBACK_HPP_
+#define WIZTK_GUI_CALLBACK_HPP_
 
 #include "wiztk/base/delegate.hpp"
 #include "wiztk/base/macros.hpp"
@@ -75,4 +75,4 @@ class Callback {
 } // namespace gui
 } // namespace wiztk
 
-#endif //WIZTK_CALLBACK_HPP
+#endif // WIZTK_GUI_CALLBACK_HPP_

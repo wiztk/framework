@@ -26,7 +26,7 @@ namespace wiztk {
 namespace base {
 
 // Forward declarations:
-template<typename T>
+template<typename T, typename D>
 class Deque;
 
 namespace internal {
@@ -37,7 +37,7 @@ namespace internal {
  */
 class WIZTK_NO_EXPORT DequeEndpoint : public BinodeBase {
 
-  template<typename T> friend
+  template<typename T, typename D> friend
   class base::Deque;
 
  public:
@@ -118,6 +118,23 @@ class WIZTK_EXPORT DequeNode : public DequeNodeBase {
 
 /**
  * @ingroup base
+ * @brief Default class used to delete elements in deque when cleaning up.
+ */
+class DefaultDequeDeleter {
+
+ public:
+
+  DefaultDequeDeleter() = default;
+  ~DefaultDequeDeleter() = default;
+
+  void operator()(BinodeBase *obj) {
+    delete obj;
+  }
+
+};
+
+/**
+ * @ingroup base
  * @brief A simple double-ended queue container.
  * @tparam T Must be a subclass of DequeNodeBase
  *
@@ -130,18 +147,13 @@ class WIZTK_EXPORT DequeNode : public DequeNodeBase {
  * them by default. You can assign a deleter with in constructor, or use
  * particular clear(const DeleteType&) method.
  */
-template<typename T>
+template<typename T, typename Deleter = DefaultDequeDeleter>
 class Deque {
 
  public:
 
   /** @brief This class is non-copyable and non-movable */
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Deque);
-
-  /**
-   * @brief A typedef of a function object to remove node in clear().
-   */
-  typedef std::function<void(BinodeBase *)> DeleterType;
 
   /**
    * @brief A nested iterator for deque
@@ -404,7 +416,7 @@ class Deque {
    * @brief Constructor by given deleter object.
    * @param deleter
    */
-  explicit Deque(const DeleterType &deleter);
+  explicit Deque(const Deleter &deleter);
 
   /**
    * @brief Destructor.
@@ -452,7 +464,7 @@ class Deque {
   /**
    * @brief Use the particular deleter to remove all nodes.
    */
-  void clear(const DeleterType &deleter);
+  void clear(const Deleter &deleter);
 
   /**
    * @brief Get the node at the index.
@@ -539,29 +551,29 @@ class Deque {
   /**
    * @brief A function object to process node when removing it in clear();
    */
-  DeleterType deleter_;
+  Deleter deleter_;
 
 };
 
-template<typename T>
-Deque<T>::Deque() {
+template<typename T, typename Deleter>
+Deque<T, Deleter>::Deque() {
   head_.next_ = &tail_;
   tail_.previous_ = &head_;
 }
 
-template<typename T>
-Deque<T>::Deque(const DeleterType &deleter)
+template<typename T, typename Deleter>
+Deque<T, Deleter>::Deque(const Deleter &deleter)
     : Deque() {
   deleter_ = deleter;
 }
 
-template<typename T>
-Deque<T>::~Deque() {
+template<typename T, typename Deleter>
+Deque<T, Deleter>::~Deque() {
   clear();
 }
 
-template<typename T>
-void Deque<T>::insert(T *node, int index) {
+template<typename T, typename Deleter>
+void Deque<T, Deleter>::insert(T *node, int index) {
   if (index >= 0) {
     BinodeBase *p = head_.next_;
     while ((&tail_ != p) && (index > 0)) {
@@ -579,8 +591,8 @@ void Deque<T>::insert(T *node, int index) {
   }
 }
 
-template<typename T>
-size_t Deque<T>::count() const {
+template<typename T, typename Deleter>
+size_t Deque<T, Deleter>::count() const {
   size_t size = 0;
 
   BinodeBase *element = head_.next_;
@@ -592,8 +604,8 @@ size_t Deque<T>::count() const {
   return size;
 }
 
-template<typename T>
-bool Deque<T>::is_empty() const {
+template<typename T, typename Deleter>
+bool Deque<T, Deleter>::is_empty() const {
   bool ret = head_.next_ == &tail_;
 
   if (ret) {
@@ -603,28 +615,28 @@ bool Deque<T>::is_empty() const {
   return ret;
 }
 
-template<typename T>
-void Deque<T>::clear() {
+template<typename T, typename Deleter>
+void Deque<T, Deleter>::clear() {
   BinodeBase *tmp = nullptr;
   while (!is_empty()) {
     tmp = begin().get();
     BinodeBase::Unlink(tmp);
-    if (deleter_) deleter_(tmp);
+    deleter_(tmp);
   }
 }
 
-template<typename T>
-void Deque<T>::clear(const DeleterType &deleter) {
+template<typename T, typename Deleter>
+void Deque<T, Deleter>::clear(const Deleter &deleter) {
   BinodeBase *tmp = nullptr;
   while (!is_empty()) {
     tmp = begin().get();
     BinodeBase::Unlink(tmp);
-    if (deleter) deleter(tmp);
+    deleter(tmp);
   }
 }
 
-template<typename T>
-T *Deque<T>::at(int index) const {
+template<typename T, typename Deleter>
+T *Deque<T, Deleter>::at(int index) const {
   BinodeBase *p = nullptr;
 
   if (index >= 0) {

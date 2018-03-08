@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 The WizTK Authors.
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -161,7 +161,7 @@ class SharedPtr {
  * @return
  */
 template<typename T, typename ... Args>
-SharedPtr<T> MakeShared(Args &&... args) {
+inline SharedPtr<T> MakeShared(Args &&... args) {
   return SharedPtr<T>(new T(std::forward<Args>(args)...));
 };
 

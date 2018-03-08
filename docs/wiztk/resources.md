@@ -11,5 +11,6 @@ Resources
         - [C++ std::thread Event Loop with Message Queue and Timer](https://www.codeproject.com/Articles/1169105/Cplusplus-std-thread-Event-Loop-with-Message-Queue)
     - Linux
         - [A Tutorial on Using the ALSA Audio API](http://www.equalarea.com/paul/alsa-audio.html)
+        - [Separation Anxiety: A Tutorial for Isolating Your System with Linux Namespaces](https://www.toptal.com/linux/separation-anxiety-isolating-your-system-with-linux-namespaces)
 - Sample code
     - [Vulkan in Wayland](https://github.com/krh/vkcube)

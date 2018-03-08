@@ -26,14 +26,16 @@ class MyElement : public DequeNode<MyElement> {
 
 };
 
-class MyDeque : public Deque<MyElement> {
+typedef std::function<void(BinodeBase *)> DeleterType;
+
+class MyDeque : public Deque<MyElement, DeleterType> {
 
  public:
 
   MyDeque() = default;
 
   explicit MyDeque(const DeleterType &deleter)
-      : Deque<MyElement>(deleter) {}
+      : Deque<MyElement, DeleterType>(deleter) {}
 
   ~MyDeque() final = default;
 
@@ -55,10 +57,10 @@ TEST_F(TestDeque, push_front_1) {
 
   ASSERT_TRUE(deque.count() == 3);
 
-  Deque<MyElement>::ConstReverseIterator it1 = deque.crbegin();
+  Deque<MyElement, DeleterType>::ConstReverseIterator it1 = deque.crbegin();
   ASSERT_TRUE(it1 == item1);
 
-  Deque<MyElement>::ConstIterator it2 = deque.cend();
+  Deque<MyElement, DeleterType>::ConstIterator it2 = deque.cend();
   ASSERT_TRUE(it2 != item1);
 
   ASSERT_TRUE(item1->next() == nullptr);
@@ -328,7 +330,7 @@ TEST_F(TestDeque, clear_2) {
   auto *item2 = new MyElement(2);
   auto *item3 = new MyElement(3);
 
-  MyDeque deque;
+  MyDeque deque([](BinodeBase *obj) {});
   deque.push_back(item1);
   deque.push_back(item2);
   deque.push_back(item3);
@@ -356,7 +358,7 @@ TEST_F(TestDeque, clear_3) {
   deque.push_back(item2);
   deque.push_back(item3);
 
-  deque.clear();
+  deque.clear([](BinodeBase *obj) {});
 
   ASSERT_TRUE(deque.is_empty());
   ASSERT_TRUE(!item1->is_linked());

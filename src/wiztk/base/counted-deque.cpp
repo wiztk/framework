@@ -16,8 +16,6 @@
 
 #include "wiztk/base/counted-deque.hpp"
 
-#include "wiztk/base/macros.hpp"
-
 namespace wiztk {
 namespace base {
 
