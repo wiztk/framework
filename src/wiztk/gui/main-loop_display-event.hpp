@@ -24,8 +24,6 @@ namespace gui {
 
 class MainLoop::DisplayEvent : public async::AbstractEvent {
 
-  friend class MainLoop;
-
  public:
 
   explicit DisplayEvent(MainLoop *main_loop);

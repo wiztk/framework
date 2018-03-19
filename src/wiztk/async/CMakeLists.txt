@@ -35,14 +35,9 @@ else ()
     add_library(wiztk-async ${config_header} ${async_sources})
 endif ()
 
-#target_link_libraries(
-#        wiztk-base
-#        PUBLIC rt
-#        PUBLIC ${LIBS}
-#        PUBLIC wayland-cursor
-#        PRIVATE skia
-#        PRIVATE xdg-shell-unstable-v6
-#        #        PRIVATE icu_utf # in third_party
-#)
+target_link_libraries(
+        wiztk-async
+        PUBLIC wiztk-base
+)
 
 install(TARGETS wiztk-async DESTINATION lib)

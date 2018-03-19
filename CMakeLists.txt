@@ -11,6 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+# This is the top-level CMake file for WizTK-Framework.
 
 cmake_minimum_required(VERSION 3.1)
 
@@ -29,6 +31,9 @@ option(BUILD_UNIT_TEST "Build unit test code" OFF)
 option(BUILD_SHARED_LIBRARY "Build shared library" OFF)
 option(TRACE "Turn trace mode on/off" ON)   # Turn on in development stage
 option(VERBOSE "Turn verbose mode on/off" OFF)
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake/modules/")
+include(cmake/functions.cmake)
 
 # ----------------------------------------------------------------------------
 # System check
@@ -224,7 +229,7 @@ endif ()
 
 # Prebuilts setting:
 
-set(PREBUILTS_DIR ${PROJECT_BINARY_DIR}/prebuilts/${CMAKE_SYSTEM_PROCESSOR})
+set(PREBUILTS_DIR ${CMAKE_BINARY_DIR}/prebuilts/${CMAKE_SYSTEM_PROCESSOR})
 
 # Skia:
 set(SKIA_INCLUDE_DIR ${PREBUILTS_DIR}/skia/include)
@@ -302,6 +307,10 @@ install(
 )
 
 # ----------------------------------------------------------------------------
+# Get prebuilt packages:
+# ----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
 # Summary:
 # ----------------------------------------------------------------------------
 
@@ -311,4 +320,4 @@ if (EGL_FOUND)
     message(STATUS "Use EGL library: ${EGL_LIBRARIES}")
 endif ()
 
-message(STATUS "IMPORTANT: checkout 'https://github.com/wiztk/prebuilts.git' to ${PROJECT_BINARY_DIR}/prebuilts.")
+message(STATUS "IMPORTANT: checkout 'https://github.com/wiztk/prebuilts.git' to ${CMAKE_BINARY_DIR}/prebuilts.")
