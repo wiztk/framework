@@ -27,12 +27,6 @@ $ cd build
 $ cmake ..
 ```
 
-Follow the instruction to checkout or download [prebuilts](https://github.com/wiztk/prebuilts):
-
-```shell
-$ git clone https://github.com/wiztk/prebuilts.git --depth 1
-```
-
 Run `make` to build the project.
 
 ```shel

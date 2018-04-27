@@ -20,10 +20,10 @@
 #include <wiztk/graphic/gradient-shader.hpp>
 #include "wiztk/graphic/font-style.hpp"
 
-#include "SkBlurMaskFilter.h"
 #include "SkPath.h"
 #include "SkCanvas.h"
 #include "SkPixmap.h"
+#include "SkMaskFilter.h"
 
 #include "theme-light.hpp"
 #include "theme-dark.hpp"
@@ -59,10 +59,10 @@ Theme::Data::Data()
 
 Shader Theme::Helper::GradientShader::MakeLinear(const Point2F *points, const Attribute &color) {
   return wiztk::graphic::GradientShader::MakeLinear(points,
-                                                        color.colors.data(),
-                                                        color.color_positions.data(),
-                                                        color.colors.size(),
-                                                        Shader::TileMode::kTileModeClamp);
+                                                    color.colors.data(),
+                                                    color.color_positions.data(),
+                                                    color.colors.size(),
+                                                    Shader::TileMode::kTileModeClamp);
 }
 
 void Theme::Initialize() {
@@ -131,9 +131,9 @@ void Theme::GenerateShadowImage() {
   SkPaint paint;
   paint.setAntiAlias(true);
   paint.setARGB(135, 0, 0, 0);
-  paint.setMaskFilter(SkBlurMaskFilter::Make(kNormal_SkBlurStyle,
+  paint.setMaskFilter(SkMaskFilter::MakeBlur(kNormal_SkBlurStyle,
                                              kShadowRadius / 2.f - 0.5f,
-                                             0x2));
+                                             false));
 
   float radii[] = {
       kShadowRadius / 1.f, kShadowRadius / 1.f, // top-left

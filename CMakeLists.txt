@@ -101,7 +101,9 @@ if (FONTCONFIG_FOUND)
     set(LIBS ${LIBS} ${FONTCONFIG_LIBRARY})
 endif ()
 
-find_package(OpenGL REQUIRED)
+# Since cmake 3.11 it's required to specify the opengl component(s)
+# Run "cmake --help-policy CMP0072" for policy details.
+find_package(OpenGL COMPONENTS OpenGL REQUIRED)
 if (OPENGL_FOUND)
     include_directories(${OPENGL_INCLUDE_DIR})
     set(LIBS ${LIBS} ${OPENGL_LIBRARIES})
@@ -217,6 +219,9 @@ if (SYSTEMD_FOUND)
     set(LIBS ${LIBS} ${SYSTEMD_LIBRARY})
 endif ()
 
+# We use python inteperator for some scripts
+find_program(PYTHON3_EXECUTE NAMES python3)
+
 # ----------------------------------------------------------------------------
 # Global definitions
 # ----------------------------------------------------------------------------
@@ -310,6 +315,56 @@ install(
 # Get prebuilt packages:
 # ----------------------------------------------------------------------------
 
+file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/cache")
+file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/prebuilts/${CMAKE_SYSTEM_PROCESSOR}")
+
+message(STATUS "Download libskia into ${PROJECT_BINARY_DIR}/cache")
+execute_process(
+        COMMAND ${PYTHON3_EXECUTE} "${PROJECT_SOURCE_DIR}/scripts/download.py"
+        "https://github.com/wiztk/libskia/releases/download/m67/libskia-m67-${CMAKE_SYSTEM_PROCESSOR}.tar.gz"
+        "e3ba61f3a227db06444055e3405d3878"
+        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/cache"
+)
+execute_process(
+        COMMAND rm -rf "${PROJECT_BINARY_DIR}/prebuilts/${CMAKE_SYSTEM_PROCESSOR}/skia"
+        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
+)
+execute_process(
+        COMMAND tar xfz "${PROJECT_BINARY_DIR}/cache/libskia-m67-${CMAKE_SYSTEM_PROCESSOR}.tar.gz"
+        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/prebuilts/${CMAKE_SYSTEM_PROCESSOR}"
+)
+execute_process(
+        COMMAND
+        mv
+        "${PROJECT_BINARY_DIR}/prebuilts/${CMAKE_SYSTEM_PROCESSOR}/libskia-m67-${CMAKE_SYSTEM_PROCESSOR}"
+        "${PROJECT_BINARY_DIR}/prebuilts/${CMAKE_SYSTEM_PROCESSOR}/skia"
+        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/prebuilts/${CMAKE_SYSTEM_PROCESSOR}"
+)
+
+message(STATUS "Download wayland-protocols into ${PROJECT_BINARY_DIR}/cache")
+execute_process(
+        COMMAND ${PYTHON3_EXECUTE} "${PROJECT_SOURCE_DIR}/scripts/download.py"
+        "https://github.com/wiztk/wayland-protocols-binaries/releases/download/1.13/wayland-protocols-binaries-1.13-${CMAKE_SYSTEM_PROCESSOR}.tar.gz"
+        "216e137f3c4faabeb8508716429f58ca"
+        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/cache"
+)
+execute_process(
+        COMMAND rm -rf "${PROJECT_BINARY_DIR}/prebuilts/${CMAKE_SYSTEM_PROCESSOR}/wayland-protocols"
+        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
+)
+execute_process(
+        COMMAND tar xfz "${PROJECT_BINARY_DIR}/cache/wayland-protocols-binaries-1.13-${CMAKE_SYSTEM_PROCESSOR}.tar.gz"
+        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/prebuilts/${CMAKE_SYSTEM_PROCESSOR}"
+)
+execute_process(
+        COMMAND
+        mv
+        "${PROJECT_BINARY_DIR}/prebuilts/${CMAKE_SYSTEM_PROCESSOR}/wayland-protocols-binaries-1.13-${CMAKE_SYSTEM_PROCESSOR}"
+        "${PROJECT_BINARY_DIR}/prebuilts/${CMAKE_SYSTEM_PROCESSOR}/wayland-protocols"
+        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/prebuilts/${CMAKE_SYSTEM_PROCESSOR}"
+)
+
+
 # ----------------------------------------------------------------------------
 # Summary:
 # ----------------------------------------------------------------------------
@@ -319,5 +374,3 @@ message(STATUS "Use Wayland client library: ${WAYLAND_CLIENT_LIBRARIES}")
 if (EGL_FOUND)
     message(STATUS "Use EGL library: ${EGL_LIBRARIES}")
 endif ()
-
-message(STATUS "IMPORTANT: checkout 'https://github.com/wiztk/prebuilts.git' to ${CMAKE_BINARY_DIR}/prebuilts.")
