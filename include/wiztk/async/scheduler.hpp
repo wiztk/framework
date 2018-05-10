@@ -17,6 +17,8 @@
 #ifndef WIZTK_ASYNC_SCHEDULER_HPP_
 #define WIZTK_ASYNC_SCHEDULER_HPP_
 
+#include "wiztk/base/macros.hpp"
+
 namespace wiztk {
 namespace async {
 
@@ -28,7 +30,7 @@ class EventLoop;
  * @brief An EventScheduler is used to send and process Event associated with
  * EventQueue.
  */
-class Scheduler {
+class WIZTK_EXPORT Scheduler {
 
  public:
 

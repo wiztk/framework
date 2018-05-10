@@ -31,20 +31,20 @@ namespace internal {
 /**
  * @ingroup async_intern
  */
-class MessageQueueTraits : public base::Deque<MessageTraits> {
+class WIZTK_NO_EXPORT MessageQueueTraits : public base::Deque<MessageTraits> {
 
  public:
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(MessageQueueTraits);
 
   explicit MessageQueueTraits(MessageQueue *event_queue)
-      : event_queue_(event_queue) {}
+      : message_queue_(event_queue) {}
 
   ~MessageQueueTraits() final = default;
 
  private:
 
-  MessageQueue *event_queue_ = nullptr;
+  MessageQueue *message_queue_ = nullptr;
 
 };
 
@@ -54,7 +54,7 @@ class MessageQueueTraits : public base::Deque<MessageTraits> {
  * @ingroup async
  * @brief A first in - first out event queue.
  */
-class MessageQueue {
+class WIZTK_EXPORT MessageQueue {
 
  public:
 

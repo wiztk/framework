@@ -1,13 +1,8 @@
 #!/usr/bin/env python3
 
 import sys
+import urllib.request
 import hashlib
-
-from utils.url import download
-
-# TODO: use argparse module
-URL = sys.argv[1]
-MD5 = sys.argv[2]
 
 
 def checksum(filename, hashcode):
@@ -23,14 +18,56 @@ def checksum(filename, hashcode):
     return False
 
 
-def main():
-    filename = URL.split('/')[-1]
+def show_progress(current, total):
+    done = int(50 * current / total)
+    sys.stdout.write("\r-- [%s%s]" % ('=' * done, ' ' * (50 - done)))
+    sys.stdout.flush()
 
-    if checksum(filename=filename, hashcode=MD5):
+
+def download(url, filename):
+    response = urllib.request.urlopen(url)
+    length = response.getheader('content-length')
+    if length:
+        length = int(length)
+        block_size = max(12800, length // 100)
+    else:
+        block_size = 1000000  # default size
+
+    size = 0
+    with open(filename, 'wb') as f:
+        data = response.read(block_size)
+        if not data:
+            return
+
+        f.write(data)
+        size += len(data)
+        if length:
+            show_progress(size, length)
+
+        while True:
+            data = response.read(block_size)
+            if not data:
+                break
+            f.write(data)
+            size += len(data)
+            if length:
+                show_progress(size, length)
+
+        sys.stdout.write("\n")
+        sys.stdout.flush()
+
+
+def main():
+    # TODO: use argparse module
+    url = sys.argv[1]
+    md5 = sys.argv[2]
+    filename = url.split('/')[-1]
+
+    if checksum(filename=filename, hashcode=md5):
         # file exists
         return
 
-    download(url=URL, filename=filename)
+    download(url=url, filename=filename)
 
 
 if __name__ == '__main__':
