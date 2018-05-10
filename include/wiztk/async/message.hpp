@@ -29,6 +29,7 @@ namespace internal {
 
 /**
  * @ingroup async_intern
+ * @brief Represents a bi-directional message node.
  */
 class WIZTK_NO_EXPORT MessageTraits : public base::Binode<MessageTraits> {
 
@@ -36,8 +37,8 @@ class WIZTK_NO_EXPORT MessageTraits : public base::Binode<MessageTraits> {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(MessageTraits);
 
-  explicit MessageTraits(Message *event)
-      : message_(event) {}
+  explicit MessageTraits(Message *message)
+      : message_(message) {}
 
   ~MessageTraits() final = default;
 
@@ -53,9 +54,9 @@ class WIZTK_NO_EXPORT MessageTraits : public base::Binode<MessageTraits> {
 
 /**
  * @ingroup async
- * @brief Abstract event which can be lined up and executed in a message queue.
+ * @brief A message which can be lined up and executed in a message queue.
  */
-class Message {
+class WIZTK_EXPORT Message {
 
   friend class MessageQueue;
   friend class Scheduler;

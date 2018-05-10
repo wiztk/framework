@@ -9,7 +9,7 @@ import sys
 
 def download(url, filename):
     with open(filename, "wb") as f:
-        print("Downloading %s" % filename)
+        # print("Downloading %s" % filename)
         response = requests.get(url, stream=True)
         total_length = response.headers.get('content-length')
 
@@ -22,7 +22,7 @@ def download(url, filename):
                 dl += len(chunk)
                 f.write(chunk)
                 done = int(50 * dl / total_length)
-                sys.stdout.write("\r[%s%s]" % ('=' * done, ' ' * (50 - done)))
+                sys.stdout.write("\r-- [%s%s]" % ('=' * done, ' ' * (50 - done)))
                 sys.stdout.flush()
 
         sys.stdout.write("\n")

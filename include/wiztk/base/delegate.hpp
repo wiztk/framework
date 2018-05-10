@@ -125,11 +125,7 @@ class WIZTK_EXPORT Delegate<ReturnType(ParamTypes...)> {
 
   struct Data {
 
-    Data()
-        : object(nullptr),
-          method_stub(nullptr) {
-      pointer.method = nullptr;
-    }
+    Data() = default;
 
     Data(const Data &other)
         : object(other.object),
@@ -147,12 +143,18 @@ class WIZTK_EXPORT Delegate<ReturnType(ParamTypes...)> {
 
     Data &operator=(Data &&) = delete;
 
-    void *object;
-    MethodStubType method_stub;
+    void reset() {
+      object = nullptr;
+      method_stub = nullptr;
+      pointer.function = nullptr;
+    }
+
+    void *object = nullptr;
+    MethodStubType method_stub = nullptr;
     union {
       internal::GenericMethodPointer method;  // member function pointer
       void *function; // static function pointer
-    } pointer;
+    } pointer = {nullptr};
 
   };
 
@@ -380,9 +382,7 @@ class WIZTK_EXPORT Delegate<ReturnType(ParamTypes...)> {
    * @note After reset, invoke this delegate by operator() or Invoke() will
    * cause segment fault.  The bool operator will return false.
    */
-  void Reset() {
-    memset(&data_, 0, sizeof(Data));
-  }
+  void Reset() { data_.reset(); }
 
   /**
    * @brief Compare this delegate to a member function of an object

@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+ /**
+  * @file singleton.hpp
+  */
+
 #ifndef WIZTK_BASE_MEMORY_SINGLETON_HPP_
 #define WIZTK_BASE_MEMORY_SINGLETON_HPP_
 
@@ -22,6 +26,10 @@
 namespace wiztk {
 namespace base {
 namespace memory {
+
+// Forward declarations:
+template<typename T, typename Traits>
+class Singleton;
 
 /**
  * @ingroup base_memory
@@ -54,10 +62,11 @@ namespace internal {
 template<typename T, typename Traits = DefaultSingletonTraits<T> >
 class SingletonBase {
 
-  template<typename AliasT, typename AliasTraits> friend
-  class Singleton;
+  template<typename R, typename RTraits> friend
+  class wiztk::base::memory::Singleton;
 
   static T *CreateOnce() {
+    // TODO: consider multi-thread
     if (nullptr == kInstance)
       kInstance = Traits::New();
 

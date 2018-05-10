@@ -315,53 +315,56 @@ install(
 # Get prebuilt packages:
 # ----------------------------------------------------------------------------
 
-file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/cache")
-file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/prebuilts/${CMAKE_SYSTEM_PROCESSOR}")
+set(PREBUILTS_DIR "${PROJECT_BINARY_DIR}/prebuilts/${CMAKE_SYSTEM_PROCESSOR}")
+set(CACHE_DIR "${PROJECT_BINARY_DIR}/cache")
 
-message(STATUS "Download libskia into ${PROJECT_BINARY_DIR}/cache")
+file(MAKE_DIRECTORY "${PREBUILTS_DIR}")
+file(MAKE_DIRECTORY "${CACHE_DIR}")
+
+set(SKIA_VERSION m67)
+set(SKIA_TARBALL "libskia-${SKIA_VERSION}-${CMAKE_SYSTEM_PROCESSOR}.tar.gz")
+set(SKIA_TARBALL_MD5 "e3ba61f3a227db06444055e3405d3878")
+message(STATUS "Downloading ${SKIA_TARBALL}")
 execute_process(
         COMMAND ${PYTHON3_EXECUTE} "${PROJECT_SOURCE_DIR}/scripts/download.py"
-        "https://github.com/wiztk/libskia/releases/download/m67/libskia-m67-${CMAKE_SYSTEM_PROCESSOR}.tar.gz"
-        "e3ba61f3a227db06444055e3405d3878"
-        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/cache"
+        "https://github.com/wiztk/libskia/releases/download/${SKIA_VERSION}/${SKIA_TARBALL}"
+        ${SKIA_TARBALL_MD5}
+        WORKING_DIRECTORY ${CACHE_DIR}
 )
 execute_process(
-        COMMAND rm -rf "${PROJECT_BINARY_DIR}/prebuilts/${CMAKE_SYSTEM_PROCESSOR}/skia"
+        COMMAND rm -rf "${PREBUILTS_DIR}/skia"
         WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
 )
 execute_process(
-        COMMAND tar xfz "${PROJECT_BINARY_DIR}/cache/libskia-m67-${CMAKE_SYSTEM_PROCESSOR}.tar.gz"
-        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/prebuilts/${CMAKE_SYSTEM_PROCESSOR}"
+        COMMAND tar xfz "${CACHE_DIR}/${SKIA_TARBALL}"
+        WORKING_DIRECTORY "${PREBUILTS_DIR}"
 )
 execute_process(
-        COMMAND
-        mv
-        "${PROJECT_BINARY_DIR}/prebuilts/${CMAKE_SYSTEM_PROCESSOR}/libskia-m67-${CMAKE_SYSTEM_PROCESSOR}"
-        "${PROJECT_BINARY_DIR}/prebuilts/${CMAKE_SYSTEM_PROCESSOR}/skia"
-        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/prebuilts/${CMAKE_SYSTEM_PROCESSOR}"
+        COMMAND mv "${PREBUILTS_DIR}/libskia-${SKIA_VERSION}-${CMAKE_SYSTEM_PROCESSOR}" "${PREBUILTS_DIR}/skia"
+        WORKING_DIRECTORY "${PREBUILTS_DIR}"
 )
 
-message(STATUS "Download wayland-protocols into ${PROJECT_BINARY_DIR}/cache")
+set(WAYLAND_PROTOCOLS_VERSION "1.13")
+set(WAYLAND_PROTOCOLS_TARBALL "wayland-protocols-binaries-${WAYLAND_PROTOCOLS_VERSION}-${CMAKE_SYSTEM_PROCESSOR}.tar.gz")
+set(WAYLAND_PROTOCOLS_TARBALL_MD5 "216e137f3c4faabeb8508716429f58ca")
+message(STATUS "Downloading ${WAYLAND_PROTOCOLS_TARBALL}")
 execute_process(
         COMMAND ${PYTHON3_EXECUTE} "${PROJECT_SOURCE_DIR}/scripts/download.py"
-        "https://github.com/wiztk/wayland-protocols-binaries/releases/download/1.13/wayland-protocols-binaries-1.13-${CMAKE_SYSTEM_PROCESSOR}.tar.gz"
-        "216e137f3c4faabeb8508716429f58ca"
-        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/cache"
+        "https://github.com/wiztk/wayland-protocols-binaries/releases/download/${WAYLAND_PROTOCOLS_VERSION}/${WAYLAND_PROTOCOLS_TARBALL}"
+        ${WAYLAND_PROTOCOLS_TARBALL_MD5}
+        WORKING_DIRECTORY ${CACHE_DIR}
 )
 execute_process(
-        COMMAND rm -rf "${PROJECT_BINARY_DIR}/prebuilts/${CMAKE_SYSTEM_PROCESSOR}/wayland-protocols"
+        COMMAND rm -rf "${PREBUILTS_DIR}/wayland-protocols"
         WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
 )
 execute_process(
-        COMMAND tar xfz "${PROJECT_BINARY_DIR}/cache/wayland-protocols-binaries-1.13-${CMAKE_SYSTEM_PROCESSOR}.tar.gz"
-        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/prebuilts/${CMAKE_SYSTEM_PROCESSOR}"
+        COMMAND tar xfz "${CACHE_DIR}/${WAYLAND_PROTOCOLS_TARBALL}"
+        WORKING_DIRECTORY "${PREBUILTS_DIR}"
 )
 execute_process(
-        COMMAND
-        mv
-        "${PROJECT_BINARY_DIR}/prebuilts/${CMAKE_SYSTEM_PROCESSOR}/wayland-protocols-binaries-1.13-${CMAKE_SYSTEM_PROCESSOR}"
-        "${PROJECT_BINARY_DIR}/prebuilts/${CMAKE_SYSTEM_PROCESSOR}/wayland-protocols"
-        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/prebuilts/${CMAKE_SYSTEM_PROCESSOR}"
+        COMMAND mv "${PREBUILTS_DIR}/wayland-protocols-binaries-${WAYLAND_PROTOCOLS_VERSION}-${CMAKE_SYSTEM_PROCESSOR}" "${PREBUILTS_DIR}/wayland-protocols"
+        WORKING_DIRECTORY "${PREBUILTS_DIR}"
 )
 
 
