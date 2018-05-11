@@ -25,8 +25,8 @@
 #file(GLOB_RECURSE net_internal_headers "net/*.hpp")
 #list(APPEND all_source_files ${net_headers} ${net_sources} ${net_internal_headers})
 #
-#file(GLOB_RECURSE graphic_headers "${PROJECT_SOURCE_DIR}/include/wiztk/graphic/*.hpp")
-#file(GLOB_RECURSE graphic_sources "graphic/*.cpp")
+#file(GLOB_RECURSE graphic_headers "${PROJECT_SOURCE_DIR}/include/wiztk/graphics/*.hpp")
+#file(GLOB_RECURSE graphic_sources "graphics/*.cpp")
 #list(APPEND all_source_files ${graphic_headers} ${graphic_sources})
 #
 #file(GLOB_RECURSE gui_headers "${PROJECT_SOURCE_DIR}/include/wiztk/gui/*.hpp")
@@ -82,6 +82,6 @@ add_subdirectory(base)
 add_subdirectory(async)
 add_subdirectory(system)
 add_subdirectory(device)
-add_subdirectory(graphic)
+add_subdirectory(graphics)
 add_subdirectory(net)
 add_subdirectory(gui)

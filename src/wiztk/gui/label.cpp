@@ -16,10 +16,10 @@
 
 #include "wiztk/gui/label.hpp"
 
-#include "wiztk/graphic/font.hpp"
-#include "wiztk/graphic/canvas.hpp"
-#include "wiztk/graphic/paint.hpp"
-#include "wiztk/graphic/text-box.hpp"
+#include "wiztk/graphics/font.hpp"
+#include "wiztk/graphics/canvas.hpp"
+#include "wiztk/graphics/paint.hpp"
+#include "wiztk/graphics/text-box.hpp"
 
 #include "wiztk/gui/context.hpp"
 #include "wiztk/gui/key-event.hpp"
@@ -32,7 +32,7 @@ namespace gui {
 
 using base::RectF;
 using base::ColorF;
-using graphic::Font;
+using graphics::Font;
 
 struct Label::Private {
 
@@ -81,7 +81,7 @@ void Label::SetBackground(const ColorF &color) {
   }
 }
 
-void Label::SetFont(const graphic::Font &font) {
+void Label::SetFont(const graphics::Font &font) {
   p_->font = font;
   Update();
 }
@@ -124,9 +124,9 @@ void Label::OnKeyUp(KeyEvent *event) {
 }
 
 void Label::OnDraw(const Context &context) {
-  using graphic::Canvas;
-  using graphic::Paint;
-  using graphic::TextBox;
+  using graphics::Canvas;
+  using graphics::Paint;
+  using graphics::TextBox;
 
   int scale = context.surface()->GetScale();
   const RectF rect = GetBounds() * scale;

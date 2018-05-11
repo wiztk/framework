@@ -22,9 +22,9 @@
 #include <wiztk/gui/region.hpp>
 #include "wiztk/gui/context.hpp"
 
-#include <wiztk/graphic/paint.hpp>
-#include "wiztk/graphic/canvas.hpp"
-#include "wiztk/graphic/path.hpp"
+#include <wiztk/graphics/paint.hpp>
+#include "wiztk/graphics/canvas.hpp"
+#include "wiztk/graphics/path.hpp"
 
 namespace wiztk {
 namespace gui {
@@ -32,10 +32,10 @@ namespace gui {
 using base::RectI;
 using base::RectF;
 
-using graphic::Canvas;
-using graphic::Paint;
-using graphic::Path;
-using graphic::ClipOperation;
+using graphics::Canvas;
+using graphics::Paint;
+using graphics::Path;
+using graphics::ClipOperation;
 
 struct Dialog::Private {
 

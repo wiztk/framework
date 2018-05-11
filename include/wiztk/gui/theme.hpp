@@ -21,8 +21,8 @@
 #include "wiztk/base/margin.hpp"
 #include "wiztk/base/point.hpp"
 
-#include "wiztk/graphic/shader.hpp"
-#include "wiztk/graphic/font.hpp"
+#include "wiztk/graphics/shader.hpp"
+#include "wiztk/graphics/font.hpp"
 
 #include <vector>
 #include <string>
@@ -102,11 +102,11 @@ class Theme {
 
     Schema title_bar;
 
-    graphic::Font title_bar_font;
+    graphics::Font title_bar_font;
 
     Schema button;
 
-    graphic::Font default_font;
+    graphics::Font default_font;
 
   };
 
@@ -116,7 +116,7 @@ class Theme {
 
       using Attribute = Schema::Style::Attribute;
 
-      static graphic::Shader MakeLinear(const base::Point2F points[2], const Attribute &color);
+      static graphics::Shader MakeLinear(const base::Point2F points[2], const Attribute &color);
 
     };
 

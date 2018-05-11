@@ -17,8 +17,8 @@
 #include <wiztk/gui/theme.hpp>
 #include <iostream>
 #include <wiztk/base/macros.hpp>
-#include <wiztk/graphic/gradient-shader.hpp>
-#include "wiztk/graphic/font-style.hpp"
+#include <wiztk/graphics/gradient-shader.hpp>
+#include "wiztk/graphics/font-style.hpp"
 
 #include "SkPath.h"
 #include "SkCanvas.h"
@@ -32,8 +32,8 @@ namespace wiztk {
 namespace gui {
 
 using base::Point2F;
-using graphic::FontStyle;
-using graphic::Shader;
+using graphics::FontStyle;
+using graphics::Shader;
 
 int Theme::kShadowRadius = 33;
 int Theme::kShadowOffsetX = 0;
@@ -58,7 +58,7 @@ Theme::Data::Data()
 }
 
 Shader Theme::Helper::GradientShader::MakeLinear(const Point2F *points, const Attribute &color) {
-  return wiztk::graphic::GradientShader::MakeLinear(points,
+  return wiztk::graphics::GradientShader::MakeLinear(points,
                                                     color.colors.data(),
                                                     color.color_positions.data(),
                                                     color.colors.size(),

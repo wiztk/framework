@@ -18,12 +18,12 @@
 #include <wiztk/gui/mouse-event.hpp>
 #include <wiztk/gui/context.hpp>
 
-#include <wiztk/graphic/canvas.hpp>
-#include <wiztk/graphic/paint.hpp>
-#include <wiztk/graphic/text-box.hpp>
-#include <wiztk/graphic/path.hpp>
-#include <wiztk/graphic/gradient-shader.hpp>
-#include "wiztk/graphic/font-style.hpp"
+#include <wiztk/graphics/canvas.hpp>
+#include <wiztk/graphics/paint.hpp>
+#include <wiztk/graphics/text-box.hpp>
+#include <wiztk/graphics/path.hpp>
+#include <wiztk/graphics/gradient-shader.hpp>
+#include "wiztk/graphics/font-style.hpp"
 
 #include <wiztk/gui/theme.hpp>
 
@@ -34,13 +34,13 @@ namespace wiztk {
 namespace gui {
 
 using base::RectF;
-using graphic::Canvas;
-using graphic::Paint;
-using graphic::Path;
-using graphic::Shader;
-using graphic::Font;
-using graphic::TextBox;
-using graphic::FontStyle;
+using graphics::Canvas;
+using graphics::Paint;
+using graphics::Path;
+using graphics::Shader;
+using graphics::Font;
+using graphics::TextBox;
+using graphics::FontStyle;
 
 PushButton::PushButton(const std::string &text)
     : AbstractButton(text) {

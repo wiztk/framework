@@ -22,7 +22,7 @@
 #include "wiztk/base/point.hpp"
 #include "wiztk/base/deque.hpp"
 
-#include "wiztk/graphic/abstract-surface.hpp"
+#include "wiztk/graphics/abstract-surface.hpp"
 
 #include "abstract-view.hpp"
 #include "queued-task.hpp"
@@ -73,7 +73,7 @@ class AbstractRenderingAPI;
  * You can also use Surface::EGL::Get() to transform a 2D surface to 3D surface,
  * and delete the Surface::EGL object will transform back to 2D.
  */
-class ViewSurface : public graphic::AbstractSurface, public base::Trackable {
+class ViewSurface : public graphics::AbstractSurface, public base::Trackable {
 
   using Point  = base::Point2I;
   using Margin = base::Margin;

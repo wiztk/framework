@@ -22,7 +22,7 @@
 
 namespace wiztk {
 
-namespace graphic {
+namespace graphics {
 class Canvas;
 }
 
@@ -36,23 +36,18 @@ class Context {
 
  public:
 
-  using Canvas = graphic::Canvas;
+  using Canvas = graphics::Canvas;
 
   Context() = default;
 
   Context(ViewSurface *surface, Canvas *canvas)
       : surface_(surface), canvas_(canvas) {}
 
-  Context(const Context &other)
-      : surface_(other.surface_), canvas_(other.canvas_) {}
+  Context(const Context &other) = default;
 
   ~Context() = default;
 
-  Context &operator=(const Context &other) {
-    surface_ = other.surface_;
-    canvas_ = other.canvas_;
-    return *this;
-  }
+  Context &operator=(const Context &other) = default;
 
   ViewSurface *surface() const { return surface_; }
 

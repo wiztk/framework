@@ -22,7 +22,7 @@
 #include "wiztk/gui/key-event.hpp"
 #include "wiztk/gui/mouse-event.hpp"
 
-#include "wiztk/graphic/font.hpp"
+#include "wiztk/graphics/font.hpp"
 
 namespace wiztk {
 namespace gui {
@@ -30,8 +30,8 @@ namespace gui {
 using base::RectF;
 using base::Bit;
 
-using graphic::Font;
-using graphic::Typeface;
+using graphics::Font;
+using graphics::Typeface;
 
 struct AbstractButton::Private {
 

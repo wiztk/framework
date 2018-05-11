@@ -152,7 +152,7 @@ endif ()
 
 target_link_libraries(
         wiztk-gui
-        PUBLIC wiztk-graphic
+        PUBLIC wiztk-graphics
         PUBLIC wiztk-async
         PUBLIC ${WAYLAND_CLIENT_LIBRARIES}
         PUBLIC ${WAYLAND_EGL_LIBRARIES}

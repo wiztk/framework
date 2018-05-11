@@ -21,10 +21,10 @@
 #include "wiztk/gui/context.hpp"
 #include "wiztk/gui/theme.hpp"
 
-#include "wiztk/graphic/canvas.hpp"
-#include "wiztk/graphic/paint.hpp"
-#include "wiztk/graphic/path.hpp"
-#include "wiztk/graphic/gradient-shader.hpp"
+#include "wiztk/graphics/canvas.hpp"
+#include "wiztk/graphics/paint.hpp"
+#include "wiztk/graphics/path.hpp"
+#include "wiztk/graphics/gradient-shader.hpp"
 
 #include "SkCanvas.h"
 //#include "SkTypeface.h"
@@ -35,9 +35,9 @@ namespace wiztk {
 namespace gui {
 
 using base::RectF;
-using graphic::Canvas;
-using graphic::Paint;
-using graphic::Path;
+using graphics::Canvas;
+using graphics::Paint;
+using graphics::Path;
 
 class TitleBar::Button : public AbstractButton {
  public:
@@ -361,7 +361,7 @@ void TitleBar::OnKeyUp(KeyEvent *event) {
 
 void TitleBar::OnDraw(const Context &context) {
   using namespace base;
-  using namespace graphic;
+  using namespace graphics;
 
   int scale = context.surface()->GetScale();
 

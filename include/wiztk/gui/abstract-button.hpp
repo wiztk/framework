@@ -22,7 +22,7 @@
 namespace wiztk {
 
 // Forward declaration
-namespace graphic {
+namespace graphics {
 class Font;
 }
 
@@ -36,7 +36,7 @@ class AbstractButton : public AbstractView {
 
  public:
 
-  using Font = graphic::Font;
+  using Font = graphics::Font;
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(AbstractButton);
 
@@ -56,7 +56,7 @@ class AbstractButton : public AbstractView {
 
   const Font &GetFont() const;
 
-  void SetFont(const graphic::Font &font);
+  void SetFont(const graphics::Font &font);
 
   const std::string &GetText() const;
 

@@ -20,7 +20,7 @@
 #include "abstract-button.hpp"
 
 #include "wiztk/base/color.hpp"
-#include "wiztk/graphic/font.hpp"
+#include "wiztk/graphics/font.hpp"
 
 namespace wiztk {
 namespace gui {
@@ -112,7 +112,7 @@ class TitleBar final : public AbstractView {
   MinimizeButton *minimize_button_;
   FullscreenButton *fullscreen_button_;
 
-  graphic::Font font_;
+  graphics::Font font_;
 
   std::string title_;
 };

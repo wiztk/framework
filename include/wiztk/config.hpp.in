@@ -14,10 +14,24 @@
  * limitations under the License.
  */
 
+ /**
+  * @file config.hpp
+  * @brief A global config file generated with cmake.
+  */
+
 #ifndef WIZTK_CONFIG_HPP_
 #define WIZTK_CONFIG_HPP_
 
+#define WIZTK_VERSION_MAJOR @VERSION_MAJOR@
+
+#define WIZTK_VERSION_MINOR @VERSION_MINOR@
+
+#define WIZTK_VERSION_PATCH @VERSION_PATCH@
+
+#define WIZTK_VERSION_STRING "@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_PATCH@"
+
 #define WIZTK_INSTALL_PREFIX "@CMAKE_INSTALL_PREFIX@"
+
 #define WIZTK_PROJECT_SOURCE_DIR "@PROJECT_SOURCE_DIR@"
 
 #define WIZTK_HAVE_SYSTEMD @HAVE_SYSTEMD@

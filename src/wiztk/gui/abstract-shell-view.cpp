@@ -28,7 +28,7 @@
 #include "wiztk/gui/context.hpp"
 #include "wiztk/gui/theme.hpp"
 
-#include "wiztk/graphic/canvas.hpp"
+#include "wiztk/graphics/canvas.hpp"
 
 #include "SkCanvas.h"
 #include "SkImage.h"
@@ -42,7 +42,7 @@ using Size = base::SizeI;
 using base::Margin;
 using base::SLOT;
 using base::Bit;
-using graphic::Canvas;
+using graphics::Canvas;
 
 const Margin AbstractShellView::kResizingMargin(5, 5, 5, 5);
 

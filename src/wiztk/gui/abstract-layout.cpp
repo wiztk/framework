@@ -19,8 +19,8 @@
 #include <wiztk/gui/mouse-event.hpp>
 #include <wiztk/gui/key-event.hpp>
 
-#include <wiztk/graphic/canvas.hpp>
-#include <wiztk/graphic/paint.hpp>
+#include <wiztk/graphics/canvas.hpp>
+#include <wiztk/graphics/paint.hpp>
 
 #include "abstract-view_iterators.hpp"
 
@@ -37,8 +37,8 @@ namespace gui {
 using base::RectF;
 using base::ColorF;
 
-using graphic::Paint;
-using graphic::Canvas;
+using graphics::Paint;
+using graphics::Canvas;
 
 AbstractLayout::AbstractLayout(const Padding &padding)
     : is_geometry_saved_(false) {

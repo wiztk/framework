@@ -21,7 +21,7 @@
 
 namespace wiztk {
 
-namespace graphic {
+namespace graphics {
 class Canvas;
 }
 

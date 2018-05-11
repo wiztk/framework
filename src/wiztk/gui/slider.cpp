@@ -20,8 +20,8 @@
 #include <wiztk/gui/key-event.hpp>
 
 #include <wiztk/gui/context.hpp>
-#include <wiztk/graphic/canvas.hpp>
-#include <wiztk/graphic/paint.hpp>
+#include <wiztk/graphics/canvas.hpp>
+#include <wiztk/graphics/paint.hpp>
 
 #include <wiztk/gui/timer.hpp>
 
@@ -108,8 +108,8 @@ void Slider::OnSetMaximum(const int &maximum) {
 }
 
 void Slider::OnDraw(const Context &context) {
-  using graphic::Canvas;
-  using graphic::Paint;
+  using graphics::Canvas;
+  using graphics::Paint;
 
   Canvas *canvas = context.canvas();
   int scale = context.surface()->GetScale();

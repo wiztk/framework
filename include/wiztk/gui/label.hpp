@@ -24,7 +24,7 @@
 namespace wiztk {
 
 // Forward declarations
-namespace graphic {
+namespace graphics {
 class Font;
 }
 
@@ -48,7 +48,7 @@ WIZTK_EXPORT class Label : public AbstractView {
 
   void SetBackground(const base::ColorF &color);
 
-  void SetFont(const graphic::Font &font);
+  void SetFont(const graphics::Font &font);
 
  protected:
 

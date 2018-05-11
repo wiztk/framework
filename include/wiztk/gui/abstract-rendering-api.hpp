@@ -37,6 +37,9 @@ class AbstractRenderingAPI {
 
  public:
 
+  template<typename ... Args> using SignalRef = typename base::SignalRef<Args...>;
+  template<typename ... Args> using Signal = typename base::Signal<Args...>;
+
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(AbstractRenderingAPI);
 
   AbstractRenderingAPI();
@@ -53,7 +56,7 @@ class AbstractRenderingAPI {
 
   virtual void SwapBuffers() = 0;
 
-  base::SignalRef<> destroyed() { return destroyed_; }
+  SignalRef<> destroyed() { return destroyed_; }
 
  protected:
 
@@ -67,7 +70,7 @@ class AbstractRenderingAPI {
 
   struct Private;
 
-  base::Signal<> destroyed_;
+  Signal<> destroyed_;
 
 };
 

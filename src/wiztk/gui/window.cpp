@@ -33,10 +33,10 @@
 
 #include "wiztk/gui/theme.hpp"
 
-#include "wiztk/graphic/canvas.hpp"
-#include "wiztk/graphic/paint.hpp"
-#include "wiztk/graphic/path.hpp"
-#include "wiztk/graphic/gradient-shader.hpp"
+#include "wiztk/graphics/canvas.hpp"
+#include "wiztk/graphics/paint.hpp"
+#include "wiztk/graphics/path.hpp"
+#include "wiztk/graphics/gradient-shader.hpp"
 
 namespace wiztk {
 namespace gui {
@@ -46,12 +46,12 @@ using base::RectF;
 using base::RectI;
 using base::Margin;
 
-using graphic::Canvas;
-using graphic::Paint;
-using graphic::Path;
-using graphic::Shader;
-using graphic::GradientShader;
-using graphic::ClipOperation;
+using graphics::Canvas;
+using graphics::Paint;
+using graphics::Path;
+using graphics::Shader;
+using graphics::GradientShader;
+using graphics::ClipOperation;
 
 /**
  * @brief The private structure for Window

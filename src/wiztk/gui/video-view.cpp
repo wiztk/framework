@@ -18,8 +18,8 @@
 #include <wiztk/gui/view-surface.hpp>
 
 #include <wiztk/gui/context.hpp>
-#include <wiztk/graphic/canvas.hpp>
-#include <wiztk/graphic/paint.hpp>
+#include <wiztk/graphics/canvas.hpp>
+#include <wiztk/graphics/paint.hpp>
 
 namespace wiztk {
 namespace gui {
@@ -72,8 +72,8 @@ void VideoView::OnKeyDown(KeyEvent *event) {
 }
 
 void VideoView::OnDraw(const Context *context) {
-  using graphic::Canvas;
-  using graphic::Paint;
+  using graphics::Canvas;
+  using graphics::Paint;
 
   Canvas *canvas = context->canvas();
   Paint paint;

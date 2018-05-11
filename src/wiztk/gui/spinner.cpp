@@ -24,8 +24,8 @@
 #include "wiztk/gui/callback.hpp"
 #include "wiztk/gui/context.hpp"
 
-#include "wiztk/graphic/canvas.hpp"
-#include "wiztk/graphic/paint.hpp"
+#include "wiztk/graphics/canvas.hpp"
+#include "wiztk/graphics/paint.hpp"
 
 #include "wiztk/base/clamp.hpp"
 
@@ -33,8 +33,8 @@ namespace wiztk {
 namespace gui {
 
 using base::ColorF;
-using graphic::Canvas;
-using graphic::Paint;
+using graphics::Canvas;
+using graphics::Paint;
 
 struct Spinner::Private : public base::Property<Spinner> {
 

@@ -18,13 +18,13 @@
 #include <wiztk/gui/window.hpp>
 #include <wiztk/gui/label.hpp>
 
-#include <wiztk/graphic/font.hpp>
-#include "wiztk/graphic/font-style.hpp"
+#include <wiztk/graphics/font.hpp>
+#include "wiztk/graphics/font-style.hpp"
 
 int main(int argc, char *argv[]) {
   using namespace wiztk;
   using namespace wiztk::gui;
-  using namespace wiztk::graphic;
+  using namespace wiztk::graphics;
 
   Application app(argc, argv);
 

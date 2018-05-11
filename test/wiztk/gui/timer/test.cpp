@@ -12,8 +12,8 @@
 #include <wiztk/gui/mouse-event.hpp>
 #include <wiztk/gui/key-event.hpp>
 
-#include <wiztk/graphic/paint.hpp>
-#include <wiztk/graphic/canvas.hpp>
+#include <wiztk/graphics/paint.hpp>
+#include <wiztk/graphics/canvas.hpp>
 
 #include <wiztk/gui/context.hpp>
 
