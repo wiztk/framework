@@ -19,7 +19,6 @@
 
 #include "wiztk/gui/abstract-view.hpp"
 
-#include "wiztk/base/padding.hpp"
 #include "wiztk/gui/anchor.hpp"
 #include "wiztk/gui/anchor-group.hpp"
 

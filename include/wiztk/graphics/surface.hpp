@@ -27,7 +27,7 @@ class Canvas;
 class ImageInfo;
 
 /**
- * @ingroup graphic
+ * @ingroup graphics
  * @brief A class responsible for managing the pixels that a canvas draws into
  *
  */

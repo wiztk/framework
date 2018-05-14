@@ -20,7 +20,7 @@
 #include "wiztk/gui/abstract-event-handler.hpp"
 
 #include "wiztk/base/rect.hpp"
-#include "wiztk/base/margin.hpp"
+#include "wiztk/base/thickness.hpp"
 
 #include "wiztk/async/message.hpp"
 
@@ -54,7 +54,7 @@ WIZTK_EXPORT class AbstractShellView : public AbstractEventHandler {
 
   using Size   = base::SizeI;           /**< @brief Alias of base::SizeI */
   using Rect   = base::RectI;           /**< @brief Alias of base::RectI */
-  using Margin = base::Margin;          /**< @brief Alias of base::Margin */
+  using Margin = base::ThicknessI;          /**< @brief Alias of base::Margin */
 
   /**
    * @brief A nested class runs in event loop to update the geometry of this shell view.

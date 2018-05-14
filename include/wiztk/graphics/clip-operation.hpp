@@ -21,7 +21,7 @@ namespace wiztk {
 namespace graphics {
 
 /**
- * @ingroup graphic
+ * @ingroup graphics
  * @brief Clip operations
  */
 enum ClipOperation {

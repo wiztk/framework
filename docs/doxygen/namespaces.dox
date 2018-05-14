@@ -32,8 +32,8 @@
  */
 
 /**
- * @namespace wiztk::graphic
- * @brief The graphic code based on Skia
+ * @namespace wiztk::graphics
+ * @brief The graphics code based on Skia
  *
  * ...
  */

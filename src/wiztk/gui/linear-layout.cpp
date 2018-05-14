@@ -21,7 +21,7 @@
 namespace wiztk {
 namespace gui {
 
-LinearLayout::LinearLayout(Orientation orientation, const base::Padding &padding, int space)
+LinearLayout::LinearLayout(Orientation orientation, const Padding &padding, int space)
     : AbstractLayout(padding) {
 
 }

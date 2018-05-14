@@ -29,7 +29,7 @@ namespace graphics {
 class Canvas;
 
 /**
- * @ingroup graphic
+ * @ingroup graphics
  * @brief Path
  */
 class Path {

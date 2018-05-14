@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,57 +14,45 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHIC_SHADER_HPP_
-#define WIZTK_GRAPHIC_SHADER_HPP_
-
-#include <memory>
+#ifndef WIZTK_GRAPHICS_ABSTRACT_BACKEND_HPP_
+#define WIZTK_GRAPHICS_ABSTRACT_BACKEND_HPP_
 
 namespace wiztk {
 namespace graphics {
 
-class Paint;
-class GradientShader;
+// Forward declarations:
+class AbstractSurface;
 
 /**
  * @ingroup graphics
- * @brief The base shader class
+ * @brief The graphics backend used for a surface.
+ *
+ * A backend object represents the different GL APIs including:
+ * - OpenGL ES 3.x
+ * - OpenGL 4.x
+ * - Vulkan
  */
-class Shader {
-
-  friend class Paint;
-  friend class GradientShader;
+class AbstractBackend {
 
  public:
 
-  enum TileMode {
-    kTileModeClamp,
-    kTileModeRepeat,
-    kTileModeMirror
-  };
+  AbstractBackend();
 
-  Shader();
+  virtual ~AbstractBackend();
 
-  Shader(const Shader &other);
+  void Setup(AbstractSurface *surface);
 
-  ~Shader();
-
-  Shader &operator=(const Shader &other);
-
-  explicit operator bool() const;
+  void Release(AbstractSurface *surface);
 
  protected:
 
-  struct Private;
+  virtual void OnSetup(AbstractSurface *surface) = 0;
 
-  explicit Shader(Private *p);
-
- private:
-
-  std::unique_ptr<Private> p_;
+  virtual void OnRelease(AbstractSurface *surface) = 0;
 
 };
 
 } // namespace graphics
 } // namespace wiztk
 
-#endif  // WIZTK_GRAPHIC_SHADER_HPP_
+#endif // WIZTK_GRAPHICS_ABSTRACT_BACKEND_HPP_

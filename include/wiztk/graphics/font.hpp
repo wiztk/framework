@@ -25,7 +25,7 @@ namespace wiztk {
 namespace graphics {
 
 /**
- * @ingroup graphic
+ * @ingroup graphics
  * @brief Text encoding
  */
 enum TextEncoding {
@@ -36,7 +36,7 @@ enum TextEncoding {
 };
 
 /**
- * @ingroup graphic
+ * @ingroup graphics
  * @brief Font
  */
 class Font {

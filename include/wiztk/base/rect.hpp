@@ -24,7 +24,6 @@
 #include <algorithm>
 
 namespace wiztk {
-
 namespace base {
 
 /**
@@ -42,7 +41,7 @@ struct Rect {
    * @param bottom
    * @return
    */
-  inline static Rect FromLTRB(T left, T top, T right, T bottom) {
+  static inline Rect FromLTRB(T left, T top, T right, T bottom) {
     return Rect(left, top, right, bottom);
   }
 
@@ -54,7 +53,7 @@ struct Rect {
    * @param height
    * @return
    */
-  inline static Rect FromXYWH(T x, T y, T width, T height) {
+  static inline Rect FromXYWH(T x, T y, T width, T height) {
     return Rect(x, y, x + width, y + height);
   }
 

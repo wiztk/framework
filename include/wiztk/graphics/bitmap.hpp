@@ -17,14 +17,15 @@
 #ifndef WIZTK_GRAPHIC_BITMAP_HPP_
 #define WIZTK_GRAPHIC_BITMAP_HPP_
 
+#include "wiztk/graphics/image-info.hpp"
+
 #include <memory>
-#include "image-info.hpp"
 
 namespace wiztk {
 namespace graphics {
 
 /**
- * @ingroup graphic
+ * @ingroup graphics
  * @brief A Bitmap class represents a raster bitmap.
  */
 class Bitmap {

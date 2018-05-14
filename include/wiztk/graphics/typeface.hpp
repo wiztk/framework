@@ -32,7 +32,7 @@ typedef uint32_t FontTableTag;
 class FontStyle;
 
 /**
- * @ingroup graphic
+ * @ingroup graphics
  * @brief Font typeface
  */
 class WIZTK_EXPORT Typeface {

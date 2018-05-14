@@ -4,9 +4,9 @@
 
 #include "test.hpp"
 
-#include <wiztk/base/margin.hpp>
+#include <wiztk/base/thickness.hpp>
 
-using wiztk::base::Margin;
+using Margin = wiztk::base::ThicknessI;
 
 Test::Test()
     : testing::Test() {

@@ -14,13 +14,47 @@
  * limitations under the License.
  */
 
-#include "wiztk/graphics/abstract-surface.hpp"
+#include "abstract-surface_private.hpp"
 
 namespace wiztk {
 namespace graphics {
 
 using base::SizeI;
-using base::Margin;
+
+AbstractSurface::AbstractSurface() {
+  p_ = std::make_unique<Private>(this);
+}
+
+AbstractSurface::AbstractSurface(const Size &size, const Margin &margin)
+    : AbstractSurface() {
+  p_->size = size;
+  p_->margin = margin;
+}
+
+AbstractSurface::AbstractSurface(int width, int height, const Margin &margin)
+    : AbstractSurface() {
+  p_->size.width = width;
+  p_->size.height = height;
+  p_->margin = margin;
+}
+
+AbstractSurface::AbstractSurface(const Margin &margin)
+    : AbstractSurface() {
+  p_->margin = margin;
+}
+
+AbstractSurface::AbstractSurface(AbstractSurface &&other) noexcept {
+  p_ = std::move(other.p_);
+}
+
+AbstractSurface &AbstractSurface::operator=(AbstractSurface &&other) noexcept {
+  p_ = std::move(other.p_);
+  return *this;
+}
+
+AbstractSurface::~AbstractSurface() {
+  delete p_->backend;
+}
 
 void AbstractSurface::SetMargin(const Margin &margin) {
   OnResetMargin(margin.left, margin.top, margin.right, margin.bottom);
@@ -28,6 +62,10 @@ void AbstractSurface::SetMargin(const Margin &margin) {
 
 void AbstractSurface::SetMargin(int left, int top, int right, int bottom) {
   OnResetMargin(left, top, right, bottom);
+}
+
+const AbstractSurface::Margin &AbstractSurface::GetMargin() const {
+  return p_->margin;
 }
 
 void AbstractSurface::Resize(const Size &size) {
@@ -38,16 +76,29 @@ void AbstractSurface::Resize(int width, int height) {
   OnResize(width, height);
 }
 
+const AbstractSurface::Size &AbstractSurface::GetSize() const {
+  return p_->size;
+}
+
+void AbstractSurface::SetBackend(AbstractBackend *backend) {
+  p_->backend = backend;
+  // TODO: more control
+}
+
+AbstractBackend *AbstractSurface::GetBackend() const {
+  return p_->backend;
+}
+
 void AbstractSurface::OnResetMargin(int left, int top, int right, int bottom) {
-  margin_.left = left;
-  margin_.top = top;
-  margin_.right = right;
-  margin_.bottom = bottom;
+  p_->margin.left = left;
+  p_->margin.top = top;
+  p_->margin.right = right;
+  p_->margin.bottom = bottom;
 }
 
 void AbstractSurface::OnResize(int width, int height) {
-  size_.width = width;
-  size_.height = height;
+  p_->size.width = width;
+  p_->size.height = height;
 }
 
 } // namespace graphics

@@ -18,7 +18,7 @@
 #define WIZTK_GUI_THEME_HPP_
 
 #include "wiztk/base/color.hpp"
-#include "wiztk/base/margin.hpp"
+#include "wiztk/base/thickness.hpp"
 #include "wiztk/base/point.hpp"
 
 #include "wiztk/graphics/shader.hpp"
@@ -46,11 +46,10 @@ class Theme {
  public:
 
   using ColorF = base::ColorF;
+  using Margin = base::ThicknessI;
 
   Theme(const Theme &) = delete;
   Theme &operator=(const Theme &) = delete;
-
-  using Margin = base::Margin;
 
   struct Schema {
 

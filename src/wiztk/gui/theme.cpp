@@ -38,10 +38,10 @@ using graphics::Shader;
 int Theme::kShadowRadius = 33;
 int Theme::kShadowOffsetX = 0;
 int Theme::kShadowOffsetY = 11;
-base::Margin Theme::kShadowMargin = base::Margin(kShadowRadius - kShadowOffsetX,
-                                                 kShadowRadius - kShadowOffsetY,
-                                                 kShadowRadius + kShadowOffsetX,
-                                                 kShadowRadius + kShadowOffsetY);
+Theme::Margin Theme::kShadowMargin = Theme::Margin(kShadowRadius - kShadowOffsetX,
+                                                   kShadowRadius - kShadowOffsetY,
+                                                   kShadowRadius + kShadowOffsetX,
+                                                   kShadowRadius + kShadowOffsetY);
 std::vector<uint32_t> Theme::kShadowPixels;
 SkPixmap *Theme::kShadowPixmap = nullptr;
 
@@ -59,10 +59,10 @@ Theme::Data::Data()
 
 Shader Theme::Helper::GradientShader::MakeLinear(const Point2F *points, const Attribute &color) {
   return wiztk::graphics::GradientShader::MakeLinear(points,
-                                                    color.colors.data(),
-                                                    color.color_positions.data(),
-                                                    color.colors.size(),
-                                                    Shader::TileMode::kTileModeClamp);
+                                                     color.colors.data(),
+                                                     color.color_positions.data(),
+                                                     color.colors.size(),
+                                                     Shader::TileMode::kTileModeClamp);
 }
 
 void Theme::Initialize() {

@@ -25,7 +25,7 @@ namespace wiztk {
 namespace graphics {
 
 /**
- * @ingroup graphic
+ * @ingroup graphics
  * @brief Skia matrix wrapper
  */
 class Matrix {

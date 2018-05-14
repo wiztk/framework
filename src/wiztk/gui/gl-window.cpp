@@ -198,11 +198,11 @@ GLWindow::~GLWindow() {
 
 void GLWindow::OnShown() {
   ViewSurface *shell_surface = this->GetShellSurface();
-  const Margin &margin = shell_surface->margin();
+  const Margin &margin = shell_surface->GetMargin();
 
   // Create buffer and attach it to the shell surface:
-  int width = GetWidth() + margin.lr();  // buffer width with horizontal margins
-  int height = GetHeight() + margin.tb();  // buffer height with vertical margins
+  int width = GetWidth() + margin.horizontal();  // buffer width with horizontal margins
+  int height = GetHeight() + margin.vertical();  // buffer height with vertical margins
   int32_t pool_size = width * 4 * height;
 
   p_->pool.Setup(pool_size);
@@ -243,7 +243,7 @@ void GLWindow::OnConfigureSize(const Size &old_size, const Size &new_size) {
 
 void GLWindow::OnSaveSize(const Size &old_size, const Size &new_size) {
   ViewSurface *shell_surface = this->GetShellSurface();
-  const Margin &margin = shell_surface->margin();
+  const Margin &margin = shell_surface->GetMargin();
   int width = new_size.width;
   int height = new_size.height;
 
@@ -251,7 +251,7 @@ void GLWindow::OnSaveSize(const Size &old_size, const Size &new_size) {
 
   input_rect.left = margin.left - kResizingMargin.left;
   input_rect.top = margin.top - kResizingMargin.top;
-  input_rect.Resize(width + kResizingMargin.lr(), height + kResizingMargin.tb());
+  input_rect.Resize(width + kResizingMargin.horizontal(), height + kResizingMargin.vertical());
 
   Region input_region;
   input_region.Add(input_rect.x(), input_rect.y(),
@@ -259,8 +259,8 @@ void GLWindow::OnSaveSize(const Size &old_size, const Size &new_size) {
   shell_surface->SetInputRegion(input_region);
 
   // Reset buffer:
-  width += margin.lr();
-  height += margin.tb();
+  width += margin.horizontal();
+  height += margin.vertical();
 
   int pool_size = width * 4 * height;
   p_->pool.Setup(pool_size);
@@ -276,7 +276,7 @@ void GLWindow::OnSaveSize(const Size &old_size, const Size &new_size) {
 
 void GLWindow::OnRenderSurface(ViewSurface *surface) {
   ViewSurface *shell_surface = GetShellSurface();
-  const Margin &margin = shell_surface->margin();
+  const Margin &margin = shell_surface->GetMargin();
   _ASSERT(shell_surface == surface);
 
   Canvas canvas((unsigned char *) p_->frame_buffer.GetData(),
@@ -284,7 +284,7 @@ void GLWindow::OnRenderSurface(ViewSurface *surface) {
                 p_->frame_buffer.GetSize().height);
   canvas.SetOrigin(margin.left, margin.top);
   p_->DrawFrame(Context(shell_surface, &canvas));
-  shell_surface->Damage(0, 0, GetWidth() + margin.lr(), GetHeight() + margin.tb());
+  shell_surface->Damage(0, 0, GetWidth() + margin.horizontal(), GetHeight() + margin.vertical());
   shell_surface->Commit();
 }
 

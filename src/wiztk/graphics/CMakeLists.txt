@@ -14,6 +14,7 @@
 
 set(
         graphics_sources
+        ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/abstract-backend.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/abstract-surface.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/bitmap.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/canvas.hpp
@@ -29,6 +30,8 @@ set(
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/surface.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/text-box.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/typeface.hpp
+        abstract-backend.cpp
+        abstract-surface_private.hpp
         abstract-surface.cpp
         bitmap.cpp
         bitmap_private.hpp

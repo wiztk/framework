@@ -21,7 +21,7 @@ namespace wiztk {
 namespace graphics {
 
 /**
- * @ingroup graphic
+ * @ingroup graphics
  * @brief Describes how to interpret the alpha component of a pixel
  */
 enum AlphaType {
@@ -37,7 +37,7 @@ enum AlphaType {
 };
 
 /**
- * @ingroup graphic
+ * @ingroup graphics
  * @brief Describes how to interpret the components of a pixel
  */
 enum ColorType {
@@ -56,7 +56,7 @@ enum ColorType {
 };
 
 /**
- * @ingroup graphic
+ * @ingroup graphics
  * @brief Describes an images' dimensions and pixel type
  */
 class ImageInfo {

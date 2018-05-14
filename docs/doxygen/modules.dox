@@ -31,8 +31,8 @@
  */
 
 /**
- * @defgroup graphic Graphic
- * @brief Graphic classes based on Google Skia
+ * @defgroup graphics Graphics
+ * @brief Graphics classes based on Google Skia
  *
  * Code using Google Skia for drawing 2D in GUI views.
  */

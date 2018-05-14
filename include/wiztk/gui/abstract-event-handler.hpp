@@ -19,7 +19,6 @@
 
 #include "wiztk/base/sigcxx.hpp"
 #include "wiztk/base/string.hpp"
-#include "wiztk/base/binode.hpp"
 
 #include <memory>
 

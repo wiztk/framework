@@ -44,7 +44,7 @@ class ImageInfo;
 class ViewSurface;
 
 /**
- * @ingroup graphic
+ * @ingroup graphics
  * @brief Canvas for drawing
  */
 class Canvas {

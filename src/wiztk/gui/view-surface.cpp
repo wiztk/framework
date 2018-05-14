@@ -32,7 +32,6 @@ namespace wiztk {
 namespace gui {
 
 using Point = base::Point2I;
-using base::Margin;
 
 ViewSurface *ViewSurface::Shell::Create(AbstractEventHandler *event_handler, const Margin &margin) {
   auto *surface = new ViewSurface(event_handler, margin);
@@ -49,8 +48,8 @@ ViewSurface::Shell *ViewSurface::Shell::Get(const ViewSurface *surface) {
 
 void ViewSurface::Shell::ResizeWindow(int width, int height) const {
   zxdg_surface_v6_set_window_geometry(p_->zxdg_surface,
-                                      surface_->margin().left,
-                                      surface_->margin().top,
+                                      surface_->GetMargin().left,
+                                      surface_->GetMargin().top,
                                       width, height);
 }
 
@@ -598,7 +597,7 @@ Point ViewSurface::GetWindowPosition() const {
     parent = parent->GetParent();
   }
 
-  return position - Point(shell_surface->margin().l, shell_surface->margin().t);
+  return position - Point(shell_surface->GetMargin().l, shell_surface->GetMargin().t);
 }
 
 ViewSurface *ViewSurface::GetParent() const {

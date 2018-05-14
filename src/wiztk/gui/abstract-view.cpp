@@ -192,7 +192,7 @@ void AbstractView::MoveTo(int x, int y) {
   OnConfigureGeometry(p_->last_geometry, geometry);
 }
 
-const base::Padding &AbstractView::GetPadding() const {
+const AbstractView::Padding &AbstractView::GetPadding() const {
   return p_->padding;
 }
 

@@ -44,7 +44,6 @@ namespace gui {
 using base::Point2F;
 using base::RectF;
 using base::RectI;
-using base::Margin;
 
 using graphics::Canvas;
 using graphics::Paint;
@@ -116,7 +115,7 @@ void Window::Private::DrawBody() {
   ViewSurface *shell_surface = proprietor()->GetShellSurface();
   _ASSERT(nullptr != shell_surface);
 
-  const Margin &margin = shell_surface->margin();
+  const Margin &margin = shell_surface->GetMargin();
   int scale = shell_surface->GetScale();
   int pixel_width = proprietor()->GetWidth() * scale;
   int pixel_height = proprietor()->GetHeight() * scale;
@@ -154,7 +153,7 @@ void Window::Private::DrawBody() {
 
   canvas.Flush();
 
-  shell_surface->Damage(0, 0, proprietor()->GetWidth() + margin.lr(), proprietor()->GetHeight() + margin.tb());
+  shell_surface->Damage(0, 0, proprietor()->GetWidth() + margin.horizontal(), proprietor()->GetHeight() + margin.vertical());
   shell_surface->Commit();
 }
 
@@ -332,7 +331,7 @@ const base::SizeI &Window::GetMaximalSize() const {
 
 void Window::OnShown() {
   ViewSurface *shell_surface = GetShellSurface();
-  const Margin &margin = shell_surface->margin();
+  const Margin &margin = shell_surface->GetMargin();
 
   // Set surface's scale
   int scale = 1;
@@ -348,8 +347,8 @@ void Window::OnShown() {
   // Create buffer:
   int width = GetWidth() * scale;
   int height = GetHeight() * scale;
-  width += margin.lr() * scale;
-  height += margin.tb() * scale;
+  width += margin.horizontal() * scale;
+  height += margin.vertical() * scale;
 
   p_->pool.Setup(width * 4 * height);
 
@@ -411,14 +410,14 @@ void Window::OnSaveSize(const Size &old_size, const Size &new_size) {
 
   int width = new_size.width;
   int height = new_size.height;
-  const base::Margin &margin = shell_surface->margin();
+  const Margin &margin = shell_surface->GetMargin();
 
   Rect input_rect(width, height);
 
   input_rect.left = margin.left - kResizingMargin.left;
   input_rect.top = margin.top - kResizingMargin.top;
-  input_rect.Resize(width + kResizingMargin.lr(),
-                    height + kResizingMargin.tb());
+  input_rect.Resize(width + kResizingMargin.horizontal(),
+                    height + kResizingMargin.vertical());
 
   Region input_region;
   input_region.Add(input_rect.x(), input_rect.y(),
@@ -428,8 +427,8 @@ void Window::OnSaveSize(const Size &old_size, const Size &new_size) {
   // Reset buffer:
   width *= scale;
   height *= scale;
-  width += margin.lr() * scale;
-  height += margin.tb() * scale;
+  width += margin.horizontal() * scale;
+  height += margin.vertical() * scale;
 
   p_->pool.Setup(width * 4 * height);
 
@@ -455,7 +454,7 @@ void Window::OnSaveSize(const Size &old_size, const Size &new_size) {
 }
 
 void Window::OnRenderSurface(ViewSurface *surface) {
-  const Margin &margin = surface->margin();
+  const Margin &margin = surface->GetMargin();
   int scale = surface->GetScale();
   int pixel_width = GetWidth() * scale;
   int pixel_height = GetHeight() * scale;

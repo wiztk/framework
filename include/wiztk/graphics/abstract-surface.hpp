@@ -14,15 +14,25 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHIC_ABSTRACT_SURFACE_HPP_
-#define WIZTK_GRAPHIC_ABSTRACT_SURFACE_HPP_
+/**
+ * @file abstract-surface.hpp
+ * @brief Header file for abstract class of drawable surface object.
+ */
+
+#ifndef WIZTK_GRAPHICS_ABSTRACT_SURFACE_HPP_
+#define WIZTK_GRAPHICS_ABSTRACT_SURFACE_HPP_
 
 #include "wiztk/base/macros.hpp"
-#include "wiztk/base/margin.hpp"
+#include "wiztk/base/thickness.hpp"
 #include "wiztk/base/size.hpp"
+
+#include <memory>
 
 namespace wiztk {
 namespace graphics {
+
+// Foward declarations:
+class AbstractBackend;
 
 /**
  * @ingroup graphic
@@ -32,7 +42,7 @@ class WIZTK_EXPORT AbstractSurface {
 
  public:
 
-  using Margin = base::Margin;
+  using Margin = base::ThicknessI;
   using Size = base::SizeI;
 
   /**
@@ -54,15 +64,14 @@ class WIZTK_EXPORT AbstractSurface {
   /**
    * @brief Default constructor
    */
-  AbstractSurface() = default;
+  AbstractSurface();
 
   /**
    * @brief Constructs a surface with given size and margin
    * @param size
    * @param margin
    */
-  explicit AbstractSurface(const Size &size, const Margin &margin = Margin())
-      : size_(size), margin_(margin) {}
+  explicit AbstractSurface(const Size &size, const Margin &margin = Margin());
 
   /**
    * @brief Constructs a surface with given size and margin
@@ -70,42 +79,27 @@ class WIZTK_EXPORT AbstractSurface {
    * @param height
    * @param margin
    */
-  AbstractSurface(int width, int height, const Margin &margin = Margin())
-      : size_(width, height), margin_(margin) {}
+  AbstractSurface(int width, int height, const Margin &margin = Margin());
 
-  explicit AbstractSurface(const Margin &margin)
-      : margin_(margin) {}
-
-  /**
-   * @brief Default copy constructor
-   * @param other
-   */
-  AbstractSurface(const AbstractSurface &other) = default;
+  explicit AbstractSurface(const Margin &margin);
 
   /**
    * @brief Default move constructor
    * @param other
    */
-  AbstractSurface(AbstractSurface &&other) = default;
+  AbstractSurface(AbstractSurface &&other) noexcept;
 
   /**
    * @brief Default destructor
    */
-  virtual ~AbstractSurface() = default;
-
-  /**
-   * @brief Default assignment operator
-   * @param other
-   * @return
-   */
-  AbstractSurface &operator=(const AbstractSurface &other) = default;
+  virtual ~AbstractSurface();
 
   /**
    * @brief Default move operator
    * @param other
    * @return
    */
-  AbstractSurface &operator=(AbstractSurface &&other)= default;
+  AbstractSurface &operator=(AbstractSurface &&other) noexcept;
 
   /**
    * @brief Call OnSetMargin()
@@ -126,7 +120,7 @@ class WIZTK_EXPORT AbstractSurface {
    * @brief Get the margin
    * @return
    */
-  const Margin &margin() const { return margin_; }
+  const Margin &GetMargin() const;
 
   /**
    * @brief Resize
@@ -145,7 +139,11 @@ class WIZTK_EXPORT AbstractSurface {
    * @brief Get size
    * @return
    */
-  const Size &size() const { return size_; }
+  const Size &GetSize() const;
+
+  void SetBackend(AbstractBackend *backend);
+
+  AbstractBackend *GetBackend() const;
 
   /**
    * @brief Pure virtual method of how to render contents on this surface.
@@ -177,12 +175,13 @@ class WIZTK_EXPORT AbstractSurface {
 
  private:
 
-  Size size_;
-  Margin margin_;
+  struct Private;
+
+  std::unique_ptr<Private> p_;
 
 };
 
 } // namespace graphics
 } // namespace wiztk
 
-#endif // WIZTK_GRAPHIC_ABSTRACT_SURFACE_HPP_
+#endif // WIZTK_GRAPHICS_ABSTRACT_SURFACE_HPP_

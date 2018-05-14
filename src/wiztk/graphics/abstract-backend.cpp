@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_BASE_PADDING_HPP_
-#define WIZTK_BASE_PADDING_HPP_
-
-#include "bounding-box.hpp"
+#include "wiztk/graphics/abstract-backend.hpp"
 
 namespace wiztk {
-namespace base {
+namespace graphics {
 
-/**
- * @ingroup base
- * @brief Class specifies content paddings.
- */
-typedef BoundingBox<int> Padding;
+AbstractBackend::AbstractBackend() = default;
 
+AbstractBackend::~AbstractBackend() = default;
+
+void AbstractBackend::Setup(wiztk::graphics::AbstractSurface *surface) {
+  OnSetup(surface);
 }
+
+void AbstractBackend::Release(wiztk::graphics::AbstractSurface *surface) {
+  OnRelease(surface);
 }
 
-#endif // WIZTK_CORE_PADDING_HPP_
+} // namespace graphics
+} // namespace wiztk

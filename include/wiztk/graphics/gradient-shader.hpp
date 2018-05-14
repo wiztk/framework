@@ -28,7 +28,7 @@ namespace graphics {
 class Matrix;
 
 /**
- * @ingroup graphic
+ * @ingroup graphics
  * @brief Gradient shader
  */
 class GradientShader {

@@ -17,7 +17,7 @@
 #ifndef WIZTK_GRAPHIC_TEXT_BOX_HPP_
 #define WIZTK_GRAPHIC_TEXT_BOX_HPP_
 
-#include "../base/rect.hpp"
+#include "wiztk/base/rect.hpp"
 
 #include <memory>
 

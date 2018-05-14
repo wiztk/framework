@@ -31,7 +31,7 @@ namespace graphics {
 class Shader;
 
 /**
- * @ingroup graphic
+ * @ingroup graphics
  * @brief Class holds the style and color information about how to draw geometries, text and bitmaps.
  */
 class Paint {

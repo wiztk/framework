@@ -22,7 +22,7 @@
 #include "wiztk/base/types.hpp"
 #include "wiztk/base/size.hpp"
 #include "wiztk/base/rect.hpp"
-#include "wiztk/base/padding.hpp"
+#include "wiztk/base/thickness.hpp"
 #include <wiztk/base/deque.hpp>
 
 #include "wiztk/async/message.hpp"
@@ -85,7 +85,7 @@ WIZTK_EXPORT class AbstractView : public AbstractEventHandler {
   using Size    = base::SizeI;          /**< @brief Alias of base::SizeI */
   using Rect    = base::RectI;          /**< @brief Alias of base::RectI */
   using RectF   = base::RectF;          /**< @brief Alias of base::RectF */
-  using Padding = base::Padding;        /**< @brief Alias of base::Padding */
+  using Padding = base::ThicknessI;        /**< @brief Alias of base::Padding */
 
   class GeometryMessage;
   class RenderNode;

@@ -39,12 +39,12 @@ namespace gui {
 using Point = base::Point2I;
 using Size = base::SizeI;
 
-using base::Margin;
+using base::ThicknessI;
 using base::SLOT;
 using base::Bit;
 using graphics::Canvas;
 
-const Margin AbstractShellView::kResizingMargin(5, 5, 5, 5);
+const AbstractShellView::Margin AbstractShellView::kResizingMargin(5, 5, 5, 5);
 
 AbstractShellView::AbstractShellView(const char *title, AbstractShellView *parent)
     : AbstractShellView(400, 300, title, parent) {
@@ -77,8 +77,8 @@ AbstractShellView::AbstractShellView(int width,
   int x = 0, y = 0;  // The input region
   x += Theme::GetShadowMargin().left - kResizingMargin.left;
   y += Theme::GetShadowMargin().top - kResizingMargin.top;
-  width += kResizingMargin.lr();
-  height += kResizingMargin.tb();
+  width += kResizingMargin.horizontal();
+  height += kResizingMargin.vertical();
 
   Region input_region;
   input_region.Add(x, y, width, height);

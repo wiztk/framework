@@ -18,7 +18,7 @@
 #define WIZTK_GUI_SURFACE_HPP_
 
 #include "wiztk/base/sigcxx.hpp"
-#include "wiztk/base/margin.hpp"
+#include "wiztk/base/thickness.hpp"
 #include "wiztk/base/point.hpp"
 #include "wiztk/base/deque.hpp"
 
@@ -76,7 +76,7 @@ class AbstractRenderingAPI;
 class ViewSurface : public graphics::AbstractSurface, public base::Trackable {
 
   using Point  = base::Point2I;
-  using Margin = base::Margin;
+  using Margin = base::ThicknessI;
 
   friend class Application;
   friend class Display;

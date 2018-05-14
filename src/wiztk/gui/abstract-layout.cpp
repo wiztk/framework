@@ -45,9 +45,7 @@ AbstractLayout::AbstractLayout(const Padding &padding)
   p_->padding = padding;
 }
 
-AbstractLayout::~AbstractLayout() {
-
-}
+AbstractLayout::~AbstractLayout() = default;
 
 void AbstractLayout::AddView(AbstractView *view) {
   _ASSERT(view->p_->parent == view->p_->layout);

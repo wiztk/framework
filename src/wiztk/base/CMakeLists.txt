@@ -26,7 +26,7 @@ set(
         ${PROJECT_SOURCE_DIR}/include/wiztk/base/abstract-runnable.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/base/binode.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/base/bit.hpp
-        ${PROJECT_SOURCE_DIR}/include/wiztk/base/bounding-box.hpp
+        ${PROJECT_SOURCE_DIR}/include/wiztk/base/thickness.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/base/clamp.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/base/color.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/base/counted-deque.hpp
@@ -35,9 +35,7 @@ set(
         ${PROJECT_SOURCE_DIR}/include/wiztk/base/dynamic-library.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/base/exception.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/base/macros.hpp
-        ${PROJECT_SOURCE_DIR}/include/wiztk/base/margin.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/base/object.hpp
-        ${PROJECT_SOURCE_DIR}/include/wiztk/base/padding.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/base/point.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/base/property.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/base/rect.hpp

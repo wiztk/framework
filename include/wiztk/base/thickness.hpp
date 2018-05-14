@@ -14,34 +14,34 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_BASE_BOUNDING_BOX_HPP_
-#define WIZTK_BASE_BOUNDING_BOX_HPP_
+#ifndef WIZTK_BASE_THICKNESS_HPP_
+#define WIZTK_BASE_THICKNESS_HPP_
 
 namespace wiztk {
 namespace base {
 
 /**
  * @ingroup base
- * @brief Class specifies bounds around a rectangle
+ * @brief Structure defining thickness around the edges of a rectangle.
  */
 template<typename T>
-struct BoundingBox {
+struct Thickness {
 
-  inline BoundingBox()
+  inline Thickness()
       : l(T(0)), t(T(0)), r(T(0)), b(T(0)) {}
 
-  inline explicit BoundingBox(T value)
+  inline explicit Thickness(T value)
       : l(value), t(value), r(value), b(value) {}
 
-  inline BoundingBox(T l, T t, T r, T b)
+  inline Thickness(T l, T t, T r, T b)
       : l(l), t(t), r(r), b(b) {}
 
-  inline BoundingBox(const BoundingBox &other)
+  inline Thickness(const Thickness &other)
       : l(other.l), t(other.t), r(other.r), b(other.b) {}
 
-  inline ~BoundingBox() = default;
+  inline ~Thickness() = default;
 
-  inline BoundingBox &operator=(const BoundingBox &other) {
+  inline Thickness &operator=(const Thickness &other) {
     l = other.l;
     t = other.t;
     r = other.r;
@@ -57,18 +57,16 @@ struct BoundingBox {
   }
 
   /**
-   * Left + Right
-   * @return
+   * @brief The sum of left and right.
    */
-  inline T lr() const {
+  inline T horizontal() const {
     return left + right;
   }
 
   /**
-   * Top + Bottom
-   * @return
+   * @brief The sum of top and bottom.
    */
-  inline T tb() const {
+  inline T vertical() const {
     return top + bottom;
   }
 
@@ -83,19 +81,23 @@ struct BoundingBox {
  * @ingroup base
  */
 template<typename T>
-inline bool operator==(const BoundingBox<T> &s1, const BoundingBox<T> &s2) {
-  return memcmp(&s1, &s2, sizeof(BoundingBox<T>)) == 0;
+inline bool operator==(const Thickness<T> &s1, const Thickness<T> &s2) {
+  return memcmp(&s1, &s2, sizeof(Thickness<T>)) == 0;
 }
 
 /**
  * @ingroup base
  */
 template<typename T>
-inline bool operator!=(const BoundingBox<T> &s1, const BoundingBox<T> &s2) {
-  return memcmp(&s1, &s2, sizeof(BoundingBox<T>)) != 0;
+inline bool operator!=(const Thickness<T> &s1, const Thickness<T> &s2) {
+  return memcmp(&s1, &s2, sizeof(Thickness<T>)) != 0;
 }
+
+typedef Thickness<int> ThicknessI;
+typedef Thickness<float> ThicknessF;
+typedef Thickness<double> ThicknessD;
 
 } // namespace base
 } // namespace wiztk
 
-#endif // WIZTK_BASE_BOUNDING_BOX_HPP_
+#endif // WIZTK_BASE_THICKNESS_HPP_
