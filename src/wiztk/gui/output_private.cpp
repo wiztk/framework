@@ -36,15 +36,15 @@ void Output::Private::OnGeometry(void *data,
                                  const char *make,
                                  const char *model,
                                  int32_t transform) {
-  Output *_this = static_cast<Output *>(data);
+  auto *_this = static_cast<Output *>(data);
 
-  _this->p_->position_.x = x;
-  _this->p_->position_.y = y;
-  _this->p_->physical_size_.width = physical_width;
-  _this->p_->physical_size_.height = physical_height;
+  _this->p_->position.x = x;
+  _this->p_->position.y = y;
+  _this->p_->physical_size.width = physical_width;
+  _this->p_->physical_size.height = physical_height;
   _this->p_->subpixel = subpixel;
-  _this->p_->make_ = make;
-  _this->p_->model_ = model;
+  _this->p_->make = make;
+  _this->p_->model = model;
   _this->p_->transform = transform;
 }
 
@@ -54,25 +54,26 @@ void Output::Private::OnMode(void *data,
                              int32_t width,
                              int32_t height,
                              int32_t refresh) {
-  Output *_this = static_cast<Output *>(data);
+  auto *_this = static_cast<Output *>(data);
 
   if (flags & WL_OUTPUT_MODE_CURRENT) {
-    _this->p_->current_mode_size_.width = width;
-    _this->p_->current_mode_size_.height = height;
+    _this->p_->current_mode_size.width = width;
+    _this->p_->current_mode_size.height = height;
     _this->p_->current_refresh_rate = refresh;
   } else if (flags & WL_OUTPUT_MODE_PREFERRED) {
-    _this->p_->preferred_mode_size_.width = width;
-    _this->p_->preferred_mode_size_.height = height;
+    _this->p_->preferred_mode_size.width = width;
+    _this->p_->preferred_mode_size.height = height;
     _this->p_->preferred_refresh_rate = refresh;
   }
 }
 
 void Output::Private::OnDone(void *data, struct wl_output * /* wl_output */) {
-//  Output *_this = static_cast<Output *>(data);
+  auto *_this = static_cast<Output *>(data);
+  _this->p_->done = true;
 }
 
 void Output::Private::OnScale(void *data, struct wl_output * /* wl_output */, int32_t factor) {
-  Output *_this = static_cast<Output *>(data);
+  auto *_this = static_cast<Output *>(data);
   _this->p_->scale = factor;
 }
 

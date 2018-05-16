@@ -54,11 +54,11 @@ int Output::GetScale() const {
 }
 
 const std::string &Output::GetMake() const {
-  return p_->make_;
+  return p_->make;
 }
 
 const std::string &Output::GetModel() const {
-  return p_->model_;
+  return p_->model;
 }
 
 uint32_t Output::GetID() const {

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_INTERNAL_OUTPUT_PRIVATE_HPP_
-#define WIZTK_GUI_INTERNAL_OUTPUT_PRIVATE_HPP_
+#ifndef WIZTK_GUI_OUTPUT_PRIVATE_HPP_
+#define WIZTK_GUI_OUTPUT_PRIVATE_HPP_
 
-#include <wiztk/gui/output.hpp>
+#include "wiztk/gui/output.hpp"
 
 #include <wayland-client.h>
 
@@ -34,15 +34,7 @@ struct Output::Private : public base::CountedDequeNodeBase {
 
   explicit Private(Output *output)
       : base::CountedDequeNodeBase(),
-        proprietor(output),
-        wl_output(nullptr),
-        current_refresh_rate(0),
-        preferred_refresh_rate(0),
-        subpixel(0),
-        transform(WL_OUTPUT_TRANSFORM_NORMAL),
-        scale(1),
-        id(0),
-        version(0) {}
+        proprietor(output) {}
 
   ~Private() final {
     if (wl_output)
@@ -51,31 +43,33 @@ struct Output::Private : public base::CountedDequeNodeBase {
 
   Output *proprietor = nullptr;
 
-  struct wl_output *wl_output;
+  struct wl_output *wl_output = nullptr;
 
   /** position within the global compositor space */
-  base::Point2I position_;
+  base::Point2I position;
 
   /** physical_width width in millimeters of the output */
-  base::SizeI physical_size_;
+  base::SizeI physical_size;
 
   /** The size of a mode, given in physical hardware units of the output device */
-  base::SizeI current_mode_size_;
-  base::SizeI preferred_mode_size_;
-  int32_t current_refresh_rate;
-  int32_t preferred_refresh_rate;
+  base::SizeI current_mode_size;
+  base::SizeI preferred_mode_size;
+  int32_t current_refresh_rate = 0;
+  int32_t preferred_refresh_rate = 0;
 
-  int subpixel;  /**< enum value of wl_output_subpixel */
-  int transform; /**< enum value of wl_output_transform */
-  int scale;
+  int subpixel = 0;  /**< enum value of wl_output_subpixel */
+  int transform = WL_OUTPUT_TRANSFORM_NORMAL; /**< enum value of wl_output_transform */
+  int scale = 1;
 
   /* vertical refresh rate in mHz */
 
-  std::string make_;
-  std::string model_;
+  std::string make;
+  std::string model;
 
-  uint32_t id;
-  uint32_t version;
+  uint32_t id = 0;
+  uint32_t version = 0;
+
+  bool done = false;
 
   static void OnGeometry(void *data,
                          struct wl_output *wl_output,
@@ -109,4 +103,4 @@ struct Output::Private : public base::CountedDequeNodeBase {
 } // namespace gui
 } // namespace wiztk
 
-#endif // WIZTK_GUI_INTERNAL_OUTPUT_PRIVATE_HPP_
+#endif // WIZTK_GUI_OUTPUT_PRIVATE_HPP_

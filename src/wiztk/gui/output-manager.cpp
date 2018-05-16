@@ -38,6 +38,8 @@ void OutputManager::Clear() {
 }
 
 Output *OutputManager::FindByID(uint32_t id) const {
+  // TODO: is the id unique in the deque?
+
   Output *output = nullptr;
 
   for (auto it = deque_.begin(); it != deque_.end(); ++it) {

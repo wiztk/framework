@@ -17,6 +17,7 @@
 # gui
 add_subdirectory(display)
 add_subdirectory(application)
+add_subdirectory(output)
 add_subdirectory(window)
 add_subdirectory(dialog)
 add_subdirectory(timer)
