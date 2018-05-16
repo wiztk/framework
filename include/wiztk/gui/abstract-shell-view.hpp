@@ -81,7 +81,7 @@ WIZTK_EXPORT class AbstractShellView : public AbstractEventHandler {
 
    private:
 
-    AbstractShellView *shell_view_;
+    AbstractShellView *shell_view_ = nullptr;
 
   };
 

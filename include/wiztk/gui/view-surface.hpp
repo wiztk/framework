@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,7 +116,7 @@ class ViewSurface : public graphics::AbstractSurface, public base::Trackable {
 
   ~ViewSurface() override;
 
-  static int GetShellSurfaceCount() { return kShellSurfaceCount; }
+  static int CountShellSurfaces() { return kShellSurfaceCount; }
 
   /**
    * @brief Attach a shared memory buffer
@@ -161,7 +161,7 @@ class ViewSurface : public graphics::AbstractSurface, public base::Trackable {
    * @brief Get defferred redraw task deque
    * @return
    */
-  base::Deque<AbstractView::RenderNode> &GetViewRenderDeque() const;
+  base::Deque<AbstractView::RenderNode> &GetRenderDeque() const;
 
   ViewSurface *GetShellSurface();
 
@@ -218,6 +218,12 @@ class ViewSurface : public graphics::AbstractSurface, public base::Trackable {
 
   void Render(Delegate *delegate) override;
 
+ protected:
+
+  bool OnResetMargin(int left, int top, int right, int bottom) override;
+
+  bool OnResize(int width, int height) override;
+
  private:
 
   class RenderTask : public QueuedTask {
@@ -263,7 +269,7 @@ class ViewSurface : public graphics::AbstractSurface, public base::Trackable {
   /**
    * @brief A private structure for surface properties
    */
-  struct Private;
+  struct _Private;
 
   explicit ViewSurface(AbstractEventHandler *event_handler, const Margin &margin = Margin());
 
@@ -295,7 +301,7 @@ class ViewSurface : public graphics::AbstractSurface, public base::Trackable {
 
   static base::Deque<CommitTask> kCommitTaskDeque;
 
-  std::unique_ptr<Private> p_;
+  std::unique_ptr<_Private> p_;
 
 };
 

@@ -52,16 +52,29 @@ AbstractSurface &AbstractSurface::operator=(AbstractSurface &&other) noexcept {
   return *this;
 }
 
-AbstractSurface::~AbstractSurface() {
-  delete p_->backend;
-}
+AbstractSurface::~AbstractSurface() = default;
 
 void AbstractSurface::SetMargin(const Margin &margin) {
-  OnResetMargin(margin.left, margin.top, margin.right, margin.bottom);
+  if (p_->margin_locked) return;
+
+  p_->margin_locked = true;
+  if (OnResetMargin(margin.left, margin.top, margin.right, margin.bottom)) {
+    p_->margin = margin;
+  }
+  p_->margin_locked = false;
 }
 
 void AbstractSurface::SetMargin(int left, int top, int right, int bottom) {
-  OnResetMargin(left, top, right, bottom);
+  if (p_->margin_locked) return;
+
+  p_->margin_locked = true;
+  if (OnResetMargin(left, top, right, bottom)) {
+    p_->margin.left = left;
+    p_->margin.top = top;
+    p_->margin.right = right;
+    p_->margin.bottom = bottom;
+  }
+  p_->margin_locked = false;
 }
 
 const AbstractSurface::Margin &AbstractSurface::GetMargin() const {
@@ -69,36 +82,28 @@ const AbstractSurface::Margin &AbstractSurface::GetMargin() const {
 }
 
 void AbstractSurface::Resize(const Size &size) {
-  OnResize(size.width, size.height);
+  if (p_->size_locked) return;
+
+  p_->size_locked = true;
+  if (OnResize(size.width, size.height)) {
+    p_->size = size;
+  }
+  p_->size_locked = false;
 }
 
 void AbstractSurface::Resize(int width, int height) {
-  OnResize(width, height);
+  if (p_->size_locked) return;
+
+  p_->size_locked = true;
+  if (OnResize(width, height)) {
+    p_->size.width = width;
+    p_->size.height = height;
+  }
+  p_->size_locked = false;
 }
 
 const AbstractSurface::Size &AbstractSurface::GetSize() const {
   return p_->size;
-}
-
-void AbstractSurface::SetBackend(AbstractBackend *backend) {
-  p_->backend = backend;
-  // TODO: more control
-}
-
-AbstractBackend *AbstractSurface::GetBackend() const {
-  return p_->backend;
-}
-
-void AbstractSurface::OnResetMargin(int left, int top, int right, int bottom) {
-  p_->margin.left = left;
-  p_->margin.top = top;
-  p_->margin.right = right;
-  p_->margin.bottom = bottom;
-}
-
-void AbstractSurface::OnResize(int width, int height) {
-  p_->size.width = width;
-  p_->size.height = height;
 }
 
 } // namespace graphics

@@ -172,7 +172,7 @@ void Display::Private::MakeSwapBufferNonBlock() const {
     fprintf(stderr, "warning: swap interval range unknown\n");
   } else if (a > 0) {
     fprintf(stderr, "warning: minimum swap interval is %d, "
-        "while 0 is required to not deadlock on resize.\n", a);
+                    "while 0 is required to not deadlock on resize.\n", a);
   }
 
   /*
@@ -278,8 +278,7 @@ void Display::Private::OnGlobal(void *data,
 
     _this->InitializeCursors();
   } else if (strcmp(interface, wl_output_interface.name) == 0) {
-    auto *output = new Output(id, version);
-    _this->p_->output_manager.AddOutput(output);
+    _this->p_->output_manager.AddOutput(id, version);
   } else if (strcmp(interface, zxdg_shell_v6_interface.name) == 0) {
     _this->p_->xdg_shell =
         static_cast<struct zxdg_shell_v6 *>(wl_registry_bind(_this->p_->wl_registry,
@@ -305,7 +304,7 @@ void Display::Private::OnGlobal(void *data,
 }
 
 void Display::Private::OnGlobalRemove(void *data,
-                                      struct wl_registry *registry,
+                                      struct wl_registry */* registry */,
                                       uint32_t name) {
   auto *_this = static_cast<Display *>(data);
 
@@ -316,7 +315,7 @@ void Display::Private::OnGlobalRemove(void *data,
     }
 
     if ((*it)->interface == "wl_output") {
-      _this->DestroyOutput(name);
+      _this->p_->output_manager.RemoveOutput(name);
     }
 
     _this->unregister_.Emit(**it);

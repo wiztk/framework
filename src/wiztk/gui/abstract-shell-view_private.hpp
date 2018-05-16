@@ -47,11 +47,7 @@ struct AbstractShellView::Private : public base::Property<AbstractShellView> {
    */
   explicit Private(AbstractShellView *shell_view)
       : base::Property<AbstractShellView>(shell_view),
-        flags(0),
-        shell_surface(nullptr),
-        parent(nullptr),
-        geometry_task(shell_view),
-        is_damaged(false) {}
+        geometry_task(shell_view) {}
 
   /**
    * @brief Destructor
@@ -61,7 +57,7 @@ struct AbstractShellView::Private : public base::Property<AbstractShellView> {
   /**
    * @brief Bitwise flags
    */
-  int flags;
+  int flags = 0;
 
   /**
    * @brief Title string for the top level window
@@ -88,7 +84,7 @@ struct AbstractShellView::Private : public base::Property<AbstractShellView> {
   /**
    * @brief A pointer to a shell surface created with a shell view object
    */
-  ViewSurface *shell_surface;
+  ViewSurface *shell_surface = nullptr;
 
   /**
    * @brief The parent shell view object
@@ -98,14 +94,14 @@ struct AbstractShellView::Private : public base::Property<AbstractShellView> {
    *  - A shell view object if surface is a popup shell surface
    *  - nullptr if surface is a top level shell surface
    */
-  AbstractShellView *parent;
+  AbstractShellView *parent = nullptr;
 
   GeometryMessage geometry_task;
 
   /**
    * @brief If need to call wayland API to damage area on the surface
    */
-  bool is_damaged;
+  bool is_damaged = false;
 
   void OnXdgSurfaceConfigure(uint32_t serial);
 

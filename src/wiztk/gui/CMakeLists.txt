@@ -34,6 +34,7 @@ set(
         ${PROJECT_SOURCE_DIR}/include/wiztk/gui/gl-view.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/gui/gl-window.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/gui/glesv2-api.hpp
+        ${PROJECT_SOURCE_DIR}/include/wiztk/gui/gles2-backend.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/gui/input.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/gui/input-event.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/gui/input-manager.hpp
@@ -91,6 +92,7 @@ set(
         gl-view.cpp
         gl-window.cpp
         glesv2-api.cpp
+        gles2-backend.cpp
         input.cpp
         input-event.cpp
         input-manager.cpp

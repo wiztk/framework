@@ -25,11 +25,6 @@ OutputManager::~OutputManager() {
   Clear();
 }
 
-void OutputManager::AddOutput(Output *output) {
-  auto *node = output->p_.get();
-  deque_.push_front(node);
-}
-
 Output *OutputManager::GetActiveOutput() const {
   return deque_.count() > 0 ? deque_[0]->proprietor : nullptr;
 }
@@ -45,7 +40,7 @@ void OutputManager::Clear() {
 Output *OutputManager::FindByID(uint32_t id) const {
   Output *output = nullptr;
 
-  for (OutputPrivateDeque::Iterator it = deque_.begin(); it != deque_.end(); ++it) {
+  for (auto it = deque_.begin(); it != deque_.end(); ++it) {
     if (it->proprietor->GetID() == id) {
       output = it->proprietor;
       break;
@@ -55,5 +50,30 @@ Output *OutputManager::FindByID(uint32_t id) const {
   return output;
 }
 
+void OutputManager::AddOutput(uint32_t id, uint32_t version) {
+  auto *output = new Output(id, version);
+  auto *node = output->p_.get();
+  deque_.push_front(node);
+  added_.Emit(output);
 }
+
+void OutputManager::RemoveOutput(uint32_t id) {
+  Output *output = nullptr;
+  for (auto it = deque_.begin(); it != deque_.end(); ++it) {
+    if (it->proprietor->GetID() == id) {
+      output = it->proprietor;
+      break;
+    }
+  }
+
+  if (nullptr != output) {
+    removed_.Emit(output);
+    delete output;
+  }
+
+  // There must be a output stored.
+  _ASSERT(nullptr != output);
 }
+
+} // namespace gui
+} // namespace wiztk

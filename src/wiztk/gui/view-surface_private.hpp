@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,38 +23,30 @@
 namespace wiztk {
 namespace gui {
 
-struct ViewSurface::Private {
+struct ViewSurface::_Private {
 
   using PointI = base::Point2I;
 
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
-  Private() = delete;
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(_Private);
+  _Private() = delete;
 
-  Private(ViewSurface *surface, AbstractEventHandler *event_handler, const Margin &margin)
-      : wl_surface(nullptr),
-        commit_mode(kSynchronized),
-        transform(kTransformNormal),
-        scale(1),
-        event_handler(event_handler),
-        parent(nullptr),
-        above(nullptr),
-        below(nullptr),
-        upper(nullptr),
-        lower(nullptr),
-        rendering_api(nullptr),
+  _Private(ViewSurface *surface, AbstractEventHandler *event_handler, const Margin &margin)
+      : event_handler(event_handler),
         render_task(surface),
         commit_task(surface) {
   }
 
-  ~Private() = default;
+  ~_Private() = default;
 
-  struct wl_surface *wl_surface;
+  struct wl_surface *wl_surface = nullptr;
 
-  CommitMode commit_mode;
-  Transform transform;
-  int32_t scale;
+  CommitMode commit_mode = kSynchronized;
 
-  AbstractEventHandler *event_handler;
+  Transform transform = kTransformNormal;
+
+  int32_t scale = 1;
+
+  AbstractEventHandler *event_handler = nullptr;
 
   /**
    * Position in parent surface
@@ -66,40 +58,41 @@ struct ViewSurface::Private {
   /**
     * @brief The parent surface
     */
-  ViewSurface *parent;
+  ViewSurface *parent = nullptr;
 
   /**
     * @brief The sibling surface placed up
     */
-  ViewSurface *above;
+  ViewSurface *above = nullptr;
 
   /**
     * @brief The sibling surface placed down
     */
-  ViewSurface *below;
+  ViewSurface *below = nullptr;
 
   /**
    * @brief The shell surface shows front
    */
-  ViewSurface *upper;
+  ViewSurface *upper = nullptr;
 
   /**
    * @brief The shell surface shows back
    */
-  ViewSurface *lower;
+  ViewSurface *lower = nullptr;
 
-  AbstractRenderingAPI *rendering_api;
+  AbstractRenderingAPI *rendering_api = nullptr;
 
   union {
     void *placeholder;
     Shell *shell;
     Sub *sub;
-  } role;
+  } role = {nullptr};
 
   RenderTask render_task;
+
   CommitTask commit_task;
 
-  base::Deque<AbstractView::RenderNode> view_render_deque;
+  base::Deque<AbstractView::RenderNode> render_deque;
 
   static void OnEnter(void *data, struct wl_surface *wl_surface,
                       struct wl_output *wl_output);

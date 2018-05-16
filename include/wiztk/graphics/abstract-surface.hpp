@@ -31,9 +31,6 @@
 namespace wiztk {
 namespace graphics {
 
-// Foward declarations:
-class AbstractBackend;
-
 /**
  * @ingroup graphic
  * @brief Abstract surface for rendering 2D/3D contents.
@@ -141,10 +138,6 @@ class WIZTK_EXPORT AbstractSurface {
    */
   const Size &GetSize() const;
 
-  void SetBackend(AbstractBackend *backend);
-
-  AbstractBackend *GetBackend() const;
-
   /**
    * @brief Pure virtual method of how to render contents on this surface.
    * @param delegate
@@ -162,7 +155,7 @@ class WIZTK_EXPORT AbstractSurface {
    *
    * If override this method in sub class, don't forget to call AbstractSurface::OnSetMargin() to save.
    */
-  virtual void OnResetMargin(int left, int top, int right, int bottom);
+  virtual bool OnResetMargin(int left, int top, int right, int bottom) = 0;
 
   /**
    * @brief Virtual method to handle resizing.
@@ -171,7 +164,7 @@ class WIZTK_EXPORT AbstractSurface {
    *
    * If override this method in sub class, don't forget to call AbstractSurface::OnResize() to save.
    */
-  virtual void OnResize(int width, int height);
+  virtual bool OnResize(int width, int height) = 0;
 
  private:
 

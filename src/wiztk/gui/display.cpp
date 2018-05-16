@@ -136,11 +136,6 @@ const Cursor *Display::GetCursor(CursorType cursor_type) const {
   return __PROPERTY__(cursors)[cursor_type];
 }
 
-void Display::DestroyOutput(uint32_t id) {
-  Output *output = __PROPERTY__(output_manager).FindByID(id);
-  delete output;
-}
-
 void Display::InitializeCursors() {
   p_->cursors[kCursorBottomLeft] =
       Cursor::Create(wl_cursor_theme_get_cursor(p_->wl_cursor_theme, "bottom_left_corner"));

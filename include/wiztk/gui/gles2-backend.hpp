@@ -14,42 +14,37 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_PUSH_BUTTON_HPP_
-#define WIZTK_GUI_PUSH_BUTTON_HPP_
+#ifndef WIZTK_GUI_GLES2_BACKEND_HPP_
+#define WIZTK_GUI_GLES2_BACKEND_HPP_
 
-#include "abstract-button.hpp"
-#include "wiztk/base/color.hpp"
+#include "wiztk/graphics/abstract-backend.hpp"
+
+#include <memory>
 
 namespace wiztk {
 namespace gui {
 
 /**
  * @ingroup gui
- * @brief A most commonly used button
+ * @brief OpenGL ES V2 Backend.
  */
-class PushButton : public AbstractButton {
+class GLES2Backend : public graphics::AbstractBackend {
 
  public:
 
-  using ColorF = base::ColorF;
+  GLES2Backend();
 
-  explicit PushButton(const std::string &text);
-
- protected:
-
-  virtual ~PushButton();
-
-  void OnDraw(const Context &context) override;
+  ~GLES2Backend() override;
 
  private:
 
-  ColorF regular_;
-  ColorF highlight_;
-  ColorF active_;
+  struct Private;
+
+  std::unique_ptr<Private> p_;
 
 };
 
 } // namespace gui
 } // namespace wiztk
 
-#endif // WIZTK_GUI_PUSH_BUTTON_HPP_
+#endif // WIZTK_GUI_GLES2_BACKEND_HPP_

@@ -375,7 +375,7 @@ void Window::OnRequestUpdateFrom(AbstractView *view) {
   if (p_->inhibit_update) return;
 
   ViewSurface *surface = GetShellSurface();
-  surface->GetViewRenderDeque().push_back(AbstractView::RenderNode::Get(view));
+  surface->GetRenderDeque().push_back(AbstractView::RenderNode::Get(view));
   surface->Update();
 }
 
@@ -477,7 +477,7 @@ void Window::OnRenderSurface(ViewSurface *surface) {
     path.AddRoundRect(outline_geometry, outline_radii.data());
   }
 
-  base::Deque<AbstractView::RenderNode> &deque = surface->GetViewRenderDeque();
+  base::Deque<AbstractView::RenderNode> &deque = surface->GetRenderDeque();
   base::Deque<AbstractView::RenderNode>::Iterator it = deque.begin();
 
   Canvas::LockGuard guard(&canvas, path, ClipOperation::kClipIntersect, true);

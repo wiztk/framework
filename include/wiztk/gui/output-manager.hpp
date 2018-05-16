@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 The WizTK Authors.
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,6 +50,9 @@ class WIZTK_EXPORT OutputManager {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(OutputManager);
 
+  template<typename ... Args> using SignalRef = typename base::SignalRef<Args...>;
+  template<typename ... Args> using Signal = typename base::Signal<Args...>;
+
  public:
 
   Output *GetActiveOutput() const;
@@ -57,6 +60,10 @@ class WIZTK_EXPORT OutputManager {
   size_t size() const { return deque_.count(); }
 
   Output *FindByID(uint32_t id) const;
+
+  SignalRef<Output *> added() { return added_; }
+
+  SignalRef<Output *> removed() { return removed_; }
 
  private:
 
@@ -73,14 +80,29 @@ class WIZTK_EXPORT OutputManager {
   ~OutputManager();
 
   /**
-   * @brief Add a output.
-   * @param output
+   * @brief Create and store a new Output.
+   * @param id
+   * @param version
+   *
+   * This private method is only called in Display once a new wayland output is registered.
    */
-  void AddOutput(Output *output);
+  void AddOutput(uint32_t id, uint32_t version);
+
+  /**
+   * @brief Remove and distroy an Output.
+   * @param id
+   *
+   * This private method is only called in Display once an wayland output is removed.
+   */
+  void RemoveOutput(uint32_t id);
 
   void Clear();
 
   OutputPrivateDeque deque_;
+
+  Signal<Output *> added_;
+
+  Signal<Output *> removed_;
 
 };
 

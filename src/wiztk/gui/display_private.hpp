@@ -47,23 +47,7 @@ struct Display::Private {
   Private(const Private &) = delete;
   Private &operator=(const Private &) = delete;
 
-  Private()
-      : wl_display(nullptr),
-        wl_registry(nullptr),
-        wl_compositor(nullptr),
-        wl_subcompositor(nullptr),
-        wl_shm(nullptr),
-        wl_shell(nullptr),
-        xdg_shell(nullptr),
-        wl_cursor_theme(nullptr),
-        wl_data_device_manager(nullptr),
-        egl_display(nullptr),
-        egl_context(nullptr),
-        egl_config(nullptr),
-        egl_version_major(0),
-        egl_version_minor(0),
-        fd(0),
-        epoll_events(0) {}
+  Private() = default;
 
   ~Private() = default;
 
@@ -77,29 +61,29 @@ struct Display::Private {
 
   void MakeSwapBufferNonBlock() const;
 
-  struct wl_display *wl_display;
-  struct wl_registry *wl_registry;
-  struct wl_compositor *wl_compositor;
-  struct wl_subcompositor *wl_subcompositor;
-  struct wl_shm *wl_shm;
-  struct wl_shell *wl_shell;
-  struct zxdg_shell_v6 *xdg_shell;
-  struct wl_cursor_theme *wl_cursor_theme;
-  struct wl_data_device_manager *wl_data_device_manager;
+  struct wl_display *wl_display = nullptr;
+  struct wl_registry *wl_registry = nullptr;
+  struct wl_compositor *wl_compositor = nullptr;
+  struct wl_subcompositor *wl_subcompositor = nullptr;
+  struct wl_shm *wl_shm = nullptr;
+  struct wl_shell *wl_shell = nullptr;
+  struct zxdg_shell_v6 *xdg_shell = nullptr;
+  struct wl_cursor_theme *wl_cursor_theme = nullptr;
+  struct wl_data_device_manager *wl_data_device_manager = nullptr;
 
-  EGLDisplay egl_display;
-  EGLContext egl_context;
-  EGLConfig egl_config;
+  EGLDisplay egl_display = nullptr;
+  EGLContext egl_context = nullptr;
+  EGLConfig egl_config = nullptr;
 
-  EGLint egl_version_major;  /**< The major version */
-  EGLint egl_version_minor;  /**< The minor version */
+  EGLint egl_version_major = 0;  /**< The major version */
+  EGLint egl_version_minor = 0;  /**< The minor version */
 
   vk::Instance vk_instance;
 
-  struct xkb_context *xkb_context;
+  struct xkb_context *xkb_context = nullptr;
 
-  int fd;
-  uint32_t epoll_events;
+  int fd = 0;
+  uint32_t epoll_events = 0;
 
   InputManager input_manager;
   OutputManager output_manager;

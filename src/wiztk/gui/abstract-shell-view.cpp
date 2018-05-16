@@ -115,7 +115,7 @@ void AbstractShellView::Show() {
 }
 
 void AbstractShellView::Close(SLOT) {
-  if (ViewSurface::GetShellSurfaceCount() == 1) {
+  if (ViewSurface::CountShellSurfaces() == 1) {
     Application::GetInstance()->Exit();
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -452,12 +452,12 @@ base::Deque<ViewSurface::CommitTask> ViewSurface::kCommitTaskDeque;
 ViewSurface::ViewSurface(AbstractEventHandler *event_handler, const Margin &margin)
     : AbstractSurface(margin) {
   _ASSERT(nullptr != event_handler);
-  p_ = std::make_unique<Private>(this, event_handler, margin);
+  p_ = std::make_unique<_Private>(this, event_handler, margin);
   p_->role.placeholder = nullptr;
 
   Display *display = Application::GetInstance()->GetDisplay();
   p_->wl_surface = wl_compositor_create_surface(Display::Proxy::wl_compositor(display));
-  wl_surface_add_listener(p_->wl_surface, &Private::kListener, this);
+  wl_surface_add_listener(p_->wl_surface, &_Private::kListener, this);
 }
 
 ViewSurface::~ViewSurface() {
@@ -569,8 +569,8 @@ void ViewSurface::Update(bool validate) {
   kRenderTaskDeque.push_back(&p_->render_task);
 }
 
-base::Deque<AbstractView::RenderNode> &ViewSurface::GetViewRenderDeque() const {
-  return p_->view_render_deque;
+base::Deque<AbstractView::RenderNode> &ViewSurface::GetRenderDeque() const {
+  return p_->render_deque;
 }
 
 ViewSurface *ViewSurface::GetShellSurface() {
@@ -640,6 +640,14 @@ const Point &ViewSurface::GetRelativePosition() const {
 void ViewSurface::Render(Delegate *delegate) {
   if (nullptr != delegate) delegate->Render();
   // TODO: use this method
+}
+
+bool ViewSurface::OnResetMargin(int /* left */, int /* top */, int /* right */, int /* bottom */) {
+  return true;
+}
+
+bool ViewSurface::OnResize(int /* width */, int /* height */) {
+  return true;
 }
 
 void ViewSurface::OnGLInterfaceDestroyed(base::SLOT /* slot */) {

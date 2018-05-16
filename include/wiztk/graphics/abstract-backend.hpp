@@ -17,6 +17,8 @@
 #ifndef WIZTK_GRAPHICS_ABSTRACT_BACKEND_HPP_
 #define WIZTK_GRAPHICS_ABSTRACT_BACKEND_HPP_
 
+#include "wiztk/base/macros.hpp"
+
 namespace wiztk {
 namespace graphics {
 
@@ -32,9 +34,17 @@ class AbstractSurface;
  * - OpenGL 4.x
  * - Vulkan
  */
-class AbstractBackend {
+class WIZTK_EXPORT AbstractBackend {
 
  public:
+
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(AbstractBackend);
+
+  class Attribute {
+   public:
+    Attribute() = default;
+    virtual ~Attribute() = default;
+  };
 
   AbstractBackend();
 

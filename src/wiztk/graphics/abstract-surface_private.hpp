@@ -18,7 +18,6 @@
 #define WIZTK_GRAPHICS_ABSTRACT_SURFACE_PRIVATE_HPP_
 
 #include "wiztk/graphics/abstract-surface.hpp"
-#include "wiztk/graphics/abstract-backend.hpp"
 
 namespace wiztk {
 namespace graphics {
@@ -42,7 +41,9 @@ struct AbstractSurface::Private {
 
   Margin margin;
 
-  AbstractBackend *backend = nullptr;
+  bool margin_locked = false;
+
+  bool size_locked = false;
 
 };
 

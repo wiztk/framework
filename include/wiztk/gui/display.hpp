@@ -118,8 +118,6 @@ class WIZTK_EXPORT Display {
    */
   void Disconnect() noexcept;
 
-  void DestroyOutput(uint32_t id);
-
   void InitializeCursors();
 
   void ReleaseCursors();
