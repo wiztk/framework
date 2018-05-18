@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
   auto *win = new Window(320, 240, "Dark Theme");
   win->SetAppId("Theme");
 
-  auto *label = new Label("Hello Wayland!");
+  auto *label = Label::Create("Hello Wayland!");
   label->SetForeground(0xFF777777);
   label->SetFont(Font("Noto Sans CJK SC",
                       FontStyle(FontStyle::kWeightBold,

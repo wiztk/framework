@@ -1,15 +1,18 @@
-% file: signal_slot.tex
+% file: signal-slot.tex
 %
 % Use:
 % 	$ pdflatex -shell-escape <filename.tex>
 % to generate a png image.
 
-\documentclass[11pt,tikz,border=1,convert={outfile=\jobname.png}]{standalone}
+\documentclass[10pt,tikz,border=4,convert={outfile=\jobname.png}]{standalone}
 \usetikzlibrary{calc,positioning,arrows.meta,shadows}
+
+% Use sans-serif as the default font:
+\renewcommand{\familydefault}{\sfdefault}
 
 \begin{document}
   \begin{tikzpicture}[
-    object/.style={thick,fill=white,rectangle,rounded corners=5pt,draw,minimum width=100pt,minimum height=120pt,drop shadow},
+    object/.style={thin,fill=white,rectangle,rounded corners=4pt,draw,minimum width=100pt,minimum height=120pt,drop shadow},
     token/.style={circle,draw,fill=yellow!50,minimum size=6pt},
     binding/.style={circle,draw,fill=violet!50,minimum size=6pt}
     ]
@@ -19,11 +22,11 @@
   \node(event1) [token] at (subject.east) {};
   \node(event2) [token,yshift=-20pt] at (subject.east) {};
 
-  \node(observer1) [right=5cm of subject,yshift=4cm,object] {};
+  \node(observer1) [right=5cm of subject,yshift=4cm,object,fill=yellow!15!white] {};
   \node(observer1Name) [below] at (observer1.north) {\bf Observer1};
   \node(method1) [binding,yshift=-10pt] at (observer1.west) {};
 
-  \node(observer2) [right=4cm of subject,yshift=-3cm,object] {};
+  \node(observer2) [right=4cm of subject,yshift=-3cm,object,fill=orange!15!white] {};
   \node(observer2Name) [below] at (observer2.north) {\bf Observer2};
   \node(method2) [binding,yshift=-10pt] at (observer2.west) {};
 

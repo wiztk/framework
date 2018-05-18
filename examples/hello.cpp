@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
   Window win(320, 240, "Hello");
   win.SetAppId("Hello");
 
-  auto *label = new Label("Hello Wayland!");
+  auto *label = Label::Create("Hello Wayland!");
   label->SetName("Label");
   label->SetForeground(0xFF444444);
   label->SetFont(Font(24.f));

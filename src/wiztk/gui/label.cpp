@@ -39,13 +39,13 @@ struct Label::Private {
   Private(const Private &) = delete;
   Private &operator=(const Private &) = delete;
 
-  Private(const std::string &text)
+  explicit Private(const std::string &text)
       : text(text),
         foreground(0.2f, 0.2f, 0.2f),
         background(0.f, 0.f, 0.f, 0.f),
         font(Theme::GetData().default_font) {}
 
-  ~Private() {}
+  ~Private() = default;
 
   std::string text;
   base::ColorF foreground;
@@ -63,9 +63,7 @@ Label::Label(int width, int height, const std::string &text)
   p_ = std::make_unique<Private>(text);
 }
 
-Label::~Label() {
-
-}
+Label::~Label() = default;
 
 void Label::SetForeground(const ColorF &color) {
   if (p_->foreground != color) {

@@ -68,7 +68,7 @@ TEST_F(TestOutput, show) {
 
   Window win(400, 300, "Test Output");
 
-  auto *button = new PushButton("Get Output");
+  auto *button = PushButton::Create("Get Output");
   button->clicked().Connect(&responder, &Responder::OnShowDisplayInfo);
 
   win.SetContentView(button);

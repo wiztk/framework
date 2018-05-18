@@ -44,7 +44,6 @@ using graphics::FontStyle;
 
 PushButton::PushButton(const std::string &text)
     : AbstractButton(text) {
-
   /* Debug */
   srand((unsigned int) Timer::GetClockTime());
   regular_.red = std::rand() % 255 / 255.f;
@@ -53,15 +52,9 @@ PushButton::PushButton(const std::string &text)
 
   highlight_ = regular_ + 25;
   active_ = regular_ - 25;
-
-//  SetFont(Font("Noto Sans CJK SC",
-//               FontStyle(),
-//               12.f));
 }
 
-PushButton::~PushButton() {
-
-}
+PushButton::~PushButton() = default;
 
 void PushButton::OnDraw(const Context &context) {
   Canvas *canvas = context.canvas();
@@ -95,7 +88,7 @@ void PushButton::OnDraw(const Context &context) {
   paint.SetColor(text_color);
   paint.SetStyle(Paint::kStyleFill);
   paint.SetFont(font);
-  paint.SetTextSize(font.GetSize());
+  paint.SetTextSize(font.GetSize() * scale);
 
   float text_width = paint.MeasureText(text.c_str(), text.length());
 

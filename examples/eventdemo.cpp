@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
   win.SetAppId("Event-Demo");
 
   auto *layout = new RelativeLayout;
-  auto *button = new PushButton("Test");
+  auto *button = PushButton::Create("Test");
 
   layout->AddView(button);
   button->MoveTo(200, 200);

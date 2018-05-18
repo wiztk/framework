@@ -17,8 +17,8 @@
 #ifndef WIZTK_GUI_PUSH_BUTTON_HPP_
 #define WIZTK_GUI_PUSH_BUTTON_HPP_
 
-#include "abstract-button.hpp"
 #include "wiztk/base/color.hpp"
+#include "wiztk/gui/abstract-button.hpp"
 
 namespace wiztk {
 namespace gui {
@@ -33,11 +33,20 @@ class PushButton : public AbstractButton {
 
   using ColorF = base::ColorF;
 
-  explicit PushButton(const std::string &text);
+  /**
+   * @brief Create a new PushButton object.
+   * @tparam Args
+   * @param args
+   * @return
+   */
+  template<typename ... Args>
+  static PushButton *Create(Args &&... args);
 
  protected:
 
-  virtual ~PushButton();
+  explicit PushButton(const std::string &text);
+
+  ~PushButton() override;
 
   void OnDraw(const Context &context) override;
 
@@ -48,6 +57,11 @@ class PushButton : public AbstractButton {
   ColorF active_;
 
 };
+
+template<typename ... Args>
+PushButton *PushButton::Create(Args &&... args) {
+  return new PushButton(std::forward<Args>(args)...);
+}
 
 } // namespace gui
 } // namespace wiztk

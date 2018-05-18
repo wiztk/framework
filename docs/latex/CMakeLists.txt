@@ -19,39 +19,78 @@ add_custom_target(
 )
 
 # -----------------------------------------------------------------------------
-# signal_slot:
 
 set(LATEX_SOURCE_DIR "${PROJECT_SOURCE_DIR}/docs/latex")
 set(LATEX_BINARY_DIR "${PROJECT_BINARY_DIR}/docs/latex")
 
-add_custom_command(
-        TARGET tikz
-        PRE_BUILD
-        COMMAND ${CMAKE_COMMAND} -E ${COPY_OR_LINK} "${LATEX_SOURCE_DIR}/signal_slot.tex" "${LATEX_BINARY_DIR}/signal_slot.tex"
-        WORKING_DIRECTORY ${LATEX_BINARY_DIR}
-        COMMENT "${COPY_OR_LINK_MESSAGE} \"${LATEX_SOURCE_DIR}/signal_slot.tex\" to \"${LATEX_BINARY_DIR}/signal_slot.tex\""
-        VERBATIM)
-
-add_custom_command(
-        TARGET tikz
-        COMMAND "${PDFLATEX_COMPILER}"
-        ARGS "-shell-escape" "signal_slot" "1>/dev/null" "2>&1"
-        DEPENDS "${LATEX_BINARY_DIR}/signal_slot.tex"
-        WORKING_DIRECTORY "${LATEX_BINARY_DIR}"
-        COMMENT "${PDFLATEX_COMPILER} ${LATEX_BINARY_DIR}/signal_slot.tex")
+# signal-slot:
 
 add_custom_command(
         TARGET tikz
         PRE_BUILD
-        COMMAND ${CMAKE_COMMAND} -E ${COPY_OR_LINK} "${LATEX_SOURCE_DIR}/main_loop.tex" "${LATEX_BINARY_DIR}/main_loop.tex"
+        COMMAND ${CMAKE_COMMAND} -E ${COPY_OR_LINK} "${LATEX_SOURCE_DIR}/signal-slot.tex" "${LATEX_BINARY_DIR}/signal-slot.tex"
         WORKING_DIRECTORY ${LATEX_BINARY_DIR}
-        COMMENT "${COPY_OR_LINK_MESSAGE} \"${LATEX_SOURCE_DIR}/main_loop.tex\" to \"${LATEX_BINARY_DIR}/main_loop.tex\""
+        COMMENT "${COPY_OR_LINK_MESSAGE} \"${LATEX_SOURCE_DIR}/signal-slot.tex\" to \"${LATEX_BINARY_DIR}/signal-slot.tex\""
         VERBATIM)
 
 add_custom_command(
         TARGET tikz
-        COMMAND "${PDFLATEX_COMPILER}"
-        ARGS "-shell-escape" "main_loop" "1>/dev/null" "2>&1"
-        DEPENDS "${LATEX_BINARY_DIR}/main_loop.tex"
+        COMMAND "${XELATEX_COMPILER}"
+        ARGS "-shell-escape" "signal-slot" "1>/dev/null" "2>&1"
+        DEPENDS "${LATEX_BINARY_DIR}/signal-slot.tex"
         WORKING_DIRECTORY "${LATEX_BINARY_DIR}"
-        COMMENT "${PDFLATEX_COMPILER} ${LATEX_BINARY_DIR}/main_loop.tex")
+        COMMENT "${PDFLATEX_COMPILER} ${LATEX_BINARY_DIR}/signal-slot.tex")
+
+# main-loop.tex:
+
+add_custom_command(
+        TARGET tikz
+        PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E ${COPY_OR_LINK} "${LATEX_SOURCE_DIR}/main-loop.tex" "${LATEX_BINARY_DIR}/main-loop.tex"
+        WORKING_DIRECTORY ${LATEX_BINARY_DIR}
+        COMMENT "${COPY_OR_LINK_MESSAGE} \"${LATEX_SOURCE_DIR}/main-loop.tex\" to \"${LATEX_BINARY_DIR}/main-loop.tex\""
+        VERBATIM)
+
+add_custom_command(
+        TARGET tikz
+        COMMAND "${XELATEX_COMPILER}"
+        ARGS "-shell-escape" "main-loop" "1>/dev/null" "2>&1"
+        DEPENDS "${LATEX_BINARY_DIR}/main-loop.tex"
+        WORKING_DIRECTORY "${LATEX_BINARY_DIR}"
+        COMMENT "${PDFLATEX_COMPILER} ${LATEX_BINARY_DIR}/main-loop.tex")
+
+# architecture.tex:
+
+add_custom_command(
+        TARGET tikz
+        PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E ${COPY_OR_LINK} "${LATEX_SOURCE_DIR}/architecture.tex" "${LATEX_BINARY_DIR}/architecture.tex"
+        WORKING_DIRECTORY ${LATEX_BINARY_DIR}
+        COMMENT "${COPY_OR_LINK_MESSAGE} \"${LATEX_SOURCE_DIR}/architecture.tex\" to \"${LATEX_BINARY_DIR}/architecture.tex\""
+        VERBATIM)
+
+add_custom_command(
+        TARGET tikz
+        COMMAND "${XELATEX_COMPILER}"
+        ARGS "-shell-escape" "architecture" "1>/dev/null" "2>&1"
+        DEPENDS "${LATEX_BINARY_DIR}/architecture.tex"
+        WORKING_DIRECTORY "${LATEX_BINARY_DIR}"
+        COMMENT "${PDFLATEX_COMPILER} ${LATEX_BINARY_DIR}/architecture.tex")
+
+# push-button.tex:
+
+add_custom_command(
+        TARGET tikz
+        PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E ${COPY_OR_LINK} "${LATEX_SOURCE_DIR}/push-button.tex" "${LATEX_BINARY_DIR}/push-button.tex"
+        WORKING_DIRECTORY ${LATEX_BINARY_DIR}
+        COMMENT "${COPY_OR_LINK_MESSAGE} \"${LATEX_SOURCE_DIR}/push-button.tex\" to \"${LATEX_BINARY_DIR}/push-button.tex\""
+        VERBATIM)
+
+add_custom_command(
+        TARGET tikz
+        COMMAND "${XELATEX_COMPILER}"
+        ARGS "-shell-escape" "push-button" "1>/dev/null" "2>&1"
+        DEPENDS "${LATEX_BINARY_DIR}/push-button.tex"
+        WORKING_DIRECTORY "${LATEX_BINARY_DIR}"
+        COMMENT "${PDFLATEX_COMPILER} ${LATEX_BINARY_DIR}/push-button.tex")

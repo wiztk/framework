@@ -48,8 +48,8 @@ TEST_F(Test, regular_1) {
 
   Window win(400, 300, "Test Window");
 
-  RelativeLayout* layout = new RelativeLayout;
-  PushButton * button = new PushButton("Test");
+  RelativeLayout *layout = new RelativeLayout;
+  PushButton *button = PushButton::Create("Test");
 
   layout->AddView(button);
   button->MoveTo(100, 100);
@@ -76,8 +76,8 @@ TEST_F(Test, layout_left) {
 
   Window win(400, 300, "Relative Layout - Left");
 
-  RelativeLayout* layout = new RelativeLayout;
-  PushButton * button = new PushButton("Test");
+  RelativeLayout *layout = new RelativeLayout;
+  PushButton *button = PushButton::Create("Test");
 
   layout->AddView(button);
   button->MoveTo(200, 200);
@@ -109,8 +109,8 @@ TEST_F(Test, layout_top) {
 
   Window win(400, 300, "Relative Layout - Top");
 
-  RelativeLayout* layout = new RelativeLayout;
-  PushButton * button = new PushButton("Test");
+  RelativeLayout *layout = new RelativeLayout;
+  PushButton *button = PushButton::Create("Test");
 
   layout->AddView(button);
   button->MoveTo(200, 200);
@@ -142,8 +142,8 @@ TEST_F(Test, layout_right) {
 
   Window win(400, 300, "Relative Layout - Right");
 
-  RelativeLayout* layout = new RelativeLayout;
-  PushButton * button = new PushButton("Test");
+  RelativeLayout *layout = new RelativeLayout;
+  PushButton *button = PushButton::Create("Test");
 
   layout->AddView(button);
   button->MoveTo(200, 200);
@@ -175,8 +175,8 @@ TEST_F(Test, layout_bottom) {
 
   Window win(400, 300, "Relative Layout - Bottom");
 
-  RelativeLayout* layout = new RelativeLayout;
-  PushButton * button = new PushButton("Test");
+  RelativeLayout *layout = new RelativeLayout;
+  PushButton *button = PushButton::Create("Test");
 
   layout->AddView(button);
   button->MoveTo(200, 200);
@@ -208,8 +208,8 @@ TEST_F(Test, regular_2) {
 
   Window win(400, 300, "Test Window");
 
-  RelativeLayout* layout = new RelativeLayout;
-  PushButton * button = new PushButton("Test");
+  RelativeLayout *layout = new RelativeLayout;
+  PushButton *button = PushButton::Create("Test");
 
   layout->AddView(button);
   button->MoveTo(200, 200);

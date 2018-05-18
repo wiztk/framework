@@ -21,6 +21,7 @@
 
 #include "wiztk/gui/key-event.hpp"
 #include "wiztk/gui/mouse-event.hpp"
+#include "wiztk/gui/theme.hpp"
 
 #include "wiztk/graphics/font.hpp"
 
@@ -35,8 +36,7 @@ using graphics::Typeface;
 
 struct AbstractButton::Private {
 
-  Private(const Private &) = delete;
-  Private &operator=(const Private &) = delete;
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
 
   enum FlagIndex {
 
@@ -54,21 +54,19 @@ struct AbstractButton::Private {
 
   };
 
-  Private()
-      : flags(0x1), font(Typeface::kBold) {}
+  Private() = default;
+  ~Private() = default;
 
-  uint32_t flags;
+  uint32_t flags = 0x1;
 
-  Font font;
+  Font font = Theme::GetData().default_font;
 
   std::string text;
 
 };
 
 AbstractButton::AbstractButton()
-    : AbstractView(80, 20) {
-  p_ = std::make_unique<Private>();
-}
+    : AbstractButton(80, 20) {}
 
 AbstractButton::AbstractButton(int width, int height)
     : AbstractView(width, height) {
@@ -76,14 +74,11 @@ AbstractButton::AbstractButton(int width, int height)
 }
 
 AbstractButton::AbstractButton(const std::string &text)
-    : AbstractView(80, 20) {
-  p_ = std::make_unique<Private>();
+    : AbstractButton(80, 20) {
   p_->text = text;
 }
 
-AbstractButton::~AbstractButton() {
-
-}
+AbstractButton::~AbstractButton() = default;
 
 bool AbstractButton::IsSensitive() const {
   return (p_->flags & Private::FlagIndex::kSensitive) != 0;

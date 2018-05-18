@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,9 +40,14 @@ WIZTK_EXPORT class Label : public AbstractView {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Label);
 
-  Label(const std::string &text);
-
-  Label(int width, int height, const std::string &text);
+  /**
+   * @brief Create a new Label object.
+   * @tparam Args
+   * @param args
+   * @return
+   */
+  template<typename ... Args>
+  static Label *Create(Args &&...args);
 
   void SetForeground(const base::ColorF &color);
 
@@ -52,29 +57,33 @@ WIZTK_EXPORT class Label : public AbstractView {
 
  protected:
 
-  virtual ~Label();
+  explicit Label(const std::string &text);
 
-  virtual void OnConfigureGeometry(const RectF &old_geometry,
-                                   const RectF &new_geometry) override;
+  Label(int width, int height, const std::string &text);
 
-  virtual void OnSaveGeometry(const RectF &old_geometry,
-                              const RectF &new_geometry) final;
+  ~Label() override;
 
-  virtual void OnMouseEnter(MouseEvent *event) override;
+  void OnConfigureGeometry(const RectF &old_geometry,
+                           const RectF &new_geometry) override;
 
-  virtual void OnMouseLeave() override;
+  void OnSaveGeometry(const RectF &old_geometry,
+                      const RectF &new_geometry) final;
 
-  virtual void OnMouseMove(MouseEvent *event) override;
+  void OnMouseEnter(MouseEvent *event) override;
 
-  virtual void OnMouseDown(MouseEvent *event) override;
+  void OnMouseLeave() override;
 
-  virtual void OnMouseUp(MouseEvent *event) override;
+  void OnMouseMove(MouseEvent *event) override;
 
-  virtual void OnKeyDown(KeyEvent *event) override;
+  void OnMouseDown(MouseEvent *event) override;
 
-  virtual void OnKeyUp(KeyEvent *event) override;
+  void OnMouseUp(MouseEvent *event) override;
 
-  virtual void OnDraw(const Context &context) override;
+  void OnKeyDown(KeyEvent *event) override;
+
+  void OnKeyUp(KeyEvent *event) override;
+
+  void OnDraw(const Context &context) override;
 
  private:
 
@@ -83,6 +92,11 @@ WIZTK_EXPORT class Label : public AbstractView {
   std::unique_ptr<Private> p_;
 
 };
+
+template<typename ... Args>
+Label *Label::Create(Args &&... args) {
+  return new Label(std::forward<Args>(args)...);
+}
 
 } // namespace gui
 } // namespace wiztk

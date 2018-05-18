@@ -60,9 +60,7 @@ Font::Font(const Font &other) {
   p_->sk_font = other.p_->sk_font;
 }
 
-Font::~Font() {
-
-}
+Font::~Font() = default;
 
 Font &Font::operator=(const Font &other) {
   p_->sk_font = other.p_->sk_font;
