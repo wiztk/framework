@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,14 @@
  * limitations under the License.
  */
 
+#include "gles2-backend_private.hpp"
+
 #include "display/proxy.hpp"
 
-#include "wiztk/gui/region.hpp"
 #include "wiztk/gui/application.hpp"
 
 namespace wiztk {
 namespace gui {
 
-Region::Region()
-    : wl_region_(nullptr) {
-  Display *display = Application::GetInstance()->GetDisplay();
-  wl_region_ = wl_compositor_create_region(Display::Proxy::wl_compositor(display));
 }
-
-Region::~Region() {
-  if (wl_region_)
-    wl_region_destroy(wl_region_);
 }
-
-} // namespace gui
-} // namespace wiztk

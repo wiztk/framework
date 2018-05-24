@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "display_proxy.hpp"
+#include "display/proxy.hpp"
 
 #include <wiztk/gui/shared-memory-pool.hpp>
 #include "wiztk/gui/application.hpp"

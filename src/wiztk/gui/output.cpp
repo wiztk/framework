@@ -15,7 +15,7 @@
  */
 
 #include "output_private.hpp"
-#include "display_proxy.hpp"
+#include "display/proxy.hpp"
 
 #include "wiztk/gui/display.hpp"
 #include "wiztk/gui/application.hpp"

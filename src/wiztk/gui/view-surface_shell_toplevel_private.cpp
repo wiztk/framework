@@ -16,7 +16,7 @@
 
 #include "view-surface_shell_toplevel_private.hpp"
 #include "view-surface_private.hpp"
-#include "abstract-shell-view_private.hpp"
+#include "abstract-shell-view/private.hpp"
 
 #include "wiztk/base/bit.hpp"
 

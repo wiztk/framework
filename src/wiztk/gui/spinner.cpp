@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 The WizTK Authors.
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,8 +45,8 @@ struct Spinner::Private : public base::Property<Spinner> {
 
   Callback frame_callback;
 
-  ColorF foreground = 0xEFFFFFFF;
-  ColorF background = 0xFF69DD69;
+  ColorF fore_color = 0xEF999999;
+  ColorF back_color = 0x00000000;
 
   float angle = 0.f;
 
@@ -71,11 +71,11 @@ void Spinner::Private::Draw(const Context &context) {
   Paint paint;
   paint.SetAntiAlias(true);
 
-  paint.SetColor(background);
+  paint.SetColor(back_color);
   paint.SetStyle(Paint::Style::kStyleFill);
   canvas->DrawRect(rect, paint);
 
-  paint.SetColor(ColorF(foreground));
+  paint.SetColor(ColorF(fore_color));
   paint.SetStyle(Paint::Style::kStyleStroke);
   paint.SetStrokeWidth(6.f);
 
@@ -98,9 +98,7 @@ Spinner::Spinner() {
   p_->frame_callback.done().Bind(p_.get(), &Private::OnFrame);
 }
 
-Spinner::~Spinner() {
-
-}
+Spinner::~Spinner() = default;
 
 void Spinner::OnConfigureGeometry(const RectF &old_rect, const RectF &new_rect) {
   RequestSaveGeometry(new_rect);
@@ -143,5 +141,5 @@ void Spinner::OnDraw(const Context &context) {
   p_->Draw(context);
 }
 
-}
-}
+} // namespace gui
+} // namespace wiztk

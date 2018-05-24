@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,30 @@
  * limitations under the License.
  */
 
-#include "display/proxy.hpp"
+#ifndef WIZTK_FRAMEWORK_GLES2_BACKEND_PRIVATE_HPP
+#define WIZTK_FRAMEWORK_GLES2_BACKEND_PRIVATE_HPP
 
-#include "wiztk/gui/region.hpp"
-#include "wiztk/gui/application.hpp"
+#include "wiztk/gui/gles2-backend.hpp"
+
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
+#include <wayland-egl.h>
 
 namespace wiztk {
 namespace gui {
 
-Region::Region()
-    : wl_region_(nullptr) {
-  Display *display = Application::GetInstance()->GetDisplay();
-  wl_region_ = wl_compositor_create_region(Display::Proxy::wl_compositor(display));
+/**
+* @brief Private data in GLES2Backend.
+*/
+struct GLES2Backend::Private {
+
+  EGLSurface egl_surface = nullptr;
+
+  struct wl_egl_window *wl_egl_window = nullptr;
+
+};
+
+}
 }
 
-Region::~Region() {
-  if (wl_region_)
-    wl_region_destroy(wl_region_);
-}
-
-} // namespace gui
-} // namespace wiztk
+#endif //WIZTK_FRAMEWORK_GLES2_BACKEND_PRIVATE_HPP

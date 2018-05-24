@@ -83,7 +83,6 @@ struct Display::Private {
   struct xkb_context *xkb_context = nullptr;
 
   int fd = 0;
-  uint32_t epoll_events = 0;
 
   InputManager input_manager;
   OutputManager output_manager;

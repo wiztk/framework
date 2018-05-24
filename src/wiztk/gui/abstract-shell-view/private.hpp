@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_INTERNAL_ABSTRACT_SHELL_VIEW_PRIVATE_HPP_
-#define WIZTK_GUI_INTERNAL_ABSTRACT_SHELL_VIEW_PRIVATE_HPP_
+#ifndef WIZTK_GUI_ABSTRACT_SHELL_VIEW_PRIVATE_HPP_
+#define WIZTK_GUI_ABSTRACT_SHELL_VIEW_PRIVATE_HPP_
 
 #include "wiztk/gui/abstract-shell-view.hpp"
 
@@ -118,4 +118,4 @@ struct AbstractShellView::Private : public base::Property<AbstractShellView> {
 } // namespace gui
 } // namespace wiztk
 
-#endif // WIZTK_GUI_INTERNAL_ABSTRACT_SHELL_VIEW_PRIVATE_HPP_
+#endif // WIZTK_GUI_ABSTRACT_SHELL_VIEW_PRIVATE_HPP_

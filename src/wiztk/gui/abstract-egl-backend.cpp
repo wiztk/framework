@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,34 +14,34 @@
  * limitations under the License.
  */
 
-#include "keymap.hpp"
-
-#include "display/proxy.hpp"
+#include "abstract-egl-backend/private.hpp"
 
 #include "wiztk/gui/application.hpp"
+#include "display/proxy.hpp"
 
 namespace wiztk {
 namespace gui {
 
-Keymap::~Keymap() {
-  if (xkb_keymap_)
-    xkb_keymap_unref(xkb_keymap_);
-}
-
-void Keymap::Setup(const char *string, enum xkb_keymap_format format, enum xkb_keymap_compile_flags flags) {
-  Destroy();
+AbstractEGLBackend::AbstractEGLBackend()
+    : AbstractBackend() {
+  p_ = std::make_unique<Private>();
 
   Display *display = Application::GetInstance()->GetDisplay();
-  xkb_keymap_ = xkb_keymap_new_from_string(Display::Proxy::xkb_context(display), string, format, flags);
-  if (nullptr == xkb_keymap_)
-    throw std::runtime_error("FATAL! Cannot create XKB keymap!");
+  p_->egl_display = eglGetPlatformDisplay(EGL_PLATFORM_WAYLAND_KHR,
+                                          Display::Proxy::wl_display(display),
+                                          nullptr);
+  if (p_->egl_display == EGL_NO_DISPLAY) {
+    _DEBUG("%s\n", "Fail to get egl display.");
+  }
 }
 
-void Keymap::Destroy() {
-  if (xkb_keymap_) {
-    xkb_keymap_unref(xkb_keymap_);
-    xkb_keymap_ = nullptr;
-  }
+AbstractEGLBackend::~AbstractEGLBackend() {
+  if (EGL_NO_DISPLAY != p_->egl_display)
+    eglTerminate(p_->egl_display);
+}
+
+bool AbstractEGLBackend::IsValid() const {
+  return EGL_NO_DISPLAY != p_->egl_display;
 }
 
 } // namespace gui

@@ -14,55 +14,34 @@
  * limitations under the License.
  */
 
-#include "wiztk/gui/gles2-backend.hpp"
+#include "gles2-backend_private.hpp"
+#include "abstract-egl-backend/private.hpp"
 
 #include "wiztk/gui/application.hpp"
 
-#include "display_proxy.hpp"
-
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
-#include <wayland-egl.h>
+#include "display/proxy.hpp"
 
 namespace wiztk {
 namespace gui {
 
-/**
- * @brief Private data in GLES2Backend.
- */
-struct GLES2Backend::Private {
-
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
-
-  Private() = default;
-
-  ~Private() = default;
-
-  EGLSurface egl_surface = nullptr;
-
-  struct wl_egl_window *wl_egl_window = nullptr;
-
-};
-
-// ----
-
-GLES2Backend::GLES2Backend() {
+GLES2Backend::GLES2Backend()
+    : AbstractEGLBackend() {
   p_ = std::make_unique<Private>();
 
-  Display *display = Application::GetInstance()->GetDisplay();
+//  Display *display = Application::GetInstance()->GetDisplay();
 //  p_->wl_egl_window = wl_egl_window_create(Proxy::GetWaylandSurface(surface), 400, 300);
-  p_->egl_surface = eglCreatePlatformWindowSurface(Display::Proxy::egl_display(display),
-                                                   Display::Proxy::egl_config(display),
-                                                   p_->wl_egl_window,
-                                                   nullptr);
+//  p_->egl_surface = eglCreatePlatformWindowSurface(AbstractEGLBackend::p_->egl_display,
+//                                                   AbstractEGLBackend::p_->egl_display,
+//                                                   p_->wl_egl_window,
+//                                                   nullptr);
 }
 
 GLES2Backend::~GLES2Backend() {
-  _ASSERT(nullptr != p_->egl_surface);
-  _ASSERT(nullptr != p_->wl_egl_window);
-  Display *display = Application::GetInstance()->GetDisplay();
-  eglDestroySurface(Display::Proxy::egl_display(display), p_->egl_surface);
-  wl_egl_window_destroy(p_->wl_egl_window);
+//  _ASSERT(nullptr != p_->egl_surface);
+//  _ASSERT(nullptr != p_->wl_egl_window);
+//  Display *display = Application::GetInstance()->GetDisplay();
+//  eglDestroySurface(Display::Proxy::egl_display(display), p_->egl_surface);
+//  wl_egl_window_destroy(p_->wl_egl_window);
 }
 
 } // namespace gui

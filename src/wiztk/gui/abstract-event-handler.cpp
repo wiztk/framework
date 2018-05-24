@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "abstract-event-handler_private.hpp"
+#include "abstract-event-handler/private.hpp"
 
 namespace wiztk {
 namespace gui {

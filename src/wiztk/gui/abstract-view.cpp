@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#include "abstract-view_private.hpp"
-#include "abstract-view_iterators.hpp"
+#include "abstract-view/private.hpp"
+#include "abstract-view/iterators.hpp"
 
 #include "wiztk/async/scheduler.hpp"
 #include "wiztk/async/event-loop.hpp"

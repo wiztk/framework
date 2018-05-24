@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#include "display_proxy.hpp"
-#include "abstract-view_iterators.hpp"
+#include "display/proxy.hpp"
+#include "abstract-view/iterators.hpp"
 
 #include "wiztk/gui/gl-window.hpp"
 

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_GLES2_BACKEND_HPP_
-#define WIZTK_GUI_GLES2_BACKEND_HPP_
+#ifndef WIZTK_GUI_ABSTRACT_EGL_BACKEND_HPP_
+#define WIZTK_GUI_ABSTRACT_EGL_BACKEND_HPP_
 
-#include "wiztk/gui/abstract-egl-backend.hpp"
+#include "wiztk/graphics/abstract-backend.hpp"
 
 #include <memory>
 
@@ -26,25 +26,31 @@ namespace gui {
 
 /**
  * @ingroup gui
- * @brief OpenGL ES V2 Backend.
+ * @brief Abstract EGL graphic backend.
  */
-class WIZTK_EXPORT GLES2Backend : public AbstractEGLBackend {
+class WIZTK_EXPORT AbstractEGLBackend : public graphics::AbstractBackend {
 
  public:
 
-  GLES2Backend();
+  AbstractEGLBackend();
 
-  ~GLES2Backend() override;
+  ~AbstractEGLBackend() override;
 
- private:
+  bool IsValid() const;
+
+ protected:
+
+  void OnSetup(graphics::AbstractSurface *surface) override {};
+
+  void OnRelease(graphics::AbstractSurface *surface) override {};
 
   struct Private;
 
-  std::unique_ptr<GLES2Backend::Private> p_;
+  std::unique_ptr<AbstractEGLBackend::Private> p_;
 
 };
 
 } // namespace gui
 } // namespace wiztk
 
-#endif // WIZTK_GUI_GLES2_BACKEND_HPP_
+#endif // WIZTK_GUI_ABSTRACT_EGL_BACKEND_HPP_

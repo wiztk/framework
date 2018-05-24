@@ -17,7 +17,7 @@
 #ifndef WIZTK_GUI_SPINNER_HPP_
 #define WIZTK_GUI_SPINNER_HPP_
 
-#include "abstract-view.hpp"
+#include "wiztk/gui/abstract-view.hpp"
 
 namespace wiztk {
 namespace gui {
@@ -26,15 +26,18 @@ namespace gui {
  * @ingroup gui
  * @brief Spinner
  */
-class Spinner : public AbstractView {
+class WIZTK_EXPORT Spinner : public AbstractView {
 
  public:
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Spinner);
 
-  Spinner();
+  template<typename ... Args>
+  static Spinner *Create(Args &&... args);
 
  protected:
+
+  Spinner();
 
   ~Spinner() override;
 
@@ -66,7 +69,12 @@ class Spinner : public AbstractView {
 
 };
 
+template<typename ... Args>
+Spinner *Spinner::Create(Args &&... args) {
+  return new Spinner(std::forward<Args>(args)...);
 }
-}
+
+} // namespace gui
+} // namespace wiztk
 
 #endif // WIZTK_GUI_SPINNER_HPP_

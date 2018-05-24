@@ -20,7 +20,7 @@
 #include "view-surface_shell_popup_private.hpp"
 #include "input_private.hpp"
 #include "output_private.hpp"
-#include "display_proxy.hpp"
+#include "display/proxy.hpp"
 #include "buffer_private.hpp"
 
 #include "wiztk/gui/buffer.hpp"

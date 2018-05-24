@@ -17,9 +17,9 @@
 #ifndef WIZTK_GUI_LABEL_HPP_
 #define WIZTK_GUI_LABEL_HPP_
 
-#include "abstract-view.hpp"
+#include "wiztk/gui/abstract-view.hpp"
 
-#include <wiztk/base/color.hpp>
+#include "wiztk/base/color.hpp"
 
 namespace wiztk {
 
@@ -34,33 +34,83 @@ namespace gui {
  * @ingroup gui
  * @brief A label displays icon or text.
  */
-WIZTK_EXPORT class Label : public AbstractView {
+class WIZTK_EXPORT Label : public AbstractView {
 
  public:
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Label);
 
+  using ColorF = base::ColorF;
+  using Font = graphics::Font;
+
+ public:
+
   /**
-   * @brief Create a new Label object.
-   * @tparam Args
-   * @param args
-   * @return
+   * @brief Initialize a new instance of the Label class.
+   * @tparam Args Variadic template parameter.
+   * @param args Variadic function parameter, see the constructors of this class:
+   *     - Label(const std::string &)
+   *     - Label(int, int, const std::string &)
+   * @return A new pointer to a Label object.
    */
   template<typename ... Args>
   static Label *Create(Args &&...args);
 
-  void SetForeground(const base::ColorF &color);
+  /**
+   * @brief Set the foreground color of this label.
+   * @param color
+   */
+  void SetForeColor(const ColorF &color);
 
-  void SetBackground(const base::ColorF &color);
+  /**
+   * @brief Get the foreground color of this label.
+   * @return
+   */
+  const ColorF &GetForeColor() const;
 
-  void SetFont(const graphics::Font &font);
+  /**
+   * @brief Set the background color of this label.
+   * @param color
+   */
+  void SetBackColor(const ColorF &color);
+
+  /**
+   * @brief Get the background color of this label.
+   * @return
+   */
+  const ColorF &GetBackColor() const;
+
+  /**
+   * @brief Set the font of the text displayed by this label.
+   * @param font
+   */
+  void SetFont(const Font &font);
+
+  /**
+   * @brief Get the font of the text displayed by this label.
+   * @return
+   */
+  const Font &GetFont() const;
 
  protected:
 
+  /**
+   * @brief Constructor
+   * @param text
+   */
   explicit Label(const std::string &text);
 
+  /**
+   * @brief Constructor
+   * @param width Width of this view.
+   * @param height Height of this view.
+   * @param text The text to be shown.
+   */
   Label(int width, int height, const std::string &text);
 
+  /**
+   * @brief Destructor.
+   */
   ~Label() override;
 
   void OnConfigureGeometry(const RectF &old_geometry,

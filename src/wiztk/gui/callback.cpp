@@ -17,7 +17,7 @@
 #include "wiztk/base/property.hpp"
 #include "wiztk/gui/callback.hpp"
 
-#include "display_proxy.hpp"
+#include "display/proxy.hpp"
 #include "view-surface_private.hpp"
 
 namespace wiztk {

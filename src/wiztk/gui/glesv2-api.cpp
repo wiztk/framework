@@ -15,7 +15,7 @@
  */
 
 #include "abstract-rendering-api_proxy.hpp"
-#include "display_proxy.hpp"
+#include "display/proxy.hpp"
 
 #include "wiztk/gui/glesv2-api.hpp"
 #include "wiztk/gui/application.hpp"

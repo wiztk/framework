@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 #ifndef WIZTK_GUI_INTERNAL_DISPLAY_REGISTRY_HPP_
 #define WIZTK_GUI_INTERNAL_DISPLAY_REGISTRY_HPP_
 
-#include "display_private.hpp"
+#include "private.hpp"
 
 namespace wiztk {
 namespace gui {

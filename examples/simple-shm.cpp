@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
   auto *win = new Window(320, 280, "Simple Shm");
   win->SetAppId("Simple-Shm");
 
-  auto *widget = new Spinner;
+  auto *widget = Spinner::Create();
   win->SetContentView(widget);
 
   win->Show();

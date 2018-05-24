@@ -17,7 +17,7 @@
 #include "view-surface_shell_private.hpp"
 
 #include "view-surface_private.hpp"
-#include "abstract-shell-view_private.hpp"
+#include "abstract-shell-view/private.hpp"
 
 namespace wiztk {
 namespace gui {

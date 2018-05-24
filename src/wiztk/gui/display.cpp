@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "display_private.hpp"
+#include "display/private.hpp"
 
 #include "wiztk/base/property.hpp"
 

@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
   win->SetAppId("Theme");
 
   auto *label = Label::Create("Hello Wayland!");
-  label->SetForeground(0xFF777777);
+  label->SetForeColor(0xFF777777);
   label->SetFont(Font("Noto Sans CJK SC",
                       FontStyle(FontStyle::kWeightBold,
                                 FontStyle::kWidthNormal,

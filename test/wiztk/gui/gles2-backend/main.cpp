@@ -14,24 +14,9 @@
  * limitations under the License.
  */
 
-#include "display/proxy.hpp"
+#include <gtest/gtest.h>
 
-#include "wiztk/gui/region.hpp"
-#include "wiztk/gui/application.hpp"
-
-namespace wiztk {
-namespace gui {
-
-Region::Region()
-    : wl_region_(nullptr) {
-  Display *display = Application::GetInstance()->GetDisplay();
-  wl_region_ = wl_compositor_create_region(Display::Proxy::wl_compositor(display));
+int main(int argc, char *argv[]) {
+  testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
 }
-
-Region::~Region() {
-  if (wl_region_)
-    wl_region_destroy(wl_region_);
-}
-
-} // namespace gui
-} // namespace wiztk

@@ -18,7 +18,7 @@
 
 #include "main-loop_display-event.hpp"
 #include "main-loop_private.hpp"
-#include "display_proxy.hpp"
+#include "display/proxy.hpp"
 
 namespace wiztk {
 namespace gui {

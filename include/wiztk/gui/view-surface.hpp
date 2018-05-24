@@ -73,7 +73,7 @@ class AbstractRenderingAPI;
  * You can also use Surface::EGL::Get() to transform a 2D surface to 3D surface,
  * and delete the Surface::EGL object will transform back to 2D.
  */
-class ViewSurface : public graphics::AbstractSurface, public base::Trackable {
+class WIZTK_EXPORT ViewSurface : public graphics::AbstractSurface, public base::Trackable {
 
   using Point  = base::Point2I;
   using Margin = base::ThicknessI;
@@ -301,7 +301,7 @@ class ViewSurface : public graphics::AbstractSurface, public base::Trackable {
 
   static base::Deque<CommitTask> kCommitTaskDeque;
 
-  std::unique_ptr<_Private> p_;
+  std::unique_ptr<ViewSurface::_Private> p_;
 
 };
 

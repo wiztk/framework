@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,15 +41,15 @@ struct Label::Private {
 
   explicit Private(const std::string &text)
       : text(text),
-        foreground(0.2f, 0.2f, 0.2f),
-        background(0.f, 0.f, 0.f, 0.f),
+        fore_color(0.2f, 0.2f, 0.2f),
+        back_color(0.f, 0.f, 0.f, 0.f),
         font(Theme::GetData().default_font) {}
 
   ~Private() = default;
 
   std::string text;
-  base::ColorF foreground;
-  base::ColorF background;
+  ColorF fore_color;
+  ColorF back_color;
   Font font;
 
 };
@@ -65,23 +65,35 @@ Label::Label(int width, int height, const std::string &text)
 
 Label::~Label() = default;
 
-void Label::SetForeground(const ColorF &color) {
-  if (p_->foreground != color) {
-    p_->foreground = color;
+void Label::SetForeColor(const ColorF &color) {
+  if (p_->fore_color != color) {
+    p_->fore_color = color;
     Update();
   }
 }
 
-void Label::SetBackground(const ColorF &color) {
-  if (p_->background != color) {
-    p_->background = color;
+const Label::ColorF &Label::GetForeColor() const {
+  return p_->fore_color;
+}
+
+void Label::SetBackColor(const ColorF &color) {
+  if (p_->back_color != color) {
+    p_->back_color = color;
     Update();
   }
+}
+
+const Label::ColorF &Label::GetBackColor() const {
+  return p_->back_color;
 }
 
 void Label::SetFont(const graphics::Font &font) {
   p_->font = font;
   Update();
+}
+
+const Label::Font &Label::GetFont() const {
+  return p_->font;
 }
 
 void Label::OnConfigureGeometry(const RectF &old_geometry, const RectF &new_geometry) {
@@ -130,10 +142,10 @@ void Label::OnDraw(const Context &context) {
   const RectF rect = GetBounds() * scale;
 
   Paint paint;
-  paint.SetColor(p_->background);
+  paint.SetColor(p_->back_color);
   context.canvas()->DrawRect(rect, paint);
 
-  paint.SetColor(p_->foreground);
+  paint.SetColor(p_->fore_color);
   paint.SetAntiAlias(true);
   paint.SetStyle(Paint::kStyleFill);
   paint.SetFont(p_->font);

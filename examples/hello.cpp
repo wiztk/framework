@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
 
   auto *label = Label::Create("Hello Wayland!");
   label->SetName("Label");
-  label->SetForeground(0xFF444444);
+  label->SetForeColor(0xFF444444);
   label->SetFont(Font(24.f));
   win.SetContentView(label);
 

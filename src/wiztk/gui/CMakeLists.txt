@@ -15,6 +15,7 @@
 set(
         gui_sources
         ${PROJECT_SOURCE_DIR}/include/wiztk/gui/abstract-button.hpp
+        ${PROJECT_SOURCE_DIR}/include/wiztk/gui/abstract-egl-backend.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/gui/abstract-epoll-task.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/gui/abstract-event-handler.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/gui/abstract-layout.hpp
@@ -63,18 +64,20 @@ set(
         ${PROJECT_SOURCE_DIR}/include/wiztk/gui/vulkan-api.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/gui/window.hpp
         abstract-button.cpp
+        abstract-egl-backend/private.hpp
+        abstract-egl-backend.cpp
         abstract-event-handler.cpp
-        abstract-event-handler_private.hpp
+        abstract-event-handler/private.hpp
         abstract-layout.cpp
         abstract-rendering-api.cpp
         abstract-rendering-api_private.hpp
         abstract-rendering-api_proxy.hpp
+        abstract-shell-view/private.cpp
+        abstract-shell-view/private.hpp
         abstract-shell-view.cpp
-        abstract-shell-view_private.cpp
-        abstract-shell-view_private.hpp
+        abstract-view/iterators.hpp
+        abstract-view/private.hpp
         abstract-view.cpp
-        abstract-view_iterators.hpp
-        abstract-view_private.hpp
         anchor.cpp
         anchor-group.cpp
         application.cpp
@@ -84,15 +87,17 @@ set(
         callback.cpp
         cursor.cpp
         dialog.cpp
+        display/private.cpp
+        display/private.hpp
+        display/proxy.cpp
+        display/proxy.hpp
         display.cpp
-        display_private.cpp
-        display_private.hpp
-        display_proxy.cpp
-        display_proxy.hpp
         gl-view.cpp
         gl-window.cpp
         glesv2-api.cpp
         gles2-backend.cpp
+        gles2-backend_private.hpp
+        gles2-backend_private.cpp
         input.cpp
         input-event.cpp
         input-manager.cpp
@@ -169,6 +174,11 @@ target_link_libraries(
         #        PRIVATE skia
         PRIVATE xdg-shell-unstable-v6
         #        PRIVATE icu_utf # in third_party
+)
+
+target_include_directories(
+        wiztk-gui
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 install(TARGETS wiztk-gui DESTINATION lib)
