@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 The WizTK Authors.
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,40 +14,42 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHICS_ABSTRACT_SURFACE_PRIVATE_HPP_
-#define WIZTK_GRAPHICS_ABSTRACT_SURFACE_PRIVATE_HPP_
+#ifndef WIZTK_GRAPHICS_CANVAS_PRIVATE_HPP_
+#define WIZTK_GRAPHICS_CANVAS_PRIVATE_HPP_
 
-#include "wiztk/graphics/abstract-surface.hpp"
+#include "wiztk/graphics/canvas.hpp"
+
+#include "wiztk/base/deque.hpp"
+
+#include "SkCanvas.h"
 
 namespace wiztk {
 namespace graphics {
 
 /**
- * @brief Private properties used in AbstractSurface
+ * @brief The private structure used in Canvas
  */
-struct AbstractSurface::Private {
+struct Canvas::Private {
 
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
-  Private() = delete;
+  Private() = default;
 
-  explicit Private(AbstractSurface *surface)
-      : proprietor(surface) {}
+  explicit Private(const SkBitmap &bitmap)
+      : sk_canvas(bitmap) {
+  }
 
   ~Private() = default;
 
-  AbstractSurface *proprietor = nullptr;
+  SkCanvas sk_canvas;
 
-  Size size;
+  base::Point2F origin;
 
-  Margin margin;
+  size_t lock_count = 0;
 
-  bool margin_locked = false;
-
-  bool size_locked = false;
+  base::Deque<LockGuardNode> lock_guard_deque;
 
 };
 
 } // namespace graphics
-} // namesapce wiztk
+} // namespace wiztk
 
-#endif // WIZTK_GRAPHICS_ABSTRACT_SURFACE_PRIVATE_HPP_
+#endif // WIZTK_GRAPHICS_INTERNAL_CANVAS_PRIVATE_HPP_

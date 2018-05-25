@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "main-loop_private.hpp"
+#include "main-loop/private.hpp"
 #include "display/proxy.hpp"
 
 #include "wiztk/base/property.hpp"

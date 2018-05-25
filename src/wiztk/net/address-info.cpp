@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "address-info_private.hpp"
+#include "address-info/private.hpp"
 
 namespace wiztk {
 namespace net {

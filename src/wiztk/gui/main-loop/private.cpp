@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-#include "event-loop_private.hpp"
+#include "private.hpp"
 
 namespace wiztk {
-namespace async {
+namespace gui {
 
-system::threading::ThreadLocal<EventLoop> EventLoop::Private::kPerThreadStorage;
+MainLoop::_Private::_Private(MainLoop *main_loop)
+    : signal_event(main_loop), wayland_event(main_loop) {}
 
 }
 }

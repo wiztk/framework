@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 The WizTK Authors.
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,30 +14,17 @@
  * limitations under the License.
  */
 
-#include "ip-address_native.hpp"
+#ifndef WIZTK_GRAPHIC_IMAGE_INFO_PRIVATE_HPP_
+#define WIZTK_GRAPHIC_IMAGE_INFO_PRIVATE_HPP_
 
-#include "wiztk/base/property.hpp"
+#include "wiztk/graphics/image-info.hpp"
+
+#include "SkImageInfo.h"
 
 namespace wiztk {
-namespace net {
+namespace graphics {
 
-socklen_t IPAddress::Native::GetSocketLength(const IPAddress &address) {
-  socklen_t length = 0;
-
-  switch (address.__PROPERTY__(socket_address)->sa_family) {
-    case AF_INET: {
-      length = sizeof(struct sockaddr_in);
-      break;
-    }
-    case AF_INET6: {
-      length = sizeof(struct sockaddr_in6);
-      break;
-    }
-    default:break;
-  }
-
-  return length;
-}
-
-} // namespace net
+} // namespace graphics
 } // namespace wiztk
+
+#endif // WIZTK_GRAPHIC_INTERNAL_IMAGE_INFO_PRIVATE_HPP_

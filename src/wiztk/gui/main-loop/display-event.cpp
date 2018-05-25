@@ -16,8 +16,8 @@
 
 #include "wiztk/base/property.hpp"
 
-#include "main-loop_display-event.hpp"
-#include "main-loop_private.hpp"
+#include "display-event.hpp"
+#include "private.hpp"
 #include "display/proxy.hpp"
 
 namespace wiztk {

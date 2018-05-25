@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "event-loop_quit-event.hpp"
+#include "quit-event.hpp"
 
 #include <sys/eventfd.h>
 #include <unistd.h>

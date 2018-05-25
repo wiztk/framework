@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-#include "canvas_private.hpp"
+#include "canvas/private.hpp"
 
 #include <wiztk/graphics/paint.hpp>
 #include <wiztk/graphics/path.hpp>
 
-#include "matrix_private.hpp"
+#include "matrix/private.hpp"
 #include "surface_private.hpp"
-#include "image-info_private.hpp"
+#include "image-info/private.hpp"
+#include "bitmap/private.hpp"
 
 #include <unicode/utf.h>
 #include <unicode/unistr.h>

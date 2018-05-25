@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,29 +14,14 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_MATRIX_PRIVATE_HPP
-#define WIZTK_MATRIX_PRIVATE_HPP
+#include "private.hpp"
 
-#include <wiztk/graphics/matrix.hpp>
-#include "SkMatrix.h"
+#include "display/proxy.hpp"
+
+#include "wiztk/gui/application.hpp"
 
 namespace wiztk {
-namespace graphics {
+namespace gui {
 
-struct Matrix::Private {
-
-  Private() {}
-
-  Private(const Private &orig)
-      : sk_matrix(orig.sk_matrix) {}
-
-  ~Private() {}
-
-  SkMatrix sk_matrix;
-
-};
-
-} // namespace graphics
-} // namespace wiztk
-
-#endif //WIZTK_MATRIX_PRIVATE_HPP
+}
+}

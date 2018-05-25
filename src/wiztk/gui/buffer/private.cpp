@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "buffer_private.hpp"
+#include "private.hpp"
 
 namespace wiztk {
 namespace gui {

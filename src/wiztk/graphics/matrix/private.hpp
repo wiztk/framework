@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,44 +14,29 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHICS_CANVAS_PRIVATE_HPP_
-#define WIZTK_GRAPHICS_CANVAS_PRIVATE_HPP_
+#ifndef WIZTK_MATRIX_PRIVATE_HPP
+#define WIZTK_MATRIX_PRIVATE_HPP
 
-#include "wiztk/graphics/canvas.hpp"
-
-#include "bitmap_private.hpp"
-
-#include "wiztk/base/deque.hpp"
-
-#include "SkCanvas.h"
+#include <wiztk/graphics/matrix.hpp>
+#include "SkMatrix.h"
 
 namespace wiztk {
 namespace graphics {
 
-/**
- * @brief The private structure used in Canvas
- */
-struct Canvas::Private {
+struct Matrix::Private {
 
-  Private() = default;
+  Private() {}
 
-  explicit Private(const SkBitmap &bitmap)
-      : sk_canvas(bitmap) {
-  }
+  Private(const Private &orig)
+      : sk_matrix(orig.sk_matrix) {}
 
-  ~Private() = default;
+  ~Private() {}
 
-  SkCanvas sk_canvas;
-
-  base::Point2F origin;
-
-  size_t lock_count = 0;
-
-  base::Deque<LockGuardNode> lock_guard_deque;
+  SkMatrix sk_matrix;
 
 };
 
 } // namespace graphics
 } // namespace wiztk
 
-#endif // WIZTK_GRAPHICS_INTERNAL_CANVAS_PRIVATE_HPP_
+#endif //WIZTK_MATRIX_PRIVATE_HPP

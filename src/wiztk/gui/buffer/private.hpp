@@ -14,33 +14,48 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHICS_BITMAP_PRIVATE_HPP_
-#define WIZTK_GRAPHICS_BITMAP_PRIVATE_HPP_
+#ifndef WIZTK_GUI_BUFFER_PRIVATE_HPP_
+#define WIZTK_GUI_BUFFER_PRIVATE_HPP_
 
-#include "wiztk/graphics/bitmap.hpp"
+#include "wiztk/gui/buffer.hpp"
 
-#include "wiztk/base/property.hpp"
-
-#include "SkBitmap.h"
+#include <wayland-client.h>
 
 namespace wiztk {
-namespace graphics {
+namespace gui {
 
-/**
- * @brief The private structure used in Bitmap
- */
-struct Bitmap::Private : public base::Property<Bitmap> {
+struct Buffer::Private {
 
-  explicit Private(Bitmap *owner)
-      : base::Property<Bitmap>(owner) {}
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
 
-  ~Private() final = default;
+  Private() = default;
 
-  SkBitmap sk_bitmap;
+  ~Private() = default;
+
+  struct wl_buffer *wl_buffer = nullptr;
+
+  /**
+   * @brief Position on surface
+   */
+  Point position;
+
+  Size size;
+
+  int32_t stride = 0;
+
+  uint32_t format = 0;
+
+  int offset = 0;
+
+  void *data = nullptr;
+
+  static void OnRelease(void *data, struct wl_buffer *buffer);
+
+  static const struct wl_buffer_listener kListener;
 
 };
 
-} // namespace graphics
+} // namespace gui
 } // namespace wiztk
 
-#endif // WIZTK_GRAPHICS_INTERNAL_BITMAP_PRIVATE_HPP_
+#endif // WIZTK_GUI_BUFFER_PRIVATE_HPP_

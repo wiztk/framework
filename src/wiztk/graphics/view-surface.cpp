@@ -16,8 +16,8 @@
 
 #include "surface_private.hpp"
 
-#include "canvas_private.hpp"
-#include "image-info_private.hpp"
+#include "canvas/private.hpp"
+#include "image-info/private.hpp"
 
 namespace wiztk {
 namespace graphics {

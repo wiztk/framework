@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHIC_IMAGE_INFO_PRIVATE_HPP_
-#define WIZTK_GRAPHIC_IMAGE_INFO_PRIVATE_HPP_
-
-#include "wiztk/graphics/image-info.hpp"
-
-#include "SkImageInfo.h"
+#include "private.hpp"
 
 namespace wiztk {
-namespace graphics {
+namespace async {
 
-} // namespace graphics
-} // namespace wiztk
+system::threading::ThreadLocal<EventLoop> EventLoop::Private::kPerThreadStorage;
 
-#endif // WIZTK_GRAPHIC_INTERNAL_IMAGE_INFO_PRIVATE_HPP_
+}
+}

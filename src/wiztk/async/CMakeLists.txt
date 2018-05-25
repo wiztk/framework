@@ -19,11 +19,11 @@ set(
         ${PROJECT_SOURCE_DIR}/include/wiztk/async/message-queue.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/async/scheduler.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/async/type.hpp
+        event-loop/private.cpp
+        event-loop/private.hpp
+        event-loop/quit-event.cpp
+        event-loop/quit-event.hpp
         event-loop.cpp
-        event-loop_private.cpp
-        event-loop_private.hpp
-        event-loop_quit-event.cpp
-        event-loop_quit-event.hpp
         message-queue.cpp
         scheduler.cpp
 )
@@ -38,6 +38,11 @@ endif ()
 target_link_libraries(
         wiztk-async
         PUBLIC wiztk-base
+)
+
+target_include_directories(
+        wiztk-async
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 install(TARGETS wiztk-async DESTINATION lib)

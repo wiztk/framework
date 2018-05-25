@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "gles2-backend_private.hpp"
+#include "gles2-backend/private.hpp"
 #include "abstract-egl-backend/private.hpp"
 
 #include "wiztk/gui/application.hpp"

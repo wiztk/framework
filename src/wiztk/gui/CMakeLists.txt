@@ -81,9 +81,9 @@ set(
         anchor.cpp
         anchor-group.cpp
         application.cpp
+        buffer/private.cpp
+        buffer/private.hpp
         buffer.cpp
-        buffer_private.cpp
-        buffer_private.hpp
         callback.cpp
         cursor.cpp
         dialog.cpp
@@ -95,9 +95,9 @@ set(
         gl-view.cpp
         gl-window.cpp
         glesv2-api.cpp
+        gles2-backend/private.hpp
+        gles2-backend/private.cpp
         gles2-backend.cpp
-        gles2-backend_private.hpp
-        gles2-backend_private.cpp
         input.cpp
         input-event.cpp
         input-manager.cpp
@@ -109,13 +109,13 @@ set(
         keymap.hpp
         label.cpp
         linear-layout.cpp
+        main-loop/display-event.cpp
+        main-loop/display-event.hpp
+        main-loop/private.cpp
+        main-loop/private.hpp
+        main-loop/signal-event.cpp
+        main-loop/signal-event.hpp
         main-loop.cpp
-        main-loop_display-event.cpp
-        main-loop_display-event.hpp
-        main-loop_private.cpp
-        main-loop_private.hpp
-        main-loop_signal-event.cpp
-        main-loop_signal-event.hpp
         main-window.cpp
         mouse-event.cpp
         mouse-event_private.hpp

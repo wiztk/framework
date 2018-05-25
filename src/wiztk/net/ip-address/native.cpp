@@ -14,30 +14,30 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_NET_INTERNAL_IP_ADDRESS_NATIVE_HPP_
-#define WIZTK_NET_INTERNAL_IP_ADDRESS_NATIVE_HPP_
+#include "native.hpp"
 
-#include "ip-address_private.hpp"
+#include "wiztk/base/property.hpp"
 
 namespace wiztk {
 namespace net {
 
-/**
- * @brief Proxy class to get native structure in IPAddress.
- */
-class WIZTK_NO_EXPORT IPAddress::Native {
+socklen_t IPAddress::Native::GetSocketLength(const IPAddress &address) {
+  socklen_t length = 0;
 
- public:
-
-  static socklen_t GetSocketLength(const IPAddress &address);
-
-  static const struct sockaddr *GetSocketAddress(const IPAddress &address) {
-    return address.p_->socket_address;
+  switch (address.__PROPERTY__(socket_address)->sa_family) {
+    case AF_INET: {
+      length = sizeof(struct sockaddr_in);
+      break;
+    }
+    case AF_INET6: {
+      length = sizeof(struct sockaddr_in6);
+      break;
+    }
+    default:break;
   }
 
-};
-
-}
+  return length;
 }
 
-#endif // WIZTK_NET_INTERNAL_IP_ADDRESS_NATIVE_HPP_
+} // namespace net
+} // namespace wiztk

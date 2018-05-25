@@ -14,34 +14,33 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_MAIN_LOOP_PRIVATE_HPP_
-#define WIZTK_GUI_MAIN_LOOP_PRIVATE_HPP_
+#ifndef WIZTK_GRAPHICS_BITMAP_PRIVATE_HPP_
+#define WIZTK_GRAPHICS_BITMAP_PRIVATE_HPP_
 
-#include "main-loop_signal-event.hpp"
-#include "main-loop_display-event.hpp"
+#include "wiztk/graphics/bitmap.hpp"
 
-#include "wiztk/gui/main-loop.hpp"
+#include "wiztk/base/property.hpp"
 
-#include <wayland-client.h>
+#include "SkBitmap.h"
 
 namespace wiztk {
-namespace gui {
+namespace graphics {
 
-struct MainLoop::_Private {
+/**
+ * @brief The private structure used in Bitmap
+ */
+struct Bitmap::Private : public base::Property<Bitmap> {
 
-  explicit _Private(MainLoop *main_loop);
+  explicit Private(Bitmap *owner)
+      : base::Property<Bitmap>(owner) {}
 
-  ~_Private() = default;
+  ~Private() final = default;
 
-  struct wl_display *wl_display = nullptr;
-
-  SignalEvent signal_event;
-
-  DisplayEvent wayland_event;
+  SkBitmap sk_bitmap;
 
 };
 
-} // namespace gui
+} // namespace graphics
 } // namespace wiztk
 
-#endif // WIZTK_GUI_MAIN_LOOP_PRIVATE_HPP_
+#endif // WIZTK_GRAPHICS_INTERNAL_BITMAP_PRIVATE_HPP_

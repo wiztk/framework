@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "main-loop_signal-event.hpp"
+#include "signal-event.hpp"
 
 #include <csignal>
 

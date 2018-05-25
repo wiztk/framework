@@ -31,29 +31,29 @@ set(
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/text-box.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/typeface.hpp
         abstract-backend.cpp
-        abstract-surface_private.hpp
+        abstract-surface/private.hpp
         abstract-surface.cpp
+        bitmap/private.hpp
         bitmap.cpp
-        bitmap_private.hpp
+        canvas/private.hpp
         canvas.cpp
-        canvas_private.hpp
+        font/private.hpp
         font.cpp
+        font-style/private.hpp
         font-style.cpp
-        font-style_private.hpp
-        font_private.hpp
         gradient-shader.cpp
+        image-info/private.hpp
         image-info.cpp
-        image-info_private.hpp
+        matrix/private.hpp
         matrix.cpp
-        matrix_private.hpp
         paint.cpp
         path.cpp
+        shader/private.hpp
         shader.cpp
-        shader_private.hpp
         surface_private.hpp
         text-box.cpp
+        typeface/private.hpp
         typeface.cpp
-        typeface_private.hpp
         view-surface.cpp
 )
 

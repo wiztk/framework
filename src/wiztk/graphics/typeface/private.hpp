@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,40 +14,39 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHIC_FONT_PRIVATE_HPP_
-#define WIZTK_GRAPHIC_FONT_PRIVATE_HPP_
+#ifndef WIZTK_GRAPHIC_TYPEFACE_PRIVATE_HPP_
+#define WIZTK_GRAPHIC_TYPEFACE_PRIVATE_HPP_
 
-#include <wiztk/graphics/font.hpp>
+#include <wiztk/graphics/typeface.hpp>
 
-#include "SkFont.h"
+#include "SkTypeface.h"
 
 namespace wiztk {
 namespace graphics {
 
 /**
- * @brief Structure to encapsulate a sk_sp<SkFont> object
+ * @brief Structure to encapsulate a sk_sp<SkTypeface> object
  */
-struct Font::Private {
+struct Typeface::Private {
 
-  Private() = default;
+  Private() {}
 
-  explicit Private(const sk_sp<SkFont> &font)
-      : sk_font(font) {}
+  Private(const sk_sp<SkTypeface> &typeface)
+      : sk_typeface(typeface) {}
 
   Private(const Private &other)
-      : sk_font(other.sk_font) {}
+      : sk_typeface(other.sk_typeface) {}
 
   Private &operator=(const Private &other) {
-    sk_font = other.sk_font;
+    sk_typeface = other.sk_typeface;
     return *this;
   }
 
-  Private &operator=(const sk_sp<SkFont> &font) {
-    sk_font = font;
+  Private &operator=(const sk_sp<SkTypeface> &typeface) {
+    sk_typeface = typeface;
     return *this;
   }
 
-  sk_sp<SkFont> sk_font;
   sk_sp<SkTypeface> sk_typeface;
 
 };
@@ -55,4 +54,4 @@ struct Font::Private {
 } // namespace graphics
 } // namespace wiztk
 
-#endif // WIZTK_GRAPHIC_INTERNAL_FONT_META_HPP_
+#endif // WIZTK_GRAPHIC_INTERNAL_TYPEFACE_PRIVATE_HPP_

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "ip-address_private.hpp"
+#include "private.hpp"
 
 #include <cstring>
 

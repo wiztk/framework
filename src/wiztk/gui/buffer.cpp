@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "buffer_private.hpp"
+#include "buffer/private.hpp"
 
 #include "wiztk/gui/shared-memory-pool.hpp"
 

@@ -14,13 +14,34 @@
  * limitations under the License.
  */
 
-#include "main-loop_private.hpp"
+#ifndef WIZTK_GUI_MAIN_LOOP_PRIVATE_HPP_
+#define WIZTK_GUI_MAIN_LOOP_PRIVATE_HPP_
+
+#include "signal-event.hpp"
+#include "display-event.hpp"
+
+#include "wiztk/gui/main-loop.hpp"
+
+#include <wayland-client.h>
 
 namespace wiztk {
 namespace gui {
 
-MainLoop::_Private::_Private(MainLoop *main_loop)
-    : signal_event(main_loop), wayland_event(main_loop) {}
+struct MainLoop::_Private {
 
-}
-}
+  explicit _Private(MainLoop *main_loop);
+
+  ~_Private() = default;
+
+  struct wl_display *wl_display = nullptr;
+
+  SignalEvent signal_event;
+
+  DisplayEvent wayland_event;
+
+};
+
+} // namespace gui
+} // namespace wiztk
+
+#endif // WIZTK_GUI_MAIN_LOOP_PRIVATE_HPP_

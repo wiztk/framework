@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,48 +14,40 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_INTERNAL_BUFFER_PRIVATE_HPP_
-#define WIZTK_GUI_INTERNAL_BUFFER_PRIVATE_HPP_
+#ifndef WIZTK_GRAPHICS_ABSTRACT_SURFACE_PRIVATE_HPP_
+#define WIZTK_GRAPHICS_ABSTRACT_SURFACE_PRIVATE_HPP_
 
-#include "wiztk/gui/buffer.hpp"
-
-#include <wayland-client.h>
+#include "wiztk/graphics/abstract-surface.hpp"
 
 namespace wiztk {
-namespace gui {
+namespace graphics {
 
-struct Buffer::Private {
+/**
+ * @brief Private properties used in AbstractSurface
+ */
+struct AbstractSurface::Private {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
+  Private() = delete;
 
-  Private() = default;
+  explicit Private(AbstractSurface *surface)
+      : proprietor(surface) {}
 
   ~Private() = default;
 
-  struct wl_buffer *wl_buffer = nullptr;
-
-  /**
-   * @brief Position on surface
-   */
-  Point position;
+  AbstractSurface *proprietor = nullptr;
 
   Size size;
 
-  int32_t stride = 0;
+  Margin margin;
 
-  uint32_t format = 0;
+  bool margin_locked = false;
 
-  int offset = 0;
-
-  void *data = nullptr;
-
-  static void OnRelease(void *data, struct wl_buffer *buffer);
-
-  static const struct wl_buffer_listener kListener;
+  bool size_locked = false;
 
 };
 
-} // namespace gui
-} // namespace wiztk
+} // namespace graphics
+} // namesapce wiztk
 
-#endif // WIZTK_GUI_INTERNAL_BUFFER_PRIVATE_HPP_
+#endif // WIZTK_GRAPHICS_ABSTRACT_SURFACE_PRIVATE_HPP_

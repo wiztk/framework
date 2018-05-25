@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-#include "event-loop_private.hpp"
+#include "event-loop/private.hpp"
+#include "event-loop/quit-event.hpp"
 
 #include "wiztk/async/message.hpp"
 #include "wiztk/async/message-queue.hpp"
 #include "wiztk/async/scheduler.hpp"
-#include "event-loop_quit-event.hpp"
 
 #include <unistd.h>
 #include <sys/epoll.h>

@@ -23,14 +23,14 @@ set(
         ${PROJECT_SOURCE_DIR}/include/wiztk/net/socket.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/net/socket-exception.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/net/socket-type.hpp
+        address-info/private.hpp
         address-info.cpp
-        address-info_private.hpp
         io-buffer.cpp
+        ip-address/native.cpp
+        ip-address/native.hpp
+        ip-address/private.cpp
+        ip-address/private.hpp
         ip-address.cpp
-        ip-address_native.cpp
-        ip-address_native.hpp
-        ip-address_private.cpp
-        ip-address_private.hpp
         server-socket.cpp
         socket.cpp
 )
