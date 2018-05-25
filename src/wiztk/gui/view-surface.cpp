@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-#include "view-surface_private.hpp"
-#include "view-surface_shell_private.hpp"
-#include "view-surface_shell_toplevel_private.hpp"
-#include "view-surface_shell_popup_private.hpp"
-#include "input_private.hpp"
-#include "output_private.hpp"
+#include "view-surface/private.hpp"
+#include "view-surface/shell/private.hpp"
+#include "view-surface/shell/toplevel/private.hpp"
+#include "view-surface/shell/popup/private.hpp"
+#include "input/private.hpp"
+#include "output/private.hpp"
 #include "display/proxy.hpp"
 #include "buffer/private.hpp"
 

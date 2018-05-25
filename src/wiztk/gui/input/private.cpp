@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "input_private.hpp"
+#include "private.hpp"
 
 #include <wiztk/base/macros.hpp>
 

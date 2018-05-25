@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-#include "view-surface_shell_private.hpp"
+#include "private.hpp"
 
-#include "view-surface_private.hpp"
+#include "view-surface/private.hpp"
 #include "abstract-shell-view/private.hpp"
 
 namespace wiztk {

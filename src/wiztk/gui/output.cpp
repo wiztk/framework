@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "output_private.hpp"
+#include "output/private.hpp"
 #include "display/proxy.hpp"
 
 #include "wiztk/gui/display.hpp"

@@ -98,11 +98,11 @@ set(
         gles2-backend/private.hpp
         gles2-backend/private.cpp
         gles2-backend.cpp
+        input/private.cpp
+        input/private.hpp
         input.cpp
         input-event.cpp
         input-manager.cpp
-        input_private.cpp
-        input_private.hpp
         keyboard_state.cpp
         keyboard_state.hpp
         keymap.cpp
@@ -119,10 +119,10 @@ set(
         main-window.cpp
         mouse-event.cpp
         mouse-event_private.hpp
+        output/private.cpp
+        output/private.hpp
         output.cpp
         output-manager.cpp
-        output_private.cpp
-        output_private.hpp
         push-button.cpp
         region.cpp
         relative-layout.cpp
@@ -138,14 +138,14 @@ set(
         title-bar.cpp
         tooltip.cpp
         video-view.cpp
+        view-surface/shell/popup/private.hpp
+        view-surface/shell/toplevel/private.cpp
+        view-surface/shell/toplevel/private.hpp
+        view-surface/shell/private.cpp
+        view-surface/shell/private.hpp
+        view-surface/private.cpp
+        view-surface/private.hpp
         view-surface.cpp
-        view-surface_private.cpp
-        view-surface_private.hpp
-        view-surface_shell_popup_private.hpp
-        view-surface_shell_private.cpp
-        view-surface_shell_private.hpp
-        view-surface_shell_toplevel_private.cpp
-        view-surface_shell_toplevel_private.hpp
         vulkan-api.cpp
         window.cpp
 )

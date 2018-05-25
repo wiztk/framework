@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "view-surface_private.hpp"
+#include "private.hpp"
 
 #include <wiztk/gui/abstract-event-handler.hpp>
 

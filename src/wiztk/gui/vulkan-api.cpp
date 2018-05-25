@@ -15,7 +15,7 @@
  */
 
 #include "display/proxy.hpp"
-#include "view-surface_private.hpp"
+#include "view-surface/private.hpp"
 #include "abstract-rendering-api_proxy.hpp"
 
 #include "wiztk/gui/vulkan-api.hpp"
