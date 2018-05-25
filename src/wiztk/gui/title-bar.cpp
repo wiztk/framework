@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,13 +46,12 @@ class TitleBar::Button : public AbstractButton {
 
   ~Button() override = default;
 
+  static const int kButtonSize = 14;
+
  protected:
 
   void OnDraw(const Context &context) override;
 
- private:
-
-  static const int kButtonSize = 14;
 };
 
 TitleBar::Button::Button()
@@ -103,7 +102,7 @@ void TitleBar::CloseButton::OnDraw(const Context &context) {
   canvas->DrawCircle(rect.center_x(), rect.center_y(), 7.f, paint);
 
 //  paint.SetColor(Theme::GetData().title_bar.active.foreground.color);
-  paint.SetColor(0xFFDDDDDD);
+  paint.SetColor(Theme::GetData().title_bar.active.background);
   paint.SetStrokeWidth(1.5f);
   canvas->DrawLine(rect.center_x() - 3.f, rect.center_y() - 3.f,
                    rect.center_x() + 3.f, rect.center_y() + 3.f,
@@ -141,7 +140,7 @@ void TitleBar::MaximizeButton::OnDraw(const Context &context) {
 
   if (IsHovered()) {
     if (IsPressed()) {
-      paint.SetColor(Theme::GetData().title_bar.highlight.foreground.colors[0]);
+      paint.SetColor(Theme::GetData().title_bar.highlight.foreground);
       paint.SetStyle(Paint::Style::kStyleFill);
       canvas->DrawCircle(rect.center_x(), rect.center_y(), 7.f, paint);
       paint.Reset();
@@ -149,12 +148,12 @@ void TitleBar::MaximizeButton::OnDraw(const Context &context) {
     }
 
     paint.SetStyle(Paint::Style::kStyleStroke);
-    paint.SetColor(Theme::GetData().title_bar.active.foreground.colors[0]);
+    paint.SetColor(Theme::GetData().title_bar.active.foreground);
     paint.SetStrokeWidth(1.f);
     canvas->DrawCircle(rect.center_x(), rect.center_y(), 6.5f, paint);
   }
 
-  paint.SetColor(Theme::GetData().title_bar.active.foreground.colors[0]);
+  paint.SetColor(Theme::GetData().title_bar.active.foreground);
   paint.SetStrokeWidth(1.5f);
   canvas->DrawLine(rect.center_x() - 4.f, rect.center_y(),
                    rect.center_x() + 4.f, rect.center_y(),
@@ -192,7 +191,7 @@ void TitleBar::MinimizeButton::OnDraw(const Context &context) {
 
   if (IsHovered()) {
     if (IsPressed()) {
-      paint.SetColor(Theme::GetData().title_bar.highlight.foreground.colors[0]);
+      paint.SetColor(Theme::GetData().title_bar.highlight.foreground);
       paint.SetStyle(Paint::Style::kStyleFill);
       canvas->DrawCircle(rect.center_x(), rect.center_y(), 7.f, paint);
       paint.Reset();
@@ -200,12 +199,12 @@ void TitleBar::MinimizeButton::OnDraw(const Context &context) {
     }
 
     paint.SetStyle(Paint::Style::kStyleStroke);
-    paint.SetColor(Theme::GetData().title_bar.active.foreground.colors[0]);
+    paint.SetColor(Theme::GetData().title_bar.active.foreground);
     paint.SetStrokeWidth(1.f);
     canvas->DrawCircle(rect.center_x(), rect.center_y(), 6.5f, paint);
   }
 
-  paint.SetColor(Theme::GetData().title_bar.active.foreground.colors[0]);
+  paint.SetColor(Theme::GetData().title_bar.active.foreground);
   paint.SetStrokeWidth(1.5f);
   canvas->DrawLine(rect.center_x() - 4.f, rect.center_y(),
                    rect.center_x() + 4.f, rect.center_y(),
@@ -239,7 +238,7 @@ void TitleBar::FullscreenButton::OnDraw(const Context &context) {
 
   if (IsHovered()) {
     if (IsPressed()) {
-      paint.SetColor(Theme::GetData().title_bar.active.foreground.colors[0]);
+      paint.SetColor(Theme::GetData().title_bar.active.foreground);
       paint.SetStyle(Paint::Style::kStyleFill);
       canvas->DrawCircle(rect.center_x(), rect.center_y(), 7.f, paint);
       paint.Reset();
@@ -247,12 +246,12 @@ void TitleBar::FullscreenButton::OnDraw(const Context &context) {
     }
 
     paint.SetStyle(Paint::Style::kStyleStroke);
-    paint.SetColor(Theme::GetData().title_bar.active.foreground.colors[0]);
+    paint.SetColor(Theme::GetData().title_bar.active.foreground);
     paint.SetStrokeWidth(1.f);
     canvas->DrawCircle(rect.center_x(), rect.center_y(), 6.5f, paint);
   }
 
-  paint.SetColor(Theme::GetData().title_bar.active.foreground.colors[0]);
+  paint.SetColor(Theme::GetData().title_bar.active.foreground);
   paint.SetStyle(Paint::Style::kStyleFill);
 
   Path path;
@@ -373,7 +372,10 @@ void TitleBar::OnDraw(const Context &context) {
   paint.SetStyle(Paint::kStyleFill);
 
   Point2F points[2] = {{factor, bounds.top + factor}, {factor, bounds.bottom}};
-  uint32_t colors[2] = {0xFFE7E7E7, 0xFFD7D7D7};
+
+  uint32_t color1 = (Theme::GetData().title_bar.active.background + 5).argb();
+  uint32_t color2 = (Theme::GetData().title_bar.active.background - 15).argb();
+  uint32_t colors[2] = {color1, color2};
   float pos[2] = {0.f, 1.f};
 
   Shader shader = GradientShader::MakeLinear(points, colors, pos, 2, Shader::kTileModeClamp);
@@ -390,7 +392,7 @@ void TitleBar::OnDraw(const Context &context) {
   paint.SetFont(font_);
   paint.SetTextSize(font_.GetSize() * scale);
 
-  paint.SetColor(Theme::GetData().title_bar.active.foreground.colors[0]);
+  paint.SetColor(Theme::GetData().title_bar.active.foreground);
 
   float text_width = paint.MeasureText(title_.c_str(), title_.length());
 

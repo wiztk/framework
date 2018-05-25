@@ -61,7 +61,7 @@ const struct wl_touch_listener Input::Private::kTouchListener = {
 };
 
 void Input::Private::OnSeatCapabilities(void *data, struct wl_seat *wl_seat, uint32_t capabilities) {
-  Input *_this = static_cast<Input *>(data);
+  auto *_this = static_cast<Input *>(data);
 
   if (capabilities & WL_SEAT_CAPABILITY_KEYBOARD) {
     _ASSERT(nullptr == _this->p_->wl_keyboard);
@@ -90,7 +90,7 @@ void Input::Private::OnSeatCapabilities(void *data, struct wl_seat *wl_seat, uin
 }
 
 void Input::Private::OnSeatName(void *data, struct wl_seat *wl_seat, const char *name) {
-  Input *_this = static_cast<Input *>(data);
+  auto *_this = static_cast<Input *>(data);
   _this->p_->name = name;
 }
 
@@ -100,7 +100,7 @@ void Input::Private::OnPointerEnter(void *data,
                                     struct wl_surface *wl_surface,
                                     wl_fixed_t surface_x,
                                     wl_fixed_t surface_y) {
-  Input *_this = static_cast<Input *>(data);
+  auto *_this = static_cast<Input *>(data);
 
   _this->p_->mouse_event->p_->serial = serial;
   _this->p_->mouse_event->p_->surface_xy.x = wl_fixed_to_double(surface_x);
@@ -117,7 +117,7 @@ void Input::Private::OnPointerLeave(void *data,
                                     struct wl_pointer *wl_pointer,
                                     uint32_t serial,
                                     struct wl_surface *wl_surface) {
-  Input *_this = static_cast<Input *>(data);
+  auto *_this = static_cast<Input *>(data);
 
   _this->p_->mouse_event->p_->serial = serial;
   _this->p_->mouse_event->p_->surface = static_cast<ViewSurface *>(wl_surface_get_user_data(wl_surface));
@@ -131,7 +131,7 @@ void Input::Private::OnPointerMotion(void *data,
                                      uint32_t time,
                                      wl_fixed_t surface_x,
                                      wl_fixed_t surface_y) {
-  Input *_this = static_cast<Input *>(data);
+  auto *_this = static_cast<Input *>(data);
 
   _this->p_->mouse_event->p_->time = time;
   _this->p_->mouse_event->p_->surface_xy.x = wl_fixed_to_double(surface_x);
@@ -149,7 +149,7 @@ void Input::Private::OnPointerButton(void *data,
                                      uint32_t time,
                                      uint32_t button,
                                      uint32_t state) {
-  Input *_this = static_cast<Input *>(data);
+  auto *_this = static_cast<Input *>(data);
 
   _this->p_->mouse_event->response_ = InputEvent::kUnknown;
   _this->p_->mouse_event->p_->serial = serial;
@@ -197,7 +197,7 @@ void Input::Private::OnKeyboardKeymap(void *data,
                                       uint32_t format,
                                       int32_t fd,
                                       uint32_t size) {
-  Input *_this = static_cast<Input *>(data);
+  auto *_this = static_cast<Input *>(data);
 
   if (format != WL_KEYBOARD_KEYMAP_FORMAT_XKB_V1) {
     close(fd);
@@ -236,7 +236,7 @@ void Input::Private::OnKeyboardEnter(void *data,
                                      uint32_t serial,
                                      struct wl_surface *wl_surface,
                                      struct wl_array *keys) {
-  Input *_this = static_cast<Input *>(data);
+  auto *_this = static_cast<Input *>(data);
 
   _this->p_->key_event->serial_ = serial;
 //  keyboard_event_.surface_ = static_cast<Surface*>(wl_surface_get_user_data((wl_surface)));
@@ -252,7 +252,7 @@ void Input::Private::OnKeyboardLeave(void *data,
                                      struct wl_keyboard *wl_keyboard,
                                      uint32_t serial,
                                      struct wl_surface *wl_surface) {
-  Input *_this = static_cast<Input *>(data);
+  auto *_this = static_cast<Input *>(data);
 
   _this->p_->key_event->serial_ = serial;
 
@@ -264,7 +264,7 @@ void Input::Private::OnKeyboardKey(void *data,
                                    uint32_t time,
                                    uint32_t key,
                                    uint32_t state) {
-  Input *_this = static_cast<Input *>(data);
+  auto *_this = static_cast<Input *>(data);
 
   _this->p_->key_event->serial_ = serial;
   _this->p_->key_event->time_ = serial;
@@ -285,7 +285,7 @@ void Input::Private::OnKeyboardModifiers(void *data,
                                          uint32_t mods_latched,
                                          uint32_t mods_locked,
                                          uint32_t group) {
-  Input *_this = static_cast<Input *>(data);
+  auto *_this = static_cast<Input *>(data);
 
   _this->p_->key_event->serial_ = serial;
   _this->p_->key_event->mods_depressed_ = mods_depressed;

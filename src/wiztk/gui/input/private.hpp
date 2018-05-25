@@ -25,7 +25,7 @@
 #include <wiztk/gui/key-event.hpp>
 #include <wiztk/gui/touch-event.hpp>
 
-#include "mouse-event_private.hpp"
+#include "mouse-event/private.hpp"
 #include "keymap.hpp"
 #include "keyboard_state.hpp"
 
@@ -40,10 +40,10 @@ struct WIZTK_NO_EXPORT Input::Private : public base::CountedDequeNodeBase {
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
   Private() = delete;
 
-  Private(Input *input)
+  explicit Private(Input *input)
       : proprietor(input) {}
 
-  ~Private() {
+  ~Private() final {
     keyboard_state.Destroy();
     keymap.Destroy();
 

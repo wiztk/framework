@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,48 +30,32 @@ class ThemeDark : public Theme {
 
   ThemeDark()
       : Theme() {
-    data().window.inactive.outline.colors[0] = 0xEF0F0F0F;
-    data().window.inactive.background.colors[0] = 0xEF202020;
-    data().window.active.background.colors[0] = 0xEF202020;
-    data().window.inactive.foreground.colors[0] = 0xEF303030;
-    data().window.active.foreground.colors[0] = 0xEF404040;
+    data().window.inactive.outline = 0xEF0F0F0F;
+    data().window.inactive.background = 0xEF202020;
+    data().window.inactive.foreground = 0xEF303030;
 
-    data().title_bar.inactive.background.colors[0] = 0xEF202020;
+    data().window.active.background = 0xEF202020;
+    data().window.active.foreground = 0xEF404040;
 
-    data().title_bar.active.background.colors.resize(2);
-    data().title_bar.active.background.colors[0] = 0xFF303030;
-    data().title_bar.active.background.colors[1] = 0xFF292929;
-    data().title_bar.active.background.color_positions.resize(2);
-    data().title_bar.active.background.color_positions[0] = 0.f;
-    data().title_bar.active.background.color_positions[1] = 1.f;
+    data().title_bar.inactive.background = 0xEF202020;
+    data().title_bar.inactive.foreground = 0xFFAAAAAA;
 
-    data().title_bar.highlight.background.colors[0] = data().title_bar.active.background.colors[0] + 55;
-    data().title_bar.inactive.foreground.colors[0] = 0xFFAAAAAA;
-    data().title_bar.active.foreground.colors[0] = 0xFF999999;
-    data().title_bar.highlight.foreground.colors[0] = data().title_bar.active.foreground.colors[0] + 55;
+    data().title_bar.active.background = 0xFF292929;
+    data().title_bar.active.foreground = 0xFF777777;
 
-    data().button.inactive.outline.colors[0] = 0x7F000000;
-    data().button.inactive.background.colors[0] = 0xFF4E4E4E;
-    data().button.inactive.background.colors.resize(2);
-    data().button.inactive.background.colors[0] = 0xFF5E5E5E;
-    data().button.inactive.background.colors[1] = 0xFF3E3E3E;
-    data().button.inactive.background.color_positions.resize(2);
-    data().button.inactive.background.color_positions[0] = 0.f;
-    data().button.inactive.background.color_positions[1] = 1.f;
-    data().button.active.background.colors[0] = 0xFFB67E3E;
-    data().button.active.background.colors.resize(2);
-    data().button.active.background.colors[0] = 0xFF8B5C2D;
-    data().button.active.background.colors[1] = 0xFFCD9866;
-    data().button.active.background.color_positions.resize(2);
-    data().button.active.background.color_positions[0] = 0.f;
-    data().button.active.background.color_positions[1] = 1.f;
-    data().button.highlight.background.colors[0] = data().button.inactive.background.colors[0] + 25;
-    data().button.inactive.foreground.colors[0] = 0xFF444444;
-    data().button.active.foreground.colors[0] = 0xFFEEEEEE;
-    data().button.highlight.foreground.colors[0] = data().button.active.foreground.colors[0] + 25;
+    data().title_bar.highlight.background = data().title_bar.active.background + 55;
+    data().title_bar.highlight.foreground = data().title_bar.active.foreground + 55;
+
+    data().button.inactive.outline = 0x7F000000;
+    data().button.inactive.background = 0xFF4E4E4E;
+    data().button.active.background = 0xFFB67E3E;
+    data().button.highlight.background = data().button.inactive.background + 25;
+    data().button.inactive.foreground = 0xFF444444;
+    data().button.active.foreground = 0xFFEEEEEE;
+    data().button.highlight.foreground = data().button.active.foreground + 25;
   }
 
-  ~ThemeDark() {}
+  ~ThemeDark() final = default;
 
 };
 
@@ -83,6 +67,6 @@ void *ThemeDarkCreate() {
 }
 
 void ThemeDarkDestroy(void *p) {
-  wiztk::gui::ThemeDark *theme = static_cast<wiztk::gui::ThemeDark *>(p);
+  auto *theme = static_cast<wiztk::gui::ThemeDark *>(p);
   delete theme;
 }

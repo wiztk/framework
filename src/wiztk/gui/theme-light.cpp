@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,54 +30,31 @@ class ThemeLight : public Theme {
 
   ThemeLight()
       : Theme() {
-    data().window.inactive.outline.colors[0] = 0xFF444444;
-    data().window.inactive.background.colors[0] = 0xEFF0F0F0;
-    data().window.active.background.colors[0] = 0xEFF0F0F0;
-    data().window.inactive.foreground.colors[0] = 0xEFE0E0E0;
-    data().window.active.foreground.colors[0] = 0xEFE7E7E7;
+    data().window.inactive.foreground = 0xEFE0E0E0;
+    data().window.inactive.background = 0xEFF0F0F0;
+    data().window.inactive.outline = 0xFF444444;
 
-    data().title_bar.inactive.background.colors[0] = 0xEFF0F0F0;
+    data().window.active.background = 0xEFF0F0F0;
+    data().window.active.foreground = 0xEFE7E7E7;
 
-    data().title_bar.active.background.colors.resize(2);
-    data().title_bar.active.background.colors[0] = 0xFFDDDDDD;
-    data().title_bar.active.background.colors[1] = 0xFFCCCCCC;
-    data().title_bar.active.background.color_positions.resize(2);
-    data().title_bar.active.background.color_positions[0] = 0.f;
-    data().title_bar.active.background.color_positions[1] = 1.f;
+    data().title_bar.active.background = 0xFFDDDDDD;
+    data().title_bar.inactive.background = 0xEFF0F0F0;
 
-    data().title_bar.highlight.background.colors[0] = data().title_bar.active.background.colors[0] + 55;
-    data().title_bar.inactive.foreground.colors[0] = 0xFF444444;
-    data().title_bar.active.foreground.colors[0] = 0xFF777777;
-    data().title_bar.highlight.foreground.colors[0] = data().title_bar.active.foreground.colors[0] + 55;
+    data().title_bar.highlight.background = data().title_bar.active.background + 55;
+    data().title_bar.inactive.foreground = 0xFF444444;
+    data().title_bar.active.foreground = 0xFF777777;
+    data().title_bar.highlight.foreground = data().title_bar.active.foreground + 55;
 
-    data().button.inactive.outline.colors[0] = 0xEF999999;
-    data().button.inactive.background.colors[0] = 0xFFE0E0E0;
-    data().button.inactive.background.colors.resize(2);
-    data().button.inactive.background.colors[0] = 0xFFDDDDDD;
-    data().button.inactive.background.colors[1] = 0xFFCCCCCC;
-    data().button.inactive.background.color_positions.resize(2);
-    data().button.inactive.background.color_positions[0] = 0.f;
-    data().button.inactive.background.color_positions[1] = 1.f;
-    data().button.inactive.foreground.colors[0] = 0xFF444444;
-    data().button.active.background.colors[0] = 0xFFB67E3E;
-    data().button.active.background.colors.resize(2);
-    data().button.active.background.colors[0] = 0xFFAAAAAA;
-    data().button.active.background.colors[1] = 0xFFBBBBBB;
-    data().button.active.background.color_positions.resize(2);
-    data().button.active.background.color_positions[0] = 0.f;
-    data().button.active.background.color_positions[1] = 1.f;
-    data().button.active.foreground.colors[0] = 0xFFEEEEEE;
-    data().button.highlight.background.colors[0] = data().button.inactive.background.colors[0] + 25;
-    data().button.highlight.background.colors.resize(2);
-    data().button.highlight.background.colors[0] = 0xFFE7E7E7;
-    data().button.highlight.background.colors[1] = 0xFFD5D5D5;
-    data().button.highlight.background.color_positions.resize(2);
-    data().button.highlight.background.color_positions[0] = 0.f;
-    data().button.highlight.background.color_positions[1] = 1.f;
-    data().button.highlight.foreground.colors[0] = data().button.active.foreground.colors[0] + 25;
+    data().button.inactive.outline = 0xEF999999;
+    data().button.inactive.background = 0xFFE0E0E0;
+    data().button.inactive.foreground = 0xFF444444;
+    data().button.active.background = 0xFFB67E3E;
+    data().button.active.foreground = 0xFFEEEEEE;
+    data().button.highlight.background = data().button.inactive.background + 25;
+    data().button.highlight.foreground = data().button.active.foreground + 25;
   }
 
-  ~ThemeLight() {}
+  ~ThemeLight() final = default;
 
 };
 
@@ -89,7 +66,7 @@ void *ThemeLightCreate() {
 }
 
 void ThemeLightDestroy(void *p) {
-  wiztk::gui::ThemeLight *theme = static_cast<wiztk::gui::ThemeLight *>(p);
+  auto *theme = static_cast<wiztk::gui::ThemeLight *>(p);
   delete theme;
 }
 

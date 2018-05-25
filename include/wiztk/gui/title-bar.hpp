@@ -66,7 +66,7 @@ class TitleBar final : public AbstractView {
    *
    * This value is the height when placed on top or width when placed on left/right side.
    */
-  static const int kHeight = 22;
+  static const int kHeight = 24;
 
  protected:
 

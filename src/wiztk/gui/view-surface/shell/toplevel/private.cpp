@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,14 +65,14 @@ void ViewSurface::Shell::Toplevel::Private::OnConfigure(void *data,
     }
   }
 
-  AbstractShellView *shell_view = dynamic_cast<AbstractShellView *>(_this->p_->shell->surface_->p_->event_handler);
+  auto *shell_view = dynamic_cast<AbstractShellView *>(_this->p_->shell->surface_->p_->event_handler);
   if (shell_view)
     shell_view->p_->OnXdgToplevelConfigure(width, height, value);
 }
 
 void ViewSurface::Shell::Toplevel::Private::OnClose(void *data, struct zxdg_toplevel_v6 * /* zxdg_toplevel_v6 */) {
-  Toplevel *_this = static_cast<Toplevel *>(data);
-  AbstractShellView *shell_view = dynamic_cast<AbstractShellView *>(_this->p_->shell->surface_->p_->event_handler);
+  auto *_this = static_cast<Toplevel *>(data);
+  auto *shell_view = dynamic_cast<AbstractShellView *>(_this->p_->shell->surface_->p_->event_handler);
   if (shell_view)
     shell_view->p_->OnXdgToplevelClose();
 }

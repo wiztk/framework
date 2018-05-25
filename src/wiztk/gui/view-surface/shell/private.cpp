@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,8 @@ const struct zxdg_surface_v6_listener ViewSurface::Shell::Private::kListener = {
 void ViewSurface::Shell::Private::OnConfigure(void *data,
                                           struct zxdg_surface_v6 *zxdg_surface_v6,
                                           uint32_t serial) {
-  Shell *_this = static_cast<Shell *>(data);
-  AbstractShellView *shell_view = dynamic_cast<AbstractShellView *>(_this->surface_->p_->event_handler);
+  auto *_this = static_cast<Shell *>(data);
+  auto *shell_view = dynamic_cast<AbstractShellView *>(_this->surface_->p_->event_handler);
   if (shell_view)
     shell_view->p_->OnXdgSurfaceConfigure(serial);
 }

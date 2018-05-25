@@ -39,7 +39,7 @@ typedef void(*ThemeDestroyHandle)(void *p);
  * @ingroup gui
  * @brief The global theme manager
  */
-class Theme {
+class WIZTK_EXPORT Theme {
 
   friend class Application;
 
@@ -54,27 +54,16 @@ class Theme {
   struct Schema {
 
     struct Style {
-
-      struct Attribute {
-
-        Attribute(size_t color_count = 1, size_t pos_count = 0)
-            : colors(color_count), color_positions(pos_count) {}
-
-        std::vector<ColorF> colors;
-        std::vector<float> color_positions;
-
-      };
-
-      Attribute foreground;
-      Attribute background;
-      Attribute outline;
+      ColorF foreground;
+      ColorF background;
+      ColorF outline;
     };
 
     Schema() {
 
-      active.foreground.colors[0] = 0xFF000000; // black
-      active.background.colors[0] = 0xFFFFFFFF; // white
-      active.outline.colors[0] = 0xFF000000;  // black
+      active.foreground = 0xFF000000; // black
+      active.background = 0xFFFFFFFF; // white
+      active.outline = 0xFF000000;  // black
 
       inactive = active;
       highlight = active;
@@ -106,18 +95,6 @@ class Theme {
     Schema button;
 
     graphics::Font default_font;
-
-  };
-
-  struct Helper {
-
-    struct GradientShader {
-
-      using Attribute = Schema::Style::Attribute;
-
-      static graphics::Shader MakeLinear(const base::Point2F points[2], const Attribute &color);
-
-    };
 
   };
 

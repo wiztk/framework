@@ -117,8 +117,8 @@ set(
         main-loop/signal-event.hpp
         main-loop.cpp
         main-window.cpp
+        mouse-event/private.hpp
         mouse-event.cpp
-        mouse-event_private.hpp
         output/private.cpp
         output/private.hpp
         output.cpp

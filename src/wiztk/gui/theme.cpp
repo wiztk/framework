@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,14 +57,6 @@ Theme::Data::Data()
 
 }
 
-Shader Theme::Helper::GradientShader::MakeLinear(const Point2F *points, const Attribute &color) {
-  return wiztk::graphics::GradientShader::MakeLinear(points,
-                                                     color.colors.data(),
-                                                     color.color_positions.data(),
-                                                     color.colors.size(),
-                                                     Shader::TileMode::kTileModeClamp);
-}
-
 void Theme::Initialize() {
   if (kTheme) return;
 
@@ -91,16 +83,12 @@ void Theme::Release() {
   kShadowPixmap = nullptr;
 }
 
-Theme::Theme() {
+Theme::Theme() = default;
 
-}
-
-Theme::~Theme() {
-
-}
+Theme::~Theme() = default;
 
 void Theme::Load(const char *name) {
-  if (kTheme) delete kTheme;
+  delete kTheme;
   kTheme = nullptr;
 
   if (nullptr == name) name = "Light";
@@ -152,5 +140,5 @@ void Theme::GenerateShadowImage() {
   canvas->drawPath(path, paint);
 }
 
-}
-}
+} // namespace gui
+} // namespace wiztk

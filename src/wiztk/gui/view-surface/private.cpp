@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 #include "private.hpp"
 
-#include <wiztk/gui/abstract-event-handler.hpp>
+#include "wiztk/gui/abstract-event-handler.hpp"
 
 namespace wiztk {
 namespace gui {
@@ -27,14 +27,14 @@ const struct wl_surface_listener ViewSurface::_Private::kListener = {
 };
 
 void ViewSurface::_Private::OnEnter(void *data, struct wl_surface *wl_surface, struct wl_output *wl_output) {
-  const ViewSurface *_this = static_cast<const ViewSurface *>(data);
-  const Output *output = static_cast<const Output *>(wl_output_get_user_data(wl_output));
+  auto *_this = static_cast<const ViewSurface *>(data);
+  auto *output = static_cast<const Output *>(wl_output_get_user_data(wl_output));
   _this->p_->event_handler->OnEnterOutput(_this, output);
 }
 
 void ViewSurface::_Private::OnLeave(void *data, struct wl_surface *wl_surface, struct wl_output *wl_output) {
-  const ViewSurface *_this = static_cast<const ViewSurface *>(data);
-  const Output *output = static_cast<const Output *>(wl_output_get_user_data(wl_output));
+  auto *_this = static_cast<const ViewSurface *>(data);
+  auto *output = static_cast<const Output *>(wl_output_get_user_data(wl_output));
   _this->p_->event_handler->OnLeaveOutput(_this, output);
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -163,7 +163,7 @@ void Window::Private::DrawInner(const Context &context, const Path &path) {
   // Fill color:
   Paint paint;
   paint.SetAntiAlias(true);
-  paint.SetColor(window_schema.active.background.colors[0]);
+  paint.SetColor(window_schema.active.background);
 
   Canvas::LockGuard guard(context.canvas(), path, ClipOperation::kClipIntersect, true);
   context.canvas()->DrawPath(path, paint);
@@ -173,7 +173,7 @@ void Window::Private::DrawOutline(const Context &context, const Path &path) {
   const Theme::Schema &window_schema = Theme::GetData().window;
   Paint paint;
   paint.SetAntiAlias(true);
-  paint.SetColor(window_schema.inactive.outline.colors[0]);
+  paint.SetColor(window_schema.inactive.outline);
   paint.SetStyle(Paint::Style::kStyleStroke);
   paint.SetStrokeWidth(.5f);
   context.canvas()->DrawPath(path, paint);
