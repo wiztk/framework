@@ -122,8 +122,6 @@ class Font {
 
   bool IsUseNonLinearMetrics() const;
 
-  bool IsDevKern();
-
   int TextToGlyphs(const void *text,
                    size_t byte_length,
                    TextEncoding encoding,

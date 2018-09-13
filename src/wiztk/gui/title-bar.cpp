@@ -29,7 +29,6 @@
 #include "SkCanvas.h"
 //#include "SkTypeface.h"
 //#include "SkPaint.h"
-#include "SkTextBox.h"
 
 namespace wiztk {
 namespace gui {
@@ -394,17 +393,17 @@ void TitleBar::OnDraw(const Context &context) {
 
   paint.SetColor(Theme::GetData().title_bar.active.foreground);
 
-  float text_width = paint.MeasureText(title_.c_str(), title_.length());
-
-  SkTextBox text_box;
-  // Put the foreground at the center
-  text_box.setBox(bounds.l + (bounds.width() - text_width) / 2.f,
-                  bounds.t + 1.f, // move down a little for better look
-                  bounds.r - (bounds.width() - text_width) / 2.f,
-                  bounds.b);
-  text_box.setSpacingAlign(SkTextBox::kCenter_SpacingAlign);
-  text_box.setText(title_.c_str(), title_.length(), paint.GetSkPaint());
-  text_box.draw(context.canvas()->GetSkCanvas());
+//  float text_width = paint.MeasureText(title_.c_str(), title_.length());
+//
+//  SkTextBox text_box;
+//  // Put the foreground at the center
+//  text_box.setBox(bounds.l + (bounds.width() - text_width) / 2.f,
+//                  bounds.t + 1.f, // move down a little for better look
+//                  bounds.r - (bounds.width() - text_width) / 2.f,
+//                  bounds.b);
+//  text_box.setSpacingAlign(SkTextBox::kCenter_SpacingAlign);
+//  text_box.setText(title_.c_str(), title_.length(), paint.GetSkPaint());
+//  text_box.draw(context.canvas()->GetSkCanvas());
 
 }
 

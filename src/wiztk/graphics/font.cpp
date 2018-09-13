@@ -115,10 +115,6 @@ bool Font::IsUseNonLinearMetrics() const {
   return p_->sk_font->isUseNonLinearMetrics();
 }
 
-bool Font::IsDevKern() {
-  return p_->sk_font->isDevKern();
-}
-
 int Font::TextToGlyphs(const void *text,
                        size_t byte_length,
                        TextEncoding encoding,

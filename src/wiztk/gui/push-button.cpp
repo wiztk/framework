@@ -20,7 +20,6 @@
 
 #include <wiztk/graphics/canvas.hpp>
 #include <wiztk/graphics/paint.hpp>
-#include <wiztk/graphics/text-box.hpp>
 #include <wiztk/graphics/path.hpp>
 #include <wiztk/graphics/gradient-shader.hpp>
 #include "wiztk/graphics/font-style.hpp"
@@ -39,7 +38,6 @@ using graphics::Paint;
 using graphics::Path;
 using graphics::Shader;
 using graphics::Font;
-using graphics::TextBox;
 using graphics::FontStyle;
 
 PushButton::PushButton(const std::string &text)
@@ -80,7 +78,7 @@ void PushButton::OnDraw(const Context &context) {
   }
 
   const Font &font = GetFont();
-  const std::string &text = GetText();
+//  const std::string &text = GetText();
 
 //  paint.SetColor(schema.inactive.foreground.color);
   ColorF text_color = regular_;
@@ -90,17 +88,17 @@ void PushButton::OnDraw(const Context &context) {
   paint.SetFont(font);
   paint.SetTextSize(font.GetSize() * scale);
 
-  float text_width = paint.MeasureText(text.c_str(), text.length());
-
-  TextBox text_box;
-  // Put the text at the center
-  text_box.SetBox(rect.l + (rect.width() - text_width) / 2.f,
-                  rect.t + 1.f, // move down a little for better look
-                  rect.r - (rect.width() - text_width) / 2.f,
-                  rect.b);
-  text_box.SetSpacingAlign(TextBox::kSpacingAlignCenter);
-  text_box.SetText(text.c_str(), text.length(), paint);
-  text_box.Draw(*canvas);
+//  float text_width = paint.MeasureText(text.c_str(), text.length());
+//
+//  TextBox text_box;
+//  // Put the text at the center
+//  text_box.SetBox(rect.l + (rect.width() - text_width) / 2.f,
+//                  rect.t + 1.f, // move down a little for better look
+//                  rect.r - (rect.width() - text_width) / 2.f,
+//                  rect.b);
+//  text_box.SetSpacingAlign(TextBox::kSpacingAlignCenter);
+//  text_box.SetText(text.c_str(), text.length(), paint);
+//  text_box.Draw(*canvas);
 }
 
 } // namespace gui

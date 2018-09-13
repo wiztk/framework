@@ -19,7 +19,6 @@
 #include "wiztk/graphics/font.hpp"
 #include "wiztk/graphics/canvas.hpp"
 #include "wiztk/graphics/paint.hpp"
-#include "wiztk/graphics/text-box.hpp"
 
 #include "wiztk/gui/context.hpp"
 #include "wiztk/gui/key-event.hpp"
@@ -136,7 +135,6 @@ void Label::OnKeyUp(KeyEvent *event) {
 void Label::OnDraw(const Context &context) {
   using graphics::Canvas;
   using graphics::Paint;
-  using graphics::TextBox;
 
   int scale = context.surface()->GetScale();
   const RectF rect = GetBounds() * scale;
@@ -151,17 +149,17 @@ void Label::OnDraw(const Context &context) {
   paint.SetFont(p_->font);
   paint.SetTextSize(p_->font.GetSize() * scale);
 
-  float text_width = paint.MeasureText(p_->text.c_str(), p_->text.length());
-
-  TextBox text_box;
-  // Put the text at the center
-  text_box.SetBox(rect.l + (rect.width() - text_width) / 2.f,
-                  rect.t + 1.f, // move down a little for better look
-                  rect.r - (rect.width() - text_width) / 2.f,
-                  rect.b);
-  text_box.SetSpacingAlign(TextBox::kSpacingAlignCenter);
-  text_box.SetText(p_->text.c_str(), p_->text.length(), paint);
-  text_box.Draw(*context.canvas());
+//  float text_width = paint.MeasureText(p_->text.c_str(), p_->text.length());
+//
+//  TextBox text_box;
+//  // Put the text at the center
+//  text_box.SetBox(rect.l + (rect.width() - text_width) / 2.f,
+//                  rect.t + 1.f, // move down a little for better look
+//                  rect.r - (rect.width() - text_width) / 2.f,
+//                  rect.b);
+//  text_box.SetSpacingAlign(TextBox::kSpacingAlignCenter);
+//  text_box.SetText(p_->text.c_str(), p_->text.length(), paint);
+//  text_box.Draw(*context.canvas());
 }
 
 } // namespace gui
