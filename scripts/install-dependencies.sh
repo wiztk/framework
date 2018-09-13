@@ -1,5 +1,9 @@
 #!/usr/bin/env sh
 
+if [[ $EUID != 0 ]]; then
+    echo "Warning: you may need to run this script as admistrator!"
+fi
+
 which lsb_release 1>/dev/null 2>&1
 
 if [ $? = 0 ]; then
@@ -15,9 +19,10 @@ ARCH=$(uname -m | sed 's/x86_//;s/i[3-6]86/32/')
 # VER=$(lsb_release -sr)
 PACKAGES=""
 
-if [ "$OS" = "Ubuntu" ]; then
+case $OS in
+    "Ubuntu")
 	PACKAGES="cmake \
-		libwayland-dev \
+               	libwayland-dev \
 		libxkbcommon-dev \
 		libegl1-mesa-dev \
 		libgl1-mesa-dev \
@@ -42,9 +47,10 @@ if [ "$OS" = "Ubuntu" ]; then
 		libswresample-dev \
 		doxygen \
 		graphviz"
-	sudo apt install ${PACKAGES}
-elif [ "$OS" = "Fedora" ]; then
-    echo "Please make sure that rpmfusion repos were loaded."
+	apt install ${PACKAGES}
+	;;
+    "Fedora")
+        echo "Please make sure that rpmfusion repos were loaded."
 	PACKAGES="gcc-c++ \
 		cmake \
 		wayland-devel \
@@ -71,9 +77,19 @@ elif [ "$OS" = "Fedora" ]; then
 		doxygen \
 		graphviz"
 	# sudo dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
-	sudo dnf install ${PACKAGES}
-else
+	dnf install ${PACKAGES}
+	;;
+    "Arch Linux")
+	PACKAGES="cmake \
+                vulkan-headers \
+                openimageio"
+	pacman -Syu ${PACKAGES}
+        echo "You may need to install one of vulkan drivers for your graphic card: vulkan-intel vulkan-nvidia vulkan-radeon."
+	;;
+    *)
 	echo "Unsupported Linux distribution!"
-fi
+	exit 2
+	;;
+esac
 
 # Recommended to install ccache.
