@@ -340,25 +340,25 @@ bool AbstractView::IsVisible() const {
 void AbstractView::AddAnchorTo(AbstractView *target, int align, int distance) {
   if (target == p_->parent || this == target->p_->parent) {
     switch (align) {
-      case Alignment::Horizontal::kLeft: {
+      case Alignment::kLeft: {
         std::pair<Anchor *, Anchor *> pair = Anchor::MakePair(distance, this, target);
         p_->left_anchor_group.PushBack(pair.first);
         target->p_->left_anchor_group.PushBack(pair.second);
         break;
       }
-      case Alignment::Vertical::kTop: {
+      case Alignment::kTop: {
         std::pair<Anchor *, Anchor *> pair = Anchor::MakePair(distance, this, target);
         p_->top_anchor_group.PushBack(pair.first);
         target->p_->top_anchor_group.PushBack(pair.second);
         break;
       }
-      case Alignment::Horizontal::kRight: {
+      case Alignment::kRight: {
         std::pair<Anchor *, Anchor *> pair = Anchor::MakePair(distance, this, target);
         p_->right_anchor_group.PushBack(pair.first);
         target->p_->right_anchor_group.PushBack(pair.second);
         break;
       }
-      case Alignment::Vertical::kBottom: {
+      case Alignment::kBottom: {
         std::pair<Anchor *, Anchor *> pair = Anchor::MakePair(distance, this, target);
         p_->bottom_anchor_group.PushBack(pair.first);
         target->p_->bottom_anchor_group.PushBack(pair.second);
@@ -368,25 +368,25 @@ void AbstractView::AddAnchorTo(AbstractView *target, int align, int distance) {
     }
   } else if (target->p_->parent == p_->parent) {
     switch (align) {
-      case Alignment::Horizontal::kLeft: {
+      case Alignment::kLeft: {
         std::pair<Anchor *, Anchor *> pair = Anchor::MakePair(distance, this, target);
         p_->right_anchor_group.PushBack(pair.first);
         target->p_->left_anchor_group.PushBack(pair.second);
         break;
       }
-      case Alignment::Vertical::kTop: {
+      case Alignment::kTop: {
         std::pair<Anchor *, Anchor *> pair = Anchor::MakePair(distance, this, target);
         p_->bottom_anchor_group.PushBack(pair.first);
         target->p_->top_anchor_group.PushBack(pair.second);
         break;
       }
-      case Alignment::Horizontal::kRight: {
+      case Alignment::kRight: {
         std::pair<Anchor *, Anchor *> pair = Anchor::MakePair(distance, this, target);
         p_->left_anchor_group.PushBack(pair.first);
         target->p_->right_anchor_group.PushBack(pair.second);
         break;
       }
-      case Alignment::Vertical::kBottom: {
+      case Alignment::kBottom: {
         std::pair<Anchor *, Anchor *> pair = Anchor::MakePair(distance, this, target);
         p_->top_anchor_group.PushBack(pair.first);
         target->p_->bottom_anchor_group.PushBack(pair.second);
@@ -401,10 +401,10 @@ void AbstractView::AddAnchorTo(AbstractView *target, int align, int distance) {
 
 const AnchorGroup &AbstractView::GetAnchorGroup(int align) const {
   switch (align) {
-    case Alignment::Horizontal::kLeft:return p_->left_anchor_group;
-    case Alignment::Vertical::kTop:return p_->top_anchor_group;
-    case Alignment::Horizontal::kRight:return p_->right_anchor_group;
-    case Alignment::Vertical::kBottom:return p_->bottom_anchor_group;
+    case Alignment::kLeft:return p_->left_anchor_group;
+    case Alignment::kTop:return p_->top_anchor_group;
+    case Alignment::kRight:return p_->right_anchor_group;
+    case Alignment::kBottom:return p_->bottom_anchor_group;
     default:return p_->left_anchor_group;
   }
 }

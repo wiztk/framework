@@ -128,50 +128,24 @@ void Canvas::DrawPath(const Path &path, const Paint &paint) {
   p_->sk_canvas.drawPath(path.GetSkPath(), paint.GetSkPaint());
 }
 
-void Canvas::DrawText(const void *text, size_t byte_length, float x, float y, const Paint &paint) {
-  p_->sk_canvas.drawText(text, byte_length, x, y, paint.GetSkPaint());
+void Canvas::DrawText(const void *text, size_t byte_length, float x, float y, const Paint &paint,
+                      TextAlignment::Vertical vert) {
+  DrawAlignedText(text, byte_length, x, y, paint, vert);
 }
 
-void Canvas::DrawText(const std::string &text, float x, float y, const Paint &paint) {
-  p_->sk_canvas.drawText(text.data(), text.length(), x, y, paint.GetSkPaint());
+void Canvas::DrawText(const std::string &text, float x, float y, const Paint &paint,
+                      TextAlignment::Vertical vert) {
+  DrawAlignedText(text.data(), text.length(), x, y, paint, vert);
 }
 
-void Canvas::DrawText(const String &text, float x, float y, const Paint &paint) {
+void Canvas::DrawText(const String &text, float x, float y, const Paint &paint,
+                      TextAlignment::Vertical vert) {
   // TODO: This create and copy the string array from String16 to icu::UnicodeString, find a better way for performance.
   std::string utf8;
   icu::UnicodeString utf16(text.data(), static_cast<uint32_t>(text.length()));
   utf16.toUTF8String(utf8);
 
-  p_->sk_canvas.drawText(utf8.data(), utf8.length(), x, y, paint.GetSkPaint());
-}
-
-void Canvas::DrawAlignedText(const std::string &text,
-                             float x,
-                             float y,
-                             Alignment::Vertical vert,
-                             const Paint &paint) {
-  RectF rect;
-  paint.MeasureText(text.c_str(), text.length(), &rect);
-
-  switch (vert) {
-    case Alignment::kTop: {
-      y = y - rect.top; // top is negative
-      break;
-    }
-    case Alignment::kMiddle: {
-      y = y - rect.top - rect.height() / 2.f;
-      break;
-    }
-    case Alignment::kBottom: {
-      y = y - (rect.height() + rect.top);
-      break;
-    }
-    case Alignment::kBaseline:
-    default:
-      break;
-  }
-
-  DrawText(text, x, y, paint);
+  DrawAlignedText(utf8.data(), utf8.length(), x, y, paint, vert);
 }
 
 void Canvas::DrawPaint(const Paint &paint) {
@@ -284,6 +258,37 @@ const Point2F &Canvas::GetOrigin() const {
 
 SkCanvas *Canvas::GetSkCanvas() const {
   return &p_->sk_canvas;
+}
+
+void Canvas::DrawAlignedText(const void *text,
+                             size_t byte_length,
+                             float x,
+                             float y,
+                             const wiztk::graphics::Paint &paint,
+                             wiztk::graphics::TextAlignment::Vertical vert) {
+  SkRect rect = SkRect::MakeEmpty();
+  paint.GetSkPaint().measureText(text, byte_length, &rect);
+
+  switch (vert) {
+    case TextAlignment::kTop: {
+      y = y - rect.top(); // top is negative
+      break;
+    }
+    case TextAlignment::kMiddle: {
+      y = y - rect.top() - rect.height() / 2.f;
+      break;
+    }
+    case TextAlignment::kBottom: {
+      y = y - (rect.height() + rect.top());
+      break;
+    }
+    case TextAlignment::kBaseline:
+    default: {
+      break;
+    }
+  }
+
+  p_->sk_canvas.drawText(text, byte_length, x, y, paint.GetSkPaint());
 }
 
 // ----------

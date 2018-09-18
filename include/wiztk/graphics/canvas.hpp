@@ -25,7 +25,7 @@
 #include "wiztk/base/deque.hpp"
 #include "wiztk/base/string.hpp"
 
-#include "wiztk/graphics/alignment.hpp"
+#include "wiztk/graphics/text-alignment.hpp"
 #include "clip-operation.hpp"
 
 #include <memory>
@@ -102,17 +102,14 @@ class Canvas {
 
   void DrawPath(const Path &path, const Paint &paint);
 
-  void DrawText(const void *text, size_t byte_length, float x, float y, const Paint &paint);
+  void DrawText(const void *text, size_t byte_length, float x, float y, const Paint &paint,
+                TextAlignment::Vertical vert = TextAlignment::kBaseline);
 
-  void DrawText(const std::string &text, float x, float y, const Paint &paint);
+  void DrawText(const std::string &text, float x, float y, const Paint &paint,
+                TextAlignment::Vertical vert = TextAlignment::kBaseline);
 
-  void DrawText(const String &text, float x, float y, const Paint &paint);
-
-  void DrawAlignedText(const std::string &text,
-                       float x,
-                       float y,
-                       Alignment::Vertical vert,
-                       const Paint &paint);
+  void DrawText(const String &text, float x, float y, const Paint &paint,
+                TextAlignment::Vertical vert = TextAlignment::kBaseline);
 
   void DrawPaint(const Paint &paint);
 
@@ -179,6 +176,13 @@ class Canvas {
 
   struct LockGuardNode;
   struct Private;
+
+  void DrawAlignedText(const void *text,
+                       size_t byte_length,
+                       float x,
+                       float y,
+                       const Paint &paint,
+                       TextAlignment::Vertical vert = TextAlignment::kBaseline);
 
   std::unique_ptr<Private> p_;
 

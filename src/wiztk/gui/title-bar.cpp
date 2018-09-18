@@ -394,8 +394,8 @@ void TitleBar::OnDraw(const Context &context) {
 
   paint.SetColor(Theme::GetData().title_bar.active.foreground);
 
-  paint.SetTextAlign(Alignment::kCenter);
-  canvas->DrawAlignedText(title_, bounds.center_x(), bounds.center_y(), Alignment::kMiddle, paint);
+  paint.SetTextAlign(TextAlignment::kCenter);
+  canvas->DrawText(title_, bounds.center_x(), bounds.center_y(), paint, TextAlignment::kMiddle);
 }
 
 } // namespace gui

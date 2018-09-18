@@ -135,7 +135,7 @@ void Label::OnKeyUp(KeyEvent *event) {
 void Label::OnDraw(const Context &context) {
   using graphics::Canvas;
   using graphics::Paint;
-  using graphics::Alignment;
+  using graphics::TextAlignment;
 
   Canvas* const canvas = context.canvas();
   int scale = context.surface()->GetScale();
@@ -150,10 +150,9 @@ void Label::OnDraw(const Context &context) {
   paint.SetStyle(Paint::kStyleFill);
   paint.SetFont(p_->font);
   paint.SetTextSize(p_->font.GetSize() * scale);
-  paint.SetTextAlign(Alignment::Horizontal::kCenter);
 
-  paint.SetTextAlign(Alignment::kCenter);
-  canvas->DrawAlignedText(p_->text, rect.center_x(), rect.center_y(), Alignment::kMiddle, paint);
+  paint.SetTextAlign(TextAlignment::kCenter);
+  canvas->DrawText(p_->text, rect.center_x(), rect.center_y(), paint, TextAlignment::kMiddle);
 }
 
 } // namespace gui

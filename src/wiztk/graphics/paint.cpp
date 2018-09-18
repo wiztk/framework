@@ -118,11 +118,11 @@ void Paint::SetShader(const Shader &shader) {
   p_->sk_paint.setShader(shader.p_->sk_shader);
 }
 
-Alignment::Horizontal Paint::GetTextAlign() const {
-  return static_cast<Alignment::Horizontal>(p_->sk_paint.getTextAlign());
+TextAlignment::Horizontal Paint::GetTextAlign() const {
+  return static_cast<TextAlignment::Horizontal>(p_->sk_paint.getTextAlign());
 }
 
-void Paint::SetTextAlign(Alignment::Horizontal align) {
+void Paint::SetTextAlign(TextAlignment::Horizontal align) {
   p_->sk_paint.setTextAlign(static_cast<SkPaint::Align>(align));
 }
 

@@ -20,7 +20,7 @@
 #include "wiztk/base/color.hpp"
 
 #include "wiztk/graphics/font.hpp"
-#include "wiztk/graphics/alignment.hpp"
+#include "wiztk/graphics/text-alignment.hpp"
 
 #include <cstdint>
 #include <memory>
@@ -97,9 +97,9 @@ class WIZTK_EXPORT Paint {
 
   void SetShader(const Shader &shader);
 
-  Alignment::Horizontal GetTextAlign() const;
+  TextAlignment::Horizontal GetTextAlign() const;
 
-  void SetTextAlign(Alignment::Horizontal align);
+  void SetTextAlign(TextAlignment::Horizontal align);
 
   float GetTextSize() const;
 

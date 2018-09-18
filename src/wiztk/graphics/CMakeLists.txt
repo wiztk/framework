@@ -16,6 +16,8 @@ set(
         graphics_sources
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/abstract-gl-backend.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/abstract-surface.hpp
+        ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/alignment.hpp
+        ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/text-alignment.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/bitmap.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/canvas.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/clip-operation.hpp
@@ -29,7 +31,6 @@ set(
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/shader.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/surface.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/typeface.hpp
-        ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/alignment.hpp
         abstract-gl-backend.cpp
         abstract-surface/private.hpp
         abstract-surface.cpp

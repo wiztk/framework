@@ -51,10 +51,10 @@ WIZTK_NO_EXPORT struct AbstractView::Private {
         y_layout_policy(kLayoutPreferred),
         geometry_message(view),
         redraw_node(view),
-        left_anchor_group(view, graphics::Alignment::Horizontal::kLeft),
-        top_anchor_group(view, graphics::Alignment::Vertical::kTop),
-        right_anchor_group(view, graphics::Alignment::Horizontal::kRight),
-        bottom_anchor_group(view, graphics::Alignment::Vertical::kBottom),
+        left_anchor_group(view, graphics::Alignment::kLeft),
+        top_anchor_group(view, graphics::Alignment::kTop),
+        right_anchor_group(view, graphics::Alignment::kRight),
+        bottom_anchor_group(view, graphics::Alignment::kBottom),
         layout(nullptr) {}
 
   ~Private() = default;

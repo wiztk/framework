@@ -14,43 +14,38 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHIC_ALIGNMENT_HPP_
-#define WIZTK_GRAPHIC_ALIGNMENT_HPP_
+#ifndef WIZTK_GRAPHICS_TEXT_ALIGNMENT_HPP_
+#define WIZTK_GRAPHICS_TEXT_ALIGNMENT_HPP_
 
 #include "wiztk/base/macros.hpp"
 
 namespace wiztk {
 namespace graphics {
 
-/**
- * @ingroup graphics
- * @brief Text Alignment
- *
- * Text alignment adjusts the text relative to the text position.
- */
-class WIZTK_EXPORT Alignment {
+class WIZTK_EXPORT TextAlignment {
 
  public:
 
-  enum Type {
+  enum Horizontal {
     kLeft,
-    kTop,
-    kRight,
-    kBottom
+    kCenter,
+    kRight
   };
 
-  explicit Alignment(int init = 0)
-      : value_(init) {}
+  static constexpr int kHorizontalMask = 0x0F;
 
-  int value() const { return value_; }
+  enum Vertical {
+    kTop = 0x0,
+    kMiddle = (0x1 << 4),
+    kBottom = (0x2 << 4),
+    kBaseline = (0x3 << 4)
+  };
 
- private:
-
-  int value_ = 0;
+  static constexpr int kVerticalMask = 0xF0;
 
 };
 
 } // namespace graphics
 } // namespace wiztk
 
-#endif // WIZTK_GRAPHIC_TEXT_ALIGNMENT_HPP_
+#endif // WIZTK_GRAPHICS_TEXT_ALIGNMENT_HPP_
