@@ -16,10 +16,14 @@
 
 #include "abstract-view/iterators.hpp"
 
+#include "wiztk/graphics/alignment.hpp"
+
 #include <wiztk/gui/relative-layout.hpp>
 
 namespace wiztk {
 namespace gui {
+
+using graphics::Alignment;
 
 RelativeLayout::~RelativeLayout() {
 
@@ -36,22 +40,22 @@ void RelativeLayout::OnViewRemoved(AbstractView *view) {
 }
 
 void RelativeLayout::OnLayout(int left, int top, int right, int bottom) {
-  const AnchorGroup &left_group = GetAnchorGroup(kAlignLeft);
+  const AnchorGroup &left_group = GetAnchorGroup(Alignment::kLeft);
   for (Anchor *anchor = left_group.first(); nullptr != anchor; anchor = anchor->next()) {
     anchor->contrary()->group()->view()->SetLeft(left + anchor->distance());
   }
 
-  const AnchorGroup &top_group = GetAnchorGroup(kAlignTop);
+  const AnchorGroup &top_group = GetAnchorGroup(Alignment::kTop);
   for (Anchor *anchor = top_group.first(); nullptr != anchor; anchor = anchor->next()) {
     anchor->contrary()->group()->view()->SetTop(top + anchor->distance());
   }
 
-  const AnchorGroup &right_group = GetAnchorGroup(kAlignRight);
+  const AnchorGroup &right_group = GetAnchorGroup(Alignment::kRight);
   for (Anchor *anchor = right_group.first(); nullptr != anchor; anchor = anchor->next()) {
     anchor->contrary()->group()->view()->SetRight(right + anchor->distance());
   }
 
-  const AnchorGroup &bottom_group = GetAnchorGroup(kAlignBottom);
+  const AnchorGroup &bottom_group = GetAnchorGroup(Alignment::kBottom);
   for (Anchor *anchor = bottom_group.first(); nullptr != anchor; anchor = anchor->next()) {
     anchor->contrary()->group()->view()->SetBottom(bottom + anchor->distance());
   }

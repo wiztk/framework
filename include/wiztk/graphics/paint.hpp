@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,10 @@
 #ifndef WIZTK_GRAPHIC_PAINT_HPP_
 #define WIZTK_GRAPHIC_PAINT_HPP_
 
-#include "../base/color.hpp"
-#include "font.hpp"
+#include "wiztk/base/color.hpp"
+
+#include "wiztk/graphics/font.hpp"
+#include "wiztk/graphics/alignment.hpp"
 
 #include <cstdint>
 #include <memory>
@@ -34,10 +36,15 @@ class Shader;
  * @ingroup graphics
  * @brief Class holds the style and color information about how to draw geometries, text and bitmaps.
  */
-class Paint {
+class WIZTK_EXPORT Paint {
 
   friend bool operator==(const Paint &paint1, const Paint &paint2);
   friend bool operator!=(const Paint &paint1, const Paint &paint2);
+
+ public:
+
+  using RectF = base::RectF;
+  using ColorF = base::ColorF;
 
  public:
 
@@ -52,16 +59,6 @@ class Paint {
     kHintingSlight,
     kHintingNormal,
     kHintingFull
-  };
-
-  enum Align {
-    kAlignLeft,
-    kAlignCenter,
-    kAlignRight
-  };
-
-  enum {
-    kAlignCount = 3
   };
 
   Paint();
@@ -90,7 +87,7 @@ class Paint {
 
   void SetColor(uint32_t argb);
 
-  void SetColor(const base::ColorF &color);
+  void SetColor(const ColorF &color);
 
   float GetStrokeWidth() const;
 
@@ -100,9 +97,9 @@ class Paint {
 
   void SetShader(const Shader &shader);
 
-  Align GetTextAlign() const;
+  Alignment::Horizontal GetTextAlign() const;
 
-  void SetTextAlign(Align align);
+  void SetTextAlign(Alignment::Horizontal align);
 
   float GetTextSize() const;
 
@@ -128,7 +125,7 @@ class Paint {
 
   int CountText(const void *text, size_t byte_length) const;
 
-  float MeasureText(const void *text, size_t length, base::RectF *boulds) const;
+  float MeasureText(const void *text, size_t length, RectF *boulds) const;
 
   float MeasureText(const void *text, size_t length) const {
     return MeasureText(text, length, nullptr);

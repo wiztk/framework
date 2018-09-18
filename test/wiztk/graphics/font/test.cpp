@@ -28,9 +28,9 @@ TEST_F(Test, enums_check_1) {
   ASSERT_TRUE((int) Font::Flags::kFlagEmbeddedBitmaps == (int) SkFont::Flags::kEmbeddedBitmaps_Flag);
   ASSERT_TRUE((int) Font::Flags::kFlagUseNonlinearMetrics == (int) SkFont::Flags::kUseNonlinearMetrics_Flag);
   ASSERT_TRUE((int) Font::Flags::kFlagVertical == (int) SkFont::Flags::kVertical_Flag);
-  ASSERT_TRUE((int) Font::Flags::kFlagGenA8FromLCD == (int) SkFont::Flags::kGenA8FromLCD_Flag);
+//  ASSERT_TRUE((int) Font::Flags::kFlagGenA8FromLCD == (int) SkFont::Flags::kGenA8FromLCD_Flag);
   ASSERT_TRUE((int) Font::Flags::kFlagEmbolden == (int) SkFont::Flags::kEmbolden_Flag);
-  ASSERT_TRUE((int) Font::Flags::kFlagDevKern == (int) SkFont::Flags::kDevKern_Flag);
+//  ASSERT_TRUE((int) Font::Flags::kFlagDevKern == (int) SkFont::Flags::kDevKern_Flag);
 
   ASSERT_TRUE((int) Font::MaskType::kMaskBW == (int) SkFont::MaskType::kBW_MaskType);
   ASSERT_TRUE((int) Font::MaskType::kMaskA8 == (int) SkFont::MaskType::kA8_MaskType);

@@ -361,6 +361,7 @@ void TitleBar::OnDraw(const Context &context) {
   using namespace base;
   using namespace graphics;
 
+  Canvas *const canvas = context.canvas();
   int scale = context.surface()->GetScale();
 
   const RectF bounds = GetBounds() * scale;
@@ -380,10 +381,10 @@ void TitleBar::OnDraw(const Context &context) {
   Shader shader = GradientShader::MakeLinear(points, colors, pos, 2, Shader::kTileModeClamp);
   paint.SetShader(shader);
 
-  context.canvas()->DrawRect(RectF::FromLTRB(bounds.left + factor,
-                                             bounds.top + factor,
-                                             bounds.right - factor,
-                                             bounds.bottom), paint);
+  canvas->DrawRect(RectF::FromLTRB(bounds.left + factor,
+                                   bounds.top + factor,
+                                   bounds.right - factor,
+                                   bounds.bottom), paint);
 
   paint.Reset();
   paint.SetAntiAlias(true);
@@ -393,18 +394,8 @@ void TitleBar::OnDraw(const Context &context) {
 
   paint.SetColor(Theme::GetData().title_bar.active.foreground);
 
-//  float text_width = paint.MeasureText(title_.c_str(), title_.length());
-//
-//  SkTextBox text_box;
-//  // Put the foreground at the center
-//  text_box.setBox(bounds.l + (bounds.width() - text_width) / 2.f,
-//                  bounds.t + 1.f, // move down a little for better look
-//                  bounds.r - (bounds.width() - text_width) / 2.f,
-//                  bounds.b);
-//  text_box.setSpacingAlign(SkTextBox::kCenter_SpacingAlign);
-//  text_box.setText(title_.c_str(), title_.length(), paint.GetSkPaint());
-//  text_box.draw(context.canvas()->GetSkCanvas());
-
+  paint.SetTextAlign(Alignment::kCenter);
+  canvas->DrawAlignedText(title_, bounds.center_x(), bounds.center_y(), Alignment::kMiddle, paint);
 }
 
 } // namespace gui

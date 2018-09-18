@@ -37,7 +37,7 @@ class AnchorGroup {
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(AnchorGroup);
   AnchorGroup() = delete;
 
-  AnchorGroup(AbstractView *view, Alignment align);
+  AnchorGroup(AbstractView *view, int align);
 
   ~AnchorGroup();
 
@@ -66,7 +66,7 @@ class AnchorGroup {
 
   AbstractView *view() const { return view_; }
 
-  Alignment alignment() const { return alignment_; }
+  int alignment() const { return alignment_; }
 
   Anchor *first() const { return first_; }
 
@@ -77,7 +77,7 @@ class AnchorGroup {
  private:
 
   AbstractView *view_;
-  Alignment alignment_;
+  int alignment_;
 
   Anchor *first_;
   Anchor *last_;

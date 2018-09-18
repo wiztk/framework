@@ -39,6 +39,7 @@ using graphics::Path;
 using graphics::Shader;
 using graphics::Font;
 using graphics::FontStyle;
+using graphics::Alignment;
 
 PushButton::PushButton(const std::string &text)
     : AbstractButton(text) {
@@ -88,17 +89,8 @@ void PushButton::OnDraw(const Context &context) {
   paint.SetFont(font);
   paint.SetTextSize(font.GetSize() * scale);
 
-//  float text_width = paint.MeasureText(text.c_str(), text.length());
-//
-//  TextBox text_box;
-//  // Put the text at the center
-//  text_box.SetBox(rect.l + (rect.width() - text_width) / 2.f,
-//                  rect.t + 1.f, // move down a little for better look
-//                  rect.r - (rect.width() - text_width) / 2.f,
-//                  rect.b);
-//  text_box.SetSpacingAlign(TextBox::kSpacingAlignCenter);
-//  text_box.SetText(text.c_str(), text.length(), paint);
-//  text_box.Draw(*canvas);
+  paint.SetTextAlign(Alignment::kCenter);
+  canvas->DrawAlignedText(GetText(), rect.center_x(), rect.center_y(), Alignment::kMiddle, paint);
 }
 
 } // namespace gui

@@ -23,6 +23,8 @@
 #include "wiztk/base/bit.hpp"
 #include "wiztk/base/clamp.hpp"
 
+#include "wiztk/graphics/alignment.hpp"
+
 #include "wiztk/gui/abstract-shell-view.hpp"
 #include "wiztk/gui/abstract-layout.hpp"
 #include "wiztk/gui/mouse-event.hpp"
@@ -35,6 +37,8 @@ using base::SizeI;
 using base::RectF;
 using base::Clamp;
 using base::Bit;
+
+using graphics::Alignment;
 
 AbstractView::DeleterType AbstractView::kDefaultDeleter = [](AbstractView *obj) {
   delete obj;
@@ -333,28 +337,28 @@ bool AbstractView::IsVisible() const {
   return p_->visible;
 }
 
-void AbstractView::AddAnchorTo(AbstractView *target, Alignment align, int distance) {
+void AbstractView::AddAnchorTo(AbstractView *target, int align, int distance) {
   if (target == p_->parent || this == target->p_->parent) {
     switch (align) {
-      case kAlignLeft: {
+      case Alignment::Horizontal::kLeft: {
         std::pair<Anchor *, Anchor *> pair = Anchor::MakePair(distance, this, target);
         p_->left_anchor_group.PushBack(pair.first);
         target->p_->left_anchor_group.PushBack(pair.second);
         break;
       }
-      case kAlignTop: {
+      case Alignment::Vertical::kTop: {
         std::pair<Anchor *, Anchor *> pair = Anchor::MakePair(distance, this, target);
         p_->top_anchor_group.PushBack(pair.first);
         target->p_->top_anchor_group.PushBack(pair.second);
         break;
       }
-      case kAlignRight: {
+      case Alignment::Horizontal::kRight: {
         std::pair<Anchor *, Anchor *> pair = Anchor::MakePair(distance, this, target);
         p_->right_anchor_group.PushBack(pair.first);
         target->p_->right_anchor_group.PushBack(pair.second);
         break;
       }
-      case kAlignBottom: {
+      case Alignment::Vertical::kBottom: {
         std::pair<Anchor *, Anchor *> pair = Anchor::MakePair(distance, this, target);
         p_->bottom_anchor_group.PushBack(pair.first);
         target->p_->bottom_anchor_group.PushBack(pair.second);
@@ -364,25 +368,25 @@ void AbstractView::AddAnchorTo(AbstractView *target, Alignment align, int distan
     }
   } else if (target->p_->parent == p_->parent) {
     switch (align) {
-      case kAlignLeft: {
+      case Alignment::Horizontal::kLeft: {
         std::pair<Anchor *, Anchor *> pair = Anchor::MakePair(distance, this, target);
         p_->right_anchor_group.PushBack(pair.first);
         target->p_->left_anchor_group.PushBack(pair.second);
         break;
       }
-      case kAlignTop: {
+      case Alignment::Vertical::kTop: {
         std::pair<Anchor *, Anchor *> pair = Anchor::MakePair(distance, this, target);
         p_->bottom_anchor_group.PushBack(pair.first);
         target->p_->top_anchor_group.PushBack(pair.second);
         break;
       }
-      case kAlignRight: {
+      case Alignment::Horizontal::kRight: {
         std::pair<Anchor *, Anchor *> pair = Anchor::MakePair(distance, this, target);
         p_->left_anchor_group.PushBack(pair.first);
         target->p_->right_anchor_group.PushBack(pair.second);
         break;
       }
-      case kAlignBottom: {
+      case Alignment::Vertical::kBottom: {
         std::pair<Anchor *, Anchor *> pair = Anchor::MakePair(distance, this, target);
         p_->top_anchor_group.PushBack(pair.first);
         target->p_->bottom_anchor_group.PushBack(pair.second);
@@ -395,12 +399,12 @@ void AbstractView::AddAnchorTo(AbstractView *target, Alignment align, int distan
   }
 }
 
-const AnchorGroup &AbstractView::GetAnchorGroup(Alignment align) const {
+const AnchorGroup &AbstractView::GetAnchorGroup(int align) const {
   switch (align) {
-    case kAlignLeft:return p_->left_anchor_group;
-    case kAlignTop:return p_->top_anchor_group;
-    case kAlignRight:return p_->right_anchor_group;
-    case kAlignBottom:return p_->bottom_anchor_group;
+    case Alignment::Horizontal::kLeft:return p_->left_anchor_group;
+    case Alignment::Vertical::kTop:return p_->top_anchor_group;
+    case Alignment::Horizontal::kRight:return p_->right_anchor_group;
+    case Alignment::Vertical::kBottom:return p_->bottom_anchor_group;
     default:return p_->left_anchor_group;
   }
 }

@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-#include "wiztk/graphics/abstract-backend.hpp"
+#include "wiztk/graphics/abstract-gl-backend.hpp"
 
 namespace wiztk {
 namespace graphics {
 
-AbstractBackend::AbstractBackend() = default;
+AbstractGLBackend::AbstractGLBackend() = default;
 
-AbstractBackend::~AbstractBackend() = default;
+AbstractGLBackend::~AbstractGLBackend() = default;
 
-void AbstractBackend::Setup(wiztk::graphics::AbstractSurface *surface) {
+void AbstractGLBackend::Setup(wiztk::graphics::AbstractSurface *surface) {
   OnSetup(surface);
 }
 
-void AbstractBackend::Release(wiztk::graphics::AbstractSurface *surface) {
+void AbstractGLBackend::Release(wiztk::graphics::AbstractSurface *surface) {
   OnRelease(surface);
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@
 #include "wiztk/base/deque.hpp"
 #include "wiztk/base/string.hpp"
 
+#include "wiztk/graphics/alignment.hpp"
 #include "clip-operation.hpp"
 
 #include <memory>
@@ -35,7 +36,7 @@ class SkCanvas;
 namespace wiztk {
 namespace graphics {
 
-// Forward declarations
+// Forward declarations:
 class Paint;
 class Path;
 class Matrix;
@@ -106,6 +107,12 @@ class Canvas {
   void DrawText(const std::string &text, float x, float y, const Paint &paint);
 
   void DrawText(const String &text, float x, float y, const Paint &paint);
+
+  void DrawAlignedText(const std::string &text,
+                       float x,
+                       float y,
+                       Alignment::Vertical vert,
+                       const Paint &paint);
 
   void DrawPaint(const Paint &paint);
 

@@ -31,6 +31,8 @@ namespace gui {
 */
 struct GLES2Backend::Private {
 
+  EGLContext egl_context = nullptr;
+
   EGLSurface egl_surface = nullptr;
 
   struct wl_egl_window *wl_egl_window = nullptr;

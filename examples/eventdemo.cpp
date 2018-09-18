@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#include "wiztk/graphics/alignment.hpp"
+
 #include <wiztk/gui/application.hpp>
 #include <wiztk/gui/window.hpp>
 #include <wiztk/gui/push-button.hpp>
@@ -21,6 +23,7 @@
 
 using namespace wiztk;
 using namespace wiztk::gui;
+using namespace wiztk::graphics;
 
 int main(int argc, char *argv[]) {
   Application app(argc, argv);
@@ -36,7 +39,7 @@ int main(int argc, char *argv[]) {
 
 //  button->AddAnchorTo(layout, wiztk::kAlignLeft, 20);
 //  button->AddAnchorTo(layout, wiztk::kAlignTop, 20);
-  button->AddAnchorTo(layout, wiztk::kAlignRight, 20);
+  button->AddAnchorTo(layout, Alignment::kRight, 20);
 //  button->AddAnchorTo(layout, wiztk::kAlignBottom, 20);
 
   win.SetContentView(layout);

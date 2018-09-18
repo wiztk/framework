@@ -135,31 +135,25 @@ void Label::OnKeyUp(KeyEvent *event) {
 void Label::OnDraw(const Context &context) {
   using graphics::Canvas;
   using graphics::Paint;
+  using graphics::Alignment;
 
+  Canvas* const canvas = context.canvas();
   int scale = context.surface()->GetScale();
   const RectF rect = GetBounds() * scale;
 
   Paint paint;
   paint.SetColor(p_->back_color);
-  context.canvas()->DrawRect(rect, paint);
+  canvas->DrawRect(rect, paint);
 
   paint.SetColor(p_->fore_color);
   paint.SetAntiAlias(true);
   paint.SetStyle(Paint::kStyleFill);
   paint.SetFont(p_->font);
   paint.SetTextSize(p_->font.GetSize() * scale);
+  paint.SetTextAlign(Alignment::Horizontal::kCenter);
 
-//  float text_width = paint.MeasureText(p_->text.c_str(), p_->text.length());
-//
-//  TextBox text_box;
-//  // Put the text at the center
-//  text_box.SetBox(rect.l + (rect.width() - text_width) / 2.f,
-//                  rect.t + 1.f, // move down a little for better look
-//                  rect.r - (rect.width() - text_width) / 2.f,
-//                  rect.b);
-//  text_box.SetSpacingAlign(TextBox::kSpacingAlignCenter);
-//  text_box.SetText(p_->text.c_str(), p_->text.length(), paint);
-//  text_box.Draw(*context.canvas());
+  paint.SetTextAlign(Alignment::kCenter);
+  canvas->DrawAlignedText(p_->text, rect.center_x(), rect.center_y(), Alignment::kMiddle, paint);
 }
 
 } // namespace gui

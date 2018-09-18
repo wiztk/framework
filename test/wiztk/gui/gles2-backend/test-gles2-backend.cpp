@@ -19,7 +19,7 @@
 #include "wiztk/gui/application.hpp"
 #include "wiztk/gui/window.hpp"
 #include "wiztk/gui/push-button.hpp"
-#include "wiztk/gui/abstract-egl-backend.hpp"
+#include "wiztk/gui/gles2-backend.hpp"
 
 using namespace wiztk::gui;
 using namespace wiztk::graphics;
@@ -33,11 +33,14 @@ class Responder : public wiztk::base::Trackable {
 };
 
 void Responder::OnCheckGLES2Backend(wiztk::base::SLOT slot) {
-  AbstractEGLBackend backend1;
+  GLES2Backend backend1;
   ASSERT_TRUE(backend1.IsValid());
 
-  AbstractEGLBackend backend2;
+  GLES2Backend backend2;
   ASSERT_TRUE(backend2.IsValid());
+
+  fprintf(stdout, "1: major: %d, minor: %d\n", backend1.GetVersionMajor(), backend1.GetVersionMinor());
+  fprintf(stdout, "2: major: %d, minor: %d\n", backend2.GetVersionMajor(), backend2.GetVersionMinor());
 }
 
 /**

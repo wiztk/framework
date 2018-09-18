@@ -25,13 +25,29 @@
 namespace wiztk {
 namespace gui {
 
+/**
+ * @brief Private data used in AbstractEGLBackend.
+ */
 struct AbstractEGLBackend::Private {
 
+  /**
+   * @brief The native EGL display object.
+   */
   EGLDisplay egl_display = EGL_NO_DISPLAY;
+
+  /**
+   * @brief Major version number.
+   */
+  EGLint version_major = 0;
+
+  /**
+   * @brief Minor version numberl
+   */
+  EGLint version_minor = 0;
 
 };
 
-}
-}
+} // namespace gui
+} // namespace wiztk
 
 #endif // WIZTK_GUI_ABSTRACT_EGL_BACKEND_PRIVATE_HPP_

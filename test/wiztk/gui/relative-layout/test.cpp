@@ -16,6 +16,8 @@
 
 #include "test.hpp"
 
+#include "wiztk/graphics/alignment.hpp"
+
 #include <wiztk/gui/application.hpp>
 #include <wiztk/gui/window.hpp>
 #include <wiztk/gui/relative-layout.hpp>
@@ -25,6 +27,7 @@
 
 using namespace wiztk;
 using namespace wiztk::gui;
+using namespace wiztk::graphics;
 
 Test::Test()
     : testing::Test() {
@@ -82,7 +85,7 @@ TEST_F(Test, layout_left) {
   layout->AddView(button);
   button->MoveTo(200, 200);
 
-  button->AddAnchorTo(layout, wiztk::kAlignLeft, 20);
+  button->AddAnchorTo(layout, Alignment::kLeft, 20);
 //  button->AddAnchorTo(layout, wiztk::kAlignTop, 20);
 //  button->AddAnchorTo(layout, wiztk::kAlignRight, 20);
 //  button->AddAnchorTo(layout, wiztk::kAlignBottom, 20);
@@ -116,7 +119,7 @@ TEST_F(Test, layout_top) {
   button->MoveTo(200, 200);
 
 //  button->AddAnchorTo(layout, wiztk::kAlignLeft, 20);
-  button->AddAnchorTo(layout, wiztk::kAlignTop, 20);
+  button->AddAnchorTo(layout, Alignment::kTop, 20);
 //  button->AddAnchorTo(layout, wiztk::kAlignRight, 20);
 //  button->AddAnchorTo(layout, wiztk::kAlignBottom, 20);
 
@@ -150,7 +153,7 @@ TEST_F(Test, layout_right) {
 
 //  button->AddAnchorTo(layout, wiztk::kAlignLeft, 20);
 //  button->AddAnchorTo(layout, wiztk::kAlignTop, 20);
-  button->AddAnchorTo(layout, wiztk::kAlignRight, 20);
+  button->AddAnchorTo(layout, Alignment::kRight, 20);
 //  button->AddAnchorTo(layout, wiztk::kAlignBottom, 20);
 
   win.SetContentView(layout);
@@ -184,7 +187,7 @@ TEST_F(Test, layout_bottom) {
 //  button->AddAnchorTo(layout, wiztk::kAlignLeft, 20);
 //  button->AddAnchorTo(layout, wiztk::kAlignTop, 20);
 //  button->AddAnchorTo(layout, wiztk::kAlignRight, 20);
-  button->AddAnchorTo(layout, wiztk::kAlignBottom, 20);
+  button->AddAnchorTo(layout, Alignment::kBottom, 20);
 
   win.SetContentView(layout);
   win.Show();
@@ -214,10 +217,10 @@ TEST_F(Test, regular_2) {
   layout->AddView(button);
   button->MoveTo(200, 200);
 
-  button->AddAnchorTo(layout, wiztk::kAlignLeft, 20);
-  button->AddAnchorTo(layout, wiztk::kAlignTop, 20);
-  button->AddAnchorTo(layout, wiztk::kAlignRight, 20);
-  button->AddAnchorTo(layout, wiztk::kAlignBottom, 20);
+  button->AddAnchorTo(layout, Alignment::kLeft, 20);
+  button->AddAnchorTo(layout, Alignment::kTop, 20);
+  button->AddAnchorTo(layout, Alignment::kRight, 20);
+  button->AddAnchorTo(layout, Alignment::kBottom, 20);
 
   win.SetContentView(layout);
   win.Show();

@@ -20,7 +20,7 @@
 namespace wiztk {
 namespace gui {
 
-AnchorGroup::AnchorGroup(AbstractView *view, Alignment align)
+AnchorGroup::AnchorGroup(AbstractView *view, int align)
     : view_(view),
       alignment_(align),
       first_(nullptr),

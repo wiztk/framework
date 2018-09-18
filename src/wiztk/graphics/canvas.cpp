@@ -145,6 +145,35 @@ void Canvas::DrawText(const String &text, float x, float y, const Paint &paint) 
   p_->sk_canvas.drawText(utf8.data(), utf8.length(), x, y, paint.GetSkPaint());
 }
 
+void Canvas::DrawAlignedText(const std::string &text,
+                             float x,
+                             float y,
+                             Alignment::Vertical vert,
+                             const Paint &paint) {
+  RectF rect;
+  paint.MeasureText(text.c_str(), text.length(), &rect);
+
+  switch (vert) {
+    case Alignment::kTop: {
+      y = y - rect.top; // top is negative
+      break;
+    }
+    case Alignment::kMiddle: {
+      y = y - rect.top - rect.height() / 2.f;
+      break;
+    }
+    case Alignment::kBottom: {
+      y = y - (rect.height() + rect.top);
+      break;
+    }
+    case Alignment::kBaseline:
+    default:
+      break;
+  }
+
+  DrawText(text, x, y, paint);
+}
+
 void Canvas::DrawPaint(const Paint &paint) {
   p_->sk_canvas.drawPaint(paint.GetSkPaint());
 }

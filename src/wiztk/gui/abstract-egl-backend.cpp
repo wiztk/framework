@@ -23,15 +23,21 @@ namespace wiztk {
 namespace gui {
 
 AbstractEGLBackend::AbstractEGLBackend()
-    : AbstractBackend() {
+    : AbstractGLBackend() {
   p_ = std::make_unique<Private>();
 
   Display *display = Application::GetInstance()->GetDisplay();
   p_->egl_display = eglGetPlatformDisplay(EGL_PLATFORM_WAYLAND_KHR,
                                           Display::Proxy::wl_display(display),
                                           nullptr);
-  if (p_->egl_display == EGL_NO_DISPLAY) {
+  if (EGL_NO_DISPLAY == p_->egl_display) {
     _DEBUG("%s\n", "Fail to get egl display.");
+    throw std::runtime_error("Error! Fail to get EGL display!");
+  }
+
+  EGLBoolean ret = eglInitialize(p_->egl_display, &p_->version_major, &p_->version_minor);
+  if (EGL_TRUE != ret) {
+    _DEBUG("%s\n", "Fail to initialize EGL");
   }
 }
 
@@ -42,6 +48,14 @@ AbstractEGLBackend::~AbstractEGLBackend() {
 
 bool AbstractEGLBackend::IsValid() const {
   return EGL_NO_DISPLAY != p_->egl_display;
+}
+
+int AbstractEGLBackend::GetVersionMajor() const {
+  return p_->version_major;
+}
+
+int AbstractEGLBackend::GetVersionMinor() const {
+  return p_->version_minor;
 }
 
 } // namespace gui

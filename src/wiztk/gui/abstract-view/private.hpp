@@ -19,6 +19,8 @@
 
 #include "wiztk/gui/abstract-view.hpp"
 
+#include "wiztk/graphics/alignment.hpp"
+
 #include "wiztk/gui/anchor.hpp"
 #include "wiztk/gui/anchor-group.hpp"
 
@@ -49,10 +51,10 @@ WIZTK_NO_EXPORT struct AbstractView::Private {
         y_layout_policy(kLayoutPreferred),
         geometry_message(view),
         redraw_node(view),
-        left_anchor_group(view, kAlignLeft),
-        top_anchor_group(view, kAlignTop),
-        right_anchor_group(view, kAlignRight),
-        bottom_anchor_group(view, kAlignBottom),
+        left_anchor_group(view, graphics::Alignment::Horizontal::kLeft),
+        top_anchor_group(view, graphics::Alignment::Vertical::kTop),
+        right_anchor_group(view, graphics::Alignment::Horizontal::kRight),
+        bottom_anchor_group(view, graphics::Alignment::Vertical::kBottom),
         layout(nullptr) {}
 
   ~Private() = default;

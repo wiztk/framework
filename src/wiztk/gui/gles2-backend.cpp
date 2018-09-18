@@ -28,6 +28,51 @@ GLES2Backend::GLES2Backend()
     : AbstractEGLBackend() {
   p_ = std::make_unique<Private>();
 
+  EGLBoolean ret = eglBindAPI(EGL_OPENGL_ES_API);
+  if (EGL_TRUE != ret) {
+    _DEBUG("%s\n", "Cannot bind OpenGL ES API!");
+    throw std::runtime_error("Error! Fail to bind OpenGL ES API!");
+  }
+
+  EGLint count, n, size;
+
+  EGLint config_attribs[] = {
+      EGL_SURFACE_TYPE, EGL_WINDOW_BIT, // TODO: support PIXMAP/PBUFFER
+      EGL_RED_SIZE, 8,
+      EGL_GREEN_SIZE, 8,
+      EGL_BLUE_SIZE, 8,
+      EGL_ALPHA_SIZE, 8,
+      EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
+      EGL_NONE
+  };
+  const EGLint context_attribs[] = {
+      EGL_CONTEXT_CLIENT_VERSION, 2,
+      EGL_NONE
+  };
+
+  EGLDisplay egl_display = AbstractEGLBackend::p_->egl_display;
+  EGLConfig egl_config = nullptr;
+
+  eglGetConfigs(egl_display, nullptr, 0, &count);
+  auto *configs = (EGLConfig *) calloc((size_t) count, sizeof(EGLConfig));
+  eglChooseConfig(egl_display, config_attribs, configs, count, &n);
+  for (int i = 0; i < n; i++) {
+    eglGetConfigAttrib(egl_display, configs[i], EGL_BUFFER_SIZE, &size);
+    if (32 == size) {
+      // TODO: config buffer size
+      egl_config = configs[i];
+      break;
+    }
+  }
+  free(configs);
+  _ASSERT(egl_config);
+
+  p_->egl_context = eglCreateContext(egl_display, egl_config, EGL_NO_CONTEXT, context_attribs);
+  if (nullptr == p_->egl_context) {
+    _DEBUG("%s\n", "Fail to create EGL context!");
+    throw std::runtime_error("Error! Cannot create EGL Context!");
+  }
+
 //  Display *display = Application::GetInstance()->GetDisplay();
 //  p_->wl_egl_window = wl_egl_window_create(Proxy::GetWaylandSurface(surface), 400, 300);
 //  p_->egl_surface = eglCreatePlatformWindowSurface(AbstractEGLBackend::p_->egl_display,
@@ -42,6 +87,9 @@ GLES2Backend::~GLES2Backend() {
 //  Display *display = Application::GetInstance()->GetDisplay();
 //  eglDestroySurface(Display::Proxy::egl_display(display), p_->egl_surface);
 //  wl_egl_window_destroy(p_->wl_egl_window);
+  if (nullptr != p_->egl_context) {
+    eglDestroyContext(AbstractEGLBackend::p_->egl_display, p_->egl_context);
+  }
 }
 
 } // namespace gui

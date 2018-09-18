@@ -25,9 +25,6 @@
 namespace wiztk {
 namespace graphics {
 
-using base::RectF;
-using base::ColorF;
-
 struct Paint::Private {
 
   Private() = default;
@@ -86,7 +83,7 @@ void Paint::SetStyle(Style style) {
   p_->sk_paint.setStyle(static_cast<SkPaint::Style>(style));
 }
 
-ColorF Paint::GetColor() const {
+Paint::ColorF Paint::GetColor() const {
   uint32_t value = p_->sk_paint.getColor();
   return ColorF::FromRGBA(SkToU8(SkColorGetR(value)),
                           SkToU8(SkColorGetG(value)),
@@ -121,11 +118,11 @@ void Paint::SetShader(const Shader &shader) {
   p_->sk_paint.setShader(shader.p_->sk_shader);
 }
 
-Paint::Align Paint::GetTextAlign() const {
-  return static_cast<Align>(p_->sk_paint.getTextAlign());
+Alignment::Horizontal Paint::GetTextAlign() const {
+  return static_cast<Alignment::Horizontal>(p_->sk_paint.getTextAlign());
 }
 
-void Paint::SetTextAlign(Align align) {
+void Paint::SetTextAlign(Alignment::Horizontal align) {
   p_->sk_paint.setTextAlign(static_cast<SkPaint::Align>(align));
 }
 

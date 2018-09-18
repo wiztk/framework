@@ -393,9 +393,9 @@ WIZTK_EXPORT class AbstractView : public AbstractEventHandler {
    * @note This method does not check if there's already anchors connect these 2
    * views.
    */
-  void AddAnchorTo(AbstractView *target, Alignment align, int distance);
+  void AddAnchorTo(AbstractView *target, int align, int distance);
 
-  const AnchorGroup &GetAnchorGroup(Alignment align) const;
+  const AnchorGroup &GetAnchorGroup(int align) const;
 
   /**
    * @brief Update the display of this widget
