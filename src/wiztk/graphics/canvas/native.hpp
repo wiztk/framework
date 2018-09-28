@@ -14,22 +14,25 @@
  * limitations under the License.
  */
 
-#include "wiztk/graphics/abstract-gl-backend.hpp"
+#ifndef WIZTK_FRAMEWORK_NATIVE_HPP
+#define WIZTK_FRAMEWORK_NATIVE_HPP
+
+#include "private.hpp"
 
 namespace wiztk {
 namespace graphics {
 
-AbstractGLBackend::AbstractGLBackend() = default;
+class Canvas::Native {
 
-AbstractGLBackend::~AbstractGLBackend() = default;
+ public:
 
-void AbstractGLBackend::Setup(wiztk::graphics::AbstractSurface *surface) {
-  OnSetup(surface);
-}
+  static inline SkCanvas* sk_canvas(const Canvas* canvas) {
+    return &canvas->p_->sk_canvas;
+  }
 
-void AbstractGLBackend::Release(wiztk::graphics::AbstractSurface *surface) {
-  OnRelease(surface);
-}
+};
 
-} // namespace graphics
-} // namespace wiztk
+} // graphics
+} // wiztk
+
+#endif //WIZTK_FRAMEWORK_NATIVE_HPP

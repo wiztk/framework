@@ -14,7 +14,7 @@
 
 set(
         graphics_sources
-        ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/abstract-gl-backend.hpp
+        ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/abstract-rendering-backend.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/abstract-surface.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/alignment.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/text-alignment.hpp
@@ -31,11 +31,12 @@ set(
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/shader.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/surface.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/typeface.hpp
-        abstract-gl-backend.cpp
+        abstract-rendering-backend.cpp
         abstract-surface/private.hpp
         abstract-surface.cpp
         bitmap/private.hpp
         bitmap.cpp
+        canvas/native.hpp
         canvas/private.hpp
         canvas.cpp
         font/private.hpp

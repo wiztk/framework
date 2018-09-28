@@ -17,7 +17,7 @@
 #ifndef WIZTK_GUI_ABSTRACT_EGL_BACKEND_HPP_
 #define WIZTK_GUI_ABSTRACT_EGL_BACKEND_HPP_
 
-#include "wiztk/graphics/abstract-gl-backend.hpp"
+#include "wiztk/graphics/abstract-rendering-backend.hpp"
 
 #include <memory>
 
@@ -28,7 +28,7 @@ namespace gui {
  * @ingroup gui
  * @brief Abstract EGL graphic backend.
  */
-class WIZTK_EXPORT AbstractEGLBackend : public graphics::AbstractGLBackend {
+class WIZTK_EXPORT AbstractEGLBackend : public graphics::AbstractRenderingBackend {
 
  public:
 

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHIC_CANVAS_HPP_
-#define WIZTK_GRAPHIC_CANVAS_HPP_
+#ifndef WIZTK_GRAPHICS_CANVAS_HPP_
+#define WIZTK_GRAPHICS_CANVAS_HPP_
 
 #include "wiztk/base/types.hpp"
 #include "wiztk/base/size.hpp"
@@ -26,7 +26,7 @@
 #include "wiztk/base/string.hpp"
 
 #include "wiztk/graphics/text-alignment.hpp"
-#include "clip-operation.hpp"
+#include "wiztk/graphics/clip-operation.hpp"
 
 #include <memory>
 
@@ -46,7 +46,13 @@ class ViewSurface;
 
 /**
  * @ingroup graphics
- * @brief Canvas for drawing
+ *
+ * @brief A canvas is a container that holds various drawing elements
+ *
+ * A canvas is a container that holds various drawing elements (lines, shapes,
+ * text, frames containing other elements, etc.). It takes its name from the
+ * canvas used in visual arts. It arranges the logical representation of a user
+ * interface or graphical scene.
  */
 class Canvas {
 
@@ -54,12 +60,21 @@ class Canvas {
 
  public:
 
-  using RectF = base::RectF;
-  using String = base::String;
+  /// @brief A type alias refers to base::RectF
+  using RectF   = base::RectF;
+
+  /// @brief A type alias refers to base::String
+  using String  = base::String;
+
+  /// @brief A type alias refers to base::Point2F
+  using Point2F = base::Point2F;
+
+  class Native;
+  class LockGuard;
+
+ public:
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Canvas);
-
-  class LockGuard;
 
   static Canvas *CreateRasterDirect(int width,
                                     int height,
@@ -168,7 +183,7 @@ class Canvas {
 
   void Flush();
 
-  const base::Point2F &GetOrigin() const;
+  const Point2F &GetOrigin() const;
 
   SkCanvas *GetSkCanvas() const;
 
@@ -306,4 +321,4 @@ class Canvas::LockGuard {
 } // namespace graphics
 } // namespace wiztk
 
-#endif // WIZTK_GRAPHIC_CANVAS_HPP_
+#endif // WIZTK_GRAPHICS_CANVAS_HPP_

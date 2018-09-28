@@ -34,3 +34,10 @@ target_link_libraries(theme wiztk-gui)
 
 add_executable(player player.cpp)
 target_link_libraries(player wiztk-gui)
+
+find_package(GLFW)
+if (GLFW_FOUND)
+    add_executable(vulkan-triangle vulkan-triangle.cpp)
+    target_link_libraries(vulkan-triangle wiztk-gui ${GLFW_LIBRARIES})
+    target_include_directories(vulkan-triangle PUBLIC ${GLFW_INCLUDE_DIR})
+endif ()

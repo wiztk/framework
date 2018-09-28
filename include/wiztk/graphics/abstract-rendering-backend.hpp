@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHICS_ABSTRACT_GL_BACKEND_HPP_
-#define WIZTK_GRAPHICS_ABSTRACT_GL_BACKEND_HPP_
+#ifndef WIZTK_GRAPHICS_ABSTRACT_RENDERING_BACKEND_HPP_
+#define WIZTK_GRAPHICS_ABSTRACT_RENDERING_BACKEND_HPP_
 
 #include "wiztk/base/macros.hpp"
 
@@ -34,11 +34,11 @@ class AbstractSurface;
  * - OpenGL 4.x
  * - Vulkan
  */
-class WIZTK_EXPORT AbstractGLBackend {
+class WIZTK_EXPORT AbstractRenderingBackend {
 
  public:
 
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(AbstractGLBackend);
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(AbstractRenderingBackend);
 
   class Attribute {
    public:
@@ -46,9 +46,9 @@ class WIZTK_EXPORT AbstractGLBackend {
     virtual ~Attribute() = default;
   };
 
-  AbstractGLBackend();
+  AbstractRenderingBackend();
 
-  virtual ~AbstractGLBackend();
+  virtual ~AbstractRenderingBackend();
 
   void Setup(AbstractSurface *surface);
 
@@ -65,4 +65,4 @@ class WIZTK_EXPORT AbstractGLBackend {
 } // namespace graphics
 } // namespace wiztk
 
-#endif // WIZTK_GRAPHICS_ABSTRACT_BACKEND_HPP_
+#endif // WIZTK_GRAPHICS_ABSTRACT_RENDERING_BACKEND_HPP_
