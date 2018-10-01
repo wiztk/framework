@@ -80,7 +80,7 @@ class MainWidget : public AbstractView {
     event->Ignore();
   }
 
-  virtual void OnDraw(const Context &context) override {
+  void OnDraw(const Context &context) override {
     using wiztk::graphics::Canvas;
     using wiztk::graphics::Paint;
 

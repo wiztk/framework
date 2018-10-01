@@ -39,15 +39,13 @@ Bitmap &Bitmap::operator=(const Bitmap &other) {
   return *this;
 }
 
-Bitmap::~Bitmap() {
-
-}
+Bitmap::~Bitmap() = default;
 
 void Bitmap::AllocatePixels(const ImageInfo &info) {
-  p_->sk_bitmap.allocPixels(SkImageInfo::Make(info.width(),
-                                              info.height(),
-                                              static_cast<SkColorType>(info.color_type()),
-                                              static_cast<SkAlphaType>(info.alpha_type())));
+  p_->sk_bitmap.allocPixels(SkImageInfo::Make(info.GetWidth(),
+                                              info.GetHeight(),
+                                              static_cast<SkColorType>(info.GetColorType()),
+                                              static_cast<SkAlphaType>(info.GetAlphaType())));
 }
 
 void Bitmap::AllocateN32Pixels(int width, int height, bool is_opaque) {
@@ -55,10 +53,10 @@ void Bitmap::AllocateN32Pixels(int width, int height, bool is_opaque) {
 }
 
 bool Bitmap::InstallPixels(const ImageInfo &info, void *pixels, size_t row_bytes) {
-  return p_->sk_bitmap.installPixels(SkImageInfo::Make(info.width(),
-                                                       info.height(),
-                                                       static_cast<SkColorType >(info.color_type()),
-                                                       static_cast<SkAlphaType >(info.alpha_type())),
+  return p_->sk_bitmap.installPixels(SkImageInfo::Make(info.GetWidth(),
+                                                       info.GetHeight(),
+                                                       static_cast<SkColorType >(info.GetColorType()),
+                                                       static_cast<SkAlphaType >(info.GetAlphaType())),
                                      pixels,
                                      row_bytes);
 }

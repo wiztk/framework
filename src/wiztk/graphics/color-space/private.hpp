@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHICS_IMAGE_INFO_PRIVATE_HPP_
-#define WIZTK_GRAPHICS_IMAGE_INFO_PRIVATE_HPP_
+#ifndef WIZTK_GRAPHICS_COLOR_SPACE_PRIVATE_HPP_
+#define WIZTK_GRAPHICS_COLOR_SPACE_PRIVATE_HPP_
 
-#include "wiztk/graphics/image-info.hpp"
+#include "wiztk/graphics/color-space.hpp"
 
-#include "SkImageInfo.h"
+#include "SkColorSpace.h"
 
 namespace wiztk {
 namespace graphics {
 
 /**
- * @brief Private data for ImageInfo
+ * @brief Private structure used in ColorSpace
  */
-struct ImageInfo::Private {
+struct ColorSpace::Private {
 
   Private() = default;
 
@@ -35,17 +35,17 @@ struct ImageInfo::Private {
 
   Private(Private &&) = default;
 
-  ~Private() = default;
-
   Private &operator=(const Private &) = default;
 
   Private &operator=(Private &&) = default;
 
-  SkImageInfo sk_image_info;
+  ~Private() = default;
+
+  sk_sp<SkColorSpace> sk_sp_color_space;
 
 };
 
 } // namespace graphics
 } // namespace wiztk
 
-#endif // WIZTK_GRAPHIC_INTERNAL_IMAGE_INFO_PRIVATE_HPP_
+#endif // WIZTK_GRAPHICS_COLOR_SPACE_PRIVATE_HPP_

@@ -20,6 +20,7 @@ set(
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/text-alignment.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/bitmap.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/canvas.hpp
+        ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/color-space.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/clip-operation.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/font.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/font-style.hpp
@@ -39,6 +40,8 @@ set(
         canvas/native.hpp
         canvas/private.hpp
         canvas.cpp
+        color-space/private.hpp
+        color-space.cpp
         font/private.hpp
         font.cpp
         font-style/private.hpp

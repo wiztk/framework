@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,14 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHIC_IMAGE_INFO_HPP_
-#define WIZTK_GRAPHIC_IMAGE_INFO_HPP_
+#ifndef WIZTK_GRAPHICS_IMAGE_INFO_HPP_
+#define WIZTK_GRAPHICS_IMAGE_INFO_HPP_
+
+#include "wiztk/base/macros.hpp"
+
+#include "wiztk/graphics/color-space.hpp"
+
+#include <memory>
 
 namespace wiztk {
 namespace graphics {
@@ -25,14 +31,10 @@ namespace graphics {
  * @brief Describes how to interpret the alpha component of a pixel
  */
 enum AlphaType {
-  kAlphaTypeUnknown,
-
-  kAlphaTypeOpaque,
-
+  kAlphaTypeUnknown,                    ///< Uninitialized
+  kAlphaTypeOpaque,                     ///< Pixel is opaque
   kAlphaTypePremul,
-
   kAlphaTypeUnpremul,
-
   kAlphaTypeLast = kAlphaTypeUnpremul
 };
 
@@ -47,19 +49,22 @@ enum ColorType {
   kColorTypeRGB565,
   kColorTypeARGB4444,
   kColorTypeRGBA8888,
+  kColorTypeRGB888x,
   kColorTypeBGRA8888,
-  kColorTypeIndex8,
+  kColorTypeRGBA1010102,
+  kColorTypeRGB101010x,
   kColorTypeGray8,
   kColorTypeRGBAF16,
+  kColorTypeRGBAF32,
 
-  kColorTypeLast = kColorTypeRGBAF16
+  kColorTypeLast = kColorTypeRGBAF32
 };
 
 /**
  * @ingroup graphics
- * @brief Describes an images' dimensions and pixel type
+ * @brief Describes pixel dimensions and encoding
  */
-class ImageInfo {
+class WIZTK_EXPORT ImageInfo {
 
   friend class Bitmap;
   friend class ViewSurface;
@@ -67,53 +72,45 @@ class ImageInfo {
 
  public:
 
-  static ImageInfo Make(int width, int height, ColorType ct, AlphaType at) {
-    return ImageInfo(width, height, ct, at);
-  }
+  static ImageInfo Make(int width, int height, ColorType ct, AlphaType at);
 
-  static ImageInfo MakeN32Premul(int width, int height) {
-    return ImageInfo(width, height, kColorTypeBGRA8888, kAlphaTypePremul);
-  }
+  static ImageInfo Make(int width, int height, ColorType ct, AlphaType at, const ColorSpace &cs);
 
-  ImageInfo() = default;
+  static ImageInfo MakeN32Premul(int width, int height);
 
-  ImageInfo(const ImageInfo &orig) = default;
+  static ImageInfo MakeN32Premul(int width, int height, const ColorSpace &cs);
 
-  ~ImageInfo() = default;
+  ImageInfo(const ImageInfo &other);
 
-  ImageInfo &operator=(const ImageInfo &other) = default;
+  ImageInfo(ImageInfo &&other) noexcept;
 
-  int width() const { return width_; }
+  ~ImageInfo();
 
-  int height() const { return height_; }
+  ImageInfo &operator=(const ImageInfo &other);
 
-  ColorType color_type() const { return color_type_; }
+  ImageInfo &operator=(ImageInfo &&other) noexcept;
 
-  AlphaType alpha_type() const { return alpha_type_; }
+  int GetWidth() const;
 
-  void reset() {
-    width_ = 0;
-    height_ = 0;
-    color_type_ = kColorTypeUnknown;
-    alpha_type_ = kAlphaTypeUnknown;
-  }
+  int GetHeight() const;
+
+  ColorType GetColorType() const;
+
+  AlphaType GetAlphaType() const;
+
+  void Reset();
 
  private:
 
-  ImageInfo(int width, int height, ColorType color_type, AlphaType alpha_type)
-      : width_(width),
-        height_(height),
-        color_type_(color_type),
-        alpha_type_(alpha_type) {}
+  struct Private;
 
-  int width_ = 0;
-  int height_ = 0;
-  ColorType color_type_ = kColorTypeUnknown;
-  AlphaType alpha_type_ = kAlphaTypeUnknown;
+  ImageInfo();
+
+  std::unique_ptr<Private> p_;
 
 };
 
 } // namespace graphics
 } // namespace wiztk
 
-#endif // WIZTK_GRAPHIC_IMAGE_INFO_HPP_
+#endif // WIZTK_GRAPHICS_IMAGE_INFO_HPP_

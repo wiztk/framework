@@ -12,16 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
+file(GLOB sources "*.cpp")
+file(GLOB headers "*.hpp")
 
-# graphics
-add_subdirectory(font)
-add_subdirectory(font-style)
-add_subdirectory(color-space)
-add_subdirectory(image-info)
-add_subdirectory(gradient-shader)
-add_subdirectory(path)
-add_subdirectory(typeface)
-add_subdirectory(paint)
-add_subdirectory(canvas)
-
+add_executable(graphics-color-space ${sources} ${headers})
+target_link_libraries(graphics-color-space ${GTEST_LIBRARIES} wiztk-graphics)

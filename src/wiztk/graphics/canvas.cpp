@@ -88,10 +88,10 @@ void Canvas::SetOrigin(float x, float y) {
 }
 
 ViewSurface *Canvas::CreateSurface(const ImageInfo &info) {
-  sk_sp<SkSurface> native = p_->sk_canvas.makeSurface(SkImageInfo::Make(info.width(),
-                                                                        info.height(),
-                                                                        static_cast<SkColorType >(info.color_type()),
-                                                                        static_cast<SkAlphaType >(info.alpha_type())));
+  sk_sp<SkSurface> native = p_->sk_canvas.makeSurface(SkImageInfo::Make(info.GetWidth(),
+                                                                        info.GetHeight(),
+                                                                        static_cast<SkColorType >(info.GetColorType()),
+                                                                        static_cast<SkAlphaType >(info.GetAlphaType())));
   // TODO: create surface
   return nullptr;
 }
