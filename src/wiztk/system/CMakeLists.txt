@@ -20,7 +20,6 @@ set(
         ${PROJECT_SOURCE_DIR}/include/wiztk/system/threading/mutex.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/system/threading/thread.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/system/threading/thread-local.hpp
-        ${PROJECT_SOURCE_DIR}/include/wiztk/system/threading/thread-state.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/system/time/clock.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/system/time/delta.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/system/time/realtime-clock.hpp
@@ -28,8 +27,8 @@ set(
         logging/logger.cpp
         threading/main-thread.cpp
         threading/thread.cpp
-        threading/thread_private.cpp
-        threading/thread_private.hpp
+        threading/thread/private.cpp
+        threading/thread/private.hpp
         time/clock.cpp
         time/delta.cpp
         time/realtime-clock.cpp

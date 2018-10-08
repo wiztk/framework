@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "thread_private.hpp"
+#include "thread/private.hpp"
 
 #include <stdexcept>
 
@@ -33,7 +33,7 @@ Thread::ID Thread::ID::GetCurrent() {
 /**
  * @brief A helper class to set/get low-level thread attributes.
  */
-class Thread::Attribute {
+class WIZTK_NO_EXPORT Thread::Attribute {
   friend class Thread;
 
  public:
@@ -41,18 +41,18 @@ class Thread::Attribute {
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Attribute);
 
   enum DetachStateType {
-    kDetachStateCreateDetached = PTHREAD_CREATE_DETACHED,
-    kDetachStateCreateJoinable = PTHREAD_CREATE_JOINABLE
+    kCreateDetached = PTHREAD_CREATE_DETACHED,
+    kCreateJoinable = PTHREAD_CREATE_JOINABLE
   };
 
   enum ScopeType {
-    kScopeSystem = PTHREAD_SCOPE_SYSTEM,
-    kScopeProcess = PTHREAD_SCOPE_PROCESS
+    kSystem = PTHREAD_SCOPE_SYSTEM,
+    kProcess = PTHREAD_SCOPE_PROCESS
   };
 
   enum SchedulerType {
-    kSchedulerInherit = PTHREAD_INHERIT_SCHED,
-    kSchedulerExplicit = PTHREAD_EXPLICIT_SCHED
+    kInheritSched = PTHREAD_INHERIT_SCHED,
+    kExplicitSched = PTHREAD_EXPLICIT_SCHED
   };
 
   Attribute();
@@ -71,6 +71,8 @@ class Thread::Attribute {
 
   size_t GetStackSize() const;
 
+  const pthread_attr_t *data() const { return &native_; }
+
  private:
 
   pthread_attr_t native_;
@@ -79,27 +81,24 @@ class Thread::Attribute {
 
 // -------
 
-const Thread::DelegateDeleterType Thread::kDefaultDelegateDeleter = [](Delegate *obj) {
+const Thread::DelegateDeleter Thread::kDefaultDelegateDeleter = [](Delegate *obj) {
   delete obj;
 };
 
-const Thread::DelegateDeleterType Thread::kLeakyDelegateDeleter = [](Delegate *obj) {
-  // Warning: do nothing!
+const Thread::DelegateDeleter Thread::kLeakyDelegateDeleter = [](Delegate *obj) {
+  // WARNING: do nothing!
 };
 
 Thread::Thread() {
   p_ = std::make_unique<Private>();
 }
 
-Thread::Thread(Delegate *delegate, const DelegateDeleterType &deleter)
-    : Thread() {
-  p_->delegate = delegate;
-  p_->delegate_deleter = deleter;
+Thread::Thread(Delegate *delegate, const DelegateDeleter &deleter) {
+  p_ = std::make_unique<Private>(delegate, deleter);
 }
 
-Thread::Thread(const Options &option)
-    : Thread() {
-  // TODO: process option
+Thread::Thread(const Options &options) {
+  p_ = std::make_unique<Private>(options);
 }
 
 Thread::Thread(Thread &&other) noexcept {
@@ -108,8 +107,6 @@ Thread::Thread(Thread &&other) noexcept {
 
 Thread::~Thread() {
   Stop();
-
-  if (p_->delegate_deleter) p_->delegate_deleter(p_->delegate);
 }
 
 Thread &Thread::operator=(Thread &&other) noexcept {
@@ -121,8 +118,15 @@ void Thread::Start() {
   typedef void *(*fn)(void *);
   int ret = 0;
 
+  Attribute attr;
+
+  p_->options.joinable ? attr.SetDetachState(Attribute::kCreateJoinable)
+                       : attr.SetDetachState(Attribute::kCreateDetached);
+
+  if (p_->options.stack_size > 0) attr.SetStackSize(p_->options.stack_size);
+
   ret = pthread_create(&p_->id.native_,
-                       nullptr,
+                       attr.data(),
                        reinterpret_cast<fn>(Thread::Private::StartRoutine),
                        this);
 
@@ -130,7 +134,7 @@ void Thread::Start() {
 }
 
 void Thread::Start(const Options &options) {
-
+  // TODO: implement this method
 }
 
 void Thread::Stop() {
@@ -157,6 +161,18 @@ const Thread::ID &Thread::GetID() const {
 Thread *Thread::GetCurrent() {
   return Specific::kPerThreadStorage.Get()->thread;
 }
+
+void Thread::Run() {
+  // Override in subclass
+}
+
+// ----
+
+void Thread::Delegate::Run() {
+  // Override in subclass
+}
+
+// ----
 
 bool operator==(const Thread::ID &id1, const Thread::ID &id2) {
   return 0 != pthread_equal(id1.native_, id2.native_);

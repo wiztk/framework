@@ -40,26 +40,35 @@ namespace threading {
  */
 class WIZTK_EXPORT Thread {
 
-  friend class MessageLoop;
   friend class MainThread;
 
  public:
 
   WIZTK_DECLARE_NONCOPYABLE(Thread);
 
-  /**d
+  /**
    * @brief A nested class represents a thread ID.
    */
   class ID;
+
+  /**
+   * @brief Enumeration indicates the state of a Thread.
+   */
+  enum State {
+    kNew, /**< A thread that has not started */
+    kRunning, /**< The thread has been started */
+    kTerminated /**< A thread that has exited */
+  };
+
+  /**
+   * @brief A nested class represents a runnable delegate run in thread.
+   */
   class Delegate;
 
   /**
    * @brief A structure to be used when constructing a Thread object only.
    */
   struct WIZTK_EXPORT Options {
-
-    Options() = default;
-    ~Options() = default;
 
     /**
      * @brief The stack size for the thread to use.
@@ -68,21 +77,27 @@ class WIZTK_EXPORT Thread {
      */
     size_t stack_size = 0;
 
+    /**
+     * @brief If the thread is created joinable.
+     */
     bool joinable = true;
 
   };
 
-  typedef std::function<void(Delegate *)> DelegateDeleterType;
+  /**
+   * @brief A function object to delete Delegate object in destructor.
+   */
+  typedef std::function<void(Delegate *)> DelegateDeleter;
 
   /**
    * @brief A default function object which will delete delegate in destructor.
    */
-  static const DelegateDeleterType kDefaultDelegateDeleter;
+  static const DelegateDeleter kDefaultDelegateDeleter;
 
   /**
    * @brief Alternate function object which will not clean up Delegate.
    */
-  static const DelegateDeleterType kLeakyDelegateDeleter;
+  static const DelegateDeleter kLeakyDelegateDeleter;
 
  public:
 
@@ -91,15 +106,36 @@ class WIZTK_EXPORT Thread {
    */
   Thread();
 
+  /**
+   * @brief Constructor with a Delegate object.
+   * @param delegate
+   * @param deleter
+   */
   explicit Thread(Delegate *delegate,
-                  const DelegateDeleterType &deleter = kDefaultDelegateDeleter);
+                  const DelegateDeleter &deleter = kDefaultDelegateDeleter);
 
-  explicit Thread(const Options &option);
+  /**
+   * @brief Constructor with options.
+   * @param options
+   */
+  explicit Thread(const Options &options);
 
+  /**
+   * @brief Move constructor.
+   * @param other
+   */
   Thread(Thread &&other) noexcept;
 
+  /**
+   * @brief Destructor.
+   */
   virtual ~Thread();
 
+  /**
+   * @brief Move assignment.
+   * @param other
+   * @return
+   */
   Thread &operator=(Thread &&other) noexcept;
 
   /**
@@ -142,7 +178,16 @@ class WIZTK_EXPORT Thread {
 
  protected:
 
-  virtual void Run() {/* Override in sub class */}
+  /**
+   * @brief A virtual method for subclass to run the routine in this thread.
+   *
+   * If this thread was constructed using a separate Delegate object, then that
+   * Delegate object's Run() method is called; otherwise, this method does
+   * nothing and returns.
+   *
+   * Subclasses of Thread should override this method.
+   */
+  virtual void Run();
 
  private:
 
@@ -157,26 +202,28 @@ class WIZTK_EXPORT Thread {
 /**
  * @brief Thread delegate.
  */
-class Thread::Delegate : public base::AbstractRunnable<> {
+class WIZTK_EXPORT Thread::Delegate : public base::AbstractRunnable<> {
   friend class Thread;
 
  public:
 
+  /** @brief Default constructor. */
   Delegate() = default;
+
+  /** @brief Default destructor. */
   ~Delegate() override = default;
 
  protected:
 
-  void Run() override {
-    // TODO: Override in subclass
-  }
+  /** @brief Virtual function to be overrided in subclass */
+  void Run() override;
 
 };
 
 /**
  * @brief Thread ID
  */
-class Thread::ID {
+class WIZTK_EXPORT Thread::ID {
 
   friend class Thread;
   friend bool operator==(const Thread::ID &id1, const Thread::ID &id2);
@@ -186,12 +233,18 @@ class Thread::ID {
 
   WIZTK_DECLARE_NONCOPYABLE(ID);
 
+  /** @brief Default constructor. */
   ID() {
     native_ = pthread_self();
   }
 
+  /** @brief Default move constructor. */
   ID(ID &&) = default;
+
+  /** @brief Default destructor. */
   ~ID() = default;
+
+  /** @brief Default move assignment. */
   ID &operator=(ID &&) = default;
 
   /**

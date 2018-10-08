@@ -44,8 +44,6 @@ class ThreadLocal {
     }
   }
 
-  // TODO: another constructor with deleter
-
   /**
    * @brief Destructor.
    */

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "thread_private.hpp"
+#include "private.hpp"
 
 namespace wiztk {
 namespace system {

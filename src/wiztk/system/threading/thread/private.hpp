@@ -19,7 +19,6 @@
 
 #include "wiztk/system/threading/thread.hpp"
 #include "wiztk/system/threading/thread-local.hpp"
-#include "wiztk/system/threading/thread-state.hpp"
 
 namespace wiztk {
 namespace system {
@@ -34,15 +33,27 @@ struct Thread::Private {
 
   Private() = default;
 
-  ~Private() = default;
+  Private(Delegate *d, const DelegateDeleter &deleter)
+      : delegate(d), delegate_deleter(deleter) {}
+
+  explicit Private(const Options &options)
+      : options(options) {}
+
+  ~Private() {
+    if (nullptr != delegate) {
+      delegate_deleter(delegate);
+    }
+  }
 
   ID id;
 
+  Options options;
+
   Delegate *delegate = nullptr;
 
-  DelegateDeleterType delegate_deleter;
+  DelegateDeleter delegate_deleter;
 
-  ThreadState state = kNew;
+  State state = kNew;
 
   /**
    * @brief A static helper method to start a thread routine.
@@ -59,6 +70,8 @@ struct Thread::Private {
  * @brief Thread-specific data.
  */
 struct Thread::Specific {
+
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Specific);
 
   static Specific *GetCurrent();
 
@@ -79,8 +92,8 @@ struct Thread::Specific {
 
 };
 
-}
-}
-}
+} // namespace threading
+} // namespace system
+} // namespace wiztk
 
 #endif // WIZTK_SYSTEM_THREADING_THREAD_PRIVATE_HPP_

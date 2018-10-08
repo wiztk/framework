@@ -16,7 +16,7 @@
 
 #include "wiztk/system/threading/main-thread.hpp"
 
-#include "thread_private.hpp"
+#include "thread/private.hpp"
 
 namespace wiztk {
 namespace system {
