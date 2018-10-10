@@ -42,14 +42,14 @@ MainLoop *MainLoop::Initialize(const Display *display) {
                                  EPOLLIN | EPOLLOUT | EPOLLERR | EPOLLHUP);
 
   main_loop->WatchFileDescriptor(wl_display_get_fd(main_loop->__PROPERTY__(wl_display)),
-                                 &main_loop->__PROPERTY__(wayland_event),
+                                 &main_loop->__PROPERTY__(display_event),
                                  EPOLLIN | EPOLLOUT | EPOLLERR | EPOLLHUP);
 
   return main_loop;
 }
 
 MainLoop::MainLoop() {
-  p_ = std::make_unique<_Private>(this);
+  p_ = std::make_unique<Private>(this);
 }
 
 MainLoop::~MainLoop() = default;

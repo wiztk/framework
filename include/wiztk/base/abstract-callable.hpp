@@ -36,10 +36,43 @@ class WIZTK_EXPORT AbstractCallable<ReturnType(ParamTypes...)> {
 
  public:
 
+  /**
+   * @brief Default constructor.
+   */
   AbstractCallable() = default;
 
+  /**
+   * @brief Default copy constructor.
+   */
+  AbstractCallable(const AbstractCallable &) = default;
+
+  /**
+   * @brief Default move constructor.
+   */
+  AbstractCallable(AbstractCallable &&) noexcept = default;
+
+  /**
+   * @brief Default destructor.
+   */
   virtual ~AbstractCallable() = default;
 
+  /**
+   * @brief Default copy assignment.
+   * @return Reference to this object.
+   */
+  AbstractCallable &operator=(const AbstractCallable &) = default;
+
+  /**
+   * @brief Default move assignment.
+   * @return Reference to this object.
+   */
+  AbstractCallable &operator=(AbstractCallable &&) noexcept = default;
+
+  /**
+   * @brief The virtual method to be overrided in subclass.
+   * @param Args Variadic template arguments.
+   * @return Template return value.
+   */
   virtual ReturnType Call(ParamTypes... Args) = 0;
 
 };

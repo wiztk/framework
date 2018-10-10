@@ -17,7 +17,8 @@
 #ifndef WIZTK_MATRIX_PRIVATE_HPP
 #define WIZTK_MATRIX_PRIVATE_HPP
 
-#include <wiztk/graphics/matrix.hpp>
+#include "wiztk/graphics/matrix.hpp"
+
 #include "SkMatrix.h"
 
 namespace wiztk {
@@ -25,12 +26,15 @@ namespace graphics {
 
 struct Matrix::Private {
 
-  Private() {}
+  static const Private &Get(const Matrix &matrix) {
+    return *matrix.p_;
+  }
 
-  Private(const Private &orig)
-      : sk_matrix(orig.sk_matrix) {}
+  Private() = default;
 
-  ~Private() {}
+  Private(const Private &orig) = default;
+
+  ~Private() = default;
 
   SkMatrix sk_matrix;
 

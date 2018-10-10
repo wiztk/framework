@@ -22,19 +22,17 @@
 namespace wiztk {
 namespace graphics {
 
-class Paint;
-class GradientShader;
-
 /**
  * @ingroup graphics
  * @brief The base shader class
  */
 class Shader {
 
-  friend class Paint;
   friend class GradientShader;
 
  public:
+
+  struct Private;
 
   enum TileMode {
     kTileModeClamp,
@@ -53,8 +51,6 @@ class Shader {
   explicit operator bool() const;
 
  protected:
-
-  struct Private;
 
   explicit Shader(Private *p);
 

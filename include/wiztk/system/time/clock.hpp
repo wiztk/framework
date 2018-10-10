@@ -100,6 +100,8 @@ class WIZTK_EXPORT Clock {
    */
   long nsec() const { return timespec_.tv_nsec; }
 
+  const timespec *data() const { return &timespec_; }
+
  protected:
 
   struct timespec timespec_ = {0};

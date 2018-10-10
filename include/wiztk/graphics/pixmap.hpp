@@ -14,47 +14,47 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_MAIN_LOOP_HPP_
-#define WIZTK_GUI_MAIN_LOOP_HPP_
+#ifndef WIZTK_GRAPHICS_PIXMAP_HPP_
+#define WIZTK_GRAPHICS_PIXMAP_HPP_
 
-#include "wiztk/async/event-loop.hpp"
+#include "wiztk/base/macros.hpp"
+
+#include "wiztk/graphics/image-info.hpp"
 
 #include <memory>
 
 namespace wiztk {
-namespace gui {
+namespace graphics {
 
-// Forward declaration:
-class Display;
-
-/**
- * @ingroup gui
- * @brief The event loop used in the main thread.
- */
-class MainLoop final : public async::EventLoop {
-
-  friend class Application;
+class WIZTK_EXPORT Pixmap {
 
  public:
 
-  /**
-   * @brief Initialize a singleton main loop.
-   * @return
-   */
-  static MainLoop *Initialize(const Display *display);
+  Pixmap();
 
-  ~MainLoop() final;
+  Pixmap(const ImageInfo &info, const void *addr, size_t row_bytes);
 
- protected:
+  virtual ~Pixmap();
 
-  MainLoop();
+  void Reset();
 
-  void DispatchMessage() final;
+  void Reset(const ImageInfo &info, const void *addr, size_t row_bytes);
+
+  void SetColorSpace(const ColorSpace &color_space);
+
+  size_t GetRowBytes() const;
+
+  const void *GetAddr() const;
+
+  int GetWidth() const;
+
+  int GetHeight() const;
+
+  ColorType GetColorType() const;
+
+  AlphaType GetAlphaType() const;
 
  private:
-
-  class SignalEvent;
-  class DisplayEvent;
 
   struct Private;
 
@@ -62,7 +62,7 @@ class MainLoop final : public async::EventLoop {
 
 };
 
-} // namespace gui
-} // namespace wiztk
+}
+}
 
-#endif // WIZTK_GUI_MAIN_LOOP_HPP_
+#endif // WIZTK_GRAPHICS_PIXMAP_HPP_

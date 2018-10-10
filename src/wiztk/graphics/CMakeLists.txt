@@ -25,10 +25,12 @@ set(
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/font.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/font-style.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/gradient-shader.hpp
+        ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/image.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/image-info.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/matrix.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/paint.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/path.hpp
+        ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/pixmap.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/shader.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/surface.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/typeface.hpp
@@ -47,12 +49,14 @@ set(
         font-style/private.hpp
         font-style.cpp
         gradient-shader.cpp
+        image.cpp
         image-info/private.hpp
         image-info.cpp
         matrix/private.hpp
         matrix.cpp
         paint.cpp
         path.cpp
+        pixmap.cpp
         shader/private.hpp
         shader.cpp
         surface_private.hpp

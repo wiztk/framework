@@ -14,47 +14,39 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_MAIN_LOOP_HPP_
-#define WIZTK_GUI_MAIN_LOOP_HPP_
+#ifndef WIZTK_GRAPHICS_IMAGE_HPP_
+#define WIZTK_GRAPHICS_IMAGE_HPP_
 
-#include "wiztk/async/event-loop.hpp"
+#include "wiztk/base/macros.hpp"
 
 #include <memory>
 
 namespace wiztk {
-namespace gui {
+namespace graphics {
 
-// Forward declaration:
-class Display;
-
-/**
- * @ingroup gui
- * @brief The event loop used in the main thread.
- */
-class MainLoop final : public async::EventLoop {
-
-  friend class Application;
+class Image {
 
  public:
 
-  /**
-   * @brief Initialize a singleton main loop.
-   * @return
-   */
-  static MainLoop *Initialize(const Display *display);
+  typedef void *ReleaseContext;
 
-  ~MainLoop() final;
+  typedef void (*RasterReleaseProc)(const void *pixels, ReleaseContext);
 
- protected:
+  static Image MakeFromRaster();
 
-  MainLoop();
+  Image();
 
-  void DispatchMessage() final;
+  Image(const Image &other);
+
+  Image(Image &&other) noexcept;
+
+  Image &operator=(const Image &other);
+
+  Image &operator=(Image &&other) noexcept;
+
+  virtual ~Image();
 
  private:
-
-  class SignalEvent;
-  class DisplayEvent;
 
   struct Private;
 
@@ -62,7 +54,7 @@ class MainLoop final : public async::EventLoop {
 
 };
 
-} // namespace gui
+} // namespace graphics
 } // namespace wiztk
 
-#endif // WIZTK_GUI_MAIN_LOOP_HPP_
+#endif // WIZTK_GRAPHICS_IMAGE_HPP_

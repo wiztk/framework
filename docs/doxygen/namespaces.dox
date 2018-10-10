@@ -47,9 +47,11 @@
 
 /**
  * @namespace wiztk::system::threading
- * @brief The system::threading namespace provides high-level classes for multi-threaded programming.
+ * @brief The system::threading namespace provides high-level classes for
+ * multi-threaded programming.
  *
- * ...
+ * The system.threading namespace provides classes and interfaces that enable
+ * multithreaded programming based on POSIX Thread.
  */
 
 /**

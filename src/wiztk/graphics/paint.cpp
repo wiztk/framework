@@ -29,8 +29,7 @@ struct Paint::Private {
 
   Private() = default;
 
-  Private(const Private &orig)
-      : sk_paint(orig.sk_paint) {}
+  Private(const Private &orig) = default;
 
   ~Private() = default;
 
@@ -46,9 +45,7 @@ Paint::Paint(const Paint &orig) {
   p_ = std::make_unique<Private>(*orig.p_);
 }
 
-Paint::~Paint() {
-
-}
+Paint::~Paint() = default;
 
 Paint &Paint::operator=(const Paint &other) {
   *p_ = *other.p_;
@@ -115,7 +112,7 @@ void Paint::SetFont(const Font &font) {
 }
 
 void Paint::SetShader(const Shader &shader) {
-  p_->sk_paint.setShader(shader.p_->sk_shader);
+  p_->sk_paint.setShader(Shader::Private::Get(shader).sk_shader);
 }
 
 TextAlignment::Horizontal Paint::GetTextAlign() const {

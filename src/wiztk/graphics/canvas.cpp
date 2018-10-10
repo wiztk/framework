@@ -173,11 +173,11 @@ void Canvas::Skew(float sx, float sy) {
 }
 
 void Canvas::Concat(const Matrix &matrix) {
-  p_->sk_canvas.concat(matrix.p_->sk_matrix);
+  p_->sk_canvas.concat(Matrix::Private::Get(matrix).sk_matrix);
 }
 
 void Canvas::SetMatrix(const Matrix &matrix) {
-  p_->sk_canvas.setMatrix(matrix.p_->sk_matrix);
+  p_->sk_canvas.setMatrix(Matrix::Private::Get(matrix).sk_matrix);
 }
 
 void Canvas::ResetMatrix() {

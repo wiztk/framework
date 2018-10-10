@@ -38,11 +38,6 @@ class WIZTK_EXPORT AbstractRunnable {
   AbstractRunnable() = default;
 
   /**
-   * @brief Default destructor.
-   */
-  virtual ~AbstractRunnable() = default;
-
-  /**
    * @brief Default copy constructor.
    */
   AbstractRunnable(const AbstractRunnable &) = default;
@@ -51,6 +46,11 @@ class WIZTK_EXPORT AbstractRunnable {
    * @brief Default move constructor.
    */
   AbstractRunnable(AbstractRunnable &&) noexcept = default;
+
+  /**
+   * @brief Default destructor.
+   */
+  virtual ~AbstractRunnable() = default;
 
   /**
    * @brief Default copy assignment.

@@ -19,8 +19,6 @@
 
 #include <memory>
 
-class SkMatrix;
-
 namespace wiztk {
 namespace graphics {
 
@@ -30,9 +28,9 @@ namespace graphics {
  */
 class Matrix {
 
-  friend class Canvas;
-
  public:
+
+  struct Private;
 
   Matrix();
 
@@ -42,11 +40,7 @@ class Matrix {
 
   Matrix &operator=(const Matrix &other);
 
-  const SkMatrix *GetSkMatrix() const;
-
  private:
-
-  struct Private;
 
   std::unique_ptr<Private> p_;
 

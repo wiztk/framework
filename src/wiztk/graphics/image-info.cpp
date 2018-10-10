@@ -39,7 +39,7 @@ ImageInfo ImageInfo::Make(int width,
       SkImageInfo::Make(width, height,
                         static_cast<SkColorType>(ct),
                         static_cast<SkAlphaType>(at),
-                        cs.p_->sk_sp_color_space);
+                        ColorSpace::Private::Get(cs).sk_sp_color_space);
   return image_info;
 }
 
@@ -51,7 +51,8 @@ ImageInfo ImageInfo::MakeN32Premul(int width, int height) {
 
 ImageInfo ImageInfo::MakeN32Premul(int width, int height, const wiztk::graphics::ColorSpace &cs) {
   ImageInfo image_info;
-  image_info.p_->sk_image_info = SkImageInfo::MakeN32Premul(width, height, cs.p_->sk_sp_color_space);
+  image_info.p_->sk_image_info = SkImageInfo::MakeN32Premul(width, height,
+      ColorSpace::Private::Get(cs).sk_sp_color_space);
   return image_info;
 }
 

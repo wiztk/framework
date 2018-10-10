@@ -19,8 +19,8 @@
 namespace wiztk {
 namespace gui {
 
-MainLoop::_Private::_Private(MainLoop *main_loop)
-    : signal_event(main_loop), wayland_event(main_loop) {}
+MainLoop::Private::Private(MainLoop *main_loop)
+    : signal_event(main_loop), display_event(main_loop) {}
 
 }
 }

@@ -17,17 +17,27 @@
 #ifndef WIZTK_SYSTEM_THREADING_MUTEX_HPP_
 #define WIZTK_SYSTEM_THREADING_MUTEX_HPP_
 
+#include "wiztk/base/macros.hpp"
+
 #include <pthread.h>
 
 namespace wiztk {
 namespace system {
+
+namespace time {
+// Forward declaration:
+class Clock;
+}
+
 namespace threading {
 
-class Mutex {
+class WIZTK_EXPORT Mutex {
 
  public:
 
   class Attribute;
+
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Mutex);
 
  public:
 
@@ -38,6 +48,14 @@ class Mutex {
   ~Mutex() {
     pthread_mutex_destroy(&pthread_mutex_);
   }
+
+  void Lock();
+
+  void Lock(const time::Clock &timeout);
+
+  void TryLock();
+
+  void Unlock();
 
  private:
 
@@ -63,8 +81,8 @@ class Mutex::Attribute {
 
 };
 
-}
-}
-}
+} // namespace threading
+} // namespace system
+} // namespace wiztk
 
 #endif // WIZTK_SYSTEM_THREADING_MUTEX_HPP_

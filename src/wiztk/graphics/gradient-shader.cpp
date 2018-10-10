@@ -18,6 +18,7 @@
 #include <wiztk/graphics/matrix.hpp>
 
 #include "shader/private.hpp"
+#include "matrix/private.hpp"
 
 #include "SkGradientShader.h"
 
@@ -40,7 +41,7 @@ Shader GradientShader::MakeLinear(const base::Point2F *points,
                                    count,
                                    (SkShader::TileMode) mode,
                                    flags,
-                                   nullptr == local_matrix ? nullptr : local_matrix->GetSkMatrix());
+                                   nullptr == local_matrix ? nullptr : &Matrix::Private::Get(*local_matrix).sk_matrix);
 
   return Shader(new Shader::Private(sk_shader));
 }
@@ -60,7 +61,7 @@ Shader GradientShader::MakeLinear(const Point2F points[],
                                    count,
                                    (SkShader::TileMode) mode,
                                    flags,
-                                   nullptr == local_matrix ? nullptr : local_matrix->GetSkMatrix());
+                                   nullptr == local_matrix ? nullptr : &Matrix::Private::Get(*local_matrix).sk_matrix);
 
   return Shader(new Shader::Private(sk_shader));
 }
@@ -81,7 +82,7 @@ Shader GradientShader::MakeRadial(const Point2F &center,
                                    count,
                                    (SkShader::TileMode) mode,
                                    flags,
-                                   nullptr == local_matrix ? nullptr : local_matrix->GetSkMatrix());
+                                   nullptr == local_matrix ? nullptr : &Matrix::Private::Get(*local_matrix).sk_matrix);
   return Shader(new Shader::Private(sk_shader));
 }
 
@@ -102,7 +103,7 @@ Shader GradientShader::MakeRadial(const Point2F &center,
                                    count,
                                    (SkShader::TileMode) mode,
                                    flags,
-                                   nullptr == local_matrix ? nullptr : local_matrix->GetSkMatrix());
+                                   nullptr == local_matrix ? nullptr : &Matrix::Private::Get(*local_matrix).sk_matrix);
 
   return Shader(new Shader::Private(sk_shader));
 }

@@ -20,23 +20,18 @@ namespace wiztk {
 namespace graphics {
 
 Matrix::Matrix() {
-  p_.reset(new Private);
+  p_ = std::make_unique<Private>();
 }
 
 Matrix::Matrix(const Matrix &other) {
-  p_.reset(new Private(*other.p_));
+  p_ = std::make_unique<Private>(*other.p_);
 }
 
-Matrix::~Matrix() {
-}
+Matrix::~Matrix() = default;
 
 Matrix &Matrix::operator=(const Matrix &other) {
   *p_ = *other.p_;
   return *this;
-}
-
-const SkMatrix *Matrix::GetSkMatrix() const {
-  return &p_->sk_matrix;
 }
 
 } // namespace graphics

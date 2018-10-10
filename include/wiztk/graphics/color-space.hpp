@@ -30,12 +30,12 @@ namespace graphics {
  */
 class WIZTK_EXPORT ColorSpace {
 
-  friend class ImageInfo;
-
   friend bool operator==(const ColorSpace &, const ColorSpace &);
   friend bool operator!=(const ColorSpace &, const ColorSpace &);
 
  public:
+
+  struct Private;
 
   /**
    * @brief A certain complete subset of colors.
@@ -69,8 +69,6 @@ class WIZTK_EXPORT ColorSpace {
   bool IsSRGB() const;
 
  private:
-
-  struct Private;
 
   ColorSpace();
 

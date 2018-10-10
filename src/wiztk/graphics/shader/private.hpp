@@ -29,18 +29,18 @@ namespace graphics {
  */
 struct Shader::Private {
 
-  Private() {}
+  static const Private &Get(const Shader &shader) {
+    return *shader.p_;
+  }
+
+  Private() = default;
 
   Private(const sk_sp<SkShader> &shader)
       : sk_shader(shader) {}
 
-  Private(const Private &other)
-      : sk_shader(other.sk_shader) {}
+  Private(const Private &other) = default;
 
-  Private &operator=(const Private &other) {
-    sk_shader = other.sk_shader;
-    return *this;
-  }
+  Private &operator=(const Private &other) = default;
 
   Private &operator=(const sk_sp<SkShader> &shader) {
     sk_shader = shader;

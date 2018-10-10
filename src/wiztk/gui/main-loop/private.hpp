@@ -27,17 +27,17 @@
 namespace wiztk {
 namespace gui {
 
-struct MainLoop::_Private {
+struct MainLoop::Private {
 
-  explicit _Private(MainLoop *main_loop);
+  explicit Private(MainLoop *main_loop);
 
-  ~_Private() = default;
+  ~Private() = default;
 
   struct wl_display *wl_display = nullptr;
 
   SignalEvent signal_event;
 
-  DisplayEvent wayland_event;
+  DisplayEvent display_event;
 
 };
 

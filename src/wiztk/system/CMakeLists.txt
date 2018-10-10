@@ -29,6 +29,7 @@ set(
         threading/thread.cpp
         threading/thread/private.cpp
         threading/thread/private.hpp
+        threading/mutex.cpp
         time/clock.cpp
         time/delta.cpp
         time/realtime-clock.cpp

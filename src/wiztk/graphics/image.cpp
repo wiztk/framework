@@ -14,42 +14,67 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHICS_IMAGE_INFO_PRIVATE_HPP_
-#define WIZTK_GRAPHICS_IMAGE_INFO_PRIVATE_HPP_
+#include "wiztk/graphics/image.hpp"
 
-#include "wiztk/graphics/image-info.hpp"
-
-#include "SkImageInfo.h"
+#include "SkImage.h"
 
 namespace wiztk {
 namespace graphics {
 
-/**
- * @brief Private data for ImageInfo
- */
-struct ImageInfo::Private {
-
-  static const Private &Get(const ImageInfo &info) {
-    return *info.p_;
-  }
+struct Image::Private {
 
   Private() = default;
 
   Private(const Private &) = default;
 
-  Private(Private &&) = default;
+  Private(Private &&other) noexcept {
+    sk_image_sp = std::move(other.sk_image_sp);
+  }
 
   ~Private() = default;
 
   Private &operator=(const Private &) = default;
 
-  Private &operator=(Private &&) = default;
+  Private &operator=(Private &&other) noexcept {
+    sk_image_sp = std::move(other.sk_image_sp);
+    return *this;
+  }
 
-  SkImageInfo sk_image_info;
+  sk_sp<SkImage> sk_image_sp;
 
 };
 
+// ----
+
+Image Image::MakeFromRaster() {
+  Image image;
+
+  return image;
+}
+
+Image::Image() {
+  p_ = std::make_unique<Private>();
+}
+
+Image::Image(const Image &other) {
+  p_ = std::make_unique<Private>(*other.p_);
+}
+
+Image::Image(Image &&other) noexcept {
+  p_ = std::move(other.p_);
+}
+
+Image::~Image() = default;
+
+Image &Image::operator=(const Image &other) {
+  *p_ = *other.p_;
+  return *this;
+}
+
+Image &Image::operator=(Image &&other) noexcept {
+  p_ = std::move(other.p_);
+  return *this;
+}
+
 } // namespace graphics
 } // namespace wiztk
-
-#endif // WIZTK_GRAPHIC_INTERNAL_IMAGE_INFO_PRIVATE_HPP_

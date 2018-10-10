@@ -66,11 +66,9 @@ enum ColorType {
  */
 class WIZTK_EXPORT ImageInfo {
 
-  friend class Bitmap;
-  friend class ViewSurface;
-  friend class Canvas;
-
  public:
+
+  struct Private;
 
   static ImageInfo Make(int width, int height, ColorType ct, AlphaType at);
 
@@ -101,8 +99,6 @@ class WIZTK_EXPORT ImageInfo {
   void Reset();
 
  private:
-
-  struct Private;
 
   ImageInfo();
 

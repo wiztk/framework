@@ -29,6 +29,10 @@ namespace graphics {
  */
 struct ColorSpace::Private {
 
+  static const Private &Get(const ColorSpace &color_space) {
+    return *color_space.p_;
+  }
+
   Private() = default;
 
   Private(const Private &) = default;
