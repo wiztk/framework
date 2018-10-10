@@ -29,8 +29,8 @@ Typeface::Typeface() {
 
 Typeface::Typeface(const char *family_name, const FontStyle &font_style) {
   p_ = std::make_unique<Private>();
-  SkFontStyle style = font_style.p_->sk_font_style;
-  p_->sk_typeface = SkTypeface::MakeFromName(family_name, style);
+  p_->sk_typeface = SkTypeface::MakeFromName(family_name,
+      FontStyle::Private::Get(font_style).sk_font_style);
 }
 
 //Typeface::Typeface(const Typeface &other, Style style) {
@@ -61,7 +61,7 @@ Typeface &Typeface::operator=(const Typeface &other) {
 }
 
 FontStyle Typeface::GetFontStyle() const {
-  return FontStyle(p_->sk_typeface->fontStyle());
+  return FontStyle(FontStyle::Private(p_->sk_typeface->fontStyle()));
 }
 
 bool Typeface::IsBold() const {

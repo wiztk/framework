@@ -21,9 +21,6 @@
 
 #include <memory>
 
-// Forward declarations:
-class SkFontStyle;
-
 namespace wiztk {
 namespace graphics {
 
@@ -38,6 +35,8 @@ class WIZTK_EXPORT FontStyle {
   friend class Typeface;
 
  public:
+
+  struct Private;
 
   enum Weight {
     kWeightInvisible = 0,
@@ -97,9 +96,7 @@ class WIZTK_EXPORT FontStyle {
 
  private:
 
-  FontStyle(const SkFontStyle &native);
-
-  struct Private;
+  explicit FontStyle(const Private &p);
 
   std::unique_ptr<Private> p_;
 
@@ -109,4 +106,4 @@ class WIZTK_EXPORT FontStyle {
 } // namespace wiztk
 
 
-#endif // WIZTK_FONT_STYLE_HPP
+#endif // WIZTK_GRAPHIC_FONT_STYLE_HPP_

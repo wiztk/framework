@@ -30,6 +30,8 @@ class WIZTK_EXPORT Pixmap {
 
  public:
 
+  struct Private;
+
   Pixmap();
 
   Pixmap(const ImageInfo &info, const void *addr, size_t row_bytes);
@@ -55,8 +57,6 @@ class WIZTK_EXPORT Pixmap {
   AlphaType GetAlphaType() const;
 
  private:
-
-  struct Private;
 
   std::unique_ptr<Private> p_;
 

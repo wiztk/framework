@@ -31,6 +31,10 @@ namespace graphics {
  */
 struct Bitmap::Private : public base::Property<Bitmap> {
 
+  static const Private &Get(const Bitmap &bitmap) {
+    return *bitmap.p_;
+  }
+
   explicit Private(Bitmap *owner)
       : base::Property<Bitmap>(owner) {}
 
@@ -43,4 +47,4 @@ struct Bitmap::Private : public base::Property<Bitmap> {
 } // namespace graphics
 } // namespace wiztk
 
-#endif // WIZTK_GRAPHICS_INTERNAL_BITMAP_PRIVATE_HPP_
+#endif // WIZTK_GRAPHICS_BITMAP_PRIVATE_HPP_

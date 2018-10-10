@@ -14,28 +14,13 @@
  * limitations under the License.
  */
 
-#include "wiztk/graphics/paint.hpp"
+#include "paint/private.hpp"
 
 #include "font/private.hpp"
 #include "shader/private.hpp"
 
-#include "SkPaint.h"
-#include "SkTypeface.h"
-
 namespace wiztk {
 namespace graphics {
-
-struct Paint::Private {
-
-  Private() = default;
-
-  Private(const Private &orig) = default;
-
-  ~Private() = default;
-
-  SkPaint sk_paint;
-
-};
 
 Paint::Paint() {
   p_ = std::make_unique<Private>();
@@ -173,10 +158,6 @@ int Paint::CountText(const void *text, size_t byte_length) const {
 
 float Paint::MeasureText(const void *text, size_t length, RectF *boulds) const {
   return p_->sk_paint.measureText(text, length, reinterpret_cast<SkRect *>(boulds));
-}
-
-const SkPaint &Paint::GetSkPaint() const {
-  return p_->sk_paint;
 }
 
 bool operator==(const Paint &paint1, const Paint &paint2) {

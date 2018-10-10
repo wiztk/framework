@@ -25,11 +25,10 @@
 #include <cstdint>
 #include <memory>
 
-class SkPaint;
-
 namespace wiztk {
 namespace graphics {
 
+// Forward declaration
 class Shader;
 
 /**
@@ -45,6 +44,8 @@ class WIZTK_EXPORT Paint {
 
   using RectF = base::RectF;
   using ColorF = base::ColorF;
+
+  struct Private;
 
  public:
 
@@ -130,12 +131,8 @@ class WIZTK_EXPORT Paint {
   float MeasureText(const void *text, size_t length) const {
     return MeasureText(text, length, nullptr);
   }
-
-  const SkPaint &GetSkPaint() const;
-
+  
  private:
-
-  struct Private;
 
   std::unique_ptr<Private> p_;
 };

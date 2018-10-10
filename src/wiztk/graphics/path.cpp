@@ -14,28 +14,13 @@
  * limitations under the License.
  */
 
-#include <wiztk/graphics/path.hpp>
-
-#include "SkPath.h"
+#include "path/private.hpp"
 
 namespace wiztk {
 namespace graphics {
 
 using base::Point2F;
 using base::RectF;
-
-struct Path::Private {
-
-  Private() {}
-
-  Private(const Private &orig)
-      : sk_path(orig.sk_path) {}
-
-  ~Private() {}
-
-  SkPath sk_path;
-
-};
 
 Path::Path() {
   p_.reset(new Private);
@@ -189,10 +174,6 @@ void Path::RelativeQuadTo(float dx1, float dy1, float dx2, float dy2) {
 
 void Path::Close() {
   p_->sk_path.close();
-}
-
-const SkPath &Path::GetSkPath() const {
-  return p_->sk_path;
 }
 
 bool operator==(const Path &path1, const Path &path2) {

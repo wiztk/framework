@@ -30,9 +30,9 @@ namespace graphics {
  */
 class Bitmap {
 
-  friend class Canvas;
-
  public:
+
+  struct Private;
 
   /**
    * @brief Default constructor
@@ -67,8 +67,6 @@ class Bitmap {
   AlphaType GetAlphaType() const;
 
  private:
-
-  struct Private;
 
   std::unique_ptr<Private> p_;
 

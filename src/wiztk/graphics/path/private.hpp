@@ -14,41 +14,38 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHIC_FONT_STYLE_PRIVATE_HPP_
-#define WIZTK_GRAPHIC_FONT_STYLE_PRIVATE_HPP_
+#ifndef WIZTK_FRAMEWORK_PRIVATE_HPP
+#define WIZTK_FRAMEWORK_PRIVATE_HPP
 
-#include "wiztk/graphics/font-style.hpp"
+#include "wiztk/graphics/path.hpp"
 
-#include "SkFontStyle.h"
+#include "SkPath.h"
 
 namespace wiztk {
 namespace graphics {
 
-struct FontStyle::Private {
+using base::Point2F;
+using base::RectF;
 
-  static const Private &Get(const FontStyle &font_style) {
-    return *font_style.p_;
+struct Path::Private {
+
+  static const Private &Get(const Path &path) {
+    return *path.p_;
   }
 
   Private() = default;
 
-  explicit Private(const SkFontStyle &native)
-      : sk_font_style(native) {}
-
-  Private(const Private &) = default;
-
-  Private(int weight, int width, SkFontStyle::Slant slant)
-      : sk_font_style(weight, width, slant) {}
+  Private(const Private &orig) = default;
 
   ~Private() = default;
 
   Private &operator=(const Private &) = default;
 
-  SkFontStyle sk_font_style;
+  SkPath sk_path;
 
 };
 
 }
 }
 
-#endif // WIZTK_GRAPHIC_INTERNAL_FONT_STYLE_PRIVATE_HPP_
+#endif //WIZTK_FRAMEWORK_PRIVATE_HPP

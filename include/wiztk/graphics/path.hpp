@@ -21,12 +21,8 @@
 
 #include <memory>
 
-class SkPath;
-
 namespace wiztk {
 namespace graphics {
-
-class Canvas;
 
 /**
  * @ingroup graphics
@@ -38,6 +34,8 @@ class Path {
   friend bool operator!=(const Path &, const Path &);
 
  public:
+
+  struct Private;
 
   enum Direction {
     kClockwise,
@@ -133,11 +131,7 @@ class Path {
 
   void Close();
 
-  const SkPath &GetSkPath() const;
-
  private:
-
-  struct Private;
 
   std::unique_ptr<Private> p_;
 };

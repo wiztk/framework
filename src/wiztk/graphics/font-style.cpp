@@ -27,8 +27,8 @@ FontStyle::FontStyle(const FontStyle &other) {
   p_->sk_font_style = other.p_->sk_font_style;
 }
 
-FontStyle::FontStyle(const SkFontStyle &native) {
-  p_ = std::make_unique<Private>(native);
+FontStyle::FontStyle(const Private &p) {
+  p_ = std::make_unique<Private>(p);
 }
 
 FontStyle::FontStyle(FontStyle &&other) noexcept {
@@ -45,7 +45,7 @@ FontStyle &FontStyle::operator=(FontStyle &&other) noexcept {
   return *this;
 }
 
-FontStyle::~FontStyle() {}
+FontStyle::~FontStyle() = default;
 
 bool FontStyle::operator==(const FontStyle &other) const {
   return p_->sk_font_style == other.p_->sk_font_style;
