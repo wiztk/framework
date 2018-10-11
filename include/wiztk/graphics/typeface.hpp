@@ -42,6 +42,10 @@ class WIZTK_EXPORT Typeface {
 
  public:
 
+  using RectF = base::RectF;
+
+  struct Private;
+
   enum Style {
     kNormal = 0,
     kBold = 0x01,
@@ -116,11 +120,9 @@ class WIZTK_EXPORT Typeface {
 
   bool GetKerningPairAdjustments(const GlyphID glyphs[], int count, int32_t adjustments[]) const;
 
-  base::RectF GetBounds() const;
+  RectF GetBounds() const;
 
  private:
-
-  struct Private;
 
   std::unique_ptr<Private> p_;
 

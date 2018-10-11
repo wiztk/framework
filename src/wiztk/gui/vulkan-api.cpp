@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "display/proxy.hpp"
+#include "display/private.hpp"
 #include "view-surface/private.hpp"
 #include "abstract-rendering-api_proxy.hpp"
 
@@ -38,11 +38,11 @@ void VulkanAPI::OnSetup() {
 
   vk::WaylandSurfaceCreateInfoKHR info = {
       vk::WaylandSurfaceCreateFlagsKHR(),
-      Display::Proxy::wl_display(display),
+      Display::Private::Get(*display).wl_display,
 //      Proxy::GetWaylandSurface(GetSurface())
   };
 
-  vk_surface_ = Display::Proxy::vk_instance(display).createWaylandSurfaceKHR(info);
+  vk_surface_ = Display::Private::Get(*display).vk_instance.createWaylandSurfaceKHR(info);
 }
 
 } // namespace gui

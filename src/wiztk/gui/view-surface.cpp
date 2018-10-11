@@ -20,7 +20,7 @@
 #include "view-surface/shell/popup/private.hpp"
 #include "input/private.hpp"
 #include "output/private.hpp"
-#include "display/proxy.hpp"
+#include "display/private.hpp"
 #include "buffer/private.hpp"
 
 #include "wiztk/gui/buffer.hpp"
@@ -65,7 +65,7 @@ ViewSurface::Shell::Shell(ViewSurface *surface)
   role_.placeholder = nullptr;
 
   Display *display = Application::GetInstance()->GetDisplay();
-  p_->zxdg_surface = zxdg_shell_v6_get_xdg_surface(Display::Proxy::xdg_shell(display), surface_->p_->wl_surface);
+  p_->zxdg_surface = zxdg_shell_v6_get_xdg_surface(Display::Private::Get(*display).xdg_shell, surface_->p_->wl_surface);
   zxdg_surface_v6_add_listener(p_->zxdg_surface, &Private::kListener, this);
 
   Push();
@@ -213,7 +213,7 @@ ViewSurface::Shell::Popup::Popup(Shell *shell) {
   p_->shell = shell;
 
   Display *display = Application::GetInstance()->GetDisplay();
-  p_->zxdg_positioner = zxdg_shell_v6_create_positioner(Display::Proxy::xdg_shell(display));
+  p_->zxdg_positioner = zxdg_shell_v6_create_positioner(Display::Private::Get(*display).xdg_shell);
   p_->zxdg_popup = zxdg_surface_v6_get_popup(shell->p_->zxdg_surface,
                                              shell->parent_->p_->zxdg_surface,
                                              p_->zxdg_positioner);
@@ -248,7 +248,7 @@ ViewSurface::Sub::Sub(ViewSurface *surface, ViewSurface *parent)
   _ASSERT(nullptr != parent);
 
   Display *display = Application::GetInstance()->GetDisplay();
-  wl_sub_surface_ = wl_subcompositor_get_subsurface(Display::Proxy::wl_subcompositor(display),
+  wl_sub_surface_ = wl_subcompositor_get_subsurface(Display::Private::Get(*display).wl_subcompositor,
                                                     surface_->p_->wl_surface,
                                                     parent->p_->wl_surface);
   SetParent(parent);
@@ -456,7 +456,7 @@ ViewSurface::ViewSurface(AbstractEventHandler *event_handler, const Margin &marg
   p_->role.placeholder = nullptr;
 
   Display *display = Application::GetInstance()->GetDisplay();
-  p_->wl_surface = wl_compositor_create_surface(Display::Proxy::wl_compositor(display));
+  p_->wl_surface = wl_compositor_create_surface(Display::Private::Get(*display).wl_compositor);
   wl_surface_add_listener(p_->wl_surface, &_Private::kListener, this);
 }
 

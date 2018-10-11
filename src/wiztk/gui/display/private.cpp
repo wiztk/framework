@@ -15,7 +15,6 @@
  */
 
 #include "private.hpp"
-#include "proxy.hpp"
 
 #include "wiztk/base/macros.hpp"
 
@@ -24,6 +23,8 @@
 
 namespace wiztk {
 namespace gui {
+
+PFNEGLSWAPBUFFERSWITHDAMAGEEXTPROC Display::Private::kSwapBuffersWithDamageAPI = NULL;
 
 const struct wl_display_listener Display::Private::kDisplayListener = {
     OnError,
@@ -125,13 +126,13 @@ void Display::Private::InitializeEGLDisplay() {
       if (CheckEGLExtension(extensions,
                             swap_damage_ext_to_entrypoint[i].extension)) {
         /* The EXTPROC is identical to the KHR one */
-        Proxy::kSwapBuffersWithDamageAPI =
+        Private::kSwapBuffersWithDamageAPI =
             (PFNEGLSWAPBUFFERSWITHDAMAGEEXTPROC)
                 eglGetProcAddress(swap_damage_ext_to_entrypoint[i].entrypoint);
         break;
       }
     }
-    if (Proxy::kSwapBuffersWithDamageAPI)
+    if (Private::kSwapBuffersWithDamageAPI)
       printf("has EGL_EXT_buffer_age and %s\n", swap_damage_ext_to_entrypoint[i].extension);
   }
 }

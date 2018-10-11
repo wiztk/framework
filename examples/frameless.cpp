@@ -121,10 +121,10 @@ int main(int argc, char *argv[]) {
   Application app(argc, argv);
 
   auto *win = new Window("Frameless Window");
-//  win->SetAppId("Frameless-Demo");
+  win->SetAppId("Frameless-Demo");
 
-//  auto *widget = new MainWidget;
-//  win->SetContentView(widget);
+  auto *widget = new MainWidget;
+  win->SetContentView(widget);
 
   win->Show();
 

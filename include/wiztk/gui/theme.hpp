@@ -23,6 +23,7 @@
 
 #include "wiztk/graphics/shader.hpp"
 #include "wiztk/graphics/font.hpp"
+#include "wiztk/graphics/pixmap.hpp"
 
 #include <vector>
 #include <string>
@@ -116,7 +117,7 @@ class WIZTK_EXPORT Theme {
     return kShadowMargin;
   }
 
-  static inline const SkPixmap *GetShadowPixmap() {
+  static inline const graphics::Pixmap *GetShadowPixmap() {
     return kShadowPixmap;
   }
 
@@ -161,7 +162,7 @@ class WIZTK_EXPORT Theme {
 
   static std::vector<uint32_t> kShadowPixels;
 
-  static SkPixmap *kShadowPixmap;
+  static graphics::Pixmap *kShadowPixmap;
 
   static Theme *kTheme;
 

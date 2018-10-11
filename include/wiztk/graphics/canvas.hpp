@@ -37,6 +37,7 @@ namespace wiztk {
 namespace graphics {
 
 // Forward declarations:
+class Image;
 class Paint;
 class Path;
 class Matrix;
@@ -63,13 +64,14 @@ class Canvas {
   /// @brief A type alias refers to base::RectF
   using RectF   = base::RectF;
 
+  using RectI = base::RectI;
+
   /// @brief A type alias refers to base::String
   using String  = base::String;
 
   /// @brief A type alias refers to base::Point2F
   using Point2F = base::Point2F;
 
-  class Native;
   class LockGuard;
 
  public:
@@ -125,6 +127,8 @@ class Canvas {
 
   void DrawText(const String &text, float x, float y, const Paint &paint,
                 TextAlignment::Vertical vert = TextAlignment::kBaseline);
+
+  void DrawImageRect(const Image &img, const RectF &src, const RectF &dst);
 
   void DrawPaint(const Paint &paint);
 

@@ -14,12 +14,39 @@
  * limitations under the License.
  */
 
-#include "proxy.hpp"
+#ifndef WIZTK_GRAPHICS_PIXMAP_PRIVATE_HPP_
+#define WIZTK_GRAPHICS_PIXMAP_PRIVATE_HPP_
+
+#include "wiztk/graphics/pixmap.hpp"
+
+#include "SkImageInfo.h"
+#include "SkPixmap.h"
 
 namespace wiztk {
-namespace gui {
+namespace graphics {
 
-PFNEGLSWAPBUFFERSWITHDAMAGEEXTPROC Display::Proxy::kSwapBuffersWithDamageAPI = NULL;
+struct Pixmap::Private {
 
-} // namespace gui
-} // namespace wiztk
+  static const Private &Get(const Pixmap &pixmap) {
+    return *pixmap.p_;
+  }
+
+  Private() = default;
+
+  Private(const Private &) = default;
+
+  Private(const SkImageInfo &info, const void *addr, size_t row_bytes)
+      : sk_pixmap(info, addr, row_bytes) {}
+
+  ~Private() = default;
+
+  Private &operator=(const Private &) = default;
+
+  SkPixmap sk_pixmap;
+
+};
+
+}
+}
+
+#endif // WIZTK_GRAPHICS_PIXMAP_PRIVATE_HPP_

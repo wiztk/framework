@@ -14,45 +14,44 @@
  * limitations under the License.
  */
 
-#include "image/private.hpp"
+#ifndef WIZTK_GRAPHICS_IMAGE_PRIVATE_HPP_
+#define WIZTK_GRAPHICS_IMAGE_PRIVATE_HPP_
 
-#include "pixmap/private.hpp"
+#include "wiztk/graphics/image.hpp"
+
+#include "SkImage.h"
 
 namespace wiztk {
 namespace graphics {
 
-Image Image::MakeFromRaster(const Pixmap &pixmap) {
-  Image image;
-  image.p_->sk_image_sp = SkImage::MakeFromRaster(Pixmap::Private::Get(pixmap).sk_pixmap,
-      nullptr,
-      nullptr);
+struct Image::Private {
 
-  return image;
-}
+  static const Private &Get(const Image &image) {
+    return *image.p_;
+  }
 
-Image::Image() {
-  p_ = std::make_unique<Private>();
-}
+  Private() = default;
 
-Image::Image(const Image &other) {
-  p_ = std::make_unique<Private>(*other.p_);
-}
+  Private(const Private &) = default;
 
-Image::Image(Image &&other) noexcept {
-  p_ = std::move(other.p_);
-}
+  Private(Private &&other) noexcept {
+    sk_image_sp = std::move(other.sk_image_sp);
+  }
 
-Image::~Image() = default;
+  ~Private() = default;
 
-Image &Image::operator=(const Image &other) {
-  *p_ = *other.p_;
-  return *this;
-}
+  Private &operator=(const Private &) = default;
 
-Image &Image::operator=(Image &&other) noexcept {
-  p_ = std::move(other.p_);
-  return *this;
-}
+  Private &operator=(Private &&other) noexcept {
+    sk_image_sp = std::move(other.sk_image_sp);
+    return *this;
+  }
+
+  sk_sp<SkImage> sk_image_sp;
+
+};
 
 } // namespace graphics
 } // namespace wiztk
+
+#endif // WIZTK_GRAPHICS_IMAGE_PRIVATE_HPP_

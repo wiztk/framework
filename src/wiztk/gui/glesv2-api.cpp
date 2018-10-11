@@ -15,7 +15,7 @@
  */
 
 #include "abstract-rendering-api_proxy.hpp"
-#include "display/proxy.hpp"
+#include "display/private.hpp"
 
 #include "wiztk/gui/glesv2-api.hpp"
 #include "wiztk/gui/application.hpp"
@@ -56,15 +56,15 @@ void GLESV2API::SetViewportSize(int width, int height) {
 void GLESV2API::MakeCurrent() {
   Display *display = Application::GetInstance()->GetDisplay();
 
-  eglMakeCurrent(Display::Proxy::egl_display(display),
+  eglMakeCurrent(Display::Private::Get(*display).egl_display,
                  p_->egl_surface,
                  p_->egl_surface,
-                 Display::Proxy::egl_context(display));
+                 Display::Private::Get(*display).egl_context);
 }
 
 void GLESV2API::SwapBuffers() {
   Display *display = Application::GetInstance()->GetDisplay();
-  eglSwapBuffers(Display::Proxy::egl_display(display), p_->egl_surface);
+  eglSwapBuffers(Display::Private::Get(*display).egl_display, p_->egl_surface);
 }
 
 void GLESV2API::OnSetup(ViewSurface *surface) {
@@ -72,8 +72,8 @@ void GLESV2API::OnSetup(ViewSurface *surface) {
 
   Display *display = Application::GetInstance()->GetDisplay();
   p_->wl_egl_window = wl_egl_window_create(Proxy::GetWaylandSurface(surface), 400, 300);
-  p_->egl_surface = eglCreatePlatformWindowSurface(Display::Proxy::egl_display(display),
-                                                   Display::Proxy::egl_config(display),
+  p_->egl_surface = eglCreatePlatformWindowSurface(Display::Private::Get(*display).egl_display,
+                                                   Display::Private::Get(*display).egl_config,
                                                    p_->wl_egl_window,
                                                    nullptr);
 }
@@ -86,7 +86,7 @@ void GLESV2API::Destroy() {
   if (nullptr != p_->egl_surface) {
     _ASSERT(nullptr != p_->wl_egl_window);
     Display *display = Application::GetInstance()->GetDisplay();
-    eglDestroySurface(Display::Proxy::egl_display(display), p_->egl_surface);
+    eglDestroySurface(Display::Private::Get(*display).egl_display, p_->egl_surface);
     wl_egl_window_destroy(p_->wl_egl_window);
     p_->wl_egl_window = nullptr;
     p_->egl_surface = nullptr;

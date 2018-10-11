@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "display/proxy.hpp"
+#include "display/private.hpp"
 #include "abstract-view/iterators.hpp"
 
 #include "wiztk/gui/gl-window.hpp"

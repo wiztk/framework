@@ -22,6 +22,7 @@
 #include "surface_private.hpp"
 #include "image-info/private.hpp"
 #include "bitmap/private.hpp"
+#include "image/private.hpp"
 
 #include <unicode/utf.h>
 #include <unicode/unistr.h>
@@ -148,6 +149,13 @@ void Canvas::DrawText(const String &text, float x, float y, const Paint &paint,
   utf16.toUTF8String(utf8);
 
   DrawAlignedText(utf8.data(), utf8.length(), x, y, paint, vert);
+}
+
+void Canvas::DrawImageRect(const Image &img, const RectF &src, const RectF &dst) {
+  p_->sk_canvas.drawImageRect(Image::Private::Get(img).sk_image_sp.get(),
+                              reinterpret_cast<const SkRect &>(src),
+                              reinterpret_cast<const SkRect &>(dst),
+                              nullptr);
 }
 
 void Canvas::DrawPaint(const Paint &paint) {

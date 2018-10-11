@@ -29,18 +29,18 @@ namespace graphics {
  */
 struct Typeface::Private {
 
-  Private() {}
+  static const Private &Get(const Typeface &typeface) {
+    return *typeface.p_;
+  }
 
-  Private(const sk_sp<SkTypeface> &typeface)
+  Private() = default;
+
+  explicit Private(const sk_sp<SkTypeface> &typeface)
       : sk_typeface(typeface) {}
 
-  Private(const Private &other)
-      : sk_typeface(other.sk_typeface) {}
+  Private(const Private &) = default;
 
-  Private &operator=(const Private &other) {
-    sk_typeface = other.sk_typeface;
-    return *this;
-  }
+  Private &operator=(const Private &other) = default;
 
   Private &operator=(const sk_sp<SkTypeface> &typeface) {
     sk_typeface = typeface;
@@ -54,4 +54,4 @@ struct Typeface::Private {
 } // namespace graphics
 } // namespace wiztk
 
-#endif // WIZTK_GRAPHIC_INTERNAL_TYPEFACE_PRIVATE_HPP_
+#endif // WIZTK_GRAPHIC_TYPEFACE_PRIVATE_HPP_

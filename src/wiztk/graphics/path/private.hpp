@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_FRAMEWORK_PRIVATE_HPP
-#define WIZTK_FRAMEWORK_PRIVATE_HPP
+#ifndef WIZTK_GRAPHICS_PATH_PRIVATE_HPP_
+#define WIZTK_GRAPHICS_PATH_PRIVATE_HPP_
 
 #include "wiztk/graphics/path.hpp"
 
@@ -48,4 +48,4 @@ struct Path::Private {
 }
 }
 
-#endif //WIZTK_FRAMEWORK_PRIVATE_HPP
+#endif // WIZTK_GRAPHICS_PATH_PRIVATE_HPP_

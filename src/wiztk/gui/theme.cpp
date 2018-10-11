@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-#include <wiztk/gui/theme.hpp>
-#include <iostream>
 #include <wiztk/base/macros.hpp>
-#include <wiztk/graphics/gradient-shader.hpp>
+
+#include <wiztk/gui/theme.hpp>
+
+#include "wiztk/graphics/gradient-shader.hpp"
 #include "wiztk/graphics/font-style.hpp"
+#include "wiztk/graphics/image-info.hpp"
 
 #include "SkPath.h"
 #include "SkCanvas.h"
@@ -28,12 +30,15 @@
 #include "theme-light.hpp"
 #include "theme-dark.hpp"
 
+#include <iostream>
+
 namespace wiztk {
 namespace gui {
 
 using base::Point2F;
 using graphics::FontStyle;
 using graphics::Shader;
+using graphics::ImageInfo;
 
 int Theme::kShadowRadius = 33;
 int Theme::kShadowOffsetX = 0;
@@ -43,7 +48,7 @@ Theme::Margin Theme::kShadowMargin = Theme::Margin(kShadowRadius - kShadowOffset
                                                    kShadowRadius + kShadowOffsetX,
                                                    kShadowRadius + kShadowOffsetY);
 std::vector<uint32_t> Theme::kShadowPixels;
-SkPixmap *Theme::kShadowPixmap = nullptr;
+graphics::Pixmap *Theme::kShadowPixmap = nullptr;
 
 Theme *Theme::kTheme = nullptr;
 
@@ -63,11 +68,12 @@ void Theme::Initialize() {
   kShadowPixels.resize(kShadowImageWidth * kShadowImageHeight, 0);
   GenerateShadowImage();
 
-  SkImageInfo image_info = SkImageInfo::MakeN32Premul(kShadowImageWidth, kShadowImageHeight);
+  ImageInfo image_info = ImageInfo::MakeN32Premul(kShadowImageWidth, kShadowImageHeight);
+
   delete kShadowPixmap;
-  kShadowPixmap = new SkPixmap(image_info,
-                               kShadowPixels.data(),
-                               kShadowImageWidth * 4);
+  kShadowPixmap = new graphics::Pixmap(image_info,
+                                       kShadowPixels.data(),
+                                       kShadowImageWidth * 4);
 
   Load();
   _ASSERT(kTheme);

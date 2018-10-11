@@ -17,7 +17,7 @@
 #include "wiztk/base/property.hpp"
 #include "wiztk/gui/callback.hpp"
 
-#include "display/proxy.hpp"
+#include "display/private.hpp"
 #include "view-surface/private.hpp"
 
 namespace wiztk {
@@ -81,7 +81,7 @@ Callback::~Callback() {
 void Callback::Setup(const Display *display) {
   p_->Destroy();
 
-  p_->wl_callback = wl_display_sync(Display::Proxy::wl_display(display));
+  p_->wl_callback = wl_display_sync(Display::Private::Get(*display).wl_display);
   wl_callback_add_listener(__PROPERTY__(wl_callback), &Private::kListener, this);
 }
 

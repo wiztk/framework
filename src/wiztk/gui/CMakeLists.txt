@@ -89,8 +89,6 @@ set(
         dialog.cpp
         display/private.cpp
         display/private.hpp
-        display/proxy.cpp
-        display/proxy.hpp
         display.cpp
         gl-view.cpp
         gl-window.cpp

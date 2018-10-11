@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "display/proxy.hpp"
+#include "display/private.hpp"
 
 #include "wiztk/gui/region.hpp"
 #include "wiztk/gui/application.hpp"
@@ -25,7 +25,7 @@ namespace gui {
 Region::Region()
     : wl_region_(nullptr) {
   Display *display = Application::GetInstance()->GetDisplay();
-  wl_region_ = wl_compositor_create_region(Display::Proxy::wl_compositor(display));
+  wl_region_ = wl_compositor_create_region(Display::Private::Get(*display).wl_compositor);
 }
 
 Region::~Region() {

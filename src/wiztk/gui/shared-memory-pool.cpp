@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "display/proxy.hpp"
+#include "display/private.hpp"
 
 #include <wiztk/gui/shared-memory-pool.hpp>
 #include "wiztk/gui/application.hpp"
@@ -50,7 +50,7 @@ void SharedMemoryPool::Setup(int32_t size) {
   }
 
   Display *display = Application::GetInstance()->GetDisplay();
-  wl_shm_pool_ = wl_shm_create_pool(Display::Proxy::wl_shm(display), fd, size);
+  wl_shm_pool_ = wl_shm_create_pool(Display::Private::Get(*display).wl_shm, fd, size);
 
   size_ = size;
   close(fd);

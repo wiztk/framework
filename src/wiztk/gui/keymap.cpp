@@ -16,7 +16,7 @@
 
 #include "keymap.hpp"
 
-#include "display/proxy.hpp"
+#include "display/private.hpp"
 
 #include "wiztk/gui/application.hpp"
 
@@ -32,7 +32,7 @@ void Keymap::Setup(const char *string, enum xkb_keymap_format format, enum xkb_k
   Destroy();
 
   Display *display = Application::GetInstance()->GetDisplay();
-  xkb_keymap_ = xkb_keymap_new_from_string(Display::Proxy::xkb_context(display), string, format, flags);
+  xkb_keymap_ = xkb_keymap_new_from_string(Display::Private::Get(*display).xkb_context, string, format, flags);
   if (nullptr == xkb_keymap_)
     throw std::runtime_error("FATAL! Cannot create XKB keymap!");
 }

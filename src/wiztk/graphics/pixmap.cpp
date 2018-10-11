@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "wiztk/graphics/pixmap.hpp"
+#include "pixmap/private.hpp"
 
 #include "image-info/private.hpp"
 #include "color-space/private.hpp"
@@ -23,25 +23,6 @@
 
 namespace wiztk {
 namespace graphics {
-
-struct Pixmap::Private {
-
-  Private() = default;
-
-  Private(const Private &) = default;
-
-  Private(const SkImageInfo &info, const void *addr, size_t row_bytes)
-      : sk_pixmap(info, addr, row_bytes) {}
-
-  ~Private() = default;
-
-  Private &operator=(const Private &) = default;
-
-  SkPixmap sk_pixmap;
-
-};
-
-// ----
 
 Pixmap::Pixmap() {
   p_ = std::make_unique<Private>();

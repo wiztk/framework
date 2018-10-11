@@ -47,6 +47,10 @@ struct Display::Private {
   Private(const Private &) = delete;
   Private &operator=(const Private &) = delete;
 
+  static const Private &Get(const Display &display) {
+    return *display.p_;
+  }
+
   Private() = default;
 
   ~Private() = default;
@@ -131,6 +135,8 @@ struct Display::Private {
   static const struct wl_shm_listener kShmListener;
 
   static const struct zxdg_shell_v6_listener kXdgShellListener;
+
+  static PFNEGLSWAPBUFFERSWITHDAMAGEEXTPROC kSwapBuffersWithDamageAPI;
 
 };
 

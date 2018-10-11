@@ -15,7 +15,7 @@
  */
 
 #include "input/private.hpp"
-#include "display/proxy.hpp"
+#include "display/private.hpp"
 
 #include "wiztk/gui/application.hpp"
 
@@ -29,7 +29,7 @@ Input::Input(uint32_t id, uint32_t version) {
   p_->version = version;
 
   p_->wl_seat =
-      static_cast<struct wl_seat *>(wl_registry_bind(Display::Proxy::wl_registry(display),
+      static_cast<struct wl_seat *>(wl_registry_bind(Display::Private::Get(*display).wl_registry,
                                                      id,
                                                      &wl_seat_interface,
                                                      version));

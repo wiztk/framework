@@ -49,6 +49,7 @@ set(
         font-style/private.hpp
         font-style.cpp
         gradient-shader.cpp
+        image/private.hpp
         image.cpp
         image-info/private.hpp
         image-info.cpp

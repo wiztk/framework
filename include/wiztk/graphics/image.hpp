@@ -24,15 +24,20 @@
 namespace wiztk {
 namespace graphics {
 
+class Pixmap;
+
 class Image {
 
  public:
+
+  struct Private;
 
   typedef void *ReleaseContext;
 
   typedef void (*RasterReleaseProc)(const void *pixels, ReleaseContext);
 
-  static Image MakeFromRaster();
+  // TODO: use the rasterReleaseProc and releaseContext parameters
+  static Image MakeFromRaster(const Pixmap &pixmap);
 
   Image();
 
@@ -47,8 +52,6 @@ class Image {
   virtual ~Image();
 
  private:
-
-  struct Private;
 
   std::unique_ptr<Private> p_;
 

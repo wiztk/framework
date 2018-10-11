@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "display/proxy.hpp"
+#include "display/private.hpp"
 
 #include "wiztk/gui/application.hpp"
 
@@ -26,7 +26,7 @@ Cursor *Cursor::Create(struct wl_cursor *wl_cursor) {
 
   Cursor *cursor = new Cursor;
 
-  cursor->wl_surface_ = wl_compositor_create_surface(Display::Proxy::wl_compositor(display));
+  cursor->wl_surface_ = wl_compositor_create_surface(Display::Private::Get(*display).wl_compositor);
   cursor->wl_cursor_ = wl_cursor;
 
   struct wl_cursor_image *image = wl_cursor->images[0];

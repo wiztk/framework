@@ -15,7 +15,7 @@
  */
 
 #include "main-loop/private.hpp"
-#include "display/proxy.hpp"
+#include "display/private.hpp"
 
 #include "wiztk/base/property.hpp"
 
@@ -34,7 +34,7 @@ MainLoop *MainLoop::Initialize(const Display *display) {
     throw err;
   }
 
-  main_loop->__PROPERTY__(wl_display) = Display::Proxy::wl_display(display);
+  main_loop->__PROPERTY__(wl_display) = Display::Private::Get(*display).wl_display;
   _ASSERT(main_loop->__PROPERTY__(wl_display));
 
   main_loop->WatchFileDescriptor(main_loop->__PROPERTY__(signal_event).signal_fd_,

@@ -17,7 +17,7 @@
 #include "abstract-egl-backend/private.hpp"
 
 #include "wiztk/gui/application.hpp"
-#include "display/proxy.hpp"
+#include "display/private.hpp"
 
 namespace wiztk {
 namespace gui {
@@ -28,7 +28,7 @@ AbstractEGLBackend::AbstractEGLBackend()
 
   Display *display = Application::GetInstance()->GetDisplay();
   p_->egl_display = eglGetPlatformDisplay(EGL_PLATFORM_WAYLAND_KHR,
-                                          Display::Proxy::wl_display(display),
+                                          Display::Private::Get(*display).wl_display,
                                           nullptr);
   if (EGL_NO_DISPLAY == p_->egl_display) {
     _DEBUG("%s\n", "Fail to get egl display.");

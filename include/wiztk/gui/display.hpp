@@ -64,7 +64,7 @@ class WIZTK_EXPORT Display {
   template<typename ... Args> using Signal = typename base::Signal<Args...>;
 
   struct Global;
-  struct Proxy;
+  struct Private;
 
  public:
 
@@ -96,8 +96,6 @@ class WIZTK_EXPORT Display {
   const Cursor *GetCursor(CursorType cursor_type) const;
 
  private:
-
-  struct Private;
 
   Display();
 

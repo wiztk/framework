@@ -18,7 +18,7 @@
 
 #include "display-event.hpp"
 #include "private.hpp"
-#include "display/proxy.hpp"
+#include "display/private.hpp"
 
 namespace wiztk {
 namespace gui {
