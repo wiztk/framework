@@ -74,14 +74,14 @@ Callback::Callback(const ViewSurface *surface)
   Setup(surface);
 }
 
-Callback::~Callback() {
-
-}
+Callback::~Callback() = default;
 
 void Callback::Setup(const Display *display) {
   p_->Destroy();
 
-  p_->wl_callback = wl_display_sync(Display::Private::Get(*display).wl_display);
+  struct wl_display *wl_display = Display::Private::Get(*display).wl_display;
+
+  p_->wl_callback = wl_display_sync(wl_display);
   wl_callback_add_listener(__PROPERTY__(wl_callback), &Private::kListener, this);
 }
 

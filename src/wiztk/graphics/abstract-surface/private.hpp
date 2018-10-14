@@ -19,23 +19,27 @@
 
 #include "wiztk/graphics/abstract-surface.hpp"
 
+#include "wiztk/base/property.hpp"
+
 namespace wiztk {
 namespace graphics {
 
 /**
  * @brief Private properties used in AbstractSurface
  */
-struct AbstractSurface::Private {
+struct AbstractSurface::Private : public base::Property<AbstractSurface> {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
   Private() = delete;
 
+  static const Private &Get(const AbstractSurface &surface) {
+    return *surface.p_;
+  }
+
   explicit Private(AbstractSurface *surface)
-      : proprietor(surface) {}
+      : base::Property<AbstractSurface>(surface) {}
 
-  ~Private() = default;
-
-  AbstractSurface *proprietor = nullptr;
+  ~Private() final = default;
 
   Size size;
 

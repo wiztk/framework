@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 The WizTK Authors.
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,6 +41,8 @@ class WIZTK_EXPORT AbstractSurface {
 
   using Margin = base::ThicknessI;
   using Size = base::SizeI;
+
+  struct Private;
 
   /**
    * @ingroup graphic
@@ -167,8 +169,6 @@ class WIZTK_EXPORT AbstractSurface {
   virtual bool OnResize(int width, int height) = 0;
 
  private:
-
-  struct Private;
 
   std::unique_ptr<Private> p_;
 

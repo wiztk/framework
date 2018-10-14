@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "surface_private.hpp"
+#include "surface/private.hpp"
 
 #include "canvas/private.hpp"
 #include "image-info/private.hpp"

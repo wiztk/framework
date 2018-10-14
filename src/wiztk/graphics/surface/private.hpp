@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHIC_SURFACE_PRIVATE_HPP_
-#define WIZTK_GRAPHIC_SURFACE_PRIVATE_HPP_
+#ifndef WIZTK_GRAPHICS_SURFACE_PRIVATE_HPP_
+#define WIZTK_GRAPHICS_SURFACE_PRIVATE_HPP_
 
 #include "wiztk/graphics/surface.hpp"
 
@@ -29,12 +29,10 @@ struct Surface::Private {
   Private(const Private &) = delete;
   Private &operator=(const Private &) = delete;
 
-  Private()
-      : canvas(nullptr) {}
+  Private() = default;
 
-  ~Private() {}
+  ~Private() = default;
 
-  Canvas *canvas;
   sk_sp<SkSurface> sp_sk_surface;
 
 };
@@ -42,4 +40,4 @@ struct Surface::Private {
 } // namespace graphics
 } // namespace wiztk
 
-#endif // WIZTK_GRAPHIC_INTERNAL_LAYER_PRIVATE_HPP_
+#endif // WIZTK_GRAPHICS_SURFACE_PRIVATE_HPP_

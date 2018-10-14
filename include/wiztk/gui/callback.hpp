@@ -17,8 +17,8 @@
 #ifndef WIZTK_GUI_CALLBACK_HPP_
 #define WIZTK_GUI_CALLBACK_HPP_
 
-#include "wiztk/base/delegate.hpp"
 #include "wiztk/base/macros.hpp"
+#include "wiztk/base/delegate.hpp"
 
 #include <memory>
 

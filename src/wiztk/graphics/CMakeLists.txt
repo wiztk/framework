@@ -60,7 +60,7 @@ set(
         pixmap.cpp
         shader/private.hpp
         shader.cpp
-        surface_private.hpp
+        surface/private.hpp
         typeface/private.hpp
         typeface.cpp
         view-surface.cpp

@@ -19,7 +19,7 @@
 #include "paint/private.hpp"
 #include "path/private.hpp"
 #include "matrix/private.hpp"
-#include "surface_private.hpp"
+#include "surface/private.hpp"
 #include "image-info/private.hpp"
 #include "bitmap/private.hpp"
 #include "image/private.hpp"

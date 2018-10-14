@@ -33,10 +33,12 @@ class ImageInfo;
  */
 class Surface {
 
+ public:
+
+  struct Private;
+
   Surface(const Surface &) = delete;
   Surface &operator=(const Surface &) = delete;
-
- public:
 
   /**
    * @brief Create a new surface object, using the specified pixels/rowbytes as its backend
@@ -57,8 +59,6 @@ class Surface {
   Surface();
 
  private:
-
-  struct Private;
 
   std::unique_ptr<Private> p_;
 

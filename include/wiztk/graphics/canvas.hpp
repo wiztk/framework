@@ -74,6 +74,8 @@ class Canvas {
 
   class LockGuard;
 
+  struct Private;
+
  public:
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Canvas);
@@ -194,7 +196,6 @@ class Canvas {
  private:
 
   struct LockGuardNode;
-  struct Private;
 
   void DrawAlignedText(const void *text,
                        size_t byte_length,
