@@ -18,7 +18,7 @@
 #include "wiztk/gui/callback.hpp"
 
 #include "display/private.hpp"
-#include "view-surface/private.hpp"
+#include "surface/private.hpp"
 
 namespace wiztk {
 namespace gui {

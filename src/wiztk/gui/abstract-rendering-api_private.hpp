@@ -19,7 +19,7 @@
 
 #include "wiztk/gui/abstract-rendering-api.hpp"
 
-#include "view-surface/private.hpp"
+#include "surface/private.hpp"
 
 namespace wiztk {
 namespace gui {

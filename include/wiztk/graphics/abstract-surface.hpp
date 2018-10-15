@@ -34,6 +34,8 @@ namespace graphics {
 /**
  * @ingroup graphic
  * @brief Abstract surface for rendering 2D/3D contents.
+ *
+ * TODO: This abstract class will be removed
  */
 class WIZTK_EXPORT AbstractSurface {
 

@@ -15,7 +15,7 @@
  */
 
 #include <wiztk/gui/video-view.hpp>
-#include <wiztk/gui/view-surface.hpp>
+#include <wiztk/gui/surface.hpp>
 
 #include <wiztk/gui/context.hpp>
 #include <wiztk/graphics/canvas.hpp>

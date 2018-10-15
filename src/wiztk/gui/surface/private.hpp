@@ -17,26 +17,26 @@
 #ifndef WIZTK_GUi_VIEW_SURFACE_PRIVATE_HPP_
 #define WIZTK_GUi_VIEW_SURFACE_PRIVATE_HPP_
 
-#include "wiztk/gui/view-surface.hpp"
+#include "wiztk/gui/surface.hpp"
 #include "wiztk/gui/abstract-rendering-api.hpp"
 
 namespace wiztk {
 namespace gui {
 
-struct ViewSurface::_Private {
+struct ViewSurface::Private {
 
   using PointI = base::Point2I;
 
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(_Private);
-  _Private() = delete;
+  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
+  Private() = delete;
 
-  _Private(ViewSurface *surface, AbstractEventHandler *event_handler, const Margin &margin)
+  Private(ViewSurface *surface, AbstractEventHandler *event_handler, const Margin &margin)
       : event_handler(event_handler),
         render_task(surface),
         commit_task(surface) {
   }
 
-  ~_Private() = default;
+  ~Private() = default;
 
   struct wl_surface *wl_surface = nullptr;
 

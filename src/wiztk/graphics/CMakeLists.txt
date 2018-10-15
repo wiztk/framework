@@ -61,9 +61,10 @@ set(
         shader/private.hpp
         shader.cpp
         surface/private.hpp
+        surface/properties/private.hpp
+        surface.cpp
         typeface/private.hpp
         typeface.cpp
-        view-surface.cpp
 )
 
 if (BUILD_SHARED_LIBRARY)

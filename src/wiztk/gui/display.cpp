@@ -18,7 +18,7 @@
 
 #include "wiztk/base/property.hpp"
 
-#include "wiztk/gui/view-surface.hpp"
+#include "wiztk/gui/surface.hpp"
 
 #include <iostream>
 

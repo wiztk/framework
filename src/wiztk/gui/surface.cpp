@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-#include "view-surface/private.hpp"
-#include "view-surface/shell/private.hpp"
-#include "view-surface/shell/toplevel/private.hpp"
-#include "view-surface/shell/popup/private.hpp"
+#include "surface/private.hpp"
+#include "surface/shell/private.hpp"
+#include "surface/shell/toplevel/private.hpp"
+#include "surface/shell/popup/private.hpp"
 #include "input/private.hpp"
 #include "output/private.hpp"
 #include "display/private.hpp"
@@ -452,12 +452,12 @@ base::Deque<ViewSurface::CommitTask> ViewSurface::kCommitTaskDeque;
 ViewSurface::ViewSurface(AbstractEventHandler *event_handler, const Margin &margin)
     : AbstractSurface(margin) {
   _ASSERT(nullptr != event_handler);
-  p_ = std::make_unique<_Private>(this, event_handler, margin);
+  p_ = std::make_unique<Private>(this, event_handler, margin);
   p_->role.placeholder = nullptr;
 
   Display *display = Application::GetInstance()->GetDisplay();
   p_->wl_surface = wl_compositor_create_surface(Display::Private::Get(*display).wl_compositor);
-  wl_surface_add_listener(p_->wl_surface, &_Private::kListener, this);
+  wl_surface_add_listener(p_->wl_surface, &Private::kListener, this);
 }
 
 ViewSurface::~ViewSurface() {

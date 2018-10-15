@@ -60,7 +60,7 @@ set(
         ${PROJECT_SOURCE_DIR}/include/wiztk/gui/tooltip.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/gui/touch-event.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/gui/video-view.hpp
-        ${PROJECT_SOURCE_DIR}/include/wiztk/gui/view-surface.hpp
+        ${PROJECT_SOURCE_DIR}/include/wiztk/gui/surface.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/gui/vulkan-api.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/gui/window.hpp
         abstract-button.cpp
@@ -136,14 +136,14 @@ set(
         title-bar.cpp
         tooltip.cpp
         video-view.cpp
-        view-surface/shell/popup/private.hpp
-        view-surface/shell/toplevel/private.cpp
-        view-surface/shell/toplevel/private.hpp
-        view-surface/shell/private.cpp
-        view-surface/shell/private.hpp
-        view-surface/private.cpp
-        view-surface/private.hpp
-        view-surface.cpp
+        surface/shell/popup/private.hpp
+        surface/shell/toplevel/private.cpp
+        surface/shell/toplevel/private.hpp
+        surface/shell/private.cpp
+        surface/shell/private.hpp
+        surface/private.cpp
+        surface/private.hpp
+        surface.cpp
         vulkan-api.cpp
         window.cpp
 )

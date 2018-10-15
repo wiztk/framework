@@ -2,22 +2,14 @@
 // Created by zhanggyb on 16-9-19.
 //
 
-#include "test.hpp"
+#include "path-test.hpp"
 
 #include <wiztk/graphics/path.hpp>
 #include "SkPath.h"
 
 using namespace wiztk::graphics;
 
-Test::Test()
-    : testing::Test() {
-}
-
-Test::~Test() {
-
-}
-
-TEST_F(Test, enums_check_1) {
+TEST_F(PathTest, enums_check_1) {
 
   // Direction
   ASSERT_TRUE((int) Path::Direction::kClockwise == (int) SkPath::Direction::kCW_Direction);

@@ -89,6 +89,11 @@ class WIZTK_EXPORT ViewSurface : public graphics::AbstractSurface, public base::
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(ViewSurface);
   ViewSurface() = delete;
 
+  /**
+   * @brief A private structure for surface properties
+   */
+  struct Private;
+
   class Shell;
   class Sub;
 
@@ -266,11 +271,6 @@ class WIZTK_EXPORT ViewSurface : public graphics::AbstractSurface, public base::
 
   };
 
-  /**
-   * @brief A private structure for surface properties
-   */
-  struct _Private;
-
   explicit ViewSurface(AbstractEventHandler *event_handler, const Margin &margin = Margin());
 
   void OnGLInterfaceDestroyed(__SLOT__);
@@ -301,7 +301,7 @@ class WIZTK_EXPORT ViewSurface : public graphics::AbstractSurface, public base::
 
   static base::Deque<CommitTask> kCommitTaskDeque;
 
-  std::unique_ptr<ViewSurface::_Private> p_;
+  std::unique_ptr<ViewSurface::Private> p_;
 
 };
 

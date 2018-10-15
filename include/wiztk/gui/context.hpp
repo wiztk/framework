@@ -17,7 +17,7 @@
 #ifndef WIZTK_GUI_CONTEXT_HPP_
 #define WIZTK_GUI_CONTEXT_HPP_
 
-#include "view-surface.hpp"
+#include "surface.hpp"
 #include "callback.hpp"
 
 namespace wiztk {

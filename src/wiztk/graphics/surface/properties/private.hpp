@@ -14,30 +14,34 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHICS_SURFACE_PRIVATE_HPP_
-#define WIZTK_GRAPHICS_SURFACE_PRIVATE_HPP_
+#ifndef WIZTK_GRAPHICS_SURFACE_PROPERTIES_PRIVATE_HPP_
+#define WIZTK_GRAPHICS_SURFACE_PROPERTIES_PRIVATE_HPP_
 
 #include "wiztk/graphics/surface.hpp"
 
-#include "SkSurface.h"
+#include "SkSurfaceProps.h"
 
 namespace wiztk {
 namespace graphics {
 
-struct Surface::Private {
+struct Surface::Properties::Private {
 
-  Private(const Private &) = delete;
-  Private &operator=(const Private &) = delete;
+  static const Private &Get(const Surface::Properties &props) {
+    return *props.p_;
+  }
 
-  Private() = default;
+  Private()
+      : sk_surface_props(SkSurfaceProps::kLegacyFontHost_InitType) {
+  }
 
-  ~Private() = default;
+  explicit Private(uint32_t flags)
+      : sk_surface_props(flags, SkSurfaceProps::kLegacyFontHost_InitType) {}
 
-  sk_sp<SkSurface> sk_surface_sp;
+  SkSurfaceProps sk_surface_props;
 
 };
 
-} // namespace graphics
-} // namespace wiztk
+}
+}
 
-#endif // WIZTK_GRAPHICS_SURFACE_PRIVATE_HPP_
+#endif // WIZTK_GRAPHICS_SURFACE_PROPERTIES_PRIVATE_HPP_

@@ -16,7 +16,7 @@
 
 #include "mouse-event/private.hpp"
 
-#include <wiztk/gui/view-surface.hpp>
+#include <wiztk/gui/surface.hpp>
 
 namespace wiztk {
 namespace gui {

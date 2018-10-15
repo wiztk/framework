@@ -15,7 +15,7 @@
  */
 
 #include "display/private.hpp"
-#include "view-surface/private.hpp"
+#include "surface/private.hpp"
 #include "abstract-rendering-api_proxy.hpp"
 
 #include "wiztk/gui/vulkan-api.hpp"
@@ -29,9 +29,7 @@ VulkanAPI::VulkanAPI()
 
 }
 
-VulkanAPI::~VulkanAPI() {
-
-}
+VulkanAPI::~VulkanAPI() = default;
 
 void VulkanAPI::OnSetup() {
   Display *display = Application::GetInstance()->GetDisplay();

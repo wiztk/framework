@@ -26,6 +26,14 @@ namespace graphics {
 class Canvas;
 class ImageInfo;
 
+enum PixelGeometryType {
+  kPixelGeometryUnknown,
+  kPixelGeometry_RGB_H,
+  kPixelGeometry_BGR_H,
+  kPixelGeometry_RGB_V,
+  kPixelGeometry_BGR_V
+};
+
 /**
  * @ingroup graphics
  * @brief A class responsible for managing the pixels that a canvas draws into
@@ -34,6 +42,8 @@ class ImageInfo;
 class Surface {
 
  public:
+
+  class Properties;
 
   struct Private;
 
@@ -46,17 +56,49 @@ class Surface {
    * @param row_bytes
    * @return
    */
-  static Surface *CreateRasterDirect(const ImageInfo &, void *pixels, size_t row_bytes);
+  static Surface CreateRasterDirect(const ImageInfo &image_info,
+                                    void *pixels,
+                                    size_t row_bytes,
+                                    const Properties *props = nullptr);
 
-  static Surface *CreateRaster(const ImageInfo &, size_t row_types);
+  static Surface CreateRaster(const ImageInfo &image_info,
+                              size_t row_bytes,
+                              const Properties *props = nullptr);
+
+  Surface(Surface &&other) noexcept;
+
+  Surface &operator=(Surface &&other) noexcept;
 
   virtual ~Surface();
-
-  Canvas *GetCanvas() const;
 
  protected:
 
   Surface();
+
+ private:
+
+  std::unique_ptr<Private> p_;
+
+};
+
+class Surface::Properties {
+
+ public:
+
+  Properties(const Properties &other) = delete;
+  Properties &operator=(const Properties &other) = delete;
+
+  struct Private;
+
+  Properties();
+
+  Properties(uint32_t flags);
+
+  Properties(Properties &&other) noexcept;
+
+  ~Properties();
+
+  Properties &operator=(Properties &&other) noexcept;
 
  private:
 

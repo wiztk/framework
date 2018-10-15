@@ -14,39 +14,46 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_VIEW_SURFACE_SHELL_PRIVATE_HPP_
-#define WIZTK_GUI_VIEW_SURFACE_SHELL_PRIVATE_HPP_
+#ifndef WIZTK_GUI_VIEW_SURFACE_SHELL_TOPLEVEL_PRIVATE_HPP_
+#define WIZTK_GUI_VIEW_SURFACE_SHELL_TOPLEVEL_PRIVATE_HPP_
 
-#include <wiztk/gui/view-surface.hpp>
+#include <wiztk/gui/surface.hpp>
 
 #include "xdg-shell-unstable-v6-client-protocol.h"
 
 namespace wiztk {
 namespace gui {
 
-struct ViewSurface::Shell::Private {
+struct ViewSurface::Shell::Toplevel::Private {
 
   Private(const Private &) = delete;
   Private &operator=(const Private &) = delete;
 
   Private()
-      : zxdg_surface(nullptr) {}
+      : shell(nullptr), zxdg_toplevel(nullptr) {}
 
   ~Private() {
-    if (zxdg_surface) zxdg_surface_v6_destroy(zxdg_surface);
+    if (zxdg_toplevel) zxdg_toplevel_v6_destroy(zxdg_toplevel);
   }
 
-  struct zxdg_surface_v6 *zxdg_surface;
+  Shell *shell;
+
+  struct zxdg_toplevel_v6 *zxdg_toplevel;
 
   static void OnConfigure(void *data,
-                          struct zxdg_surface_v6 *zxdg_surface_v6,
-                          uint32_t serial);
+                          struct zxdg_toplevel_v6 *zxdg_toplevel_v6,
+                          int32_t width,
+                          int32_t height,
+                          struct wl_array *states);
 
-  static const struct zxdg_surface_v6_listener kListener;
+  static void OnClose(void *data,
+                      struct zxdg_toplevel_v6 *zxdg_toplevel_v6);
+
+  static const struct zxdg_toplevel_v6_listener kListener;
 
 };
 
 } // namespace gui
 } // namespace wiztk
 
-#endif // WIZTK_GUI_VIEW_SURFACE_SHELL_PRIVATE_HPP_
+#endif // WIZTK_GUI_VIEW_SURFACE_SHELL_TOPLEVEL_PRIVATE_HPP_

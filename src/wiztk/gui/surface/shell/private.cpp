@@ -16,7 +16,7 @@
 
 #include "private.hpp"
 
-#include "view-surface/private.hpp"
+#include "surface/private.hpp"
 #include "abstract-shell-view/private.hpp"
 
 namespace wiztk {

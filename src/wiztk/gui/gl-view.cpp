@@ -19,7 +19,7 @@
 #include "wiztk/base/macros.hpp"
 #include "wiztk/base/property.hpp"
 
-#include "wiztk/gui/view-surface.hpp"
+#include "wiztk/gui/surface.hpp"
 #include "wiztk/gui/mouse-event.hpp"
 #include "wiztk/gui/key-event.hpp"
 #include "wiztk/gui/context.hpp"

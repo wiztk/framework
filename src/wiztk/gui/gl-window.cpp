@@ -25,7 +25,7 @@
 #include "wiztk/gui/key-event.hpp"
 #include "wiztk/gui/mouse-event.hpp"
 
-#include "wiztk/gui/view-surface.hpp"
+#include "wiztk/gui/surface.hpp"
 #include "wiztk/gui/callback.hpp"
 #include "wiztk/gui/title-bar.hpp"
 #include "wiztk/gui/glesv2-api.hpp"
