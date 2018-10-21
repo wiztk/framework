@@ -19,10 +19,11 @@
 #include "paint/private.hpp"
 #include "path/private.hpp"
 #include "matrix/private.hpp"
-#include "surface/private.hpp"
 #include "image-info/private.hpp"
 #include "bitmap/private.hpp"
 #include "image/private.hpp"
+#include "surface/private.hpp"
+#include "surface-props/private.hpp"
 
 #include <unicode/utf.h>
 #include <unicode/unistr.h>
@@ -80,55 +81,55 @@ Canvas::Canvas(const Bitmap &bitmap) {
 Canvas::~Canvas() = default;
 
 void Canvas::SetOrigin(float x, float y) {
-  p_->sk_canvas.translate(x - p_->origin.x, y - p_->origin.y);
+  p_->sk_canvas->translate(x - p_->origin.x, y - p_->origin.y);
   p_->origin.x = x;
   p_->origin.y = y;
 }
 
-ViewSurface *Canvas::CreateSurface(const ImageInfo &info) {
-  sk_sp<SkSurface> native = p_->sk_canvas.makeSurface(SkImageInfo::Make(info.GetWidth(),
-                                                                        info.GetHeight(),
-                                                                        static_cast<SkColorType >(info.GetColorType()),
-                                                                        static_cast<SkAlphaType >(info.GetAlphaType())));
-  // TODO: create surface
-  return nullptr;
+Surface Canvas::MakeSurface(const ImageInfo &info, const SurfaceProps *props) {
+  sk_sp<SkSurface> native =
+      p_->sk_canvas->makeSurface(ImageInfo::Private::Get(info).sk_image_info,
+                                 nullptr == props ? nullptr : &SurfaceProps::Private::Get(*props).sk_surface_props);
+
+  Surface surface(new Surface::Private(native));
+  return surface;
 }
 
 void Canvas::DrawLine(float x0, float y0, float x1, float y1, const Paint &paint) {
-  p_->sk_canvas.drawLine(x0, y0, x1, y1,
-                         Paint::Private::Get(paint).sk_paint);
+  p_->sk_canvas->drawLine(x0, y0, x1, y1,
+                          Paint::Private::Get(paint).sk_paint);
 }
 
 void Canvas::DrawRect(const RectF &rect, const Paint &paint) {
-  p_->sk_canvas.drawRect(*reinterpret_cast<const SkRect *>(&rect),
-                         Paint::Private::Get(paint).sk_paint);
+  p_->sk_canvas->drawRect(*reinterpret_cast<const SkRect *>(&rect),
+                          Paint::Private::Get(paint).sk_paint);
 }
 
 void Canvas::DrawRoundRect(const RectF &rect, float rx, float ry, const Paint &paint) {
-  p_->sk_canvas.drawRoundRect(*reinterpret_cast<const SkRect *>(&rect),
-                              rx, ry, Paint::Private::Get(paint).sk_paint);
+  p_->sk_canvas->drawRoundRect(*reinterpret_cast<const SkRect *>(&rect),
+                               rx, ry, Paint::Private::Get(paint).sk_paint);
 }
 
 void Canvas::DrawOval(const RectF &oval, const Paint &paint) {
-  p_->sk_canvas.drawOval(*reinterpret_cast<const SkRect *>(&oval),
-                         Paint::Private::Get(paint).sk_paint);
+  p_->sk_canvas->drawOval(*reinterpret_cast<const SkRect *>(&oval),
+                          Paint::Private::Get(paint).sk_paint);
 }
 
 void Canvas::DrawCircle(float x, float y, float radius, const Paint &paint) {
-  p_->sk_canvas.drawCircle(x, y, radius, Paint::Private::Get(paint).sk_paint);
+  p_->sk_canvas->drawCircle(x, y, radius, Paint::Private::Get(paint).sk_paint);
 }
 
 void Canvas::DrawArc(const RectF &oval, float start_angle, float sweep_angle, bool use_center, const Paint &paint) {
-  p_->sk_canvas.drawArc(*reinterpret_cast<const SkRect *>(&oval),
-                        start_angle,
-                        sweep_angle,
-                        use_center,
-                        Paint::Private::Get(paint).sk_paint);
+  p_->sk_canvas->drawArc(*reinterpret_cast<const SkRect *>(&oval),
+                         start_angle,
+                         sweep_angle,
+                         use_center,
+                         Paint::Private::Get(paint).sk_paint);
 }
 
 void Canvas::DrawPath(const Path &path, const Paint &paint) {
-  p_->sk_canvas.drawPath(Path::Private::Get(path).sk_path,
-                         Paint::Private::Get(paint).sk_paint);
+  p_->sk_canvas->drawPath(Path::Private::Get(path).sk_path,
+                          Paint::Private::Get(paint).sk_paint);
 }
 
 void Canvas::DrawText(const void *text, size_t byte_length, float x, float y, const Paint &paint,
@@ -152,122 +153,118 @@ void Canvas::DrawText(const String &text, float x, float y, const Paint &paint,
 }
 
 void Canvas::DrawImageRect(const Image &img, const RectF &src, const RectF &dst) {
-  p_->sk_canvas.drawImageRect(Image::Private::Get(img).sk_image_sp.get(),
-                              reinterpret_cast<const SkRect &>(src),
-                              reinterpret_cast<const SkRect &>(dst),
-                              nullptr);
+  p_->sk_canvas->drawImageRect(Image::Private::Get(img).sk_image_sp.get(),
+                               reinterpret_cast<const SkRect &>(src),
+                               reinterpret_cast<const SkRect &>(dst),
+                               nullptr);
 }
 
 void Canvas::DrawPaint(const Paint &paint) {
-  p_->sk_canvas.drawPaint(Paint::Private::Get(paint).sk_paint);
+  p_->sk_canvas->drawPaint(Paint::Private::Get(paint).sk_paint);
 }
 
 void Canvas::Translate(float dx, float dy) {
-  p_->sk_canvas.translate(dx, dy);
+  p_->sk_canvas->translate(dx, dy);
 }
 
 void Canvas::Scale(float sx, float sy) {
-  p_->sk_canvas.scale(sx, sy);
+  p_->sk_canvas->scale(sx, sy);
 }
 
 void Canvas::Rotate(float degrees) {
-  p_->sk_canvas.rotate(degrees);
+  p_->sk_canvas->rotate(degrees);
 }
 
 void Canvas::Rotate(float degrees, float px, float py) {
-  p_->sk_canvas.rotate(degrees, px, py);
+  p_->sk_canvas->rotate(degrees, px, py);
 }
 
 void Canvas::Skew(float sx, float sy) {
-  p_->sk_canvas.skew(sx, sy);
+  p_->sk_canvas->skew(sx, sy);
 }
 
 void Canvas::Concat(const Matrix &matrix) {
-  p_->sk_canvas.concat(Matrix::Private::Get(matrix).sk_matrix);
+  p_->sk_canvas->concat(Matrix::Private::Get(matrix).sk_matrix);
 }
 
 void Canvas::SetMatrix(const Matrix &matrix) {
-  p_->sk_canvas.setMatrix(Matrix::Private::Get(matrix).sk_matrix);
+  p_->sk_canvas->setMatrix(Matrix::Private::Get(matrix).sk_matrix);
 }
 
 void Canvas::ResetMatrix() {
-  p_->sk_canvas.resetMatrix();
-  p_->sk_canvas.translate(p_->origin.x, p_->origin.y);
+  p_->sk_canvas->resetMatrix();
+  p_->sk_canvas->translate(p_->origin.x, p_->origin.y);
 }
 
 void Canvas::Clear(uint32_t argb) {
-  p_->sk_canvas.clear(argb);
+  p_->sk_canvas->clear(argb);
 }
 
 void Canvas::Clear(const ColorF &color) {
-  p_->sk_canvas.clear(color.argb());
+  p_->sk_canvas->clear(color.argb());
 }
 
 void Canvas::ClipRect(const RectF &rect, ClipOperation op, bool antialias) {
-  p_->sk_canvas.clipRect(reinterpret_cast<const SkRect &>(rect), static_cast<SkClipOp >(op), antialias);
+  p_->sk_canvas->clipRect(reinterpret_cast<const SkRect &>(rect), static_cast<SkClipOp >(op), antialias);
 }
 
 void Canvas::ClipRect(const RectF &rect, bool antialias) {
-  p_->sk_canvas.clipRect(reinterpret_cast<const SkRect &>(rect), antialias);
+  p_->sk_canvas->clipRect(reinterpret_cast<const SkRect &>(rect), antialias);
 }
 
 void Canvas::ClipPath(const Path &path, ClipOperation op, bool antialias) {
-  p_->sk_canvas.clipPath(Path::Private::Get(path).sk_path, static_cast<SkClipOp >(op), antialias);
+  p_->sk_canvas->clipPath(Path::Private::Get(path).sk_path, static_cast<SkClipOp >(op), antialias);
 }
 
 void Canvas::ClipPath(const Path &path, bool antilias) {
-  p_->sk_canvas.clipPath(Path::Private::Get(path).sk_path, antilias);
+  p_->sk_canvas->clipPath(Path::Private::Get(path).sk_path, antilias);
 }
 
 void Canvas::Save() {
-  p_->sk_canvas.save();
+  p_->sk_canvas->save();
 }
 
 void Canvas::SaveLayer(const RectF *bounds, const Paint *paint) {
-  p_->sk_canvas.saveLayer(reinterpret_cast<const SkRect *>(bounds),
-                          nullptr == paint ? nullptr : &Paint::Private::Get(*paint).sk_paint);
+  p_->sk_canvas->saveLayer(reinterpret_cast<const SkRect *>(bounds),
+                           nullptr == paint ? nullptr : &Paint::Private::Get(*paint).sk_paint);
 }
 
 void Canvas::SaveLayer(const RectF *bounds, unsigned char alpha) {
-  p_->sk_canvas.saveLayerAlpha(reinterpret_cast<const SkRect *>(bounds), alpha);
+  p_->sk_canvas->saveLayerAlpha(reinterpret_cast<const SkRect *>(bounds), alpha);
 }
 
 void Canvas::Restore() {
   if (p_->lock_guard_deque.is_empty()) {
-    p_->sk_canvas.restore();
+    p_->sk_canvas->restore();
     return;
   }
 
-  if (p_->sk_canvas.getSaveCount() > p_->lock_guard_deque[-1]->depth) {
-    p_->sk_canvas.restore();
+  if (p_->sk_canvas->getSaveCount() > p_->lock_guard_deque[-1]->depth) {
+    p_->sk_canvas->restore();
   }
 }
 
 int Canvas::GetSaveCount() const {
-  return p_->sk_canvas.getSaveCount();
+  return p_->sk_canvas->getSaveCount();
 }
 
 void Canvas::RestoreToCount(int save_count) {
   if (p_->lock_guard_deque.is_empty()) {
-    p_->sk_canvas.restoreToCount(save_count);
+    p_->sk_canvas->restoreToCount(save_count);
     return;
   }
 
   if (save_count > p_->lock_guard_deque[-1]->depth) {
-    p_->sk_canvas.restoreToCount(save_count);
+    p_->sk_canvas->restoreToCount(save_count);
   }
 }
 
 void Canvas::Flush() {
-  p_->sk_canvas.flush();
+  p_->sk_canvas->flush();
 }
 
 const Point2F &Canvas::GetOrigin() const {
   return p_->origin;
-}
-
-SkCanvas *Canvas::GetSkCanvas() const {
-  return &p_->sk_canvas;
 }
 
 void Canvas::DrawAlignedText(const void *text,
@@ -298,7 +295,7 @@ void Canvas::DrawAlignedText(const void *text,
     }
   }
 
-  p_->sk_canvas.drawText(text, byte_length, x, y, Paint::Private::Get(paint).sk_paint);
+  p_->sk_canvas->drawText(text, byte_length, x, y, Paint::Private::Get(paint).sk_paint);
 }
 
 // ----------
@@ -310,7 +307,7 @@ Canvas::LockGuard::~LockGuard() {
       it.remove();
       it = canvas_->p_->lock_guard_deque.rbegin();
     }
-    canvas_->p_->sk_canvas.restoreToCount(node_.depth);
+    canvas_->p_->sk_canvas->restoreToCount(node_.depth);
   }
 }
 
@@ -367,7 +364,7 @@ void Canvas::LockGuard::Unlock() {
     it.remove();
     it = canvas_->p_->lock_guard_deque.rbegin();
   }
-  canvas_->p_->sk_canvas.restoreToCount(node_.depth);
+  canvas_->p_->sk_canvas->restoreToCount(node_.depth);
   node_.unlink();
 }
 

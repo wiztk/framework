@@ -30,9 +30,6 @@
 
 #include <memory>
 
-// Forward declaration
-class SkCanvas;
-
 namespace wiztk {
 namespace graphics {
 
@@ -43,7 +40,8 @@ class Path;
 class Matrix;
 class Bitmap;
 class ImageInfo;
-class ViewSurface;
+class Surface;
+class SurfaceProps;
 
 /**
  * @ingroup graphics
@@ -104,7 +102,7 @@ class Canvas {
    * @param info
    * @return A pointer to a new created surface object, must be deleted manually
    */
-  ViewSurface *CreateSurface(const ImageInfo &info);
+  Surface MakeSurface(const ImageInfo &info, const SurfaceProps *props = nullptr);
 
   void DrawLine(float x0, float y0, float x1, float y1, const Paint &paint);
 
@@ -190,8 +188,6 @@ class Canvas {
   void Flush();
 
   const Point2F &GetOrigin() const;
-
-  SkCanvas *GetSkCanvas() const;
 
  private:
 

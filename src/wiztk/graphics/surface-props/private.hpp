@@ -17,16 +17,16 @@
 #ifndef WIZTK_GRAPHICS_SURFACE_PROPERTIES_PRIVATE_HPP_
 #define WIZTK_GRAPHICS_SURFACE_PROPERTIES_PRIVATE_HPP_
 
-#include "wiztk/graphics/surface.hpp"
+#include "wiztk/graphics/surface-props.hpp"
 
 #include "SkSurfaceProps.h"
 
 namespace wiztk {
 namespace graphics {
 
-struct Surface::Properties::Private {
+struct SurfaceProps::Private {
 
-  static const Private &Get(const Surface::Properties &props) {
+  static const Private &Get(const SurfaceProps &props) {
     return *props.p_;
   }
 

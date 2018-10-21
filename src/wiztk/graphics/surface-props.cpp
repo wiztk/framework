@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 - 2018 The WizTK Authors.
+ * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,36 +14,32 @@
  * limitations under the License.
  */
 
-#include "shader/private.hpp"
+#include "surface-props/private.hpp"
 
-#include "wiztk/base/macros.hpp"
+#include "canvas/private.hpp"
+#include "image-info/private.hpp"
 
 namespace wiztk {
 namespace graphics {
 
-Shader::Shader() {
+SurfaceProps::SurfaceProps() {
   p_ = std::make_unique<Private>();
 }
 
-Shader::Shader(Private *p)
-    : p_(p) {
-  _ASSERT(p_);
+SurfaceProps::SurfaceProps(uint32_t flags) {
+  p_ = std::make_unique<Private>(flags);
 }
 
-Shader::Shader(const Shader &other) {
-  p_ = std::make_unique<Private>(other.p_->sk_shader);
+SurfaceProps::SurfaceProps(SurfaceProps &&other) noexcept {
+  p_ = std::move(other.p_);
 }
 
-Shader::~Shader() = default;
-
-Shader &Shader::operator=(const Shader &other) {
-  *p_ = *other.p_;
+SurfaceProps &SurfaceProps::operator=(SurfaceProps &&other) noexcept {
+  p_ = std::move(other.p_);
   return *this;
 }
 
-Shader::operator bool() const {
-  return p_->sk_shader.get() != nullptr;
-}
+SurfaceProps::~SurfaceProps() = default;
 
 } // namespace graphics
 } // namespace wiztk

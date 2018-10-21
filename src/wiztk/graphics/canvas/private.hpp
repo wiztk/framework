@@ -21,6 +21,8 @@
 
 #include "wiztk/base/deque.hpp"
 
+#include "wiztk/graphics/surface.hpp"
+
 #include "SkCanvas.h"
 
 namespace wiztk {
@@ -31,15 +33,27 @@ namespace graphics {
  */
 struct Canvas::Private {
 
-  Private() = default;
-
-  explicit Private(const SkBitmap &bitmap)
-      : sk_canvas(bitmap) {
+  static const Private &Get(const Canvas &canvas) {
+    return *canvas.p_;
   }
 
-  ~Private() = default;
+  Private() = default;
 
-  SkCanvas sk_canvas;
+  explicit Private(const SkBitmap &bitmap) {
+    sk_canvas = new SkCanvas(bitmap);
+  }
+
+  ~Private() {
+    if (nullptr == surface) delete sk_canvas;
+  }
+
+  SkCanvas *sk_canvas = nullptr;
+
+  /**
+   * If surface is nullptr, this canvas is constructed as standalone.
+   * If surface is not nullptr, this canvas points to a an existing one on surface, it will be destroyed by the surface.
+   */
+  Surface *surface = nullptr;
 
   Point2F origin;
 

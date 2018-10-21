@@ -15,7 +15,7 @@
  */
 
 #include "surface/private.hpp"
-#include "surface/properties/private.hpp"
+#include "surface-props/private.hpp"
 
 #include "canvas/private.hpp"
 #include "image-info/private.hpp"
@@ -26,14 +26,14 @@ namespace graphics {
 Surface Surface::CreateRasterDirect(const ImageInfo &image_info,
                                     void *pixels,
                                     size_t row_bytes,
-                                    const Properties *props) {
+                                    const SurfaceProps *props) {
   Surface surface;
 
   surface.p_->sk_surface_sp =
       SkSurface::MakeRasterDirect(ImageInfo::Private::Get(image_info).sk_image_info,
                                   pixels,
                                   row_bytes,
-                                  nullptr == props ? nullptr : &Properties::Private::Get(*props).sk_surface_props);
+                                  nullptr == props ? nullptr : &SurfaceProps::Private::Get(*props).sk_surface_props);
 
   if (!surface.p_->sk_surface_sp) {
     throw std::runtime_error("Error! Fail to create Surface object!");
@@ -44,13 +44,13 @@ Surface Surface::CreateRasterDirect(const ImageInfo &image_info,
 
 Surface Surface::CreateRaster(const ImageInfo &image_info,
                               size_t row_bytes,
-                              const Properties *props) {
+                              const SurfaceProps *props) {
   Surface surface;
 
   surface.p_->sk_surface_sp =
       SkSurface::MakeRaster(ImageInfo::Private::Get(image_info).sk_image_info,
                             row_bytes,
-                            nullptr == props ? nullptr : &Properties::Private::Get(*props).sk_surface_props);
+                            nullptr == props ? nullptr : &SurfaceProps::Private::Get(*props).sk_surface_props);
 
   if (!surface.p_->sk_surface_sp) {
     throw std::runtime_error("Error! Fail to create Surface object!");
@@ -67,33 +67,15 @@ Surface::Surface(Surface &&other) noexcept {
   p_ = std::move(other.p_);
 }
 
+Surface::Surface(Private *p)
+    : p_(p) {}
+
+Surface::~Surface() = default;
+
 Surface &Surface::operator=(Surface &&other) noexcept {
   p_ = std::move(other.p_);
   return *this;
 }
-
-Surface::~Surface() = default;
-
-// ----
-
-Surface::Properties::Properties() {
-  p_ = std::make_unique<Private>();
-}
-
-Surface::Properties::Properties(uint32_t flags) {
-  p_ = std::make_unique<Private>(flags);
-}
-
-Surface::Properties::Properties(Properties &&other) noexcept {
-  p_ = std::move(other.p_);
-}
-
-Surface::Properties &Surface::Properties::operator=(Properties &&other) noexcept {
-  p_ = std::move(other.p_);
-  return *this;
-}
-
-Surface::Properties::~Properties() = default;
 
 } // namespace graphics
 } // namespace wiztk

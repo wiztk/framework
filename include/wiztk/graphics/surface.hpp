@@ -25,14 +25,7 @@ namespace graphics {
 // Forward declarations
 class Canvas;
 class ImageInfo;
-
-enum PixelGeometryType {
-  kPixelGeometryUnknown,
-  kPixelGeometry_RGB_H,
-  kPixelGeometry_BGR_H,
-  kPixelGeometry_RGB_V,
-  kPixelGeometry_BGR_V
-};
+class SurfaceProps;
 
 /**
  * @ingroup graphics
@@ -42,8 +35,6 @@ enum PixelGeometryType {
 class Surface {
 
  public:
-
-  class Properties;
 
   struct Private;
 
@@ -59,15 +50,17 @@ class Surface {
   static Surface CreateRasterDirect(const ImageInfo &image_info,
                                     void *pixels,
                                     size_t row_bytes,
-                                    const Properties *props = nullptr);
+                                    const SurfaceProps *props = nullptr);
 
   static Surface CreateRaster(const ImageInfo &image_info,
                               size_t row_bytes,
-                              const Properties *props = nullptr);
+                              const SurfaceProps *props = nullptr);
 
   Surface(Surface &&other) noexcept;
 
   Surface &operator=(Surface &&other) noexcept;
+
+  explicit Surface(Private *p);
 
   virtual ~Surface();
 
@@ -81,32 +74,7 @@ class Surface {
 
 };
 
-class Surface::Properties {
-
- public:
-
-  Properties(const Properties &other) = delete;
-  Properties &operator=(const Properties &other) = delete;
-
-  struct Private;
-
-  Properties();
-
-  Properties(uint32_t flags);
-
-  Properties(Properties &&other) noexcept;
-
-  ~Properties();
-
-  Properties &operator=(Properties &&other) noexcept;
-
- private:
-
-  std::unique_ptr<Private> p_;
-
-};
-
 } // namespace graphics
 } // namespace wiztk
 
-#endif //WIZTK_LAYER_HPP
+#endif // WIZTK_GRAPHIC_SURFACE_HPP_

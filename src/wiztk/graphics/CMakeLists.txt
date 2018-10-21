@@ -33,6 +33,7 @@ set(
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/pixmap.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/shader.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/surface.hpp
+        ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/surface-props.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/typeface.hpp
         abstract-rendering-backend.cpp
         abstract-surface/private.hpp
@@ -61,8 +62,9 @@ set(
         shader/private.hpp
         shader.cpp
         surface/private.hpp
-        surface/properties/private.hpp
         surface.cpp
+        surface-props/private.hpp
+        surface-props.cpp
         typeface/private.hpp
         typeface.cpp
 )

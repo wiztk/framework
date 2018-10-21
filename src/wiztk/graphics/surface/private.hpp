@@ -31,6 +31,9 @@ struct Surface::Private {
 
   Private() = default;
 
+  explicit Private(const sk_sp<SkSurface> &native)
+      : sk_surface_sp(native) {}
+
   ~Private() = default;
 
   sk_sp<SkSurface> sk_surface_sp;

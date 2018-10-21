@@ -97,6 +97,7 @@ class MainWidget : public AbstractView {
 
     canvas->Restore();
 
+    /*
     SkCanvas *sk_canvas = canvas->GetSkCanvas();
 
     SkImageInfo info = SkImageInfo::MakeN32(400, 400, kPremul_SkAlphaType);
@@ -111,6 +112,7 @@ class MainWidget : public AbstractView {
     top_canvas->flush();
 
     surface->draw(sk_canvas, 100, 100, nullptr);
+     */
 
     canvas->Flush();
   }
