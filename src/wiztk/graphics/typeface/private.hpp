@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHIC_TYPEFACE_PRIVATE_HPP_
-#define WIZTK_GRAPHIC_TYPEFACE_PRIVATE_HPP_
+#ifndef WIZTK_GRAPHICS_TYPEFACE_PRIVATE_HPP_
+#define WIZTK_GRAPHICS_TYPEFACE_PRIVATE_HPP_
 
 #include <wiztk/graphics/typeface.hpp>
 
@@ -36,18 +36,18 @@ struct Typeface::Private {
   Private() = default;
 
   explicit Private(const sk_sp<SkTypeface> &typeface)
-      : sk_typeface(typeface) {}
+      : sk_typeface_sp(typeface) {}
 
   Private(const Private &) = default;
 
   Private &operator=(const Private &other) = default;
 
   Private &operator=(const sk_sp<SkTypeface> &typeface) {
-    sk_typeface = typeface;
+    sk_typeface_sp = typeface;
     return *this;
   }
 
-  sk_sp<SkTypeface> sk_typeface;
+  sk_sp<SkTypeface> sk_typeface_sp;
 
 };
 

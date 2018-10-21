@@ -74,11 +74,35 @@ Canvas::Canvas(unsigned char *pixel, int width, int height, int format) {
   p_ = std::make_unique<Private>(bitmap);
 }
 
+Canvas::Canvas(int width, int height, const SurfaceProps *props) {
+  const SkSurfaceProps *sk_props = nullptr == props ?
+                                   nullptr : &SurfaceProps::Private::Get(*props).sk_surface_props;
+  p_ = std::make_unique<Private>(width, height, sk_props);
+}
+
 Canvas::Canvas(const Bitmap &bitmap) {
   p_ = std::make_unique<Private>(Bitmap::Private::Get(bitmap).sk_bitmap);
 }
 
+Canvas::Canvas(const wiztk::graphics::Bitmap &bitmap, const SurfaceProps &props) {
+  p_ = std::make_unique<Private>(Bitmap::Private::Get(bitmap).sk_bitmap,
+                                 SurfaceProps::Private::Get(props).sk_surface_props);
+}
+
+Canvas::Canvas(Canvas &&other) noexcept {
+  p_ = std::move(other.p_);
+}
+
+Canvas::Canvas(Surface *surface) {
+  p_ = std::make_unique<Private>(surface);
+}
+
 Canvas::~Canvas() = default;
+
+Canvas &Canvas::operator=(Canvas &&other) noexcept {
+  p_ = std::move(other.p_);
+  return *this;
+}
 
 void Canvas::SetOrigin(float x, float y) {
   p_->sk_canvas->translate(x - p_->origin.x, y - p_->origin.y);

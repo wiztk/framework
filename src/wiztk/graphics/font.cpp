@@ -34,21 +34,21 @@ Font::Font(const char *family_name, const FontStyle &font_style, float size, Mas
 
   Typeface typeface(family_name, font_style);
 
-  p_->sk_typeface = typeface.p_->sk_typeface;
+  p_->sk_typeface = typeface.p_->sk_typeface_sp;
   p_->sk_font = SkFont::Make(p_->sk_typeface, size, (SkFont::MaskType) mask_type, flags);
 }
 
 Font::Font(const Typeface &typeface, float size, MaskType mask_type, uint32_t flags) {
   p_ = std::make_unique<Private>();
 
-  p_->sk_typeface = typeface.p_->sk_typeface;
+  p_->sk_typeface = typeface.p_->sk_typeface_sp;
   p_->sk_font = SkFont::Make(p_->sk_typeface, size, (SkFont::MaskType) mask_type, flags);
 }
 
 Font::Font(const Typeface &typeface, float size, float scale_x, float skew_x, MaskType mask_type, uint32_t flags) {
   p_ = std::make_unique<Private>();
 
-  p_->sk_typeface = typeface.p_->sk_typeface;
+  p_->sk_typeface = typeface.p_->sk_typeface_sp;
   p_->sk_font =
       SkFont::Make(p_->sk_typeface, size, scale_x, skew_x, (SkFont::MaskType) mask_type, flags);
 }

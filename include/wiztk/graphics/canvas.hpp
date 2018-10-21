@@ -55,7 +55,7 @@ class SurfaceProps;
  */
 class Canvas {
 
-  friend class ViewSurface;
+  friend class Surface;
 
  public:
 
@@ -76,7 +76,7 @@ class Canvas {
 
  public:
 
-  WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Canvas);
+  WIZTK_DECLARE_NONCOPYABLE(Canvas);
 
   static Canvas *CreateRasterDirect(int width,
                                     int height,
@@ -91,9 +91,17 @@ class Canvas {
   Canvas(unsigned char *pixel, int width, int height,
          int format = kPixelFormatABGR8888);
 
+  Canvas(int width, int height, const SurfaceProps *props = nullptr);
+
   explicit Canvas(const Bitmap &bitmap);
 
-  ~Canvas();
+  Canvas(const Bitmap &bitmap, const SurfaceProps &props);
+
+  Canvas(Canvas &&other) noexcept;
+
+  virtual ~Canvas();
+
+  Canvas &operator=(Canvas &&other) noexcept;
 
   void SetOrigin(float x, float y);
 
@@ -192,6 +200,8 @@ class Canvas {
  private:
 
   struct LockGuardNode;
+
+  explicit Canvas(Surface *surface);
 
   void DrawAlignedText(const void *text,
                        size_t byte_length,

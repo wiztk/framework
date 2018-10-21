@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHIC_SURFACE_HPP_
-#define WIZTK_GRAPHIC_SURFACE_HPP_
+#ifndef WIZTK_GRAPHICS_SURFACE_HPP_
+#define WIZTK_GRAPHICS_SURFACE_HPP_
 
 #include <memory>
+
+#include "wiztk/graphics/canvas.hpp"
 
 namespace wiztk {
 namespace graphics {
@@ -47,22 +49,28 @@ class Surface {
    * @param row_bytes
    * @return
    */
-  static Surface CreateRasterDirect(const ImageInfo &image_info,
-                                    void *pixels,
-                                    size_t row_bytes,
-                                    const SurfaceProps *props = nullptr);
+  static Surface MakeRasterDirect(const ImageInfo &image_info,
+                                  void *pixels,
+                                  size_t row_bytes,
+                                  const SurfaceProps *props = nullptr);
 
-  static Surface CreateRaster(const ImageInfo &image_info,
-                              size_t row_bytes,
-                              const SurfaceProps *props = nullptr);
+  static Surface MakeRaster(const ImageInfo &image_info,
+                            size_t row_bytes,
+                            const SurfaceProps *props = nullptr);
 
   Surface(Surface &&other) noexcept;
-
-  Surface &operator=(Surface &&other) noexcept;
 
   explicit Surface(Private *p);
 
   virtual ~Surface();
+
+  Surface &operator=(Surface &&other) noexcept;
+
+  int GetWidth() const;
+
+  int GetHeight() const;
+
+  Canvas GetCanvas();
 
  protected:
 

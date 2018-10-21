@@ -29,6 +29,10 @@ struct Surface::Private {
   Private(const Private &) = delete;
   Private &operator=(const Private &) = delete;
 
+  static const Private &Get(const Surface &surface) {
+    return *surface.p_;
+  }
+
   Private() = default;
 
   explicit Private(const sk_sp<SkSurface> &native)

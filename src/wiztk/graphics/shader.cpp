@@ -31,7 +31,7 @@ Shader::Shader(Private *p)
 }
 
 Shader::Shader(const Shader &other) {
-  p_ = std::make_unique<Private>(other.p_->sk_shader);
+  p_ = std::make_unique<Private>(other.p_->sk_shader_sp);
 }
 
 Shader::~Shader() = default;
@@ -42,7 +42,7 @@ Shader &Shader::operator=(const Shader &other) {
 }
 
 Shader::operator bool() const {
-  return p_->sk_shader.get() != nullptr;
+  return p_->sk_shader_sp.get() != nullptr;
 }
 
 } // namespace graphics

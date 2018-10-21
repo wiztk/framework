@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHIC_TYPEFACE_HPP_
-#define WIZTK_GRAPHIC_TYPEFACE_HPP_
+#ifndef WIZTK_GRAPHICS_TYPEFACE_HPP_
+#define WIZTK_GRAPHICS_TYPEFACE_HPP_
 
 #include "wiztk/base/macros.hpp"
 #include "wiztk/base/types.hpp"

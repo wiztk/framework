@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHIC_SHADER_PRIVATE_HPP_
-#define WIZTK_GRAPHIC_SHADER_PRIVATE_HPP_
+#ifndef WIZTK_GRAPHICS_SHADER_PRIVATE_HPP_
+#define WIZTK_GRAPHICS_SHADER_PRIVATE_HPP_
 
 #include <wiztk/graphics/shader.hpp>
 
@@ -35,19 +35,19 @@ struct Shader::Private {
 
   Private() = default;
 
-  Private(const sk_sp<SkShader> &shader)
-      : sk_shader(shader) {}
+  explicit Private(const sk_sp<SkShader> &shader)
+      : sk_shader_sp(shader) {}
 
   Private(const Private &other) = default;
 
   Private &operator=(const Private &other) = default;
 
   Private &operator=(const sk_sp<SkShader> &shader) {
-    sk_shader = shader;
+    sk_shader_sp = shader;
     return *this;
   }
 
-  sk_sp<SkShader> sk_shader;
+  sk_sp<SkShader> sk_shader_sp;
 
 };
 

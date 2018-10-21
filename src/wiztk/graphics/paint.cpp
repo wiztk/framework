@@ -97,7 +97,7 @@ void Paint::SetFont(const Font &font) {
 }
 
 void Paint::SetShader(const Shader &shader) {
-  p_->sk_paint.setShader(Shader::Private::Get(shader).sk_shader);
+  p_->sk_paint.setShader(Shader::Private::Get(shader).sk_shader_sp);
 }
 
 TextAlignment::Horizontal Paint::GetTextAlign() const {

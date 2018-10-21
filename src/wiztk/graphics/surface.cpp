@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,10 +23,10 @@
 namespace wiztk {
 namespace graphics {
 
-Surface Surface::CreateRasterDirect(const ImageInfo &image_info,
-                                    void *pixels,
-                                    size_t row_bytes,
-                                    const SurfaceProps *props) {
+Surface Surface::MakeRasterDirect(const ImageInfo &image_info,
+                                  void *pixels,
+                                  size_t row_bytes,
+                                  const SurfaceProps *props) {
   Surface surface;
 
   surface.p_->sk_surface_sp =
@@ -42,9 +42,9 @@ Surface Surface::CreateRasterDirect(const ImageInfo &image_info,
   return surface;
 }
 
-Surface Surface::CreateRaster(const ImageInfo &image_info,
-                              size_t row_bytes,
-                              const SurfaceProps *props) {
+Surface Surface::MakeRaster(const ImageInfo &image_info,
+                            size_t row_bytes,
+                            const SurfaceProps *props) {
   Surface surface;
 
   surface.p_->sk_surface_sp =
@@ -75,6 +75,18 @@ Surface::~Surface() = default;
 Surface &Surface::operator=(Surface &&other) noexcept {
   p_ = std::move(other.p_);
   return *this;
+}
+
+int Surface::GetWidth() const {
+  return p_->sk_surface_sp->width();
+}
+
+int Surface::GetHeight() const {
+  return p_->sk_surface_sp->height();
+}
+
+Canvas Surface::GetCanvas() {
+  return Canvas(this);
 }
 
 } // namespace graphics

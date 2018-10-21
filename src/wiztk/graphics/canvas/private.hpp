@@ -21,7 +21,7 @@
 
 #include "wiztk/base/deque.hpp"
 
-#include "wiztk/graphics/surface.hpp"
+#include "../surface/private.hpp"
 
 #include "SkCanvas.h"
 
@@ -37,10 +37,26 @@ struct Canvas::Private {
     return *canvas.p_;
   }
 
-  Private() = default;
+  Private() {
+    sk_canvas = new SkCanvas();
+  }
+
+  Private(int width, int height, const SkSurfaceProps *props = nullptr) {
+    sk_canvas = new SkCanvas(width, height, props);
+  }
 
   explicit Private(const SkBitmap &bitmap) {
     sk_canvas = new SkCanvas(bitmap);
+  }
+
+  Private(const SkBitmap &bitmap, const SkSurfaceProps &props) {
+    sk_canvas = new SkCanvas(bitmap, props);
+  }
+
+  explicit Private(Surface *surface)
+      : surface(surface) {
+    _ASSERT(nullptr != surface);
+    sk_canvas = Surface::Private::Get(*surface).sk_surface_sp->getCanvas();
   }
 
   ~Private() {
