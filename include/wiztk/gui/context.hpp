@@ -40,7 +40,7 @@ class Context {
 
   Context() = default;
 
-  Context(ViewSurface *surface, Canvas *canvas)
+  Context(Surface *surface, Canvas *canvas)
       : surface_(surface), canvas_(canvas) {}
 
   Context(const Context &other) = default;
@@ -49,9 +49,9 @@ class Context {
 
   Context &operator=(const Context &other) = default;
 
-  ViewSurface *surface() const { return surface_; }
+  Surface *surface() const { return surface_; }
 
-  void set_surface(ViewSurface *surface) { surface_ = surface; }
+  void set_surface(Surface *surface) { surface_ = surface; }
 
   Canvas *canvas() const { return canvas_; }
 
@@ -59,7 +59,7 @@ class Context {
 
  private:
 
-  ViewSurface *surface_ = nullptr;
+  Surface *surface_ = nullptr;
   Canvas *canvas_ = nullptr;
 
 };

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
 namespace wiztk {
 namespace gui {
 
-class ViewSurface;
+class Surface;
 
 /**
  * @ingroup gui
@@ -33,7 +33,7 @@ class ViewSurface;
  */
 class AbstractRenderingAPI {
 
-  friend class ViewSurface;
+  friend class Surface;
 
  public:
 
@@ -46,9 +46,9 @@ class AbstractRenderingAPI {
 
   virtual ~AbstractRenderingAPI();
 
-  void Setup(ViewSurface *surface);
+  void Setup(Surface *surface);
 
-  void Release(ViewSurface *surface);
+  void Release(Surface *surface);
 
   virtual void SetViewportSize(int width, int height) = 0;
 
@@ -62,9 +62,9 @@ class AbstractRenderingAPI {
 
   struct Proxy;
 
-  virtual void OnSetup(ViewSurface *surface) = 0;
+  virtual void OnSetup(Surface *surface) = 0;
 
-  virtual void OnRelease(ViewSurface *surface) = 0;
+  virtual void OnRelease(Surface *surface) = 0;
 
  private:
 

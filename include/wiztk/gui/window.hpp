@@ -89,7 +89,7 @@ class WIZTK_EXPORT Window : public AbstractShellView {
 
   void OnSaveSize(const Size &old_size, const Size &new_size) final;
 
-  void OnRenderSurface(ViewSurface *surface) final;
+  void OnRenderSurface(Surface *surface) final;
 
   void OnMouseEnter(MouseEvent *event) override;
 
@@ -109,9 +109,9 @@ class WIZTK_EXPORT Window : public AbstractShellView {
 
   void OnViewDetached(AbstractView *view) final;
 
-  void OnEnterOutput(const ViewSurface *surface, const Output *output) final;
+  void OnEnterOutput(const Surface *surface, const Output *output) final;
 
-  void OnLeaveOutput(const ViewSurface *surface, const Output *output) final;
+  void OnLeaveOutput(const Surface *surface, const Output *output) final;
 
   int GetMouseLocation(const MouseEvent *event) const;
 

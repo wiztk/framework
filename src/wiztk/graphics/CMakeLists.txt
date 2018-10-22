@@ -15,7 +15,6 @@
 set(
         graphics_sources
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/abstract-rendering-backend.hpp
-        ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/abstract-surface.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/alignment.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/text-alignment.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/bitmap.hpp
@@ -36,8 +35,6 @@ set(
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/surface-props.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/typeface.hpp
         abstract-rendering-backend.cpp
-        abstract-surface/private.hpp
-        abstract-surface.cpp
         bitmap/private.hpp
         bitmap.cpp
         canvas/native.hpp

@@ -21,19 +21,19 @@
 namespace wiztk {
 namespace gui {
 
-const struct wl_surface_listener ViewSurface::Private::kListener = {
+const struct wl_surface_listener Surface::Private::kListener = {
     OnEnter,
     OnLeave
 };
 
-void ViewSurface::Private::OnEnter(void *data, struct wl_surface *wl_surface, struct wl_output *wl_output) {
-  auto *_this = static_cast<const ViewSurface *>(data);
+void Surface::Private::OnEnter(void *data, struct wl_surface *wl_surface, struct wl_output *wl_output) {
+  auto *_this = static_cast<const Surface *>(data);
   auto *output = static_cast<const Output *>(wl_output_get_user_data(wl_output));
   _this->p_->event_handler->OnEnterOutput(_this, output);
 }
 
-void ViewSurface::Private::OnLeave(void *data, struct wl_surface *wl_surface, struct wl_output *wl_output) {
-  auto *_this = static_cast<const ViewSurface *>(data);
+void Surface::Private::OnLeave(void *data, struct wl_surface *wl_surface, struct wl_output *wl_output) {
+  auto *_this = static_cast<const Surface *>(data);
   auto *output = static_cast<const Output *>(wl_output_get_user_data(wl_output));
   _this->p_->event_handler->OnLeaveOutput(_this, output);
 }

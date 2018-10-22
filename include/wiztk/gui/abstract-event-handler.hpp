@@ -28,7 +28,7 @@ namespace gui {
 class MouseEvent;
 class KeyEvent;
 
-class ViewSurface;
+class Surface;
 class AbstractView;
 class Output;
 
@@ -54,7 +54,7 @@ class WIZTK_EXPORT AbstractEventHandler : public base::Trackable {
 
   friend class Input;
   friend class Display;
-  friend class ViewSurface;
+  friend class Surface;
 
   friend class AbstractView;
   friend class AbstractShellView;
@@ -204,21 +204,21 @@ class WIZTK_EXPORT AbstractEventHandler : public base::Trackable {
    * @brief Virtual callback when a wayland surface controlled by this event handler need to be rendered.
    * @param surface
    */
-  virtual void OnRenderSurface(ViewSurface *surface) = 0;
+  virtual void OnRenderSurface(Surface *surface) = 0;
 
   /**
    * @brief Virtual callback when this object enters an output.
    * @param surface
    * @param output
    */
-  virtual void OnEnterOutput(const ViewSurface *surface, const Output *output) = 0;
+  virtual void OnEnterOutput(const Surface *surface, const Output *output) = 0;
 
   /**
    * @brief Virtual callback when this object leaves an output.
    * @param surface
    * @param output
    */
-  virtual void OnLeaveOutput(const ViewSurface *surface, const Output *output) = 0;
+  virtual void OnLeaveOutput(const Surface *surface, const Output *output) = 0;
 
  private:
 

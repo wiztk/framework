@@ -24,7 +24,7 @@
 namespace wiztk {
 namespace gui {
 
-struct ViewSurface::Shell::Toplevel::Private {
+struct Surface::Shell::Toplevel::Private {
 
   Private(const Private &) = delete;
   Private &operator=(const Private &) = delete;

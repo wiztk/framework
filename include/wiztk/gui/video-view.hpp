@@ -22,7 +22,7 @@
 namespace wiztk {
 namespace gui {
 
-class ViewSurface;
+class Surface;
 
 /**
  * @ingroup gui
@@ -44,7 +44,7 @@ class VideoView final : public AbstractView {
 
   virtual void OnRequestUpdateFrom(AbstractView *view);
 
-  virtual ViewSurface *GetSurface(const AbstractView *view) const;
+  virtual Surface *GetSurface(const AbstractView *view) const;
 
   virtual void OnSizeChanged(int width, int height);
 
@@ -66,7 +66,7 @@ class VideoView final : public AbstractView {
 
  private:
 
-  ViewSurface *surface_;
+  Surface *surface_;
 
 };
 

@@ -33,7 +33,7 @@ MouseEvent::~MouseEvent() {
 
 }
 
-ViewSurface *MouseEvent::GetSurface() const {
+Surface *MouseEvent::GetSurface() const {
   return p_->surface;
 }
 

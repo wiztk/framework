@@ -33,31 +33,31 @@ namespace gui {
 
 using Point = base::Point2I;
 
-ViewSurface *ViewSurface::Shell::Create(AbstractEventHandler *event_handler, const Margin &margin) {
-  auto *surface = new ViewSurface(event_handler, margin);
+Surface *Surface::Shell::Create(AbstractEventHandler *event_handler, const Margin &margin) {
+  auto *surface = new Surface(event_handler, margin);
   surface->p_->role.shell = new Shell(surface);
   return surface;
 }
 
-ViewSurface::Shell *ViewSurface::Shell::Get(const ViewSurface *surface) {
+Surface::Shell *Surface::Shell::Get(const Surface *surface) {
   if (nullptr == surface->p_->parent)
     return surface->p_->role.shell;
 
   return nullptr;
 }
 
-void ViewSurface::Shell::ResizeWindow(int width, int height) const {
+void Surface::Shell::ResizeWindow(int width, int height) const {
   zxdg_surface_v6_set_window_geometry(p_->zxdg_surface,
                                       surface_->GetMargin().left,
                                       surface_->GetMargin().top,
                                       width, height);
 }
 
-void ViewSurface::Shell::AckConfigure(uint32_t serial) const {
+void Surface::Shell::AckConfigure(uint32_t serial) const {
   zxdg_surface_v6_ack_configure(p_->zxdg_surface, serial);
 }
 
-ViewSurface::Shell::Shell(ViewSurface *surface)
+Surface::Shell::Shell(Surface *surface)
     : surface_(surface), parent_(nullptr) {
   p_ = std::make_unique<Private>();
 
@@ -65,13 +65,14 @@ ViewSurface::Shell::Shell(ViewSurface *surface)
   role_.placeholder = nullptr;
 
   Display *display = Application::GetInstance()->GetDisplay();
-  p_->zxdg_surface = zxdg_shell_v6_get_xdg_surface(Display::Private::Get(*display).xdg_shell, surface_->p_->wl_surface);
+  p_->zxdg_surface = zxdg_shell_v6_get_xdg_surface(Display::Private::Get(*display).xdg_shell,
+                                                   surface_->p_->wl_surface);
   zxdg_surface_v6_add_listener(p_->zxdg_surface, &Private::kListener, this);
 
   Push();
 }
 
-ViewSurface::Shell::~Shell() {
+Surface::Shell::~Shell() {
   Remove();
 
   if (nullptr == parent_) delete role_.toplevel;
@@ -81,102 +82,102 @@ ViewSurface::Shell::~Shell() {
   surface_->p_->role.shell = nullptr;
 }
 
-void ViewSurface::Shell::Push() {
+void Surface::Shell::Push() {
   _ASSERT(nullptr == surface_->p_->parent);
   _ASSERT(nullptr == surface_->p_->upper);
   _ASSERT(nullptr == surface_->p_->lower);
 
-  _ASSERT(ViewSurface::kShellSurfaceCount >= 0);
+  _ASSERT(Surface::kShellSurfaceCount >= 0);
 
-  if (nullptr != ViewSurface::kTop) {
-    ViewSurface::kTop->p_->upper = surface_;
-    surface_->p_->lower = ViewSurface::kTop;
-    ViewSurface::kTop = surface_;
+  if (nullptr != Surface::kTop) {
+    Surface::kTop->p_->upper = surface_;
+    surface_->p_->lower = Surface::kTop;
+    Surface::kTop = surface_;
   } else {
-    _ASSERT(ViewSurface::kShellSurfaceCount == 0);
-    _ASSERT(nullptr == ViewSurface::kBottom);
-    ViewSurface::kBottom = surface_;
-    ViewSurface::kTop = surface_;
+    _ASSERT(Surface::kShellSurfaceCount == 0);
+    _ASSERT(nullptr == Surface::kBottom);
+    Surface::kBottom = surface_;
+    Surface::kTop = surface_;
   }
 
-  ViewSurface::kShellSurfaceCount++;
+  Surface::kShellSurfaceCount++;
 }
 
-void ViewSurface::Shell::Remove() {
+void Surface::Shell::Remove() {
   _ASSERT(nullptr == surface_->p_->parent);
 
   if (nullptr != surface_->p_->upper) {
     surface_->p_->upper->p_->lower = surface_->p_->lower;
   } else {
-    _ASSERT(ViewSurface::kTop == surface_);
-    ViewSurface::kTop = surface_->p_->lower;
+    _ASSERT(Surface::kTop == surface_);
+    Surface::kTop = surface_->p_->lower;
   }
 
   if (nullptr != surface_->p_->lower) {
     surface_->p_->lower->p_->upper = surface_->p_->upper;
   } else {
-    _ASSERT(ViewSurface::kBottom == surface_);
-    ViewSurface::kBottom = surface_->p_->upper;
+    _ASSERT(Surface::kBottom == surface_);
+    Surface::kBottom = surface_->p_->upper;
   }
 
   surface_->p_->upper = nullptr;
   surface_->p_->lower = nullptr;
-  ViewSurface::kShellSurfaceCount--;
-  _ASSERT(ViewSurface::kShellSurfaceCount >= 0);
+  Surface::kShellSurfaceCount--;
+  _ASSERT(Surface::kShellSurfaceCount >= 0);
 }
 
 // ------
 
-ViewSurface *ViewSurface::Shell::Toplevel::Create(AbstractEventHandler *event_handler, const Margin &margin) {
-  ViewSurface *surface = Shell::Create(event_handler, margin);
+Surface *Surface::Shell::Toplevel::Create(AbstractEventHandler *event_handler, const Margin &margin) {
+  Surface *surface = Shell::Create(event_handler, margin);
   Shell *shell = Shell::Get(surface);
   shell->role_.toplevel = new Toplevel(shell);
   return surface;
 }
 
-ViewSurface::Shell::Toplevel *ViewSurface::Shell::Toplevel::Get(const ViewSurface *surface) {
+Surface::Shell::Toplevel *Surface::Shell::Toplevel::Get(const Surface *surface) {
   Shell *shell = Shell::Get(surface);
   if ((nullptr == shell) || (nullptr != shell->parent_)) return nullptr;
   return shell->role_.toplevel;
 }
 
-void ViewSurface::Shell::Toplevel::SetTitle(const char *title) const {
+void Surface::Shell::Toplevel::SetTitle(const char *title) const {
   zxdg_toplevel_v6_set_title(p_->zxdg_toplevel, title);
 }
 
-void ViewSurface::Shell::Toplevel::SetAppId(const char *id) const {
+void Surface::Shell::Toplevel::SetAppId(const char *id) const {
   zxdg_toplevel_v6_set_app_id(p_->zxdg_toplevel, id);
 }
 
-void ViewSurface::Shell::Toplevel::Move(const InputEvent &input_event, uint32_t serial) const {
+void Surface::Shell::Toplevel::Move(const InputEvent &input_event, uint32_t serial) const {
   zxdg_toplevel_v6_move(p_->zxdg_toplevel, input_event.input_->p_->wl_seat, serial);
 }
 
-void ViewSurface::Shell::Toplevel::Resize(const InputEvent &input_event, uint32_t serial, uint32_t edges) const {
+void Surface::Shell::Toplevel::Resize(const InputEvent &input_event, uint32_t serial, uint32_t edges) const {
   zxdg_toplevel_v6_resize(p_->zxdg_toplevel, input_event.input_->p_->wl_seat, serial, edges);
 }
 
-void ViewSurface::Shell::Toplevel::SetMaximized() const {
+void Surface::Shell::Toplevel::SetMaximized() const {
   zxdg_toplevel_v6_set_maximized(p_->zxdg_toplevel);
 }
 
-void ViewSurface::Shell::Toplevel::UnsetMaximized() const {
+void Surface::Shell::Toplevel::UnsetMaximized() const {
   zxdg_toplevel_v6_unset_maximized(p_->zxdg_toplevel);
 }
 
-void ViewSurface::Shell::Toplevel::SetFullscreen(const Output *output) const {
+void Surface::Shell::Toplevel::SetFullscreen(const Output *output) const {
   zxdg_toplevel_v6_set_fullscreen(p_->zxdg_toplevel, output->p_->wl_output);
 }
 
-void ViewSurface::Shell::Toplevel::UnsetFullscreen() const {
+void Surface::Shell::Toplevel::UnsetFullscreen() const {
   zxdg_toplevel_v6_unset_fullscreen(p_->zxdg_toplevel);
 }
 
-void ViewSurface::Shell::Toplevel::SetMinimized() const {
+void Surface::Shell::Toplevel::SetMinimized() const {
   zxdg_toplevel_v6_set_minimized(p_->zxdg_toplevel);
 }
 
-ViewSurface::Shell::Toplevel::Toplevel(Shell *shell) {
+Surface::Shell::Toplevel::Toplevel(Shell *shell) {
   _ASSERT(nullptr != shell);
   p_ = std::make_unique<Private>();
   p_->shell = shell;
@@ -185,7 +186,7 @@ ViewSurface::Shell::Toplevel::Toplevel(Shell *shell) {
   zxdg_toplevel_v6_add_listener(p_->zxdg_toplevel, &Private::kListener, this);
 }
 
-ViewSurface::Shell::Toplevel::~Toplevel() {
+Surface::Shell::Toplevel::~Toplevel() {
   _ASSERT(p_->shell->role_.toplevel == this);
   _ASSERT(nullptr == p_->shell->parent_);
   p_->shell->role_.toplevel = nullptr;
@@ -193,21 +194,21 @@ ViewSurface::Shell::Toplevel::~Toplevel() {
 
 // ------
 
-ViewSurface *ViewSurface::Shell::Popup::Create(ViewSurface *parent,
-                                               AbstractEventHandler *event_handler,
-                                               const Margin &margin) {
+Surface *Surface::Shell::Popup::Create(Surface *parent,
+                                       AbstractEventHandler *event_handler,
+                                       const Margin &margin) {
   if (nullptr == parent) throw std::runtime_error("Error! parent is nullptr!");
 
   if (nullptr == Shell::Get(parent)) throw std::runtime_error("Error! parent is not a shell surface!");
 
-  ViewSurface *surface = Shell::Create(event_handler, margin);
+  Surface *surface = Shell::Create(event_handler, margin);
   Shell *shell = Shell::Get(surface);
   shell->parent_ = parent->p_->role.shell;
   shell->role_.popup = new Popup(shell);
   return surface;
 }
 
-ViewSurface::Shell::Popup::Popup(Shell *shell) {
+Surface::Shell::Popup::Popup(Shell *shell) {
   _ASSERT(nullptr != shell);
   p_ = std::make_unique<Private>();
   p_->shell = shell;
@@ -219,7 +220,7 @@ ViewSurface::Shell::Popup::Popup(Shell *shell) {
                                              p_->zxdg_positioner);
 }
 
-ViewSurface::Shell::Popup::~Popup() {
+Surface::Shell::Popup::~Popup() {
   _ASSERT(p_->shell->parent_);
   _ASSERT(p_->shell->role_.popup == this);
 
@@ -229,20 +230,20 @@ ViewSurface::Shell::Popup::~Popup() {
 
 // ------
 
-ViewSurface *ViewSurface::Sub::Create(ViewSurface *parent, AbstractEventHandler *event_handler, const Margin &margin) {
-  auto *surface = new ViewSurface(event_handler, margin);
+Surface *Surface::Sub::Create(Surface *parent, AbstractEventHandler *event_handler, const Margin &margin) {
+  auto *surface = new Surface(event_handler, margin);
   surface->p_->role.sub = new Sub(surface, parent);
   return surface;
 }
 
-ViewSurface::Sub *ViewSurface::Sub::Get(const ViewSurface *surface) {
+Surface::Sub *Surface::Sub::Get(const Surface *surface) {
   if (nullptr == surface->p_->parent)
     return nullptr;
 
   return surface->p_->role.sub;
 }
 
-ViewSurface::Sub::Sub(ViewSurface *surface, ViewSurface *parent)
+Surface::Sub::Sub(Surface *surface, Surface *parent)
     : surface_(surface), wl_sub_surface_(nullptr) {
   _ASSERT(nullptr != surface_);
   _ASSERT(nullptr != parent);
@@ -254,12 +255,12 @@ ViewSurface::Sub::Sub(ViewSurface *surface, ViewSurface *parent)
   SetParent(parent);
 }
 
-ViewSurface::Sub::~Sub() {
+Surface::Sub::~Sub() {
   _ASSERT(surface_->p_->role.sub == this);
 
   // Delete all sub surfaces of this one:
-  ViewSurface *p = nullptr;
-  ViewSurface *tmp = nullptr;
+  Surface *p = nullptr;
+  Surface *tmp = nullptr;
 
   p = surface_->p_->above;
   while (p && p->p_->parent == surface_) {
@@ -285,7 +286,7 @@ ViewSurface::Sub::~Sub() {
   surface_->p_->role.sub = nullptr;
 }
 
-void ViewSurface::Sub::PlaceAbove(ViewSurface *sibling) {
+void Surface::Sub::PlaceAbove(Surface *sibling) {
   if (sibling == surface_) return;
 
   if (surface_->GetParent() == sibling->GetParent() ||
@@ -296,7 +297,7 @@ void ViewSurface::Sub::PlaceAbove(ViewSurface *sibling) {
   }
 }
 
-void ViewSurface::Sub::PlaceBelow(ViewSurface *sibling) {
+void Surface::Sub::PlaceBelow(Surface *sibling) {
   if (sibling == surface_) return;
 
   if (surface_->GetParent() == sibling->GetParent() ||
@@ -307,13 +308,13 @@ void ViewSurface::Sub::PlaceBelow(ViewSurface *sibling) {
   }
 }
 
-void ViewSurface::Sub::SetRelativePosition(int x, int y) {
+void Surface::Sub::SetRelativePosition(int x, int y) {
   wl_subsurface_set_position(wl_sub_surface_, x, y);
   surface_->p_->relative_position.x = x;
   surface_->p_->relative_position.y = y;
 }
 
-void ViewSurface::Sub::SetWindowPosition(int x, int y) {
+void Surface::Sub::SetWindowPosition(int x, int y) {
   Point parent_global_position = surface_->GetParent()->GetWindowPosition();
   int local_x = x - parent_global_position.x;
   int local_y = y - parent_global_position.y;
@@ -322,15 +323,15 @@ void ViewSurface::Sub::SetWindowPosition(int x, int y) {
   surface_->p_->relative_position.y = y;
 }
 
-void ViewSurface::Sub::SetParent(ViewSurface *parent) {
+void Surface::Sub::SetParent(Surface *parent) {
   _ASSERT(nullptr == surface_->p_->parent &&
       surface_->p_->upper == nullptr &&
       surface_->p_->lower == nullptr);
 
   surface_->p_->parent = parent;
 
-  ViewSurface *tmp = parent;
-  ViewSurface *sibling = nullptr;
+  Surface *tmp = parent;
+  Surface *sibling = nullptr;
   do {
     sibling = tmp;
     tmp = tmp->p_->above;
@@ -339,10 +340,10 @@ void ViewSurface::Sub::SetParent(ViewSurface *parent) {
   InsertAbove(sibling);
 }
 
-void ViewSurface::Sub::MoveAbove(ViewSurface *dst) {
-  ViewSurface *top = surface_;
-  ViewSurface *bottom = surface_;
-  ViewSurface *tmp = nullptr;
+void Surface::Sub::MoveAbove(Surface *dst) {
+  Surface *top = surface_;
+  Surface *bottom = surface_;
+  Surface *tmp = nullptr;
 
   tmp = surface_;
   while (tmp->p_->above && (tmp->p_->above->p_->parent != surface_->p_->parent)) {
@@ -375,10 +376,10 @@ void ViewSurface::Sub::MoveAbove(ViewSurface *dst) {
   }
 }
 
-void ViewSurface::Sub::MoveBelow(ViewSurface *dst) {
-  ViewSurface *top = surface_;
-  ViewSurface *bottom = surface_;
-  ViewSurface *tmp = nullptr;
+void Surface::Sub::MoveBelow(Surface *dst) {
+  Surface *top = surface_;
+  Surface *bottom = surface_;
+  Surface *tmp = nullptr;
 
   tmp = surface_;
   while (tmp->p_->above && (tmp->p_->above->p_->parent != surface_->p_->parent)) {
@@ -411,7 +412,7 @@ void ViewSurface::Sub::MoveBelow(ViewSurface *dst) {
   }
 }
 
-void ViewSurface::Sub::InsertAbove(ViewSurface *sibling) {
+void Surface::Sub::InsertAbove(Surface *sibling) {
   _ASSERT(surface_->p_->parent == sibling->p_->parent ||
       surface_ == sibling->p_->parent ||
       surface_->p_->parent == sibling);
@@ -421,7 +422,7 @@ void ViewSurface::Sub::InsertAbove(ViewSurface *sibling) {
   surface_->p_->below = sibling;
 }
 
-void ViewSurface::Sub::InsertBelow(ViewSurface *sibling) {
+void Surface::Sub::InsertBelow(Surface *sibling) {
   _ASSERT(surface_->p_->parent == sibling->p_->parent ||
       surface_ == sibling->p_->parent ||
       surface_->p_->parent == sibling);
@@ -433,24 +434,23 @@ void ViewSurface::Sub::InsertBelow(ViewSurface *sibling) {
 
 // ------
 
-void ViewSurface::RenderTask::Run() {
+void Surface::RenderTask::Run() {
   surface_->p_->event_handler->OnRenderSurface(surface_);
 }
 
-void ViewSurface::CommitTask::Run() {
+void Surface::CommitTask::Run() {
   wl_surface_commit(surface_->p_->wl_surface);
 }
 
 // ------
 
-ViewSurface *ViewSurface::kTop = nullptr;
-ViewSurface *ViewSurface::kBottom = nullptr;
-int ViewSurface::kShellSurfaceCount = 0;
-base::Deque<ViewSurface::RenderTask> ViewSurface::kRenderTaskDeque;
-base::Deque<ViewSurface::CommitTask> ViewSurface::kCommitTaskDeque;
+Surface *Surface::kTop = nullptr;
+Surface *Surface::kBottom = nullptr;
+int Surface::kShellSurfaceCount = 0;
+base::Deque<Surface::RenderTask> Surface::kRenderTaskDeque;
+base::Deque<Surface::CommitTask> Surface::kCommitTaskDeque;
 
-ViewSurface::ViewSurface(AbstractEventHandler *event_handler, const Margin &margin)
-    : AbstractSurface(margin) {
+Surface::Surface(AbstractEventHandler *event_handler, const Margin &margin) {
   _ASSERT(nullptr != event_handler);
   p_ = std::make_unique<Private>(this, event_handler, margin);
   p_->role.placeholder = nullptr;
@@ -460,7 +460,7 @@ ViewSurface::ViewSurface(AbstractEventHandler *event_handler, const Margin &marg
   wl_surface_add_listener(p_->wl_surface, &Private::kListener, this);
 }
 
-ViewSurface::~ViewSurface() {
+Surface::~Surface() {
   if (nullptr != p_->rendering_api) {
     p_->rendering_api->Release(this);
   }
@@ -477,7 +477,11 @@ ViewSurface::~ViewSurface() {
     wl_surface_destroy(p_->wl_surface);
 }
 
-void ViewSurface::Attach(Buffer *buffer, int32_t x, int32_t y) {
+const Surface::Margin &Surface::GetMargin() const {
+  return p_->margin;
+}
+
+void Surface::Attach(Buffer *buffer, int32_t x, int32_t y) {
   if (nullptr == buffer) {
     wl_surface_attach(p_->wl_surface, NULL, x, y);
     return;
@@ -487,11 +491,11 @@ void ViewSurface::Attach(Buffer *buffer, int32_t x, int32_t y) {
   wl_surface_attach(p_->wl_surface, buffer->p_->wl_buffer, x, y);
 }
 
-void ViewSurface::Commit() {
+void Surface::Commit() {
   if (nullptr != p_->rendering_api) {
     // GL surface does not use commit
     if (p_->commit_mode == kSynchronized) {
-      ViewSurface *main_surface = GetShellSurface();
+      Surface *main_surface = GetShellSurface();
       if (main_surface != this)
         main_surface->Commit();
     }
@@ -509,7 +513,7 @@ void ViewSurface::Commit() {
 
   if (p_->commit_mode == kSynchronized) {
     // Synchronized mode need to commit the main surface too
-    ViewSurface *main_surface = GetShellSurface();
+    Surface *main_surface = GetShellSurface();
     main_surface->Commit();
     main_surface->p_->commit_task.push_back(&p_->commit_task);
   } else {
@@ -517,49 +521,49 @@ void ViewSurface::Commit() {
   }
 }
 
-void ViewSurface::SetCommitMode(CommitMode mode) {
+void Surface::SetCommitMode(CommitMode mode) {
   p_->commit_mode = mode;
 }
 
-void ViewSurface::Damage(int surface_x, int surface_y, int width, int height) {
+void Surface::Damage(int surface_x, int surface_y, int width, int height) {
   wl_surface_damage(p_->wl_surface, surface_x, surface_y, width, height);
 }
 
-void ViewSurface::SetInputRegion(const Region &region) {
+void Surface::SetInputRegion(const Region &region) {
   wl_surface_set_input_region(p_->wl_surface, region.wl_region_);
 }
 
-void ViewSurface::SetOpaqueRegion(const Region &region) {
+void Surface::SetOpaqueRegion(const Region &region) {
   wl_surface_set_opaque_region(p_->wl_surface, region.wl_region_);
 }
 
-void ViewSurface::SetTransform(Transform transform) {
+void Surface::SetTransform(Transform transform) {
   if (p_->transform != transform) {
     wl_surface_set_buffer_transform(p_->wl_surface, transform);
     p_->transform = transform;
   }
 }
 
-ViewSurface::Transform ViewSurface::GetTransform() const {
+Surface::Transform Surface::GetTransform() const {
   return p_->transform;
 }
 
-void ViewSurface::SetScale(int32_t scale) {
+void Surface::SetScale(int32_t scale) {
   if (p_->scale != scale) {
     wl_surface_set_buffer_scale(p_->wl_surface, scale);
     p_->scale = scale;
   }
 }
 
-int32_t ViewSurface::GetScale() const {
+int32_t Surface::GetScale() const {
   return p_->scale;
 }
 
-void ViewSurface::DamageBuffer(int32_t x, int32_t y, int32_t width, int32_t height) {
+void Surface::DamageBuffer(int32_t x, int32_t y, int32_t width, int32_t height) {
   wl_surface_damage_buffer(p_->wl_surface, x, y, width, height);
 }
 
-void ViewSurface::Update(bool validate) {
+void Surface::Update(bool validate) {
   if (!validate) {
     p_->render_task.unlink();
     return;
@@ -569,13 +573,13 @@ void ViewSurface::Update(bool validate) {
   kRenderTaskDeque.push_back(&p_->render_task);
 }
 
-base::Deque<AbstractView::RenderNode> &ViewSurface::GetRenderDeque() const {
+base::Deque<AbstractView::RenderNode> &Surface::GetRenderDeque() const {
   return p_->render_deque;
 }
 
-ViewSurface *ViewSurface::GetShellSurface() {
-  ViewSurface *shell_surface = this;
-  ViewSurface *parent = p_->parent;
+Surface *Surface::GetShellSurface() {
+  Surface *shell_surface = this;
+  Surface *parent = p_->parent;
 
   while (nullptr != parent) {
     shell_surface = parent;
@@ -585,11 +589,11 @@ ViewSurface *ViewSurface::GetShellSurface() {
   return shell_surface;
 }
 
-Point ViewSurface::GetWindowPosition() const {
+Point Surface::GetWindowPosition() const {
   Point position = p_->relative_position;
 
-  const ViewSurface *parent = p_->parent;
-  const ViewSurface *shell_surface = this;
+  const Surface *parent = p_->parent;
+  const Surface *shell_surface = this;
 
   while (nullptr != parent) {
     position += parent->GetRelativePosition();
@@ -600,61 +604,48 @@ Point ViewSurface::GetWindowPosition() const {
   return position - Point(shell_surface->GetMargin().l, shell_surface->GetMargin().t);
 }
 
-ViewSurface *ViewSurface::GetParent() const {
+Surface *Surface::GetParent() const {
   return p_->parent;
 }
 
-ViewSurface *ViewSurface::GetSiblingAbove() const {
+Surface *Surface::GetSiblingAbove() const {
   return p_->above;
 }
 
-ViewSurface *ViewSurface::GetSiblingBelow() const {
+Surface *Surface::GetSiblingBelow() const {
   return p_->below;
 }
 
-ViewSurface *ViewSurface::GetUpperShell() const {
+Surface *Surface::GetUpperShell() const {
   return p_->upper;
 }
 
-ViewSurface *ViewSurface::GetLowerShell() const {
+Surface *Surface::GetLowerShell() const {
   return p_->lower;
 }
 
-AbstractEventHandler *ViewSurface::GetEventHandler() const {
+AbstractEventHandler *Surface::GetEventHandler() const {
   return p_->event_handler;
 }
 
-void ViewSurface::SetRenderingAPI(AbstractRenderingAPI *api) {
+void Surface::SetRenderingAPI(AbstractRenderingAPI *api) {
   api->Setup(this);
-  api->destroyed().Connect(this, &ViewSurface::OnGLInterfaceDestroyed);
+  api->destroyed().Connect(this, &Surface::OnGLInterfaceDestroyed);
 }
 
-AbstractRenderingAPI *ViewSurface::GetRenderingAPI() const {
+AbstractRenderingAPI *Surface::GetRenderingAPI() const {
   return p_->rendering_api;
 }
 
-const Point &ViewSurface::GetRelativePosition() const {
+const Point &Surface::GetRelativePosition() const {
   return p_->relative_position;
 }
 
-void ViewSurface::Render(Delegate *delegate) {
-  if (nullptr != delegate) delegate->Render();
-  // TODO: use this method
-}
-
-bool ViewSurface::OnResetMargin(int /* left */, int /* top */, int /* right */, int /* bottom */) {
-  return true;
-}
-
-bool ViewSurface::OnResize(int /* width */, int /* height */) {
-  return true;
-}
-
-void ViewSurface::OnGLInterfaceDestroyed(base::SLOT /* slot */) {
+void Surface::OnGLInterfaceDestroyed(base::SLOT /* slot */) {
   p_->rendering_api = nullptr;
 }
 
-void ViewSurface::Clear() {
+void Surface::Clear() {
   while (kShellSurfaceCount > 0) {
     AbstractEventHandler *event_handler = kTop->GetEventHandler();
     delete event_handler;

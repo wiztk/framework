@@ -22,7 +22,7 @@
 namespace wiztk {
 namespace gui {
 
-struct ViewSurface::Shell::Popup::Private {
+struct Surface::Shell::Popup::Private {
 
   Private(const Private &) = delete;
   Private &operator=(const Private &) = delete;

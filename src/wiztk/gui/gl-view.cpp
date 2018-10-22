@@ -43,7 +43,7 @@ struct GLView::Private : public base::Property<GLView> {
     delete gl_surface;
   }
 
-  ViewSurface *gl_surface = nullptr;
+  Surface *gl_surface = nullptr;
 
   AbstractRenderingAPI *rendering_api = nullptr;
 
@@ -126,7 +126,7 @@ void GLView::OnDraw(const Context &context) {
   if (nullptr == p_->rendering_api) return;
 
   if (nullptr == p_->gl_surface) {
-    p_->gl_surface = ViewSurface::Sub::Create(context.surface(), this);
+    p_->gl_surface = Surface::Sub::Create(context.surface(), this);
     p_->gl_surface->SetRenderingAPI(p_->rendering_api);
 //    gl_surface->SetCommitMode(Surface::kDesynchronized);
 
@@ -134,7 +134,7 @@ void GLView::OnDraw(const Context &context) {
     p_->gl_surface->SetInputRegion(region);
 
     p_->rendering_api->SetViewportSize(GetWidth(), GetHeight());
-    ViewSurface::Sub::Get(p_->gl_surface)->SetWindowPosition(GetX(), GetY());
+    Surface::Sub::Get(p_->gl_surface)->SetWindowPosition(GetX(), GetY());
 
     p_->callback.Setup(p_->gl_surface);
     OnInitialize();
@@ -142,7 +142,7 @@ void GLView::OnDraw(const Context &context) {
   }
 }
 
-void GLView::OnRenderSurface(ViewSurface *surface) {
+void GLView::OnRenderSurface(Surface *surface) {
 
 }
 

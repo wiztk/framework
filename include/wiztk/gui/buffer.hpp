@@ -38,7 +38,7 @@ class SharedMemoryPool;
  */
 class Buffer {
 
-  friend class ViewSurface;
+  friend class Surface;
 
  public:
 

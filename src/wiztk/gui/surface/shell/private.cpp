@@ -22,11 +22,11 @@
 namespace wiztk {
 namespace gui {
 
-const struct zxdg_surface_v6_listener ViewSurface::Shell::Private::kListener = {
+const struct zxdg_surface_v6_listener Surface::Shell::Private::kListener = {
     OnConfigure
 };
 
-void ViewSurface::Shell::Private::OnConfigure(void *data,
+void Surface::Shell::Private::OnConfigure(void *data,
                                           struct zxdg_surface_v6 *zxdg_surface_v6,
                                           uint32_t serial) {
   auto *_this = static_cast<Shell *>(data);

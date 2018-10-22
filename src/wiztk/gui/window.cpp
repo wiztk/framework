@@ -112,7 +112,7 @@ std::vector<float> Window::Private::kOutlineRadii = {
 };
 
 void Window::Private::DrawBody() {
-  ViewSurface *shell_surface = proprietor()->GetShellSurface();
+  Surface *shell_surface = proprietor()->GetShellSurface();
   _ASSERT(nullptr != shell_surface);
 
   const Margin &margin = shell_surface->GetMargin();
@@ -330,7 +330,7 @@ const base::SizeI &Window::GetMaximalSize() const {
 }
 
 void Window::OnShown() {
-  ViewSurface *shell_surface = GetShellSurface();
+  Surface *shell_surface = GetShellSurface();
   const Margin &margin = shell_surface->GetMargin();
 
   // Set surface's scale
@@ -374,7 +374,7 @@ void Window::OnShown() {
 void Window::OnRequestUpdateFrom(AbstractView *view) {
   if (p_->inhibit_update) return;
 
-  ViewSurface *surface = GetShellSurface();
+  Surface *surface = GetShellSurface();
   surface->GetRenderDeque().push_back(AbstractView::RenderNode::Get(view));
   surface->Update();
 }
@@ -398,7 +398,7 @@ void Window::OnConfigureSize(const Size &old_size, const Size &new_size) {
 }
 
 void Window::OnSaveSize(const Size &old_size, const Size &new_size) {
-  ViewSurface *shell_surface = this->GetShellSurface();
+  Surface *shell_surface = this->GetShellSurface();
 
   int scale = 1;
   OutputManager *outputs = Application::GetInstance()->GetDisplay()->GetOutputManager();
@@ -453,7 +453,7 @@ void Window::OnSaveSize(const Size &old_size, const Size &new_size) {
   }
 }
 
-void Window::OnRenderSurface(ViewSurface *surface) {
+void Window::OnRenderSurface(Surface *surface) {
   const Margin &margin = surface->GetMargin();
   int scale = surface->GetScale();
   int pixel_width = GetWidth() * scale;
@@ -693,15 +693,15 @@ void Window::OnViewDetached(AbstractView *view) {
   }
 }
 
-void Window::OnEnterOutput(const ViewSurface *surface, const Output *output) {
+void Window::OnEnterOutput(const Surface *surface, const Output *output) {
   if (p_->output == output) return;
 
   p_->output = output;
-  ViewSurface *shell_surface = GetShellSurface();
+  Surface *shell_surface = GetShellSurface();
   shell_surface->SetScale(output->GetScale());
 }
 
-void Window::OnLeaveOutput(const ViewSurface *surface, const Output *output) {
+void Window::OnLeaveOutput(const Surface *surface, const Output *output) {
   if (p_->output != output) return;
 
   p_->output = nullptr;

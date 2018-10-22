@@ -61,29 +61,29 @@ void MainLoop::DispatchMessage() {
   EventLoop::DispatchMessage();
 
   QueuedTask *task = nullptr;
-  Deque<ViewSurface::RenderTask>::Iterator render_it;
-  Deque<ViewSurface::CommitTask>::Iterator commit_it;
+  Deque<Surface::RenderTask>::Iterator render_it;
+  Deque<Surface::CommitTask>::Iterator commit_it;
 
   /*
    * Draw contents on every surface requested
    */
-  render_it = ViewSurface::kRenderTaskDeque.begin();
-  while (render_it != ViewSurface::kRenderTaskDeque.end()) {
+  render_it = Surface::kRenderTaskDeque.begin();
+  while (render_it != Surface::kRenderTaskDeque.end()) {
     task = render_it.get();
     render_it.remove();
     task->Run();
-    render_it = ViewSurface::kRenderTaskDeque.begin();
+    render_it = Surface::kRenderTaskDeque.begin();
   }
 
   /*
    * Commit every surface requested
    */
-  commit_it = ViewSurface::kCommitTaskDeque.begin();
-  while (commit_it != ViewSurface::kCommitTaskDeque.end()) {
+  commit_it = Surface::kCommitTaskDeque.begin();
+  while (commit_it != Surface::kCommitTaskDeque.end()) {
     task = commit_it.get();
     commit_it.remove();
     task->Run();
-    commit_it = ViewSurface::kCommitTaskDeque.begin();
+    commit_it = Surface::kCommitTaskDeque.begin();
   }
 
   wl_display_dispatch_pending(__PROPERTY__(wl_display));

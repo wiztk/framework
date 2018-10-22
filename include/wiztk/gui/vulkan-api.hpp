@@ -24,7 +24,7 @@
 namespace wiztk {
 namespace gui {
 
-class ViewSurface;
+class Surface;
 
 /**
  * @ingroup gui

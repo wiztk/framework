@@ -69,7 +69,7 @@ Callback::Callback(const Display *display)
   Setup(display);
 }
 
-Callback::Callback(const ViewSurface *surface)
+Callback::Callback(const Surface *surface)
     : Callback() {
   Setup(surface);
 }
@@ -85,7 +85,7 @@ void Callback::Setup(const Display *display) {
   wl_callback_add_listener(__PROPERTY__(wl_callback), &Private::kListener, this);
 }
 
-void Callback::Setup(const ViewSurface *surface) {
+void Callback::Setup(const Surface *surface) {
   p_->Destroy();
   p_->wl_callback = wl_surface_frame(surface->__PROPERTY__(wl_surface));
   wl_callback_add_listener(p_->wl_callback, &Private::kListener, this);

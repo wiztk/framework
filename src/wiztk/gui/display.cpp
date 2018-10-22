@@ -71,7 +71,7 @@ void Display::Disconnect() noexcept {
 
   p_->output_manager.Clear();
   p_->input_manager.Clear();
-  ViewSurface::Clear();
+  Surface::Clear();
 
   if (p_->wl_data_device_manager) {
     wl_data_device_manager_destroy(p_->wl_data_device_manager);

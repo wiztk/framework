@@ -34,7 +34,7 @@ class Cursor;
 class WIZTK_EXPORT Input {
 
   friend class Display;
-  friend class ViewSurface;
+  friend class Surface;
   friend class InputManager;
 
  public:

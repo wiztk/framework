@@ -26,7 +26,7 @@ namespace wiztk {
 namespace gui {
 
 class Display;
-class ViewSurface;
+class Surface;
 
 /**
  * @ingroup gui
@@ -49,13 +49,13 @@ class Callback {
 
   explicit Callback(const Display *display);
 
-  explicit Callback(const ViewSurface *surface);
+  explicit Callback(const Surface *surface);
 
   ~Callback();
 
   void Setup(const Display *display);
 
-  void Setup(const ViewSurface *surface);
+  void Setup(const Surface *surface);
 
   /**
    * @brief A delegate to the 'done' event

@@ -521,15 +521,15 @@ void AbstractView::OnRequestUpdateFrom(AbstractView *view) {
   }
 }
 
-void AbstractView::OnRenderSurface(ViewSurface *surface) {
+void AbstractView::OnRenderSurface(Surface *surface) {
   // override in sub class
 }
 
-void AbstractView::OnEnterOutput(const ViewSurface *surface, const Output *output) {
+void AbstractView::OnEnterOutput(const Surface *surface, const Output *output) {
   // override this in sub class
 }
 
-void AbstractView::OnLeaveOutput(const ViewSurface *surface, const Output *output) {
+void AbstractView::OnLeaveOutput(const Surface *surface, const Output *output) {
   // override this in sub class
 }
 

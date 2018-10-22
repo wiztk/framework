@@ -23,20 +23,25 @@
 namespace wiztk {
 namespace gui {
 
-struct ViewSurface::Private {
+struct Surface::Private {
 
   using PointI = base::Point2I;
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Private);
   Private() = delete;
 
-  Private(ViewSurface *surface, AbstractEventHandler *event_handler, const Margin &margin)
-      : event_handler(event_handler),
+  Private(Surface *surface, AbstractEventHandler *event_handler, const Margin &margin)
+      : margin(margin),
+        event_handler(event_handler),
         render_task(surface),
         commit_task(surface) {
   }
 
   ~Private() = default;
+
+  Size size;
+
+  Margin margin;
 
   struct wl_surface *wl_surface = nullptr;
 
@@ -58,27 +63,27 @@ struct ViewSurface::Private {
   /**
     * @brief The parent surface
     */
-  ViewSurface *parent = nullptr;
+  Surface *parent = nullptr;
 
   /**
     * @brief The sibling surface placed up
     */
-  ViewSurface *above = nullptr;
+  Surface *above = nullptr;
 
   /**
     * @brief The sibling surface placed down
     */
-  ViewSurface *below = nullptr;
+  Surface *below = nullptr;
 
   /**
    * @brief The shell surface shows front
    */
-  ViewSurface *upper = nullptr;
+  Surface *upper = nullptr;
 
   /**
    * @brief The shell surface shows back
    */
-  ViewSurface *lower = nullptr;
+  Surface *lower = nullptr;
 
   AbstractRenderingAPI *rendering_api = nullptr;
 

@@ -47,7 +47,7 @@ WIZTK_EXPORT class Dialog : public AbstractShellView {
 
   virtual void OnSaveSize(const Size &old_size, const Size &new_size) final;
 
-  virtual void OnRenderSurface(ViewSurface *surface) final;
+  virtual void OnRenderSurface(Surface *surface) final;
 
  private:
 

@@ -27,7 +27,7 @@ class Canvas;
 
 namespace gui {
 
-class ViewSurface;
+class Surface;
 
 /**
  * @ingroup gui
@@ -55,7 +55,7 @@ class GLWindow : public AbstractShellView {
 
   void OnSaveSize(const Size &old_size, const Size &new_size) final;
 
-  void OnRenderSurface(ViewSurface *surface) final;
+  void OnRenderSurface(Surface *surface) final;
 
   void OnMouseMove(MouseEvent *event) override;
 

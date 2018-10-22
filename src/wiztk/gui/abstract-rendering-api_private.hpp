@@ -35,7 +35,7 @@ struct AbstractRenderingAPI::Private {
 
   ~Private() = default;
 
-  ViewSurface *surface = nullptr;
+  Surface *surface = nullptr;
 
 };
 

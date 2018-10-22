@@ -67,7 +67,7 @@ void GLESV2API::SwapBuffers() {
   eglSwapBuffers(Display::Private::Get(*display).egl_display, p_->egl_surface);
 }
 
-void GLESV2API::OnSetup(ViewSurface *surface) {
+void GLESV2API::OnSetup(Surface *surface) {
   Destroy();
 
   Display *display = Application::GetInstance()->GetDisplay();
@@ -78,7 +78,7 @@ void GLESV2API::OnSetup(ViewSurface *surface) {
                                                    nullptr);
 }
 
-void GLESV2API::OnRelease(ViewSurface *surface) {
+void GLESV2API::OnRelease(Surface *surface) {
   Destroy();
 }
 

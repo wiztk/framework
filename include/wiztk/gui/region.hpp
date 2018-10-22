@@ -24,7 +24,7 @@ namespace gui {
 
 class Region {
 
-  friend class ViewSurface;
+  friend class Surface;
 
  public:
 

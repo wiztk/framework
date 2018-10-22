@@ -34,7 +34,7 @@ namespace gui {
  */
 class Output {
 
-  friend class ViewSurface;
+  friend class Surface;
   friend class OutputManager;
 
  public:
