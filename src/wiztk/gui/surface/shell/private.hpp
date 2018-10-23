@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_VIEW_SURFACE_SHELL_PRIVATE_HPP_
-#define WIZTK_GUI_VIEW_SURFACE_SHELL_PRIVATE_HPP_
+#ifndef WIZTK_GUI_SURFACE_SHELL_PRIVATE_HPP_
+#define WIZTK_GUI_SURFACE_SHELL_PRIVATE_HPP_
 
 #include <wiztk/gui/surface.hpp>
 
@@ -49,4 +49,4 @@ struct Surface::Shell::Private {
 } // namespace gui
 } // namespace wiztk
 
-#endif // WIZTK_GUI_VIEW_SURFACE_SHELL_PRIVATE_HPP_
+#endif // WIZTK_GUI_SURFACE_SHELL_PRIVATE_HPP_

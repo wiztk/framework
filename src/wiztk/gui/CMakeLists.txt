@@ -20,6 +20,7 @@ set(
         ${PROJECT_SOURCE_DIR}/include/wiztk/gui/abstract-event-handler.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/gui/abstract-layout.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/gui/abstract-rendering-api.hpp
+        ${PROJECT_SOURCE_DIR}/include/wiztk/gui/abstract-rendering-backend.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/gui/abstract-shell-view.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/gui/abstract-slider.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/gui/abstract-view.hpp
@@ -72,6 +73,7 @@ set(
         abstract-rendering-api.cpp
         abstract-rendering-api_private.hpp
         abstract-rendering-api_proxy.hpp
+        abstract-rendering-backend.cpp
         abstract-shell-view/private.cpp
         abstract-shell-view/private.hpp
         abstract-shell-view.cpp

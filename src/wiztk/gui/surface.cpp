@@ -465,6 +465,8 @@ Surface::~Surface() {
     p_->rendering_api->Release(this);
   }
 
+  delete p_->rendering_backend;
+
 //  if (p_->egl)
 //    delete p_->egl;
 
@@ -635,6 +637,10 @@ void Surface::SetRenderingAPI(AbstractRenderingAPI *api) {
 
 AbstractRenderingAPI *Surface::GetRenderingAPI() const {
   return p_->rendering_api;
+}
+
+AbstractRenderingBackend *Surface::GetRenderingBackend() const {
+  return p_->rendering_backend;
 }
 
 const Point &Surface::GetRelativePosition() const {

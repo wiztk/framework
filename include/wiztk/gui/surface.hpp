@@ -36,6 +36,7 @@ class Output;
 class InputEvent;
 class Region;
 class AbstractRenderingAPI;
+class AbstractRenderingBackend;
 
 /**
  * @ingroup gui
@@ -117,6 +118,8 @@ class WIZTK_EXPORT Surface : public base::Trackable {
     kSynchronized,                      /**< Synchronized mode */
     kDesynchronized                     /**< Desynchronized mode */
   };
+
+ public:
 
   static int CountShellSurfaces() { return kShellSurfaceCount; }
 
@@ -224,6 +227,8 @@ class WIZTK_EXPORT Surface : public base::Trackable {
 
   AbstractRenderingAPI *GetRenderingAPI() const;
 
+  AbstractRenderingBackend *GetRenderingBackend() const;
+
   const Point &GetRelativePosition() const;
 
  private:
@@ -298,7 +303,7 @@ class WIZTK_EXPORT Surface : public base::Trackable {
 
   static base::Deque<CommitTask> kCommitTaskDeque;
 
-  std::unique_ptr<Surface::Private> p_;
+  std::unique_ptr<Private> p_;
 
 };
 

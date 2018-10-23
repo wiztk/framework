@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GRAPHICS_ABSTRACT_RENDERING_BACKEND_HPP_
-#define WIZTK_GRAPHICS_ABSTRACT_RENDERING_BACKEND_HPP_
+#ifndef WIZTK_GUI_ABSTRACT_RENDERING_BACKEND_HPP_
+#define WIZTK_GUI_ABSTRACT_RENDERING_BACKEND_HPP_
 
 #include "wiztk/base/macros.hpp"
 
 namespace wiztk {
-namespace graphics {
+namespace gui {
 
 // Forward declarations:
 class AbstractSurface;
@@ -65,4 +65,4 @@ class WIZTK_EXPORT AbstractRenderingBackend {
 } // namespace graphics
 } // namespace wiztk
 
-#endif // WIZTK_GRAPHICS_ABSTRACT_RENDERING_BACKEND_HPP_
+#endif // WIZTK_GUI_ABSTRACT_RENDERING_BACKEND_HPP_

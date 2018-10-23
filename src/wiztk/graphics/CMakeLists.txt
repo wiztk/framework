@@ -12,9 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(
-        graphics_sources
-        ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/abstract-rendering-backend.hpp
+set(graphics_sources
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/alignment.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/text-alignment.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/bitmap.hpp
@@ -34,7 +32,6 @@ set(
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/surface.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/surface-props.hpp
         ${PROJECT_SOURCE_DIR}/include/wiztk/graphics/typeface.hpp
-        abstract-rendering-backend.cpp
         bitmap/private.hpp
         bitmap.cpp
         canvas/native.hpp
@@ -64,7 +61,7 @@ set(
         surface-props.cpp
         typeface/private.hpp
         typeface.cpp
-)
+        )
 
 if (BUILD_SHARED_LIBRARY)
     add_library(wiztk-graphics SHARED ${config_header} ${graphics_sources})
@@ -88,7 +85,7 @@ target_link_libraries(
         PUBLIC ${WEBPDEMUX_LIBRARY}
         PUBLIC ${DL_LIBRARY}
         PUBLIC ${PTHREAD_LIBRARY}
-#        PUBLIC ${LIBS}
+        #        PUBLIC ${LIBS}
         PRIVATE skia
 )
 

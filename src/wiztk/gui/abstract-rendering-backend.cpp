@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-#include "wiztk/graphics/abstract-rendering-backend.hpp"
+#include "wiztk/gui/abstract-rendering-backend.hpp"
 
 namespace wiztk {
-namespace graphics {
+namespace gui {
 
 AbstractRenderingBackend::AbstractRenderingBackend() = default;
 
 AbstractRenderingBackend::~AbstractRenderingBackend() = default;
 
-void AbstractRenderingBackend::Setup(wiztk::graphics::AbstractSurface *surface) {
+void AbstractRenderingBackend::Setup(AbstractSurface *surface) {
   OnSetup(surface);
 }
 
-void AbstractRenderingBackend::Release(wiztk::graphics::AbstractSurface *surface) {
+void AbstractRenderingBackend::Release(AbstractSurface *surface) {
   OnRelease(surface);
 }
 

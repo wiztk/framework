@@ -17,7 +17,7 @@
 #ifndef WIZTK_GUI_ABSTRACT_EGL_BACKEND_HPP_
 #define WIZTK_GUI_ABSTRACT_EGL_BACKEND_HPP_
 
-#include "wiztk/graphics/abstract-rendering-backend.hpp"
+#include "wiztk/gui/abstract-rendering-backend.hpp"
 
 #include <memory>
 
@@ -28,7 +28,7 @@ namespace gui {
  * @ingroup gui
  * @brief Abstract EGL graphic backend.
  */
-class WIZTK_EXPORT AbstractEGLBackend : public graphics::AbstractRenderingBackend {
+class WIZTK_EXPORT AbstractEGLBackend : public AbstractRenderingBackend {
 
  public:
 
@@ -44,13 +44,13 @@ class WIZTK_EXPORT AbstractEGLBackend : public graphics::AbstractRenderingBacken
 
  protected:
 
-  void OnSetup(graphics::AbstractSurface *surface) override {};
+  void OnSetup(AbstractSurface *surface) override {};
 
-  void OnRelease(graphics::AbstractSurface *surface) override {};
+  void OnRelease(AbstractSurface *surface) override {};
 
   struct Private;
 
-  std::unique_ptr<AbstractEGLBackend::Private> p_;
+  std::unique_ptr<Private> p_;
 
 };
 

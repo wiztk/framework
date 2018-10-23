@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUi_VIEW_SURFACE_PRIVATE_HPP_
-#define WIZTK_GUi_VIEW_SURFACE_PRIVATE_HPP_
+#ifndef WIZTK_GUI_SURFACE_PRIVATE_HPP_
+#define WIZTK_GUI_SURFACE_PRIVATE_HPP_
 
 #include "wiztk/gui/surface.hpp"
 #include "wiztk/gui/abstract-rendering-api.hpp"
+#include "wiztk/gui/abstract-rendering-backend.hpp"
 
 namespace wiztk {
 namespace gui {
@@ -87,6 +88,8 @@ struct Surface::Private {
 
   AbstractRenderingAPI *rendering_api = nullptr;
 
+  AbstractRenderingBackend *rendering_backend = nullptr;
+
   union {
     void *placeholder;
     Shell *shell;
@@ -112,4 +115,4 @@ struct Surface::Private {
 } // namespace gui
 } // namespace wiztk
 
-#endif // WIZTK_GUi_VIEW_SURFACE_PRIVATE_HPP_
+#endif // WIZTK_GUI_SURFACE_PRIVATE_HPP_
