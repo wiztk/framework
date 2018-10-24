@@ -44,11 +44,9 @@ class WIZTK_EXPORT AbstractEGLBackend : public AbstractRenderingBackend {
 
  protected:
 
-  void OnSetup(AbstractSurface *surface) override {};
-
-  void OnRelease(AbstractSurface *surface) override {};
-
   struct Private;
+
+ private:
 
   std::unique_ptr<Private> p_;
 

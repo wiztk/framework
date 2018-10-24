@@ -23,7 +23,7 @@ namespace wiztk {
 namespace gui {
 
 // Forward declarations:
-class AbstractSurface;
+class Surface;
 
 /**
  * @ingroup graphics
@@ -50,15 +50,7 @@ class WIZTK_EXPORT AbstractRenderingBackend {
 
   virtual ~AbstractRenderingBackend();
 
-  void Setup(AbstractSurface *surface);
-
-  void Release(AbstractSurface *surface);
-
- protected:
-
-  virtual void OnSetup(AbstractSurface *surface) = 0;
-
-  virtual void OnRelease(AbstractSurface *surface) = 0;
+  virtual void Render(Surface *surface) = 0;
 
 };
 

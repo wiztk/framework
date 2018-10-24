@@ -36,11 +36,13 @@ class WIZTK_EXPORT GLES2Backend : public AbstractEGLBackend {
 
   ~GLES2Backend() override;
 
+  void Render(Surface *surface) final;
+
  private:
 
   struct Private;
 
-  std::unique_ptr<GLES2Backend::Private> p_;
+  std::unique_ptr<Private> p_;
 
 };
 

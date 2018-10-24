@@ -29,20 +29,20 @@ using namespace wiztk::gui;
 
 static const char *vert_shader_text =
     "uniform mat4 rotation;\n"
-        "attribute vec4 pos;\n"
-        "attribute vec4 color;\n"
-        "varying vec4 v_color;\n"
-        "void main() {\n"
-        "  gl_Position = rotation * pos;\n"
-        "  v_color = color;\n"
-        "}\n";
+    "attribute vec4 pos;\n"
+    "attribute vec4 color;\n"
+    "varying vec4 v_color;\n"
+    "void main() {\n"
+    "  gl_Position = rotation * pos;\n"
+    "  v_color = color;\n"
+    "}\n";
 
 static const char *frag_shader_text =
     "precision mediump float;\n"
-        "varying vec4 v_color;\n"
-        "void main() {\n"
-        "  gl_FragColor = v_color;\n"
-        "}\n";
+    "varying vec4 v_color;\n"
+    "void main() {\n"
+    "  gl_FragColor = v_color;\n"
+    "}\n";
 
 static GLuint
 create_shader(const char *source, GLenum shader_type) {
@@ -75,24 +75,24 @@ class SimpleEGLWindow : public GLWindow {
   SimpleEGLWindow()
       : GLWindow(250, 250, "Simple EGL") {}
 
-  virtual  ~SimpleEGLWindow() {
+  ~SimpleEGLWindow() final {
     glDeleteProgram(program);
   }
 
  protected:
 
-  virtual void OnInitialize() override;
+  void OnInitialize() override;
 
-  virtual void OnResize(int width, int height) override;
+  void OnResize(int width, int height) override;
 
-  virtual void OnRender() override;
+  void OnRender() override;
 
  private:
-  GLuint program;
+  GLuint program = 0;
 
-  GLuint rotation_uniform;
-  GLuint pos;
-  GLuint col;
+  GLuint rotation_uniform = 0;
+  GLuint pos = 0;
+  GLuint col = 0;
 
 };
 
@@ -128,8 +128,7 @@ void SimpleEGLWindow::OnInitialize() {
   glBindAttribLocation(program, col, "color");
   glLinkProgram(program);
 
-  rotation_uniform =
-      glGetUniformLocation(program, "rotation");
+  rotation_uniform = (GLuint) glGetUniformLocation(program, "rotation");
 
   SwapBuffers();
 }
@@ -142,9 +141,9 @@ void SimpleEGLWindow::OnRender() {
   MakeCurrent();
 
   static const GLfloat verts[3][2] = {
-      {-0.5, -0.5},
-      {0.5, -0.5},
-      {0, 0.5}
+      {-.5f, -.5f},
+      {.5f, -.5f},
+      {0.f, .5f}
   };
   static const GLfloat colors[3][3] = {
       {1, 0, 0},
@@ -159,7 +158,7 @@ void SimpleEGLWindow::OnRender() {
       {0, 0, 0, 1}
   };
   static const uint32_t speed_div = 5;
-  struct timeval tv;
+  struct timeval tv = {0};
 
   gettimeofday(&tv, NULL);
   uint32_t time = tv.tv_sec * 1000 + tv.tv_usec / 1000;

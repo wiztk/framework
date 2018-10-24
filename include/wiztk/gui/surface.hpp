@@ -227,6 +227,14 @@ class WIZTK_EXPORT Surface : public base::Trackable {
 
   AbstractRenderingAPI *GetRenderingAPI() const;
 
+  /**
+   * @brief Set the graphic library backend for rendering this surface.
+   * @param backend
+   *
+   * @note The AbstractRenderingBackend object will be deleted when this surface is destroyed.
+   */
+  void SetRenderingBackend(AbstractRenderingBackend *backend);
+
   AbstractRenderingBackend *GetRenderingBackend() const;
 
   const Point &GetRelativePosition() const;
@@ -273,7 +281,9 @@ class WIZTK_EXPORT Surface : public base::Trackable {
 
   };
 
-  explicit Surface(AbstractEventHandler *event_handler, const Margin &margin = Margin());
+  explicit Surface(AbstractEventHandler *event_handler,
+                   AbstractRenderingBackend *backend = nullptr,
+                   const Margin &margin = Margin());
 
   void OnGLInterfaceDestroyed(__SLOT__);
 
@@ -335,6 +345,7 @@ class Surface::Shell {
   struct Private;
 
   static Surface *Create(AbstractEventHandler *event_handler,
+                         AbstractRenderingBackend *backend = nullptr,
                          const Margin &margin = Margin());
 
   explicit Shell(Surface *surface);
@@ -382,6 +393,7 @@ class Surface::Shell::Toplevel {
    * @brief Create a toplevel shell surface
    */
   static Surface *Create(AbstractEventHandler *event_handler,
+                         AbstractRenderingBackend *backend = nullptr,
                          const Margin &margin = Margin());
 
   static Toplevel *Get(const Surface *surface);
@@ -433,6 +445,7 @@ class Surface::Shell::Popup {
    */
   static Surface *Create(Surface *parent,
                          AbstractEventHandler *event_handler,
+                         AbstractRenderingBackend *backend = nullptr,
                          const Margin &margin = Margin());
 
   void SetSize(int32_t width, int32_t height);
@@ -472,6 +485,7 @@ class Surface::Sub {
    */
   static Surface *Create(Surface *parent,
                          AbstractEventHandler *event_handler,
+                         AbstractRenderingBackend *backend = nullptr,
                          const Margin &margin = Margin());
 
   static Sub *Get(const Surface *surface);

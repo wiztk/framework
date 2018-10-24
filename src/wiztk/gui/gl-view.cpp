@@ -126,7 +126,7 @@ void GLView::OnDraw(const Context &context) {
   if (nullptr == p_->rendering_api) return;
 
   if (nullptr == p_->gl_surface) {
-    p_->gl_surface = Surface::Sub::Create(context.surface(), this);
+    p_->gl_surface = Surface::Sub::Create(context.surface(), this, nullptr);
     p_->gl_surface->SetRenderingAPI(p_->rendering_api);
 //    gl_surface->SetCommitMode(Surface::kDesynchronized);
 

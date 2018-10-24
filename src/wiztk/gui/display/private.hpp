@@ -25,16 +25,15 @@
 #include "wiztk/gui/output-manager.hpp"
 #include "wiztk/gui/cursor.hpp"
 
-#include <list>
-
-#include <vulkan/vulkan.hpp>
-
 #include <xdg-shell-unstable-v6-client-protocol.h>
 
 #include <xkbcommon/xkbcommon.h>
 
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
+
+#include <list>
+#include <vector>
 
 namespace wiztk {
 namespace gui {
@@ -59,10 +58,6 @@ struct Display::Private {
 
   void ReleaseEGLDisplay();
 
-  void CreateVKInstance();
-
-  void ReleaseVKInstance();
-
   void MakeSwapBufferNonBlock() const;
 
   struct wl_display *wl_display = nullptr;
@@ -81,8 +76,6 @@ struct Display::Private {
 
   EGLint egl_version_major = 0;  /**< The major version */
   EGLint egl_version_minor = 0;  /**< The minor version */
-
-  vk::Instance vk_instance;
 
   struct xkb_context *xkb_context = nullptr;
 

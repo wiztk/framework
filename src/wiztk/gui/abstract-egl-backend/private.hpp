@@ -30,6 +30,10 @@ namespace gui {
  */
 struct AbstractEGLBackend::Private {
 
+  static const Private &Get(const AbstractEGLBackend &egl_backend) {
+    return *egl_backend.p_;
+  }
+
   /**
    * @brief The native EGL display object.
    */

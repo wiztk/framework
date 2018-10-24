@@ -23,13 +23,5 @@ AbstractRenderingBackend::AbstractRenderingBackend() = default;
 
 AbstractRenderingBackend::~AbstractRenderingBackend() = default;
 
-void AbstractRenderingBackend::Setup(AbstractSurface *surface) {
-  OnSetup(surface);
-}
-
-void AbstractRenderingBackend::Release(AbstractSurface *surface) {
-  OnRelease(surface);
-}
-
 } // namespace graphics
 } // namespace wiztk

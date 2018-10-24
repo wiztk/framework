@@ -32,15 +32,15 @@ VulkanAPI::VulkanAPI()
 VulkanAPI::~VulkanAPI() = default;
 
 void VulkanAPI::OnSetup() {
-  Display *display = Application::GetInstance()->GetDisplay();
+//  Display *display = Application::GetInstance()->GetDisplay();
 
-  vk::WaylandSurfaceCreateInfoKHR info = {
-      vk::WaylandSurfaceCreateFlagsKHR(),
-      Display::Private::Get(*display).wl_display,
-//      Proxy::GetWaylandSurface(GetSurface())
-  };
+//  vk::WaylandSurfaceCreateInfoKHR info = {
+//      vk::WaylandSurfaceCreateFlagsKHR(),
+//      Display::Private::Get(*display).wl_display,
+////      Proxy::GetWaylandSurface(GetSurface())
+//  };
 
-  vk_surface_ = Display::Private::Get(*display).vk_instance.createWaylandSurfaceKHR(info);
+//  vk_surface_ = Display::Private::Get(*display).vk_instance.createWaylandSurfaceKHR(info);
 }
 
 } // namespace gui

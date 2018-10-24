@@ -151,19 +151,6 @@ void Display::Private::ReleaseEGLDisplay() {
   }
 }
 
-void Display::Private::CreateVKInstance() {
-  vk::InstanceCreateInfo create_info = {};
-  vk_instance = vk::createInstance(create_info);
-
-  if (!vk_instance) {
-    throw std::runtime_error("Error! Fail to create Vulkan instance!");
-  }
-}
-
-void Display::Private::ReleaseVKInstance() {
-  vk_instance.destroy();
-}
-
 void Display::Private::MakeSwapBufferNonBlock() const {
   EGLint a = EGL_MIN_SWAP_INTERVAL;
   EGLint b = EGL_MAX_SWAP_INTERVAL;

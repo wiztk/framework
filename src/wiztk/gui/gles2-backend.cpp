@@ -50,7 +50,7 @@ GLES2Backend::GLES2Backend()
       EGL_NONE
   };
 
-  EGLDisplay egl_display = AbstractEGLBackend::p_->egl_display;
+  EGLDisplay egl_display = AbstractEGLBackend::Private::Get(*this).egl_display;
   EGLConfig egl_config = nullptr;
 
   eglGetConfigs(egl_display, nullptr, 0, &count);
@@ -88,8 +88,12 @@ GLES2Backend::~GLES2Backend() {
 //  eglDestroySurface(Display::Proxy::egl_display(display), p_->egl_surface);
 //  wl_egl_window_destroy(p_->wl_egl_window);
   if (nullptr != p_->egl_context) {
-    eglDestroyContext(AbstractEGLBackend::p_->egl_display, p_->egl_context);
+    eglDestroyContext(AbstractEGLBackend::Private::Get(*this).egl_display, p_->egl_context);
   }
+}
+
+void GLES2Backend::Render(Surface *surface) {
+
 }
 
 } // namespace gui

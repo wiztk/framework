@@ -65,14 +65,15 @@ AbstractShellView::AbstractShellView(int width,
   if (nullptr != title) __PROPERTY__(title) = title;
 
   if (nullptr == __PROPERTY__(parent)) {
-    __PROPERTY__(shell_surface) = Surface::Shell::Toplevel::Create(this, Theme::GetShadowMargin());
+    __PROPERTY__(shell_surface) = Surface::Shell::Toplevel::Create(this, nullptr, Theme::GetShadowMargin());
     auto *top_level = Surface::Shell::Toplevel::Get(__PROPERTY__(shell_surface));
     top_level->SetTitle(title);
   } else {
     __PROPERTY__(shell_surface) =
         Surface::Shell::Popup::Create(__PROPERTY__(parent)->__PROPERTY__(shell_surface),
-                                          this,
-                                          Theme::GetShadowMargin());
+                                      this,
+                                      nullptr,
+                                      Theme::GetShadowMargin());
     // TODO: create popup shell surface
   }
 
@@ -517,7 +518,7 @@ void AbstractShellView::GeometryMessage::Exec() {
   shell_view_->OnSaveSize(shell_view_->__PROPERTY__(last_size), shell_view_->__PROPERTY__(size));
   shell_view_->__PROPERTY__(last_size) = shell_view_->__PROPERTY__(size);
   Surface::Shell::Get(shell_view_->__PROPERTY__(shell_surface))->ResizeWindow(shell_view_->__PROPERTY__(size).width,
-                                                                                  shell_view_->__PROPERTY__(size).height);  // Call xdg surface api
+                                                                              shell_view_->__PROPERTY__(size).height);  // Call xdg surface api
 }
 
 } // namespace gui
