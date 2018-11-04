@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_GL_WIDGET_HPP_
-#define WIZTK_GUI_GL_WIDGET_HPP_
+#ifndef WIZTK_GUI_GL_VIEW_HPP_
+#define WIZTK_GUI_GL_VIEW_HPP_
 
 #include "abstract-view.hpp"
 
@@ -37,7 +37,7 @@ class GLView : public AbstractView {
 
  protected:
 
-  virtual ~GLView();
+  ~GLView() override;
 
   void OnConfigureGeometry(const RectF &old_geometry, const RectF &new_geometry) final;
 
@@ -82,4 +82,4 @@ class GLView : public AbstractView {
 } // namespace gui
 } // namespace wiztk
 
-#endif // WIZTK_GUI_GL_WIDGET_HPP_
+#endif // WIZTK_GUI_GL_VIEW_HPP_

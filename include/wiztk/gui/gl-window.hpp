@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef WIZTK_GUI_EGL_WINDOW_HPP_
-#define WIZTK_GUI_EGL_WINDOW_HPP_
+#ifndef WIZTK_GUI_GL_WINDOW_HPP_
+#define WIZTK_GUI_GL_WINDOW_HPP_
 
 #include "abstract-shell-view.hpp"
 
@@ -45,7 +45,7 @@ class GLWindow : public AbstractShellView {
 
   GLWindow(int width, int height, const char *title);
 
-  virtual ~GLWindow();
+  ~GLWindow() override;
 
  protected:
 
@@ -65,7 +65,7 @@ class GLWindow : public AbstractShellView {
 
   void OnKeyDown(KeyEvent *event) override;
 
-  void OnFocus(bool);
+  void OnFocus(bool) override;
 
   virtual void OnInitialize();
 
@@ -88,4 +88,4 @@ class GLWindow : public AbstractShellView {
 } // namespace gui
 } // namespace wiztk
 
-#endif // WIZTK_GUI_EGL_WINDOW_HPP_
+#endif // WIZTK_GUI_GL_WINDOW_HPP_

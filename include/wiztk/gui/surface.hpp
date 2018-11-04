@@ -24,6 +24,7 @@
 
 #include "wiztk/gui/abstract-view.hpp"
 #include "wiztk/gui/queued-task.hpp"
+#include "abstract-rendering-backend.hpp"
 
 #include <wayland-egl.h>
 #include <memory>
@@ -35,7 +36,6 @@ class Buffer;
 class Output;
 class InputEvent;
 class Region;
-class AbstractRenderingAPI;
 class AbstractRenderingBackend;
 
 /**
@@ -81,12 +81,18 @@ class WIZTK_EXPORT Surface : public base::Trackable {
   friend class Application;
   friend class Display;
   friend class Callback;
-  friend class AbstractRenderingAPI;
   friend class MainLoop;
 
  public:
 
+  /**
+   * @brief Disable copy/move methods.
+   */
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Surface);
+
+  /**
+   * @brief Disable default constructor.
+   */
   Surface() = delete;
 
   /**
@@ -214,18 +220,11 @@ class WIZTK_EXPORT Surface : public base::Trackable {
    */
   Surface *GetLowerShell() const;
 
-  AbstractEventHandler *GetEventHandler() const;
-
   /**
-   * @brief Set the graphic library interface for this surface
-   * @param api An allocated GLInterface object or nullptr to unset and
-   * use shm back.
-   *
-   * @note The GLInterface will be deleted when the surface destroyed.
+   * @brief Get the event handler controles this surface.
+   * @return
    */
-  void SetRenderingAPI(AbstractRenderingAPI *api);
-
-  AbstractRenderingAPI *GetRenderingAPI() const;
+  AbstractEventHandler *GetEventHandler() const;
 
   /**
    * @brief Set the graphic library backend for rendering this surface.
@@ -235,8 +234,16 @@ class WIZTK_EXPORT Surface : public base::Trackable {
    */
   void SetRenderingBackend(AbstractRenderingBackend *backend);
 
+  /**
+   * @brief Get the rendering backend object.
+   * @return
+   */
   AbstractRenderingBackend *GetRenderingBackend() const;
 
+  /**
+   * @brief Get the relative position in the desktop.
+   * @return A relative point.
+   */
   const Point &GetRelativePosition() const;
 
  private:
@@ -281,11 +288,17 @@ class WIZTK_EXPORT Surface : public base::Trackable {
 
   };
 
+  /**
+   * @brief Constructor with given margin.
+   * @param event_handler
+   * @param margin
+   */
   explicit Surface(AbstractEventHandler *event_handler,
-                   AbstractRenderingBackend *backend = nullptr,
                    const Margin &margin = Margin());
 
-  void OnGLInterfaceDestroyed(__SLOT__);
+  explicit Surface(AbstractEventHandler *event_handler,
+                   const AbstractRenderingBackend::Allocator &allocator,
+                   const Margin &margin = Margin());
 
   // global surface stack:
 
@@ -345,7 +358,10 @@ class Surface::Shell {
   struct Private;
 
   static Surface *Create(AbstractEventHandler *event_handler,
-                         AbstractRenderingBackend *backend = nullptr,
+                         const Margin &margin = Margin());
+
+  static Surface *Create(AbstractEventHandler *event_handler,
+                         const AbstractRenderingBackend::Allocator &allocator,
                          const Margin &margin = Margin());
 
   explicit Shell(Surface *surface);
@@ -393,7 +409,10 @@ class Surface::Shell::Toplevel {
    * @brief Create a toplevel shell surface
    */
   static Surface *Create(AbstractEventHandler *event_handler,
-                         AbstractRenderingBackend *backend = nullptr,
+                         const Margin &margin = Margin());
+
+  static Surface *Create(AbstractEventHandler *event_handler,
+                         const AbstractRenderingBackend::Allocator &allocator,
                          const Margin &margin = Margin());
 
   static Toplevel *Get(const Surface *surface);
@@ -437,15 +456,26 @@ class Surface::Shell::Popup {
 
  public:
 
+  /**
+   * @brief Disable copy/move operations.
+   */
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Popup);
+
+  /**
+   * @brief Disable default constructor.
+   */
   Popup() = delete;
 
   /**
    * @brief Create a popup shell surface
    */
-  static Surface *Create(Surface *parent,
-                         AbstractEventHandler *event_handler,
-                         AbstractRenderingBackend *backend = nullptr,
+  static Surface *Create(AbstractEventHandler *event_handler,
+                         Surface *parent,
+                         const Margin &margin = Margin());
+
+  static Surface *Create(AbstractEventHandler *event_handler,
+                         Surface *parent,
+                         const AbstractRenderingBackend::Allocator &allocator,
                          const Margin &margin = Margin());
 
   void SetSize(int32_t width, int32_t height);
@@ -477,15 +507,26 @@ class Surface::Sub {
 
  public:
 
+  /**
+   * @brief Disable copy/move operations.
+   */
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(Sub);
+
+  /**
+   * @brief Disable default constructor.
+   */
   Sub() = delete;
 
   /**
    * @brief Create a sub surface
    */
-  static Surface *Create(Surface *parent,
-                         AbstractEventHandler *event_handler,
-                         AbstractRenderingBackend *backend = nullptr,
+  static Surface *Create(AbstractEventHandler *event_handler,
+                         Surface *parent,
+                         const Margin &margin = Margin());
+
+  static Surface *Create(AbstractEventHandler *event_handler,
+                         Surface *parent,
+                         const AbstractRenderingBackend::Allocator &allocator,
                          const Margin &margin = Margin());
 
   static Sub *Get(const Surface *surface);

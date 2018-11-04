@@ -32,9 +32,13 @@ class WIZTK_EXPORT GLES2Backend : public AbstractEGLBackend {
 
  public:
 
-  GLES2Backend();
+  GLES2Backend() = delete;
+
+  explicit GLES2Backend(Surface *surface);
 
   ~GLES2Backend() override;
+
+  void SetViewportSize(int width, int height) final;
 
   void Render(Surface *surface) final;
 

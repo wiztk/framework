@@ -26,9 +26,9 @@ namespace gui {
 
 struct AbstractRenderingAPI::Proxy {
 
-  static inline struct wl_surface *GetWaylandSurface(const Surface *surface) {
-    return surface->p_->wl_surface;
-  }
+//  static inline struct wl_surface *GetWaylandSurface(const Surface *surface) {
+//    return surface->p_->wl_surface;
+//  }
 
 };
 

@@ -86,8 +86,6 @@ struct Surface::Private {
    */
   Surface *lower = nullptr;
 
-  AbstractRenderingAPI *rendering_api = nullptr;
-
   AbstractRenderingBackend *rendering_backend = nullptr;
 
   union {

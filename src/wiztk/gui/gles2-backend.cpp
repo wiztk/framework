@@ -18,14 +18,15 @@
 #include "abstract-egl-backend/private.hpp"
 
 #include "wiztk/gui/application.hpp"
+#include "surface/private.hpp"
 
 #include "display/private.hpp"
 
 namespace wiztk {
 namespace gui {
 
-GLES2Backend::GLES2Backend()
-    : AbstractEGLBackend() {
+GLES2Backend::GLES2Backend(Surface *surface)
+    : AbstractEGLBackend(surface) {
   p_ = std::make_unique<Private>();
 
   EGLBoolean ret = eglBindAPI(EGL_OPENGL_ES_API);
@@ -88,8 +89,13 @@ GLES2Backend::~GLES2Backend() {
 //  eglDestroySurface(Display::Proxy::egl_display(display), p_->egl_surface);
 //  wl_egl_window_destroy(p_->wl_egl_window);
   if (nullptr != p_->egl_context) {
-    eglDestroyContext(AbstractEGLBackend::Private::Get(*this).egl_display, p_->egl_context);
+    EGLDisplay egl_display = AbstractEGLBackend::Private::Get(*this).egl_display;
+    eglDestroyContext(egl_display, p_->egl_context);
   }
+}
+
+void GLES2Backend::SetViewportSize(int width, int height) {
+
 }
 
 void GLES2Backend::Render(Surface *surface) {

@@ -33,10 +33,15 @@ namespace gui {
 
 using Point = base::Point2I;
 
-Surface *Surface::Shell::Create(AbstractEventHandler *event_handler,
-                                AbstractRenderingBackend *backend,
+Surface* Surface::Shell::Create(AbstractEventHandler *event_handler,
                                 const Margin &margin) {
-  auto *surface = new Surface(event_handler, backend, margin);
+  return Create(event_handler, AbstractRenderingBackend::Allocator(), margin);
+}
+
+Surface *Surface::Shell::Create(AbstractEventHandler *event_handler,
+                                const AbstractRenderingBackend::Allocator &allocator,
+                                const Margin &margin) {
+  auto *surface = new Surface(event_handler, allocator, margin);
   surface->p_->role.shell = new Shell(surface);
   return surface;
 }
@@ -130,10 +135,15 @@ void Surface::Shell::Remove() {
 
 // ------
 
-Surface *Surface::Shell::Toplevel::Create(AbstractEventHandler *event_handler,
-                                          AbstractRenderingBackend *backend,
+Surface* Surface::Shell::Toplevel::Create(AbstractEventHandler *event_handler,
                                           const Margin &margin) {
-  Surface *surface = Shell::Create(event_handler, backend, margin);
+  return Create(event_handler, AbstractRenderingBackend::Allocator(), margin);
+}
+
+Surface *Surface::Shell::Toplevel::Create(AbstractEventHandler *event_handler,
+                                          const AbstractRenderingBackend::Allocator &allocator,
+                                          const Margin &margin) {
+  Surface *surface = Shell::Create(event_handler, allocator, margin);
   Shell *shell = Shell::Get(surface);
   shell->role_.toplevel = new Toplevel(shell);
   return surface;
@@ -198,15 +208,21 @@ Surface::Shell::Toplevel::~Toplevel() {
 
 // ------
 
-Surface *Surface::Shell::Popup::Create(Surface *parent,
-                                       AbstractEventHandler *event_handler,
-                                       AbstractRenderingBackend *backend,
+Surface *Surface::Shell::Popup::Create(AbstractEventHandler *event_handler,
+                                       Surface *parent,
+                                       const Margin &margin) {
+  return Create(event_handler, parent, AbstractRenderingBackend::Allocator(), margin);
+}
+
+Surface *Surface::Shell::Popup::Create(AbstractEventHandler *event_handler,
+                                       Surface *parent,
+                                       const AbstractRenderingBackend::Allocator &allocator,
                                        const Margin &margin) {
   if (nullptr == parent) throw std::runtime_error("Error! parent is nullptr!");
 
   if (nullptr == Shell::Get(parent)) throw std::runtime_error("Error! parent is not a shell surface!");
 
-  Surface *surface = Shell::Create(event_handler, nullptr, margin);
+  Surface *surface = Shell::Create(event_handler, allocator, margin);
   Shell *shell = Shell::Get(surface);
   shell->parent_ = parent->p_->role.shell;
   shell->role_.popup = new Popup(shell);
@@ -235,11 +251,17 @@ Surface::Shell::Popup::~Popup() {
 
 // ------
 
-Surface *Surface::Sub::Create(Surface *parent,
-                              AbstractEventHandler *event_handler,
-                              AbstractRenderingBackend *backend,
+Surface *Surface::Sub::Create(AbstractEventHandler *event_handler,
+                              Surface *parent,
                               const Margin &margin) {
-  auto *surface = new Surface(event_handler, backend, margin);
+  return Create(event_handler, parent, AbstractRenderingBackend::Allocator(), margin);
+}
+
+Surface *Surface::Sub::Create(AbstractEventHandler *event_handler,
+                              Surface *parent,
+                              const AbstractRenderingBackend::Allocator &allocator,
+                              const Margin &margin) {
+  auto *surface = new Surface(event_handler, allocator, margin);
   surface->p_->role.sub = new Sub(surface, parent);
   return surface;
 }
@@ -458,11 +480,16 @@ int Surface::kShellSurfaceCount = 0;
 base::Deque<Surface::RenderTask> Surface::kRenderTaskDeque;
 base::Deque<Surface::CommitTask> Surface::kCommitTaskDeque;
 
-Surface::Surface(AbstractEventHandler *event_handler, AbstractRenderingBackend *backend, const Margin &margin) {
+Surface::Surface(AbstractEventHandler *event_handler, const Margin &margin)
+    : Surface(event_handler, AbstractRenderingBackend::Allocator(), margin) {}
+
+Surface::Surface(AbstractEventHandler *event_handler,
+                 const AbstractRenderingBackend::Allocator &allocator,
+                 const Margin &margin) {
   _ASSERT(nullptr != event_handler);
   p_ = std::make_unique<Private>(this, event_handler, margin);
   p_->role.placeholder = nullptr;
-  p_->rendering_backend = backend;
+  p_->rendering_backend = allocator();
 
   Display *display = Application::GetInstance()->GetDisplay();
   p_->wl_surface = wl_compositor_create_surface(Display::Private::Get(*display).wl_compositor);
@@ -470,12 +497,6 @@ Surface::Surface(AbstractEventHandler *event_handler, AbstractRenderingBackend *
 }
 
 Surface::~Surface() {
-  if (nullptr != p_->rendering_api) {
-    p_->rendering_api->Release(this);
-  }
-
-  delete p_->rendering_backend;
-
 //  if (p_->egl)
 //    delete p_->egl;
 
@@ -483,6 +504,8 @@ Surface::~Surface() {
     delete p_->role.shell; // deleting a shell surface will break the links to up_ and down_
   else
     delete p_->role.sub; // deleting all sub surfaces and break the links to above_ and below_
+
+  delete p_->rendering_backend;
 
   if (nullptr != p_->wl_surface)
     wl_surface_destroy(p_->wl_surface);
@@ -503,7 +526,7 @@ void Surface::Attach(Buffer *buffer, int32_t x, int32_t y) {
 }
 
 void Surface::Commit() {
-  if (nullptr != p_->rendering_api) {
+  if (nullptr != p_->rendering_backend) {
     // GL surface does not use commit
     if (p_->commit_mode == kSynchronized) {
       Surface *main_surface = GetShellSurface();
@@ -639,15 +662,6 @@ AbstractEventHandler *Surface::GetEventHandler() const {
   return p_->event_handler;
 }
 
-void Surface::SetRenderingAPI(AbstractRenderingAPI *api) {
-  api->Setup(this);
-  api->destroyed().Connect(this, &Surface::OnGLInterfaceDestroyed);
-}
-
-AbstractRenderingAPI *Surface::GetRenderingAPI() const {
-  return p_->rendering_api;
-}
-
 void Surface::SetRenderingBackend(AbstractRenderingBackend *backend) {
   if (p_->rendering_backend == backend) return;
 
@@ -661,10 +675,6 @@ AbstractRenderingBackend *Surface::GetRenderingBackend() const {
 
 const Point &Surface::GetRelativePosition() const {
   return p_->relative_position;
-}
-
-void Surface::OnGLInterfaceDestroyed(base::SLOT /* slot */) {
-  p_->rendering_api = nullptr;
 }
 
 void Surface::Clear() {

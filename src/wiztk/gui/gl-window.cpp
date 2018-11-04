@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Freeman Zhang <zhanggyb@gmail.com>
+ * Copyright 2017 - 2018 The WizTK Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@
 #include "wiztk/gui/surface.hpp"
 #include "wiztk/gui/callback.hpp"
 #include "wiztk/gui/title-bar.hpp"
-#include "wiztk/gui/glesv2-api.hpp"
+#include "wiztk/gui/gles2-backend.hpp"
 
 #include "wiztk/gui/shared-memory-pool.hpp"
 #include "wiztk/gui/buffer.hpp"
@@ -63,14 +63,14 @@ struct GLWindow::Private : public base::Property<GLWindow> {
   explicit Private(GLWindow *window)
       : base::Property<GLWindow>(window) {}
 
-  ~Private() final = default;
+  ~Private() final {
+    delete gl_surface;
+  }
 
   /* Properties for frame surface, JUST experimental */
   SharedMemoryPool pool;
 
   Buffer frame_buffer;
-
-  AbstractRenderingAPI *rendering_api = nullptr;
 
   Surface *gl_surface = nullptr;
 
@@ -191,10 +191,7 @@ GLWindow::GLWindow(int width, int height, const char *title)
   p_->callback.done().Bind(p_.get(), &Private::OnFrame);
 }
 
-GLWindow::~GLWindow() {
-  delete p_->rendering_api;
-  delete p_->gl_surface;
-}
+GLWindow::~GLWindow() = default;
 
 void GLWindow::OnShown() {
   Surface *shell_surface = this->GetShellSurface();
@@ -212,14 +209,16 @@ void GLWindow::OnShown() {
   shell_surface->Update();
 
   // Create a sub surface and use it as a gl surface for 3D
-  p_->gl_surface = Surface::Sub::Create(shell_surface, this);
+//  p_->gl_surface = Surface::Sub::Create(this, shell_surface, new GLES2Backend());
 
   Region region;  // zero region
   p_->gl_surface->SetInputRegion(region);
 
-  p_->rendering_api = new GLESV2API;  // Currently use GLES for demo
-  p_->gl_surface->SetRenderingAPI(p_->rendering_api);
-  p_->rendering_api->SetViewportSize(GetWidth(), GetHeight());
+//  p_->rendering_api = new GLESV2API;  // Currently use GLES for demo
+
+//  p_->gl_surface->SetRenderingAPI(p_->rendering_api);
+
+//  p_->rendering_api->SetViewportSize(GetWidth(), GetHeight());
 
   Surface::Sub::Get(p_->gl_surface)->SetWindowPosition(0, 0);
 
@@ -237,7 +236,7 @@ void GLWindow::OnConfigureSize(const Size &old_size, const Size &new_size) {
 
   if (!RequestSaveSize(size)) return;
 
-  p_->rendering_api->SetViewportSize(size.width, size.height);
+//  p_->rendering_api->SetViewportSize(size.width, size.height);
   OnResize(size.width, size.height);
 }
 
@@ -395,22 +394,22 @@ void GLWindow::OnResize(int /*width*/, int /*height*/) {
 }
 
 void GLWindow::OnRender() {
-  p_->rendering_api->MakeCurrent();
+//  p_->rendering_api->MakeCurrent();
 
   glClearColor(0.f, 0.f, 0.f, 1.f);
   glClear(GL_COLOR_BUFFER_BIT);
   glFlush();
 
-  p_->rendering_api->SwapBuffers();
+//  p_->rendering_api->SwapBuffers();
 }
 
 bool GLWindow::MakeCurrent() {
-  p_->rendering_api->MakeCurrent();
+//  p_->rendering_api->MakeCurrent();
   return false;
 }
 
 void GLWindow::SwapBuffers() {
-  p_->rendering_api->SwapBuffers();
+//  p_->rendering_api->SwapBuffers();
 }
 
 } // namespace gui

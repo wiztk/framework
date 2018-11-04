@@ -26,8 +26,8 @@ namespace gui {
 class Surface;
 
 /**
- * @ingroup graphics
- * @brief The graphics backend used for a surface.
+ * @ingroup gui
+ * @brief The graphics backend used to render a wayland surface.
  *
  * A backend object represents the different GL APIs including:
  * - OpenGL ES 3.x
@@ -40,17 +40,41 @@ class WIZTK_EXPORT AbstractRenderingBackend {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(AbstractRenderingBackend);
 
+  AbstractRenderingBackend() = delete;
+
+  class Allocator {
+
+   public:
+
+    Allocator() = default;
+    virtual ~Allocator() = default;
+
+    // This allocator in abstract class returns nullptr
+    virtual AbstractRenderingBackend *operator()() const {
+      return nullptr;
+    }
+
+  };
+
   class Attribute {
    public:
     Attribute() = default;
     virtual ~Attribute() = default;
   };
 
-  AbstractRenderingBackend();
+  explicit AbstractRenderingBackend(Surface *surface);
 
   virtual ~AbstractRenderingBackend();
 
+  virtual void SetViewportSize(int width, int height) = 0;
+
   virtual void Render(Surface *surface) = 0;
+
+  Surface *surface() const { return surface_; }
+
+ private:
+
+  Surface *surface_ = nullptr;
 
 };
 

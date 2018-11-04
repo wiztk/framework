@@ -19,7 +19,10 @@
 namespace wiztk {
 namespace gui {
 
-AbstractRenderingBackend::AbstractRenderingBackend() = default;
+AbstractRenderingBackend::AbstractRenderingBackend(Surface *surface)
+    : surface_(surface) {
+  _ASSERT(surface_);
+}
 
 AbstractRenderingBackend::~AbstractRenderingBackend() = default;
 

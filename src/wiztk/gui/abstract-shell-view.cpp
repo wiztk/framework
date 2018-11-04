@@ -65,14 +65,14 @@ AbstractShellView::AbstractShellView(int width,
   if (nullptr != title) __PROPERTY__(title) = title;
 
   if (nullptr == __PROPERTY__(parent)) {
-    __PROPERTY__(shell_surface) = Surface::Shell::Toplevel::Create(this, nullptr, Theme::GetShadowMargin());
+    __PROPERTY__(shell_surface) = Surface::Shell::Toplevel::Create(this, Theme::GetShadowMargin());
     auto *top_level = Surface::Shell::Toplevel::Get(__PROPERTY__(shell_surface));
     top_level->SetTitle(title);
   } else {
     __PROPERTY__(shell_surface) =
-        Surface::Shell::Popup::Create(__PROPERTY__(parent)->__PROPERTY__(shell_surface),
-                                      this,
-                                      nullptr,
+        Surface::Shell::Popup::Create(this,
+                                      __PROPERTY__(parent)->__PROPERTY__(shell_surface),
+                                      AbstractRenderingBackend::Allocator(),
                                       Theme::GetShadowMargin());
     // TODO: create popup shell surface
   }

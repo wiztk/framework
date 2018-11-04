@@ -71,7 +71,7 @@ void GLESV2API::OnSetup(Surface *surface) {
   Destroy();
 
   Display *display = Application::GetInstance()->GetDisplay();
-  p_->wl_egl_window = wl_egl_window_create(Proxy::GetWaylandSurface(surface), 400, 300);
+//  p_->wl_egl_window = wl_egl_window_create(Proxy::GetWaylandSurface(surface), 400, 300);
   p_->egl_surface = eglCreatePlatformWindowSurface(Display::Private::Get(*display).egl_display,
                                                    Display::Private::Get(*display).egl_config,
                                                    p_->wl_egl_window,

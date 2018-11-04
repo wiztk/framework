@@ -66,9 +66,7 @@ GLView::GLView() {
   p_->callback.done().Bind(p_.get(), &GLView::Private::OnFrame);
 }
 
-GLView::~GLView() {
-
-}
+GLView::~GLView() = default;
 
 void GLView::SetRenderingAPI(AbstractRenderingAPI *api) {
   if (p_->rendering_api == api) return;
@@ -76,7 +74,7 @@ void GLView::SetRenderingAPI(AbstractRenderingAPI *api) {
   p_->rendering_api = api;
 
   if (nullptr != p_->gl_surface) {
-    p_->gl_surface->SetRenderingAPI(p_->rendering_api);
+//    p_->gl_surface->SetRenderingAPI(p_->rendering_api);
   }
 }
 
@@ -126,8 +124,8 @@ void GLView::OnDraw(const Context &context) {
   if (nullptr == p_->rendering_api) return;
 
   if (nullptr == p_->gl_surface) {
-    p_->gl_surface = Surface::Sub::Create(context.surface(), this, nullptr);
-    p_->gl_surface->SetRenderingAPI(p_->rendering_api);
+    p_->gl_surface = Surface::Sub::Create(this, context.surface());
+//    p_->gl_surface->SetRenderingAPI(p_->rendering_api);
 //    gl_surface->SetCommitMode(Surface::kDesynchronized);
 
     Region region;
