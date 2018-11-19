@@ -14,14 +14,41 @@
  * limitations under the License.
  */
 
-#include "wiztk/gui/abstract-rendering-backend.hpp"
+#ifndef WIZTK_GUI_SHARED_MEMORY_POOL_PRIVATE_HPP
+#define WIZTK_GUI_SHARED_MEMORY_POOL_PRIVATE_HPP
+
+#include "wiztk/gui/shared-memory-pool.hpp"
+
+#include <wayland-client.h>
 
 namespace wiztk {
 namespace gui {
 
-AbstractRenderingBackend::AbstractRenderingBackend() = default;
+struct SharedMemoryPool::Private {
 
-AbstractRenderingBackend::~AbstractRenderingBackend() = default;
+  static const Private &Get(const SharedMemoryPool &pool) {
+    return *pool.p_;
+  }
 
-} // namespace graphics
-} // namespace wiztk
+  static int CreateAnonymousFile(off_t size);
+
+  static int CreateTempFile(char *tmpname);
+
+  Private() = default;
+
+  ~Private() {
+    if (wl_shm_pool) wl_shm_pool_destroy(wl_shm_pool);
+  }
+
+  struct wl_shm_pool *wl_shm_pool = nullptr;
+
+  int32_t size = 0;
+
+  void *data = nullptr;
+
+};
+
+}
+}
+
+#endif // WIZTK_GUI_SHARED_MEMORY_POOL_PRIVATE_HPP

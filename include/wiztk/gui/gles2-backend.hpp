@@ -32,9 +32,22 @@ class WIZTK_EXPORT GLES2Backend : public AbstractEGLBackend {
 
  public:
 
-  GLES2Backend() = delete;
+  class Allocator : public AbstractRenderingBackend::Allocator {
 
-  explicit GLES2Backend(Surface *surface);
+   public:
+
+    Allocator() = default;
+    Allocator(const Allocator &) = default;
+    Allocator(Allocator &&) = default;
+    Allocator &operator=(const Allocator &) = default;
+    Allocator &operator=(Allocator &&) = default;
+    ~Allocator() override = default;
+
+    AbstractRenderingBackend *operator()() const override;
+
+  };
+
+  GLES2Backend();
 
   ~GLES2Backend() override;
 

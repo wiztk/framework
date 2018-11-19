@@ -25,8 +25,12 @@
 namespace wiztk {
 namespace gui {
 
-GLES2Backend::GLES2Backend(Surface *surface)
-    : AbstractEGLBackend(surface) {
+AbstractRenderingBackend *GLES2Backend::Allocator::operator()() const {
+  return new GLES2Backend();
+}
+
+GLES2Backend::GLES2Backend()
+    : AbstractEGLBackend() {
   p_ = std::make_unique<Private>();
 
   EGLBoolean ret = eglBindAPI(EGL_OPENGL_ES_API);

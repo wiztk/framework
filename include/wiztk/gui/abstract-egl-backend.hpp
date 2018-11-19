@@ -34,9 +34,7 @@ class WIZTK_EXPORT AbstractEGLBackend : public AbstractRenderingBackend {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(AbstractEGLBackend);
 
-  AbstractEGLBackend() = delete;
-
-  explicit AbstractEGLBackend(Surface *surface);
+  AbstractEGLBackend();
 
   ~AbstractEGLBackend() override;
 

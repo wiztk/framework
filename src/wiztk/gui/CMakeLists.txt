@@ -126,6 +126,8 @@ set(
         push-button.cpp
         region.cpp
         relative-layout.cpp
+        shared-memory-pool/private.hpp
+        shared-memory-pool/private.cpp
         shared-memory-pool.cpp
         slider.cpp
         spinner.cpp

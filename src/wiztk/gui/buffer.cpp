@@ -16,7 +16,7 @@
 
 #include "buffer/private.hpp"
 
-#include "wiztk/gui/shared-memory-pool.hpp"
+#include "shared-memory-pool/private.hpp"
 
 namespace wiztk {
 namespace gui {
@@ -41,11 +41,11 @@ void Buffer::Setup(const SharedMemoryPool &pool,
   Destroy();
 
   int size = stride * height;
-  if ((offset + size) > pool.size()) {
+  if ((offset + size) > pool.GetSize()) {
     throw std::runtime_error("Error! Trying to allocate buffer on small SHM pool.");
   }
 
-  p_->wl_buffer = wl_shm_pool_create_buffer(pool.wl_shm_pool_,
+  p_->wl_buffer = wl_shm_pool_create_buffer(SharedMemoryPool::Private::Get(pool).wl_shm_pool,
                                             offset,
                                             width,
                                             height,
@@ -57,7 +57,7 @@ void Buffer::Setup(const SharedMemoryPool &pool,
   p_->stride = stride;
   p_->format = format;
   p_->offset = offset;
-  p_->data = (char *) pool.data() + offset;
+  p_->data = (char *) pool.GetData() + offset;
 }
 
 void Buffer::Destroy() {
