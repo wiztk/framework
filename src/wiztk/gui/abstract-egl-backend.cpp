@@ -22,8 +22,8 @@
 namespace wiztk {
 namespace gui {
 
-AbstractEGLBackend::AbstractEGLBackend(Surface *surface)
-    : AbstractRenderingBackend(surface) {
+AbstractEGLBackend::AbstractEGLBackend()
+    : AbstractRenderingBackend() {
   p_ = std::make_unique<Private>();
 
   Display *display = Application::GetInstance()->GetDisplay();

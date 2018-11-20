@@ -19,8 +19,7 @@
 
 #include "wiztk/base/macros.hpp"
 
-#include <wayland-client.h>
-#include <sys/types.h>
+#include <memory>
 
 namespace wiztk {
 namespace gui {
@@ -34,40 +33,30 @@ class SharedMemoryPool {
 
  public:
 
+  struct Private;
+
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(SharedMemoryPool);
 
-  SharedMemoryPool()
-      : wl_shm_pool_(nullptr), size_(0), data_(nullptr) {}
+  SharedMemoryPool();
 
   /**
    * @brief Destructor
    *
    * Destroy the pool, this does not unmap the memory though.
    */
-  ~SharedMemoryPool() {
-    if (wl_shm_pool_)
-      wl_shm_pool_destroy(wl_shm_pool_);
-  }
+  ~SharedMemoryPool();
 
   void Setup(int32_t size);
 
   void Destroy();
 
-  int32_t size() const { return size_; }
+  int32_t GetSize() const;
 
-  void *data() const { return data_; };
+  void *GetData() const;
 
  private:
 
-  static int CreateAnonymousFile(off_t size);
-
-  static int CreateTempFile(char *tmpname);
-
-  struct wl_shm_pool *wl_shm_pool_;
-
-  int32_t size_;
-
-  void *data_;
+  std::unique_ptr<Private> p_;
 
 };
 

@@ -33,10 +33,10 @@ class Responder : public wiztk::base::Trackable {
 };
 
 void Responder::OnCheckGLES2Backend(wiztk::base::SLOT /*slot*/) {
-  GLES2Backend backend1(nullptr);
+  GLES2Backend backend1;
   ASSERT_TRUE(backend1.IsValid());
 
-  GLES2Backend backend2(nullptr);
+  GLES2Backend backend2;
   ASSERT_TRUE(backend2.IsValid());
 
   fprintf(stdout, "1: major: %d, minor: %d\n", backend1.GetVersionMajor(), backend1.GetVersionMinor());

@@ -40,14 +40,16 @@ class WIZTK_EXPORT AbstractRenderingBackend {
 
   WIZTK_DECLARE_NONCOPYABLE_AND_NONMOVALE(AbstractRenderingBackend);
 
-  AbstractRenderingBackend() = delete;
-
   class Allocator {
 
    public:
 
     Allocator() = default;
+    Allocator(const Allocator &) = default;
+    Allocator(Allocator &&) = default;
     virtual ~Allocator() = default;
+    Allocator &operator=(const Allocator &) = default;
+    Allocator &operator=(Allocator &&) = default;
 
     // This allocator in abstract class returns nullptr
     virtual AbstractRenderingBackend *operator()() const {
@@ -62,19 +64,13 @@ class WIZTK_EXPORT AbstractRenderingBackend {
     virtual ~Attribute() = default;
   };
 
-  explicit AbstractRenderingBackend(Surface *surface);
+  AbstractRenderingBackend();
 
   virtual ~AbstractRenderingBackend();
 
   virtual void SetViewportSize(int width, int height) = 0;
 
   virtual void Render(Surface *surface) = 0;
-
-  Surface *surface() const { return surface_; }
-
- private:
-
-  Surface *surface_ = nullptr;
 
 };
 
